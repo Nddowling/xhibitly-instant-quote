@@ -100,7 +100,8 @@ export default function CustomerProfile() {
         additional_notes: additionalNotes,
         booth_size: quoteData.boothSize,
         show_date: quoteData.showDate,
-        website_url: quoteData.websiteUrl
+        website_url: quoteData.websiteUrl,
+        show_name: quoteData.showName || ''
       });
 
       // Add profile to quote data
