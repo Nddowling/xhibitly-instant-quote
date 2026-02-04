@@ -33,10 +33,11 @@ Deno.serve(async (req) => {
 
     // Download the image and upload to Base44 storage
     const imageResponse = await fetch(imageUrl);
-    const imageBlob = await imageResponse.blob();
+    const imageBuffer = await imageResponse.arrayBuffer();
+    const imageFile = new File([imageBuffer], "booth-design.png", { type: "image/png" });
     
     const uploadResult = await base44.integrations.Core.UploadFile({
-      file: imageBlob
+      file: imageFile
     });
 
     return Response.json({ 
