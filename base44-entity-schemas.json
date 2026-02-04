@@ -1,0 +1,217 @@
+{
+  "note": "Entity Schema Definitions for Base44 Admin Dashboard",
+  "app_id": "69834d9e0d7220d671bfd124",
+  "admin_url": "https://app.base44.com",
+
+  "entities_status": {
+    "existing_and_working": [
+      "Product - Booth products catalog",
+      "BoothDesign - AI-generated booth designs",
+      "Order - Customer booth reservations"
+    ],
+    "needed": [
+      "ClientProfile - Customer discovery questionnaire answers (RENAMED from CustomerProfile)",
+      "DealerProfile - Sales rep information (OPTIONAL - using auth.me() currently)"
+    ]
+  },
+
+  "entities": [
+    {
+      "name": "ClientProfile",
+      "description": "Stores customer discovery questionnaire answers collected during the intro process. This data is passed to the AI for personalized booth design generation.",
+      "status": "MUST CREATE",
+      "used_in": [
+        "CustomerProfile.jsx - Line 88 (creates record)",
+        "Loading.jsx - Lines 43, 93-102 (passes to AI prompts)"
+      ],
+      "fields": [
+        {
+          "name": "dealer_id",
+          "type": "text",
+          "required": true,
+          "description": "ID of the dealer who created this client profile",
+          "example": "user_abc123"
+        },
+        {
+          "name": "dealer_email",
+          "type": "text",
+          "required": true,
+          "description": "Email of the dealer (for filtering/lookup)",
+          "example": "dealer@company.com"
+        },
+        {
+          "name": "objectives",
+          "type": "json",
+          "required": true,
+          "description": "Array of client's primary trade show objectives",
+          "example": "[\"Lead Generation\", \"Brand Awareness\", \"Product Launch\"]"
+        },
+        {
+          "name": "needs_multiple_sizes",
+          "type": "boolean",
+          "default": false,
+          "description": "Whether client needs to see options for multiple booth sizes"
+        },
+        {
+          "name": "display_products",
+          "type": "boolean",
+          "default": false,
+          "description": "Whether client needs to physically display products at the booth"
+        },
+        {
+          "name": "needs_demo_space",
+          "type": "boolean",
+          "default": false,
+          "description": "Whether client needs space for product demonstrations or presentations"
+        },
+        {
+          "name": "needs_conference_area",
+          "type": "boolean",
+          "default": false,
+          "description": "Whether client needs a private conference/meeting area in the booth"
+        },
+        {
+          "name": "needs_graphic_design",
+          "type": "boolean",
+          "default": false,
+          "description": "Whether client needs custom graphic design services"
+        },
+        {
+          "name": "desired_look",
+          "type": "json",
+          "required": true,
+          "description": "Array of desired visual aesthetics from customer",
+          "example": "[\"Modern\", \"Minimalist\", \"Tech-Forward\", \"Sleek\"]"
+        },
+        {
+          "name": "desired_feel",
+          "type": "json",
+          "required": true,
+          "description": "Array of desired experiential qualities",
+          "example": "[\"Open\", \"Inviting\", \"Premium\", \"Exclusive\"]"
+        },
+        {
+          "name": "needs_logistics",
+          "type": "boolean",
+          "default": false,
+          "description": "Whether client needs full logistics support (shipping, setup, teardown)"
+        },
+        {
+          "name": "additional_notes",
+          "type": "text",
+          "required": false,
+          "description": "Any additional requirements, preferences, or special requests from client"
+        },
+        {
+          "name": "booth_size",
+          "type": "text",
+          "required": true,
+          "description": "Primary booth size requested",
+          "example": "10x10"
+        },
+        {
+          "name": "show_date",
+          "type": "text",
+          "required": true,
+          "description": "Date of the trade show (YYYY-MM-DD format)",
+          "example": "2024-06-15"
+        },
+        {
+          "name": "website_url",
+          "type": "text",
+          "required": true,
+          "description": "Client's website URL for AI brand analysis",
+          "example": "https://www.clientcompany.com"
+        },
+        {
+          "name": "show_name",
+          "type": "text",
+          "required": false,
+          "description": "Name of the trade show event (optional)",
+          "example": "CES 2024"
+        }
+      ]
+    },
+    {
+      "name": "DealerProfile",
+      "description": "OPTIONAL - Sales rep/dealer profile. Currently using base44.auth.me() which has: company_name, contact_name, phone, email. Only create this if you want separate dealer profile management.",
+      "status": "OPTIONAL (using auth.me() currently)",
+      "fields": [
+        {
+          "name": "user_id",
+          "type": "text",
+          "required": true,
+          "description": "Reference to the authenticated user ID"
+        },
+        {
+          "name": "email",
+          "type": "text",
+          "required": true,
+          "unique": true,
+          "description": "Dealer's email address"
+        },
+        {
+          "name": "company_name",
+          "type": "text",
+          "required": true,
+          "description": "Dealer's company name"
+        },
+        {
+          "name": "contact_name",
+          "type": "text",
+          "required": true,
+          "description": "Dealer's full name"
+        },
+        {
+          "name": "phone",
+          "type": "text",
+          "required": true,
+          "description": "Dealer's phone number"
+        },
+        {
+          "name": "is_active",
+          "type": "boolean",
+          "default": true,
+          "description": "Whether the dealer account is active"
+        }
+      ]
+    }
+  ],
+
+  "existing_entities_reference": {
+    "BoothDesign": {
+      "fields": ["dealer_id", "booth_size", "tier", "design_name", "brand_identity", "experience_story", "visitor_journey", "key_moments", "product_skus", "total_price", "design_rationale"],
+      "status": "EXISTS - Working correctly"
+    },
+    "Order": {
+      "fields": ["dealer_id", "dealer_email", "dealer_company", "dealer_name", "dealer_phone", "website_url", "booth_size", "show_date", "show_name", "selected_booth_design_id", "selected_tier", "quoted_price", "status", "reference_number"],
+      "status": "EXISTS - Working correctly"
+    },
+    "Product": {
+      "fields": ["sku", "name", "category", "price_tier", "base_price", "design_style", "features", "booth_sizes", "is_active"],
+      "status": "EXISTS - Working correctly"
+    }
+  },
+
+  "setup_instructions": [
+    "1. Go to https://app.base44.com and log in with your credentials",
+    "2. Navigate to your app: App ID 69834d9e0d7220d671bfd124",
+    "3. Click on 'Database' or 'Schema' section in the left sidebar",
+    "4. Click 'Create New Entity' or 'Add Table'",
+    "5. Create the 'ClientProfile' entity using the field definitions above",
+    "6. For each field:",
+    "   - Set the field name exactly as shown",
+    "   - Select the correct field type (text, json, boolean, etc.)",
+    "   - Mark required fields",
+    "   - Set default values where specified",
+    "7. Save the entity schema",
+    "8. (Optional) Create DealerProfile if you want separate dealer management",
+    "9. Test by running the app: npm run dev"
+  ],
+
+  "code_changes_made": [
+    "✅ Updated CustomerProfile.jsx line 88: Changed base44.entities.CustomerProfile to base44.entities.ClientProfile",
+    "✅ Created this schema definition file for reference",
+    "✅ Code already passes all ClientProfile data to AI prompts in Loading.jsx"
+  ]
+}
