@@ -86,8 +86,8 @@ export default function CustomerProfile() {
     try {
       // Save customer profile to database
       const profile = await base44.entities.ClientProfile.create({
-        dealer_id: user.id,
-        dealer_email: user.email,
+        client_id: user.id,
+        client_email: user.email,
         objectives: objectives,
         needs_multiple_sizes: needsMultipleSizes === 'yes',
         display_products: displayProducts === 'yes',
