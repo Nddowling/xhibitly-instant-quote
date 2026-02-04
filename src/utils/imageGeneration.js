@@ -10,50 +10,75 @@ import { base44 } from '@/api/base44Client';
 export function buildImagePrompt(design, brandAnalysis, customerProfile) {
   const lookStyles = customerProfile?.desired_look?.join(', ').toLowerCase() || 'modern';
   const feelQualities = customerProfile?.desired_feel?.join(', ').toLowerCase() || 'open';
+  const boothSize = customerProfile?.booth_size || '10x10';
 
-  // Determine tier-specific characteristics
+  // Parse booth dimensions
+  const dimensions = boothSize.split('x').map(d => parseInt(d));
+  const width = dimensions[0] || 10;
+  const depth = dimensions[1] || 10;
+  const squareFeet = width * depth;
+
+  // Determine tier-specific characteristics with more detail
   const tierDescriptions = {
-    Budget: 'functional and efficient with clean lines',
-    Hybrid: 'balanced and impactful with thoughtful details',
-    Custom: 'premium and immersive with sophisticated elements'
+    Budget: `functional and cost-effective with clean simple design, minimal custom elements, standard materials and finishes`,
+    Hybrid: `well-balanced design combining impact with value, mix of custom and modular elements, quality materials and professional finishes`,
+    Custom: `premium fully customized design with high-end materials, sophisticated architectural elements, luxury finishes and innovative features`
   };
 
   const tierDescription = tierDescriptions[design.tier] || 'professional and polished';
 
-  // Build feature descriptions
+  // Build detailed feature descriptions
   const features = [];
   if (customerProfile?.display_products) {
-    features.push('- Product display pedestals and shelving with featured items');
+    features.push(`Multiple product display areas with pedestals, shelving, or showcases prominently featuring products`);
   }
   if (customerProfile?.needs_demo_space) {
-    features.push('- Demonstration area with presentation screen');
+    features.push(`Dedicated demonstration zone with large presentation screen or monitor for product demos`);
   }
   if (customerProfile?.needs_conference_area) {
-    features.push('- Private meeting space with seating');
+    features.push(`Private semi-enclosed meeting area with seating for 4-6 people and table`);
   }
 
-  const featuresText = features.length > 0 ? `\nBooth Features:\n${features.join('\n')}` : '';
+  // Construct prominent brand color guidance
+  const primaryColor = brandAnalysis?.primary_color || '#e2231a';
+  const secondaryColor = brandAnalysis?.secondary_color || '#333333';
 
-  const prompt = `Create a professional photorealistic 3D rendering of a ${customerProfile?.booth_size || '10x10'} trade show exhibition booth.
+  const prompt = `Create a photorealistic 3D architectural rendering of a ${width} feet wide by ${depth} feet deep (${squareFeet} square feet total) ${boothSize} trade show exhibition booth viewed from eye-level perspective standing on the trade show floor.
 
-Design Style: ${lookStyles} aesthetic with ${feelQualities} spatial arrangement
-Brand Colors: Primary ${brandAnalysis?.primary_color || '#e2231a'}, Secondary ${brandAnalysis?.secondary_color || '#333333'}
-Industry: ${brandAnalysis?.industry || 'General'}
-Brand Personality: ${brandAnalysis?.brand_personality || 'Professional'}
-${featuresText}
+CRITICAL BOOTH DIMENSIONS:
+- Exact size: ${width} feet wide × ${depth} feet deep × 8-10 feet tall
+- Floor space: ${squareFeet} square feet
+- Scale: The booth must look appropriately sized for a ${squareFeet} sq ft space - ${squareFeet < 150 ? 'compact and intimate' : squareFeet < 300 ? 'medium-sized' : 'large and spacious'}
+- Show clear depth and width proportions matching ${boothSize} dimensions
 
-Design Concept: ${design.experience_story}
+BRAND IDENTITY (MUST BE PROMINENT):
+- Primary Brand Color ${primaryColor}: Use extensively in large graphic panels, overhead signage, and key structural elements
+- Secondary Color ${secondaryColor}: Use for accents, text, and complementary design elements
+- Apply brand colors to at least 40% of visible surfaces including backwall graphics, hanging signs, or structural panels
+- Industry: ${brandAnalysis?.industry || 'Professional'}
+- Brand Personality: ${brandAnalysis?.brand_personality || 'Professional and polished'}
 
-Tier Level: ${design.tier} tier (${tierDescription})
+DESIGN AESTHETIC (FROM CUSTOMER QUESTIONNAIRE):
+- Visual Style: ${lookStyles} design language
+- Spatial Feel: ${feelQualities} layout and atmosphere
+- Overall Vibe: ${design.experience_story}
 
-Visual Requirements:
-- Eye-level perspective from the trade show floor
-- Professional exhibition hall environment with proper lighting
-- Modern trade show setting with polished concrete or carpeted floor
-- Photorealistic materials and textures
-- Professional architectural visualization style
-- Clean, inviting atmosphere that matches the brand identity
-- No text or signage with readable words`;
+REQUIRED FUNCTIONAL ELEMENTS:
+${features.length > 0 ? features.map((f, i) => `${i + 1}. ${f}`).join('\n') : 'Standard booth layout with open welcoming space'}
+
+TIER CHARACTERISTICS (${design.tier} Tier - ${tierDescription.split(',')[0]}):
+${tierDescription}
+
+VISUAL REQUIREMENTS FOR PHOTOREALISM:
+- Eye-level perspective from visitor approaching the booth (5.5 feet height)
+- Professional exhibition hall with bright even lighting from ceiling grid
+- Light gray carpeted floor or polished concrete typical of convention centers
+- Show the booth within trade show context (hint of neighboring booth edges visible)
+- Photorealistic materials: fabric graphics, metal frames, wood or laminate surfaces, LED lighting
+- Professional trade show atmosphere
+- Accurate scale showing booth fits within ${squareFeet} square foot footprint
+- NO readable text, logos, or company names on any surfaces
+- Ensure brand colors ${primaryColor} and ${secondaryColor} are highly visible and dominant in the design`;
 
   return prompt;
 }
