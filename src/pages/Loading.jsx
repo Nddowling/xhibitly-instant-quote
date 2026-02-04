@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { base44 } from '@/api/base44Client';
+import db from '@/api/dbClient';
+import { getSupabaseProfileId } from '@/utils/profileSync';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Sparkles, CheckCircle, Palette, Layers, Lightbulb } from 'lucide-react';
 
@@ -71,13 +73,13 @@ export default function Loading() {
         }
       });
 
-      // Step 2: Get all available products for this booth size
-      const allProducts = await base44.entities.Product.filter({
+      // Step 2: Get all available products for this booth size from Supabase
+      const allProducts = await db.entities.Product.filter({
         is_active: true
       });
-      
+
       // Filter by booth size compatibility
-      const compatibleProducts = allProducts.filter(p => 
+      const compatibleProducts = allProducts.filter(p =>
         p.booth_sizes && p.booth_sizes.includes(boothSize)
       );
 
@@ -132,11 +134,14 @@ Return JSON with 3 designs.`;
         }
       });
 
-      // Save booth designs to database
+      // Get Supabase profile ID for the dealer
+      const supabaseProfileId = await getSupabaseProfileId(dealerId);
+
+      // Save booth designs to Supabase database
       const savedDesigns = [];
       for (const design of designs.designs) {
-        const boothDesign = await base44.entities.BoothDesign.create({
-          dealer_id: dealerId,
+        const boothDesign = await db.entities.BoothDesign.create({
+          dealer_id: supabaseProfileId, // Use Supabase profile UUID
           booth_size: boothSize,
           tier: design.tier,
           design_name: design.design_name,
