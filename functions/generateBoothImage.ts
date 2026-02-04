@@ -31,28 +31,10 @@ Deno.serve(async (req) => {
 
     const imageUrl = response.data[0].url;
 
-    // Download the image
-    const imageResponse = await fetch(imageUrl);
-    const imageBuffer = await imageResponse.arrayBuffer();
-    
-    // Upload to Base44 using FormData
-    const formData = new FormData();
-    const blob = new Blob([imageBuffer], { type: 'image/png' });
-    formData.append('file', blob, 'booth-design.png');
-    
-    const uploadResponse = await fetch(`${Deno.env.get('BASE44_API_URL') || 'https://api.base44.com'}/apps/${Deno.env.get('BASE44_APP_ID')}/integrations/Core/UploadFile`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${base44.auth.token}`
-      },
-      body: formData
-    });
-    
-    const uploadResult = await uploadResponse.json();
-
+    // Return the OpenAI-generated image URL directly
+    // (OpenAI URLs are temporary but valid for downloads)
     return Response.json({ 
-      url: uploadResult.file_url,
-      original_url: imageUrl 
+      url: imageUrl
     });
 
   } catch (error) {
