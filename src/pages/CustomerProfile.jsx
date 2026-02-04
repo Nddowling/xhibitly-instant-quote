@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { base44 } from '@/api/base44Client';
@@ -74,6 +74,11 @@ export default function CustomerProfile() {
         : [...prev, feel]
     );
   };
+
+  // Memoize textarea handler to prevent re-render lag
+  const handleNotesChange = useCallback((e) => {
+    setAdditionalNotes(e.target.value);
+  }, []);
 
   const handleSubmit = async () => {
     if (objectives.length === 0 || desiredLook.length === 0 || desiredFeel.length === 0) {
@@ -489,7 +494,7 @@ export default function CustomerProfile() {
             <CardContent>
               <Textarea
                 value={additionalNotes}
-                onChange={(e) => setAdditionalNotes(e.target.value)}
+                onChange={handleNotesChange}
                 placeholder="e.g., specific brand colors, product sizes, accessibility needs, etc."
                 rows={4}
                 className="w-full"
