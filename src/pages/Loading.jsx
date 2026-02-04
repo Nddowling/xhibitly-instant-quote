@@ -41,6 +41,24 @@ export default function Loading() {
     const { websiteUrl, dealerId, customerProfile } = JSON.parse(sessionStorage.getItem('quoteRequest'));
     
     try {
+      // Check if designs already exist for this dealer/booth size combo
+      const existingDesigns = await base44.entities.BoothDesign.filter({
+        dealer_id: dealerId,
+        booth_size: boothSize
+      });
+
+      if (existingDesigns && existingDesigns.length >= 3) {
+        // Use existing designs
+        const sortedDesigns = existingDesigns
+          .sort((a, b) => new Date(b.created_date) - new Date(a.created_date))
+          .slice(0, 3);
+        
+        sessionStorage.setItem('boothDesigns', JSON.stringify(sortedDesigns));
+        sessionStorage.setItem('brandIdentity', JSON.stringify(sortedDesigns[0].brand_identity));
+        navigate(createPageUrl('Results'));
+        return;
+      }
+      
       // Simulate minimum loading time for UX (AI processing takes time)
       const minLoadTime = new Promise(resolve => setTimeout(resolve, 8000));
       

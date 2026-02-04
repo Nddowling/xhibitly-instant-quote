@@ -301,12 +301,12 @@ export default function Results() {
           })}
         </div>
 
-        {/* Back Button */}
+        {/* Action Buttons */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
-          className="text-center mt-10"
+          className="flex items-center justify-center gap-4 mt-10"
         >
           <Button 
             variant="ghost" 
