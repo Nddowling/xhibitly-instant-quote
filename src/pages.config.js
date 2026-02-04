@@ -52,8 +52,8 @@ import CustomerProfile from './pages/CustomerProfile';
 import Home from './pages/Home';
 import Loading from './pages/Loading';
 import OrderHistory from './pages/OrderHistory';
-import ProductDetail from './pages/ProductDetail';
 import QuoteRequest from './pages/QuoteRequest';
+import ProductDetail from './pages/ProductDetail';
 import Results from './pages/Results';
 import __Layout from './Layout.jsx';
 
@@ -64,8 +64,8 @@ export const PAGES = {
     "Home": Home,
     "Loading": Loading,
     "OrderHistory": OrderHistory,
-    "ProductDetail": ProductDetail,
     "QuoteRequest": QuoteRequest,
+    "ProductDetail": ProductDetail,
     "Results": Results,
 }
 

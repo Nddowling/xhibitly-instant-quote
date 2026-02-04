@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
 import { Star, ArrowRight, Sparkles, Lightbulb, Palette, Loader2 } from 'lucide-react';
-import { generateBoothImage } from '@/utils/imageGeneration';
+import { generateBoothImage } from '@/components/utils/imageGeneration';
 import { base44 } from '@/api/base44Client';
 
 export default function Results() {
