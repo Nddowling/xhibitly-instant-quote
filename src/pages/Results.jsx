@@ -34,6 +34,15 @@ export default function Results() {
     setBrandIdentity(brand);
     setQuoteData(quote);
 
+    // Initialize generating state for designs without images
+    const initialGeneratingState = {};
+    designs.forEach(design => {
+      if (!design.design_image_url) {
+        initialGeneratingState[design.id] = true;
+      }
+    });
+    setGeneratingImages(initialGeneratingState);
+
     // Trigger async image generation
     generateImagesForDesigns(designs, brand, quote);
   }, []);
