@@ -5,28 +5,71 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
-import { Star, ArrowRight, Sparkles, Lightbulb, Palette } from 'lucide-react';
+import { Star, ArrowRight, Sparkles, Lightbulb, Palette, Loader2 } from 'lucide-react';
+import { generateBoothImage } from '@/utils/imageGeneration';
+import { base44 } from '@/api/base44Client';
 
 export default function Results() {
   const navigate = useNavigate();
   const [boothDesigns, setBoothDesigns] = useState([]);
   const [brandIdentity, setBrandIdentity] = useState(null);
   const [quoteData, setQuoteData] = useState(null);
+  const [generatingImages, setGeneratingImages] = useState({});
 
   useEffect(() => {
     const storedDesigns = sessionStorage.getItem('boothDesigns');
     const storedBrand = sessionStorage.getItem('brandIdentity');
     const storedQuote = sessionStorage.getItem('quoteRequest');
-    
+
     if (!storedDesigns || !storedQuote) {
       navigate(createPageUrl('QuoteRequest'));
       return;
     }
 
-    setBoothDesigns(JSON.parse(storedDesigns));
-    setBrandIdentity(JSON.parse(storedBrand));
-    setQuoteData(JSON.parse(storedQuote));
+    const designs = JSON.parse(storedDesigns);
+    const brand = JSON.parse(storedBrand);
+    const quote = JSON.parse(storedQuote);
+
+    setBoothDesigns(designs);
+    setBrandIdentity(brand);
+    setQuoteData(quote);
+
+    // Trigger async image generation
+    generateImagesForDesigns(designs, brand, quote);
   }, []);
+
+  const generateImagesForDesigns = async (designs, brand, quote) => {
+    const customerProfile = quote.customerProfile;
+
+    for (const design of designs) {
+      // Skip if image already exists
+      if (design.design_image_url) continue;
+
+      // Mark as generating
+      setGeneratingImages(prev => ({ ...prev, [design.id]: true }));
+
+      try {
+        const imageUrl = await generateBoothImage(design, brand, customerProfile);
+
+        // Update database
+        await base44.entities.BoothDesign.update(design.id, {
+          design_image_url: imageUrl
+        });
+
+        // Update local state
+        setBoothDesigns(prev => prev.map(d =>
+          d.id === design.id ? { ...d, design_image_url: imageUrl } : d
+        ));
+
+        // Mark as complete
+        setGeneratingImages(prev => ({ ...prev, [design.id]: false }));
+      } catch (error) {
+        console.error(`Failed to generate image for ${design.tier}:`, error);
+        // Mark as failed, keep placeholder
+        setGeneratingImages(prev => ({ ...prev, [design.id]: false }));
+      }
+    }
+  };
 
   const handleSelectDesign = (design) => {
     sessionStorage.setItem('selectedDesign', JSON.stringify(design));
@@ -165,10 +208,23 @@ export default function Results() {
                   <CardContent className={`p-6 ${design.tier === 'Hybrid' ? 'pt-14' : ''}`}>
                     {/* Visual Header */}
                     <div className={`aspect-[4/3] bg-gradient-to-br ${styles.gradient} rounded-xl mb-6 overflow-hidden flex items-center justify-center border border-slate-200`}>
-                      <div className="text-center p-6">
-                        <Sparkles className="w-16 h-16 text-slate-400 mx-auto mb-3" />
-                        <div className="text-sm text-slate-500 font-medium">Curated from {design.product_skus?.length || 0} Products</div>
-                      </div>
+                      {design.design_image_url ? (
+                        <img
+                          src={design.design_image_url}
+                          alt={design.design_name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : generatingImages[design.id] ? (
+                        <div className="text-center p-6">
+                          <Loader2 className="w-16 h-16 text-slate-400 mx-auto mb-3 animate-spin" />
+                          <div className="text-sm text-slate-500 font-medium">Generating booth visualization...</div>
+                        </div>
+                      ) : (
+                        <div className="text-center p-6">
+                          <Sparkles className="w-16 h-16 text-slate-400 mx-auto mb-3" />
+                          <div className="text-sm text-slate-500 font-medium">Curated from {design.product_skus?.length || 0} Products</div>
+                        </div>
+                      )}
                     </div>
 
                     {/* Tier Badge */}

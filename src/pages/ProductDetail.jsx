@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
-import { ArrowLeft, ShoppingCart, Star, Lightbulb, Route, Package, Loader2, Check } from 'lucide-react';
+import { ArrowLeft, ShoppingCart, Star, Lightbulb, Route, Package, Loader2, Check, Sparkles } from 'lucide-react';
 
 export default function ProductDetail() {
   const navigate = useNavigate();
@@ -203,6 +203,30 @@ Please contact the dealer within 2 hours to begin customization.
               <p className="text-slate-500 text-lg">
                 Curated {quoteData.boothSize} Experience for {quoteData.dealerCompany}
               </p>
+            </motion.div>
+
+            {/* Booth Visualization */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15 }}
+            >
+              <Card className="border-0 shadow-lg overflow-hidden">
+                <div className="aspect-[16/10] bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center">
+                  {design.design_image_url ? (
+                    <img
+                      src={design.design_image_url}
+                      alt={design.design_name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="text-center p-8">
+                      <Sparkles className="w-20 h-20 text-slate-300 mx-auto mb-4" />
+                      <p className="text-slate-400 font-medium">Booth Visualization</p>
+                    </div>
+                  )}
+                </div>
+              </Card>
             </motion.div>
 
             {/* Experience Story */}
