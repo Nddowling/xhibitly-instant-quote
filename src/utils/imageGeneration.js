@@ -43,13 +43,42 @@ export function buildImagePrompt(design, brandAnalysis, customerProfile) {
   const primaryColor = brandAnalysis?.primary_color || '#e2231a';
   const secondaryColor = brandAnalysis?.secondary_color || '#333333';
 
-  const prompt = `Create a photorealistic 3D architectural rendering of a ${width} feet wide by ${depth} feet deep (${squareFeet} square feet total) ${boothSize} trade show exhibition booth viewed from eye-level perspective standing on the trade show floor.
+  // Build size-specific constraints
+  const sizeConstraints = squareFeet <= 100
+    ? `CRITICAL: This is a VERY SMALL booth (${squareFeet} sq ft = size of a small bedroom or single parking space)
+- Maximum 1-2 functional zones ONLY (cannot fit conference area, demo space, AND product displays)
+- Maximum 2-3 people can fit comfortably
+- MUST show the booth looking cramped and compact, NOT spacious
+- Include visible neighboring booth walls to show size constraint
+- The entire booth must be visible in frame with clear spatial limits`
+    : squareFeet <= 200
+    ? `CRITICAL: This is a COMPACT booth (${squareFeet} sq ft = size of a large bedroom)
+- Maximum 2-3 functional zones
+- Maximum 4-5 people can fit comfortably
+- Show the booth looking efficient and well-organized, NOT large
+- Include neighboring booth edges to demonstrate size
+- The entire booth width should be visible in frame`
+    : squareFeet <= 400
+    ? `This is a MEDIUM-SIZED booth (${squareFeet} sq ft)
+- Can accommodate 3-4 functional zones
+- Maximum 6-8 people can fit comfortably
+- Show balanced use of space without appearing overly large`
+    : `This is a LARGE booth (${squareFeet} sq ft)
+- Can accommodate 4-6 functional zones
+- Can comfortably hold 10-15 people
+- Show spacious, premium exhibition space`;
 
-CRITICAL BOOTH DIMENSIONS:
-- Exact size: ${width} feet wide × ${depth} feet deep × 8-10 feet tall
-- Floor space: ${squareFeet} square feet
-- Scale: The booth must look appropriately sized for a ${squareFeet} sq ft space - ${squareFeet < 150 ? 'compact and intimate' : squareFeet < 300 ? 'medium-sized' : 'large and spacious'}
-- Show clear depth and width proportions matching ${boothSize} dimensions
+  const prompt = `Create a photorealistic 3D architectural rendering of a ${width} feet wide by ${depth} feet deep (${squareFeet} square feet total) ${boothSize} trade show exhibition booth.
+
+${sizeConstraints}
+
+ABSOLUTE DIMENSIONAL REQUIREMENTS:
+- Exact floor dimensions: ${width} feet wide × ${depth} feet deep (${squareFeet} total square feet)
+- Height: 8-10 feet tall maximum
+- Real-world comparison: ${squareFeet <= 100 ? 'Size of a small bedroom or one parking space' : squareFeet <= 200 ? 'Size of a large bedroom or studio apartment living room' : squareFeet <= 400 ? 'Size of a small apartment or two parking spaces' : 'Size of a large apartment'}
+- CRITICAL: If this is 10x10 (100 sq ft), it MUST look compact and intimate - DO NOT make it appear spacious or large
+- Show the booth from a 45-degree angle perspective so both width AND depth are clearly visible
+- Include people for scale (${squareFeet <= 100 ? '2-3 people max' : squareFeet <= 200 ? '4-5 people' : squareFeet <= 400 ? '6-8 people' : '10-12 people'})
 
 BRAND IDENTITY (MUST BE PROMINENT):
 - Primary Brand Color ${primaryColor}: Use extensively in large graphic panels, overhead signage, and key structural elements
@@ -63,22 +92,23 @@ DESIGN AESTHETIC (FROM CUSTOMER QUESTIONNAIRE):
 - Spatial Feel: ${feelQualities} layout and atmosphere
 - Overall Vibe: ${design.experience_story}
 
-REQUIRED FUNCTIONAL ELEMENTS:
-${features.length > 0 ? features.map((f, i) => `${i + 1}. ${f}`).join('\n') : 'Standard booth layout with open welcoming space'}
+FUNCTIONAL ELEMENTS (${squareFeet <= 100 ? 'SIMPLIFIED due to small size' : 'As specified'}):
+${features.length > 0 ? features.map((f, i) => `${i + 1}. ${f}${squareFeet <= 100 ? ' (compact version)' : ''}`).join('\n') : 'Standard booth layout with open welcoming space'}
 
-TIER CHARACTERISTICS (${design.tier} Tier - ${tierDescription.split(',')[0]}):
+TIER CHARACTERISTICS (${design.tier} Tier):
 ${tierDescription}
 
 VISUAL REQUIREMENTS FOR PHOTOREALISM:
-- Eye-level perspective from visitor approaching the booth (5.5 feet height)
+- 45-degree angle view from trade show floor showing both width and depth clearly
+- Include 2-3 neighboring booth edges/walls to provide scale context and show size constraints
 - Professional exhibition hall with bright even lighting from ceiling grid
-- Light gray carpeted floor or polished concrete typical of convention centers
-- Show the booth within trade show context (hint of neighboring booth edges visible)
+- Light gray carpeted floor typical of convention centers
 - Photorealistic materials: fabric graphics, metal frames, wood or laminate surfaces, LED lighting
-- Professional trade show atmosphere
-- Accurate scale showing booth fits within ${squareFeet} square foot footprint
+- Show people in and around the booth for accurate scale reference
+- The ENTIRE booth must be visible in the frame to show true dimensions
 - NO readable text, logos, or company names on any surfaces
-- Ensure brand colors ${primaryColor} and ${secondaryColor} are highly visible and dominant in the design`;
+- Ensure brand colors ${primaryColor} and ${secondaryColor} are highly visible and dominant in the design
+- ${squareFeet <= 100 ? 'CRITICAL: Booth must look compact and space-efficient, NOT large or spacious' : squareFeet <= 200 ? 'Booth should look well-organized but not overly spacious' : ''}`;
 
   return prompt;
 }
