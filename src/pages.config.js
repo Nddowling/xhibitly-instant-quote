@@ -49,6 +49,7 @@
  */
 import Home from './pages/Home';
 import QuoteRequest from './pages/QuoteRequest';
+import CustomerProfile from './pages/CustomerProfile';
 import Loading from './pages/Loading';
 import Results from './pages/Results';
 import ProductDetail from './pages/ProductDetail';
@@ -60,6 +61,7 @@ import __Layout from './Layout.jsx';
 export const PAGES = {
     "Home": Home,
     "QuoteRequest": QuoteRequest,
+    "CustomerProfile": CustomerProfile,
     "Loading": Loading,
     "Results": Results,
     "ProductDetail": ProductDetail,

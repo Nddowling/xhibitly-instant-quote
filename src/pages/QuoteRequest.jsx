@@ -86,7 +86,7 @@ export default function QuoteRequest() {
     };
     
     sessionStorage.setItem('quoteRequest', JSON.stringify(quoteData));
-    navigate(createPageUrl('Loading'));
+    navigate(createPageUrl('CustomerProfile'));
   };
 
   if (isLoading) {

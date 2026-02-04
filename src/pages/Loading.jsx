@@ -38,7 +38,7 @@ export default function Loading() {
   }, []);
 
   const loadProducts = async (boothSize) => {
-    const { websiteUrl, dealerId } = JSON.parse(sessionStorage.getItem('quoteRequest'));
+    const { websiteUrl, dealerId, customerProfile } = JSON.parse(sessionStorage.getItem('quoteRequest'));
     
     try {
       // Simulate minimum loading time for UX (AI processing takes time)
@@ -87,6 +87,18 @@ export default function Loading() {
 Brand Identity:
 ${JSON.stringify(brandAnalysis, null, 2)}
 
+Customer Requirements:
+${customerProfile ? `
+- Objectives: ${customerProfile.objectives.join(', ')}
+- Display Products: ${customerProfile.display_products ? 'Yes' : 'No'}
+- Demo/Presentation Space: ${customerProfile.needs_demo_space ? 'Required' : 'Not needed'}
+- Conference Area: ${customerProfile.needs_conference_area ? 'Required' : 'Not needed'}
+- Desired Look: ${customerProfile.desired_look.join(', ')}
+- Desired Feel: ${customerProfile.desired_feel.join(', ')}
+- Logistics Support: ${customerProfile.needs_logistics ? 'Required' : 'Not needed'}
+${customerProfile.additional_notes ? `- Additional Notes: ${customerProfile.additional_notes}` : ''}
+` : 'No specific customer requirements provided.'}
+
 Available Products (select from these):
 ${JSON.stringify(compatibleProducts.map(p => ({
   sku: p.sku,
@@ -100,10 +112,15 @@ ${JSON.stringify(compatibleProducts.map(p => ({
 
 For each tier (Budget, Hybrid, Custom), create a curated booth EXPERIENCE that:
 1. Tells a story and creates a memorable journey
-2. Matches the brand identity
-3. Selects 5-12 compatible products from the catalog
-4. Explains the visitor flow and key moments
-5. Total price should be: Budget $3-8K, Hybrid $8-18K, Custom $18-50K+
+2. Matches the brand identity AND customer requirements
+3. Addresses the customer's stated objectives (${customerProfile?.objectives.join(', ') || 'general lead generation'})
+4. Incorporates the desired look (${customerProfile?.desired_look.join(', ') || 'modern'}) and feel (${customerProfile?.desired_feel.join(', ') || 'open'})
+5. Selects 5-12 compatible products from the catalog
+6. ${customerProfile?.display_products ? 'Includes product display areas' : ''}
+7. ${customerProfile?.needs_demo_space ? 'Includes demonstration/presentation space' : ''}
+8. ${customerProfile?.needs_conference_area ? 'Includes a conference/meeting area' : ''}
+9. Explains the visitor flow and key moments
+10. Total price should be: Budget $3-8K, Hybrid $8-18K, Custom $18-50K+
 
 Return JSON with 3 designs.`;
 
