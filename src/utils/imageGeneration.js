@@ -43,6 +43,24 @@ export function buildImagePrompt(design, brandAnalysis, customerProfile) {
   const primaryColor = brandAnalysis?.primary_color || '#e2231a';
   const secondaryColor = brandAnalysis?.secondary_color || '#333333';
 
+  // Extract comprehensive brand identity from URL analysis
+  const brandIdentity = {
+    industry: brandAnalysis?.industry || 'Professional',
+    personality: brandAnalysis?.brand_personality || 'Professional and polished',
+    essence: brandAnalysis?.brand_essence || 'Quality and innovation',
+    targetAudience: brandAnalysis?.target_audience || 'professionals',
+    designStyle: brandAnalysis?.design_style || []
+  };
+
+  // Build brand-specific design language
+  const brandDesignElements = brandIdentity.designStyle.length > 0
+    ? `\nBrand Visual Language: ${brandIdentity.designStyle.join(', ')}`
+    : '';
+
+  const targetAudienceDesc = brandIdentity.targetAudience
+    ? `\nTarget Audience: ${brandIdentity.targetAudience} - the booth design should appeal to and resonate with this audience`
+    : '';
+
   // Build size-specific constraints
   const sizeConstraints = squareFeet <= 100
     ? `CRITICAL: This is a VERY SMALL booth (${squareFeet} sq ft = size of a small bedroom or single parking space)
@@ -104,14 +122,26 @@ ABSOLUTE DIMENSIONAL REQUIREMENTS:
 - Show the booth from a 45-degree angle perspective so both width AND depth are clearly visible
 - Include people for scale (${squareFeet <= 100 ? '2-3 people max' : squareFeet <= 200 ? '4-5 people' : squareFeet <= 400 ? '6-8 people' : '10-12 people'})
 
-BRAND IDENTITY (MUST BE PROMINENT):
-- Company: ${brandAnalysis?.industry || 'Professional'} industry
-- Brand Personality: ${brandAnalysis?.brand_personality || 'Professional and polished'}
-- Brand Essence: ${brandAnalysis?.brand_essence || 'Quality and innovation'}
-- Primary Brand Color ${primaryColor}: Use extensively in large fabric graphic panels, overhead signage, and key structural elements
-- Secondary Color ${secondaryColor}: Use for accents, text, and complementary design elements
-- Apply brand colors to at least 40% of visible surfaces including backwall graphics, hanging signs, or structural panels
-- The booth should embody the brand personality in its design language
+BRAND IDENTITY FROM URL ANALYSIS (MUST BE PROMINENTLY REFLECTED):
+- Industry: ${brandIdentity.industry}
+- Brand Personality: ${brandIdentity.personality}
+- Brand Essence: ${brandIdentity.essence}${targetAudienceDesc}${brandDesignElements}
+
+BRAND COLORS (CRITICAL - EXTRACTED FROM WEBSITE):
+- Primary Brand Color ${primaryColor}: This is the EXACT color from the brand's website. Use it extensively in:
+  * Large fabric graphic panels on backwall
+  * Overhead hanging signs or banners
+  * Key structural accent elements
+  * Flooring elements or carpet inlays
+- Secondary Color ${secondaryColor}: Use for complementary elements, text, and accents
+- REQUIREMENT: Brand colors must cover at least 50% of all visible surfaces
+- The color scheme should IMMEDIATELY communicate the brand identity to visitors
+
+BRAND VISUAL EXECUTION:
+- Every design element should reflect the brand personality: "${brandIdentity.personality}"
+- Graphics and materials should embody: "${brandIdentity.essence}"
+- Visual style must align with the brand's design language${brandIdentity.designStyle.length > 0 ? `: ${brandIdentity.designStyle.join(', ')}` : ''}
+- The booth should feel like a physical extension of the company's website and brand identity
 
 VISITOR EXPERIENCE DESIGN:
 ${design.visitor_journey || 'Create an engaging flow that draws visitors through the space naturally'}
