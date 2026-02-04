@@ -2,7 +2,6 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { appParams } from '@/lib/app-params';
 import { createAxiosClient } from '@base44/sdk/dist/utils/axios-client';
-import { syncProfileToSupabase } from '@/utils/profileSync';
 
 const AuthContext = createContext();
 
@@ -95,15 +94,6 @@ export const AuthProvider = ({ children }) => {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
       setIsAuthenticated(true);
-
-      // Sync user profile to Supabase
-      try {
-        await syncProfileToSupabase(currentUser);
-      } catch (syncError) {
-        // Don't fail auth if Supabase sync fails
-        console.error('Failed to sync profile to Supabase:', syncError);
-      }
-
       setIsLoadingAuth(false);
     } catch (error) {
       console.error('User auth check failed:', error);

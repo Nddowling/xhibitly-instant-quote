@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { base44 } from '@/api/base44Client';
-import db from '@/api/dbClient';
-import { getSupabaseProfileId } from '@/utils/profileSync';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -37,9 +35,9 @@ export default function ProductDetail() {
     setDesign(designData);
     setQuoteData(quoteInfo);
 
-    // Load actual products for this design from Supabase
+    // Load actual products for this design
     if (designData.product_skus && designData.product_skus.length > 0) {
-      const allProducts = await db.entities.Product.list();
+      const allProducts = await base44.entities.Product.list();
       const selectedProducts = allProducts.filter(p =>
         designData.product_skus.includes(p.sku)
       );
@@ -61,12 +59,9 @@ export default function ProductDetail() {
 
     const refNumber = generateRefNumber();
 
-    // Get Supabase profile ID for the dealer
-    const supabaseProfileId = await getSupabaseProfileId(quoteData.dealerId);
-
-    // Create order in Supabase
-    const order = await db.entities.Order.create({
-      dealer_id: supabaseProfileId, // Use Supabase profile UUID
+    // Create order
+    const order = await base44.entities.Order.create({
+      dealer_id: quoteData.dealerId,
       dealer_email: quoteData.dealerEmail,
       dealer_company: quoteData.dealerCompany,
       dealer_name: quoteData.dealerName,

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { base44 } from '@/api/base44Client';
-import db from '@/api/dbClient';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -25,8 +24,7 @@ export default function OrderHistory() {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
 
-      // Fetch orders from Supabase
-      const userOrders = await db.entities.Order.filter(
+      const userOrders = await base44.entities.Order.filter(
         { dealer_email: currentUser.email },
         '-created_date'
       );
