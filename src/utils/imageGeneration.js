@@ -68,7 +68,31 @@ export function buildImagePrompt(design, brandAnalysis, customerProfile) {
 - Can comfortably hold 10-15 people
 - Show spacious, premium exhibition space`;
 
+  // Build visitor journey zones if available
+  const journeyZones = [];
+  if (design.visitor_journey) {
+    // Extract key spatial elements from the visitor journey
+    const journeyLower = design.visitor_journey.toLowerCase();
+    if (journeyLower.includes('enter') || journeyLower.includes('entrance') || journeyLower.includes('archway')) {
+      journeyZones.push('welcoming entrance area');
+    }
+    if (journeyLower.includes('central') || journeyLower.includes('center')) {
+      journeyZones.push('central focal point');
+    }
+    if (journeyLower.includes('display') || journeyLower.includes('showcase')) {
+      journeyZones.push('product display zones');
+    }
+  }
+
+  // Build key moments into spatial layout
+  const keyMomentsDesc = design.key_moments && design.key_moments.length > 0
+    ? `\n\nKEY EXPERIENTIAL ZONES (based on visitor journey):\n${design.key_moments.slice(0, 3).map((moment, i) => `${i + 1}. ${moment}`).join('\n')}`
+    : '';
+
   const prompt = `Create a photorealistic 3D architectural rendering of a ${width} feet wide by ${depth} feet deep (${squareFeet} square feet total) ${boothSize} trade show exhibition booth.
+
+BOOTH CONCEPT: "${design.design_name}"
+${design.experience_story}
 
 ${sizeConstraints}
 
@@ -81,22 +105,29 @@ ABSOLUTE DIMENSIONAL REQUIREMENTS:
 - Include people for scale (${squareFeet <= 100 ? '2-3 people max' : squareFeet <= 200 ? '4-5 people' : squareFeet <= 400 ? '6-8 people' : '10-12 people'})
 
 BRAND IDENTITY (MUST BE PROMINENT):
-- Primary Brand Color ${primaryColor}: Use extensively in large graphic panels, overhead signage, and key structural elements
+- Company: ${brandAnalysis?.industry || 'Professional'} industry
+- Brand Personality: ${brandAnalysis?.brand_personality || 'Professional and polished'}
+- Brand Essence: ${brandAnalysis?.brand_essence || 'Quality and innovation'}
+- Primary Brand Color ${primaryColor}: Use extensively in large fabric graphic panels, overhead signage, and key structural elements
 - Secondary Color ${secondaryColor}: Use for accents, text, and complementary design elements
 - Apply brand colors to at least 40% of visible surfaces including backwall graphics, hanging signs, or structural panels
-- Industry: ${brandAnalysis?.industry || 'Professional'}
-- Brand Personality: ${brandAnalysis?.brand_personality || 'Professional and polished'}
+- The booth should embody the brand personality in its design language
+
+VISITOR EXPERIENCE DESIGN:
+${design.visitor_journey || 'Create an engaging flow that draws visitors through the space naturally'}
+${journeyZones.length > 0 ? `\nSpatial Layout: Include ${journeyZones.join(', ')}` : ''}${keyMomentsDesc}
 
 DESIGN AESTHETIC (FROM CUSTOMER QUESTIONNAIRE):
-- Visual Style: ${lookStyles} design language
+- Visual Style: ${lookStyles} design language reflecting the brand's personality
 - Spatial Feel: ${feelQualities} layout and atmosphere
-- Overall Vibe: ${design.experience_story}
+- Overall Atmosphere: Should support the experience story and visitor journey described above
 
 FUNCTIONAL ELEMENTS (${squareFeet <= 100 ? 'SIMPLIFIED due to small size' : 'As specified'}):
 ${features.length > 0 ? features.map((f, i) => `${i + 1}. ${f}${squareFeet <= 100 ? ' (compact version)' : ''}`).join('\n') : 'Standard booth layout with open welcoming space'}
 
 TIER CHARACTERISTICS (${design.tier} Tier):
 ${tierDescription}
+${design.design_rationale ? `\nDesign Philosophy: ${design.design_rationale}` : ''}
 
 VISUAL REQUIREMENTS FOR PHOTOREALISM:
 - 45-degree angle view from trade show floor showing both width and depth clearly
@@ -104,10 +135,11 @@ VISUAL REQUIREMENTS FOR PHOTOREALISM:
 - Professional exhibition hall with bright even lighting from ceiling grid
 - Light gray carpeted floor typical of convention centers
 - Photorealistic materials: fabric graphics, metal frames, wood or laminate surfaces, LED lighting
-- Show people in and around the booth for accurate scale reference
+- Show people in and around the booth for accurate scale reference - they should appear to be experiencing the key moments described
 - The ENTIRE booth must be visible in the frame to show true dimensions
 - NO readable text, logos, or company names on any surfaces
 - Ensure brand colors ${primaryColor} and ${secondaryColor} are highly visible and dominant in the design
+- The design should visually communicate the experience story: "${design.experience_story}"
 - ${squareFeet <= 100 ? 'CRITICAL: Booth must look compact and space-efficient, NOT large or spacious' : squareFeet <= 200 ? 'Booth should look well-organized but not overly spacious' : ''}`;
 
   return prompt;
