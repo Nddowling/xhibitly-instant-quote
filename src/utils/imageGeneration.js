@@ -1,4 +1,4 @@
-import openai from '@/api/openaiClient';
+import { base44 } from '@/api/base44Client';
 
 /**
  * Builds a detailed DALL-E prompt for booth design visualization
@@ -72,16 +72,15 @@ export async function generateBoothImage(design, brandAnalysis, customerProfile)
     console.log(`Generating image for ${design.tier} tier booth...`);
     console.log('Prompt:', prompt);
 
-    const response = await openai.images.generate({
-      model: 'dall-e-3',
+    // Call Base44 backend function for image generation
+    const response = await base44.functions.generateBoothImage({
       prompt: prompt,
-      n: 1,
+      model: 'dall-e-3',
       size: '1024x1024',
-      quality: 'standard',
-      response_format: 'url'
+      quality: 'standard'
     });
 
-    const imageUrl = response.data[0].url;
+    const imageUrl = response.image_url;
     console.log(`Image generated successfully for ${design.tier} tier:`, imageUrl);
 
     return imageUrl;
