@@ -92,7 +92,7 @@ export default function QuoteRequest() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-[#2C5282] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-[#e2231a] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -108,7 +108,7 @@ export default function QuoteRequest() {
         >
           <Card className="shadow-xl border-0">
             <CardHeader className="text-center pb-2">
-              <CardTitle className="text-2xl text-[#2C5282]">Complete Your Profile</CardTitle>
+              <CardTitle className="text-2xl text-[#e2231a]">Complete Your Profile</CardTitle>
               <CardDescription>
                 Please provide your company details to continue
               </CardDescription>
@@ -159,7 +159,7 @@ export default function QuoteRequest() {
               <Button 
                 onClick={handleSaveProfile}
                 disabled={!companyName || !contactName || !phone}
-                className="w-full bg-[#2C5282] hover:bg-[#1E3A5F] h-14 text-lg font-medium"
+                className="w-full bg-[#e2231a] hover:bg-[#b01b13] h-14 text-lg font-medium"
               >
                 Continue
                 <ArrowRight className="w-5 h-5 ml-2" />
@@ -179,7 +179,7 @@ export default function QuoteRequest() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-10"
         >
-          <h1 className="text-3xl md:text-4xl font-bold text-[#2C5282] mb-3">
+          <h1 className="text-3xl md:text-4xl font-bold text-[#e2231a] mb-3">
             Get Your Instant Quote
           </h1>
           <p className="text-slate-500 text-lg">
@@ -198,7 +198,7 @@ export default function QuoteRequest() {
                 {/* Booth Size */}
                 <div className="space-y-3">
                   <Label className="text-slate-700 font-semibold text-lg flex items-center gap-2">
-                    <Grid3X3 className="w-5 h-5 text-[#2C5282]" />
+                    <Grid3X3 className="w-5 h-5 text-[#e2231a]" />
                     Booth Size
                   </Label>
                   <Select value={boothSize} onValueChange={setBoothSize}>
@@ -216,7 +216,7 @@ export default function QuoteRequest() {
                 {/* Show Date */}
                 <div className="space-y-3">
                   <Label className="text-slate-700 font-semibold text-lg flex items-center gap-2">
-                    <CalendarIcon className="w-5 h-5 text-[#2C5282]" />
+                    <CalendarIcon className="w-5 h-5 text-[#e2231a]" />
                     Show Date
                   </Label>
                   <Popover>
@@ -244,7 +244,7 @@ export default function QuoteRequest() {
                 {/* Website URL */}
                 <div className="space-y-3">
                   <Label className="text-slate-700 font-semibold text-lg flex items-center gap-2">
-                    <Globe className="w-5 h-5 text-[#2C5282]" />
+                    <Globe className="w-5 h-5 text-[#e2231a]" />
                     Your Website URL
                   </Label>
                   <Input
@@ -262,7 +262,7 @@ export default function QuoteRequest() {
                 {/* Show Name (Optional) */}
                 <div className="space-y-3">
                   <Label className="text-slate-700 font-semibold text-lg flex items-center gap-2">
-                    <MapPin className="w-5 h-5 text-[#2C5282]" />
+                    <MapPin className="w-5 h-5 text-[#e2231a]" />
                     Show Name
                     <span className="text-slate-400 font-normal text-sm">(Optional)</span>
                   </Label>
@@ -278,7 +278,7 @@ export default function QuoteRequest() {
                 <Button 
                   onClick={handleSubmit}
                   disabled={!boothSize || !showDate || !websiteUrl}
-                  className="w-full bg-[#2C5282] hover:bg-[#1E3A5F] h-16 text-xl font-semibold transition-all duration-300 hover:shadow-lg disabled:opacity-50"
+                  className="w-full bg-[#e2231a] hover:bg-[#b01b13] h-16 text-xl font-semibold transition-all duration-300 hover:shadow-lg disabled:opacity-50"
                 >
                   Design My Brand Experience
                   <ArrowRight className="w-6 h-6 ml-3" />
@@ -301,7 +301,7 @@ export default function QuoteRequest() {
             { label: 'Custom', desc: 'Immersive Journey' },
           ].map((tier, i) => (
             <div key={tier.label} className="bg-white rounded-xl p-4 text-center shadow-sm border border-slate-100">
-              <div className="text-[#2C5282] font-semibold">{tier.label}</div>
+              <div className="text-[#e2231a] font-semibold">{tier.label}</div>
               <div className="text-slate-400 text-sm mt-1">{tier.desc}</div>
             </div>
           ))}

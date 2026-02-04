@@ -44,8 +44,8 @@ export default function Results() {
         };
       case 'Hybrid':
         return {
-          border: 'border-[#2C5282] ring-2 ring-[#2C5282]/20',
-          badge: 'bg-[#2C5282] text-white',
+          border: 'border-[#e2231a] ring-2 ring-[#e2231a]/20',
+          badge: 'bg-[#e2231a] text-white',
           gradient: 'from-blue-50 to-indigo-50',
           highlight: true
         };
@@ -78,7 +78,7 @@ export default function Results() {
   if (!quoteData || boothDesigns.length === 0) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-[#2C5282] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-[#e2231a] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -92,7 +92,7 @@ export default function Results() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-8"
         >
-          <h1 className="text-3xl md:text-4xl font-bold text-[#2C5282] mb-3">
+          <h1 className="text-3xl md:text-4xl font-bold text-[#e2231a] mb-3">
             Your Curated Booth Experiences
           </h1>
           <p className="text-slate-500 text-lg mb-4">
@@ -131,7 +131,7 @@ export default function Results() {
             transition={{ delay: 0.1 }}
             className="max-w-3xl mx-auto mb-10"
           >
-            <Card className="border-0 shadow-md bg-gradient-to-br from-[#2C5282]/5 to-indigo-50/50">
+            <Card className="border-0 shadow-md bg-gradient-to-br from-[#e2231a]/5 to-indigo-50/50">
               <CardContent className="p-6 text-center">
                 <p className="text-slate-700 italic text-lg">"{brandIdentity.brand_essence}"</p>
               </CardContent>
@@ -156,7 +156,7 @@ export default function Results() {
                 >
                   {/* Recommended Badge */}
                   {design.tier === 'Hybrid' && (
-                    <div className="absolute top-0 left-0 right-0 bg-[#2C5282] text-white text-center py-2 text-sm font-semibold flex items-center justify-center gap-2 z-10">
+                    <div className="absolute top-0 left-0 right-0 bg-[#e2231a] text-white text-center py-2 text-sm font-semibold flex items-center justify-center gap-2 z-10">
                       <Star className="w-4 h-4 fill-current" />
                       Recommended Experience
                     </div>
@@ -201,7 +201,7 @@ export default function Results() {
                         <div className="space-y-1">
                           {design.key_moments.slice(0, 3).map((moment, i) => (
                             <div key={i} className="flex items-start gap-2 text-xs text-slate-600">
-                              <div className="w-1.5 h-1.5 rounded-full bg-[#2C5282] mt-1.5 flex-shrink-0" />
+                              <div className="w-1.5 h-1.5 rounded-full bg-[#e2231a] mt-1.5 flex-shrink-0" />
                               <span className="line-clamp-2">{moment}</span>
                             </div>
                           ))}
@@ -211,7 +211,7 @@ export default function Results() {
 
                     {/* Price */}
                     <div className="mb-6 pt-4 border-t border-slate-200">
-                      <div className="text-3xl font-bold text-[#2C5282]">
+                      <div className="text-3xl font-bold text-[#e2231a]">
                         {formatPrice(design.total_price)}
                       </div>
                       <div className="text-slate-400 text-sm">Complete Experience</div>
@@ -222,7 +222,7 @@ export default function Results() {
                       onClick={() => handleSelectDesign(design)}
                       className={`w-full h-12 text-base font-semibold transition-all ${
                         design.tier === 'Hybrid' 
-                          ? 'bg-[#2C5282] hover:bg-[#1E3A5F]' 
+                          ? 'bg-[#e2231a] hover:bg-[#b01b13]' 
                           : 'bg-slate-800 hover:bg-slate-900'
                       }`}
                     >

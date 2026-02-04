@@ -42,7 +42,7 @@ export default function Confirmation() {
   if (!confirmation) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-[#2C5282] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-[#e2231a] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -59,7 +59,7 @@ export default function Confirmation() {
       >
         <Card className="border-0 shadow-2xl overflow-hidden">
           {/* Success Header */}
-          <div className="bg-gradient-to-br from-[#2C5282] to-[#1E3A5F] text-white p-8 text-center">
+          <div className="bg-gradient-to-br from-[#e2231a] to-[#b01b13] text-white p-8 text-center">
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
@@ -97,7 +97,7 @@ export default function Confirmation() {
               className="bg-slate-50 rounded-xl p-6 text-center mb-6"
             >
               <div className="text-slate-500 text-sm mb-1">Reference Number</div>
-              <div className="text-2xl font-bold text-[#2C5282] font-mono tracking-wider">
+              <div className="text-2xl font-bold text-[#e2231a] font-mono tracking-wider">
                 {refNumber}
               </div>
             </motion.div>
@@ -151,7 +151,7 @@ export default function Confirmation() {
                 )}
                 <div className="border-t border-slate-200 pt-3 flex justify-between">
                   <span className="text-slate-800 font-semibold">Total Investment</span>
-                  <span className="font-bold text-[#2C5282] text-xl">
+                  <span className="font-bold text-[#e2231a] text-xl">
                     {formatPrice(displayItem.total_price || displayItem.msrp)}
                   </span>
                 </div>
@@ -175,7 +175,7 @@ export default function Confirmation() {
               </Button>
               <Button 
                 onClick={() => navigate(createPageUrl('QuoteRequest'))}
-                className="h-14 text-base font-medium bg-[#2C5282] hover:bg-[#1E3A5F]"
+                className="h-14 text-base font-medium bg-[#e2231a] hover:bg-[#b01b13]"
               >
                 <Plus className="w-5 h-5 mr-2" />
                 New Quote

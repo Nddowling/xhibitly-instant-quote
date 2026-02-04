@@ -148,7 +148,7 @@ export default function CustomerProfile() {
   if (!quoteData || !user) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-[#2C5282] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-[#e2231a] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -171,7 +171,7 @@ export default function CustomerProfile() {
             Back
           </Button>
 
-          <h1 className="text-4xl font-bold text-[#2C5282] mb-3">
+          <h1 className="text-4xl font-bold text-[#e2231a] mb-3">
             Tell Us About Your Vision
           </h1>
           <p className="text-lg text-slate-600">
@@ -189,7 +189,7 @@ export default function CustomerProfile() {
           <Card className="border-0 shadow-md">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Target className="w-5 h-5 text-[#2C5282]" />
+                <Target className="w-5 h-5 text-[#e2231a]" />
                 What are your main objectives for this trade show? *
               </CardTitle>
               <CardDescription>Select all that apply</CardDescription>
@@ -204,7 +204,7 @@ export default function CustomerProfile() {
                       onClick={() => handleObjectiveToggle(option.value)}
                       className={`flex items-center gap-3 p-4 border-2 rounded-lg cursor-pointer transition-all ${
                         objectives.includes(option.value)
-                          ? 'border-[#2C5282] bg-[#2C5282]/5'
+                          ? 'border-[#e2231a] bg-[#e2231a]/5'
                           : 'border-slate-200 hover:border-slate-300'
                       }`}
                     >
@@ -232,7 +232,7 @@ export default function CustomerProfile() {
           <Card className="border-0 shadow-md">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <LayoutGrid className="w-5 h-5 text-[#2C5282]" />
+                <LayoutGrid className="w-5 h-5 text-[#e2231a]" />
                 Will you need multiple booth sizes for future events?
               </CardTitle>
             </CardHeader>
@@ -261,7 +261,7 @@ export default function CustomerProfile() {
           <Card className="border-0 shadow-md">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Package className="w-5 h-5 text-[#2C5282]" />
+                <Package className="w-5 h-5 text-[#e2231a]" />
                 Will you need to display products in your booth?
               </CardTitle>
             </CardHeader>
@@ -290,7 +290,7 @@ export default function CustomerProfile() {
           <Card className="border-0 shadow-md">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Presentation className="w-5 h-5 text-[#2C5282]" />
+                <Presentation className="w-5 h-5 text-[#e2231a]" />
                 Will you need space for demonstrations or presentations?
               </CardTitle>
             </CardHeader>
@@ -319,7 +319,7 @@ export default function CustomerProfile() {
           <Card className="border-0 shadow-md">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Users className="w-5 h-5 text-[#2C5282]" />
+                <Users className="w-5 h-5 text-[#e2231a]" />
                 Will you need a conference or meeting area?
               </CardTitle>
             </CardHeader>
@@ -348,7 +348,7 @@ export default function CustomerProfile() {
           <Card className="border-0 shadow-md">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Palette className="w-5 h-5 text-[#2C5282]" />
+                <Palette className="w-5 h-5 text-[#e2231a]" />
                 Will you need assistance designing graphics for your booth?
               </CardTitle>
             </CardHeader>
@@ -377,7 +377,7 @@ export default function CustomerProfile() {
           <Card className="border-0 shadow-md">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Lightbulb className="w-5 h-5 text-[#2C5282]" />
+                <Lightbulb className="w-5 h-5 text-[#e2231a]" />
                 Describe the look you desire *
               </CardTitle>
               <CardDescription>Select all that apply</CardDescription>
@@ -390,7 +390,7 @@ export default function CustomerProfile() {
                     onClick={() => handleLookToggle(option.value)}
                     className={`flex items-center gap-2 p-3 border-2 rounded-lg cursor-pointer transition-all ${
                       desiredLook.includes(option.value)
-                        ? 'border-[#2C5282] bg-[#2C5282]/5'
+                        ? 'border-[#e2231a] bg-[#e2231a]/5'
                         : 'border-slate-200 hover:border-slate-300'
                     }`}
                   >
@@ -416,7 +416,7 @@ export default function CustomerProfile() {
           <Card className="border-0 shadow-md">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <LayoutGrid className="w-5 h-5 text-[#2C5282]" />
+                <LayoutGrid className="w-5 h-5 text-[#e2231a]" />
                 Describe the feel you desire *
               </CardTitle>
               <CardDescription>Select all that apply</CardDescription>
@@ -429,7 +429,7 @@ export default function CustomerProfile() {
                     onClick={() => handleFeelToggle(option.value)}
                     className={`flex items-center gap-2 p-3 border-2 rounded-lg cursor-pointer transition-all ${
                       desiredFeel.includes(option.value)
-                        ? 'border-[#2C5282] bg-[#2C5282]/5'
+                        ? 'border-[#e2231a] bg-[#e2231a]/5'
                         : 'border-slate-200 hover:border-slate-300'
                     }`}
                   >
@@ -455,7 +455,7 @@ export default function CustomerProfile() {
           <Card className="border-0 shadow-md">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Truck className="w-5 h-5 text-[#2C5282]" />
+                <Truck className="w-5 h-5 text-[#e2231a]" />
                 Will you need shipping, storing, and logistic support for your exhibit?
               </CardTitle>
             </CardHeader>
@@ -508,7 +508,7 @@ export default function CustomerProfile() {
           <Button
             onClick={handleSubmit}
             disabled={isSubmitting || objectives.length === 0 || desiredLook.length === 0 || desiredFeel.length === 0}
-            className="bg-[#2C5282] hover:bg-[#1E3A5F] h-14 px-8 text-lg"
+            className="bg-[#e2231a] hover:bg-[#b01b13] h-14 px-8 text-lg"
           >
             {isSubmitting ? (
               'Saving...'

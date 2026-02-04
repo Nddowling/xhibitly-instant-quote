@@ -39,14 +39,14 @@ export default function Home() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#2C5282] to-[#1E3A5F] flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-[#e2231a] to-[#b01b13] flex items-center justify-center">
         <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#2C5282] via-[#1E3A5F] to-[#0F1D2E] flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-[#e2231a] via-[#b01b13] to-[#0F1D2E] flex flex-col">
       {/* Header */}
       <header className="p-6">
         <div className="flex items-center gap-3">
@@ -105,7 +105,7 @@ export default function Home() {
           >
             <Card className="bg-white/95 backdrop-blur-xl shadow-2xl border-0">
               <CardHeader className="text-center pb-2">
-                <CardTitle className="text-2xl text-[#2C5282]">Dealer Portal</CardTitle>
+                <CardTitle className="text-2xl text-[#e2231a]">Dealer Portal</CardTitle>
                 <CardDescription className="text-slate-500">
                   Sign in or create an account to get started
                 </CardDescription>
@@ -113,7 +113,7 @@ export default function Home() {
               <CardContent className="pt-6">
                 <Button 
                   onClick={handleLogin}
-                  className="w-full bg-[#2C5282] hover:bg-[#1E3A5F] text-white h-14 text-lg font-medium transition-all duration-300 hover:shadow-lg"
+                  className="w-full bg-[#e2231a] hover:bg-[#b01b13] text-white h-14 text-lg font-medium transition-all duration-300 hover:shadow-lg"
                 >
                   <LogIn className="w-5 h-5 mr-3" />
                   Sign In / Register

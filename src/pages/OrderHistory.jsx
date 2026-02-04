@@ -64,7 +64,7 @@ export default function OrderHistory() {
   if (isLoading) {
     return (
       <div className="min-h-[calc(100vh-64px)] bg-slate-50 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-[#2C5282] animate-spin" />
+        <Loader2 className="w-8 h-8 text-[#e2231a] animate-spin" />
       </div>
     );
   }
@@ -79,7 +79,7 @@ export default function OrderHistory() {
           className="flex items-center justify-between mb-8"
         >
           <div>
-            <h1 className="text-3xl font-bold text-[#2C5282] mb-2">
+            <h1 className="text-3xl font-bold text-[#e2231a] mb-2">
               Order History
             </h1>
             <p className="text-slate-500">
@@ -88,7 +88,7 @@ export default function OrderHistory() {
           </div>
           <Button 
             onClick={() => navigate(createPageUrl('QuoteRequest'))}
-            className="bg-[#2C5282] hover:bg-[#1E3A5F] h-12 px-6"
+            className="bg-[#e2231a] hover:bg-[#b01b13] h-12 px-6"
           >
             <Plus className="w-5 h-5 mr-2" />
             New Quote
@@ -143,7 +143,7 @@ export default function OrderHistory() {
 
                       {/* Right Side - Price and Date */}
                       <div className="text-right">
-                        <div className="text-2xl font-bold text-[#2C5282] mb-1">
+                        <div className="text-2xl font-bold text-[#e2231a] mb-1">
                           {formatPrice(order.quoted_price)}
                         </div>
                         <div className="text-slate-400 text-sm">
@@ -174,7 +174,7 @@ export default function OrderHistory() {
                 </p>
                 <Button 
                   onClick={() => navigate(createPageUrl('QuoteRequest'))}
-                  className="bg-[#2C5282] hover:bg-[#1E3A5F]"
+                  className="bg-[#e2231a] hover:bg-[#b01b13]"
                 >
                   Get Your First Quote
                   <ArrowRight className="w-5 h-5 ml-2" />

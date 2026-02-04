@@ -143,7 +143,7 @@ Please contact the dealer within 2 hours to begin customization.
   if (isLoading || !design || !quoteData) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-[#2C5282] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-[#e2231a] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -151,7 +151,7 @@ Please contact the dealer within 2 hours to begin customization.
   const getTierBadgeStyle = (tier) => {
     switch (tier) {
       case 'Budget': return 'bg-slate-100 text-slate-700';
-      case 'Hybrid': return 'bg-[#2C5282] text-white';
+      case 'Hybrid': return 'bg-[#e2231a] text-white';
       case 'Custom': return 'bg-amber-100 text-amber-800';
       default: return 'bg-slate-100 text-slate-700';
     }
@@ -214,7 +214,7 @@ Please contact the dealer within 2 hours to begin customization.
               <Card className="border-0 shadow-md">
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-2 text-lg">
-                    <Lightbulb className="w-5 h-5 text-[#2C5282]" />
+                    <Lightbulb className="w-5 h-5 text-[#e2231a]" />
                     The Experience Story
                   </CardTitle>
                 </CardHeader>
@@ -236,7 +236,7 @@ Please contact the dealer within 2 hours to begin customization.
                 <Card className="border-0 shadow-md">
                   <CardHeader className="pb-3">
                     <CardTitle className="flex items-center gap-2 text-lg">
-                      <Route className="w-5 h-5 text-[#2C5282]" />
+                      <Route className="w-5 h-5 text-[#e2231a]" />
                       Visitor Journey
                     </CardTitle>
                   </CardHeader>
@@ -264,8 +264,8 @@ Please contact the dealer within 2 hours to begin customization.
                     <div className="space-y-3">
                       {design.key_moments.map((moment, i) => (
                         <div key={i} className="flex items-start gap-3">
-                          <div className="w-8 h-8 bg-[#2C5282]/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <span className="text-[#2C5282] font-semibold text-sm">{i + 1}</span>
+                          <div className="w-8 h-8 bg-[#e2231a]/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <span className="text-[#e2231a] font-semibold text-sm">{i + 1}</span>
                           </div>
                           <p className="text-slate-700 leading-relaxed pt-1">{moment}</p>
                         </div>
@@ -306,7 +306,7 @@ Please contact the dealer within 2 hours to begin customization.
                 <Card className="border-0 shadow-md">
                   <CardHeader className="pb-3">
                     <CardTitle className="flex items-center gap-2 text-lg">
-                      <Package className="w-5 h-5 text-[#2C5282]" />
+                      <Package className="w-5 h-5 text-[#e2231a]" />
                       Curated Products ({products.length})
                     </CardTitle>
                   </CardHeader>
@@ -334,7 +334,7 @@ Please contact the dealer within 2 hours to begin customization.
               className="sticky top-6 space-y-6"
             >
               {/* Price Card */}
-              <Card className="border-0 shadow-xl bg-gradient-to-br from-[#2C5282] to-[#1E3A5F] text-white">
+              <Card className="border-0 shadow-xl bg-gradient-to-br from-[#e2231a] to-[#b01b13] text-white">
                 <CardContent className="p-6">
                   <div className="text-white/70 text-sm mb-1">Total Investment</div>
                   <div className="text-5xl font-bold mb-6">{formatPrice(design.total_price)}</div>
@@ -342,7 +342,7 @@ Please contact the dealer within 2 hours to begin customization.
                   <Button 
                     onClick={handleReserve}
                     disabled={isSubmitting}
-                    className="w-full h-14 text-lg font-semibold bg-white text-[#2C5282] hover:bg-white/90 transition-all duration-300"
+                    className="w-full h-14 text-lg font-semibold bg-white text-[#e2231a] hover:bg-white/90 transition-all duration-300"
                   >
                     {isSubmitting ? (
                       <>

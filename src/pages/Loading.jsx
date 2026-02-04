@@ -183,7 +183,7 @@ Return JSON with 3 designs.`;
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#2C5282] via-[#1E3A5F] to-[#0F1D2E] flex flex-col items-center justify-center p-6">
+    <div className="min-h-screen bg-gradient-to-br from-[#e2231a] via-[#b01b13] to-[#0F1D2E] flex flex-col items-center justify-center p-6">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}

@@ -40,7 +40,7 @@ export default function Layout({ children, currentPageName }) {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-[#2C5282] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-[#e2231a] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -49,22 +49,24 @@ export default function Layout({ children, currentPageName }) {
     <div className="min-h-screen bg-slate-50">
       <style>{`
         :root {
-          --primary: #2C5282;
-          --primary-light: #3D6BA8;
-          --primary-dark: #1E3A5F;
+          --primary: #e2231a;
+          --primary-light: #f04238;
+          --primary-dark: #b01b13;
         }
       `}</style>
-      
+
       {showHeader && (
-        <header className="bg-[#2C5282] text-white shadow-lg">
+        <header className="bg-[#e2231a] text-white shadow-lg">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
               <div className="flex items-center gap-2">
                 <Link to={createPageUrl('QuoteRequest')} className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
-                    <span className="text-xl font-bold">X</span>
-                  </div>
-                  <span className="text-xl font-semibold tracking-tight">Xhibitly Instant Quote</span>
+                  <img
+                    src="/assets/orbus-logo.png"
+                    alt="Orbus"
+                    className="h-8"
+                  />
+                  <span className="text-xl font-semibold tracking-tight">Instant Quote</span>
                 </Link>
               </div>
               
