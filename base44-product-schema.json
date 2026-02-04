@@ -1,0 +1,105 @@
+{
+  "entity": {
+    "name": "Product",
+    "fields": [
+      {
+        "name": "product_line",
+        "type": "text",
+        "required": true,
+        "description": "Formulate Essential or Formulate Master"
+      },
+      {
+        "name": "product_type",
+        "type": "text",
+        "required": true,
+        "description": "Banner Display, Backwall, Accent Ladder, or Tabletop"
+      },
+      {
+        "name": "sku",
+        "type": "text",
+        "required": true,
+        "unique": true,
+        "description": "Product code (e.g., FML-T-E-S-600-2)"
+      },
+      {
+        "name": "width",
+        "type": "text",
+        "required": true,
+        "description": "Width in feet: 8', 10', 12', 15', 20'"
+      },
+      {
+        "name": "height",
+        "type": "text",
+        "required": false,
+        "description": "Height in feet"
+      },
+      {
+        "name": "shape",
+        "type": "text",
+        "required": false,
+        "description": "Straight, Horizontal Curved, Vertical Curved, or Serpentine Curved"
+      },
+      {
+        "name": "description",
+        "type": "longtext",
+        "required": true,
+        "description": "Detailed product description for AI prompts"
+      },
+      {
+        "name": "price",
+        "type": "number",
+        "required": false,
+        "description": "Product price in USD"
+      },
+      {
+        "name": "tier_compatibility",
+        "type": "json",
+        "required": true,
+        "description": "Array of compatible tiers: Budget, Hybrid, Custom"
+      },
+      {
+        "name": "booth_size_min",
+        "type": "number",
+        "required": false,
+        "description": "Minimum booth square footage required"
+      },
+      {
+        "name": "booth_size_max",
+        "type": "number",
+        "required": false,
+        "description": "Maximum booth square footage recommended"
+      },
+      {
+        "name": "features",
+        "type": "json",
+        "required": false,
+        "description": "Array of features: shelving, monitor_mount, lighting, etc."
+      },
+      {
+        "name": "accessory_for",
+        "type": "text",
+        "required": false,
+        "description": "SKU of parent product if this is an accessory"
+      },
+      {
+        "name": "image_url",
+        "type": "text",
+        "required": false,
+        "description": "Product image URL"
+      },
+      {
+        "name": "dimensions",
+        "type": "text",
+        "required": false,
+        "description": "Full dimensional specifications"
+      },
+      {
+        "name": "is_active",
+        "type": "boolean",
+        "required": true,
+        "default": true,
+        "description": "Whether product is available for selection"
+      }
+    ]
+  }
+}
