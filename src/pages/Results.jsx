@@ -66,9 +66,14 @@ export default function Results() {
         });
 
         // Update local state
-        setBoothDesigns(prev => prev.map(d =>
-          d.id === design.id ? { ...d, design_image_url: imageUrl } : d
-        ));
+        setBoothDesigns(prev => {
+          const updated = prev.map(d =>
+            d.id === design.id ? { ...d, design_image_url: imageUrl } : d
+          );
+          // Update sessionStorage so images persist when navigating back
+          sessionStorage.setItem('boothDesigns', JSON.stringify(updated));
+          return updated;
+        });
 
         // Mark as complete
         setGeneratingImages(prev => ({ ...prev, [design.id]: false }));
