@@ -55,6 +55,7 @@ import OrderHistory from './pages/OrderHistory';
 import ProductDetail from './pages/ProductDetail';
 import QuoteRequest from './pages/QuoteRequest';
 import Results from './pages/Results';
+import Landing from './pages/Landing';
 import __Layout from './Layout.jsx';
 
 
@@ -67,6 +68,7 @@ export const PAGES = {
     "ProductDetail": ProductDetail,
     "QuoteRequest": QuoteRequest,
     "Results": Results,
+    "Landing": Landing,
 }
 
 export const pagesConfig = {
