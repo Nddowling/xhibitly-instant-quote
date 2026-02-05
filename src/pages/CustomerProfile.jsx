@@ -363,6 +363,10 @@ export default function CustomerProfile() {
                   <RadioGroupItem value="yes" id="graphics-yes" />
                   <Label htmlFor="graphics-yes" className="cursor-pointer">Yes, I need design help</Label>
                 </div>
+                <div className="flex items-center space-x-2 mb-2">
+                  <RadioGroupItem value="url" id="graphics-url" />
+                  <Label htmlFor="graphics-url" className="cursor-pointer">Use my URL (pull branding from website)</Label>
+                </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="no" id="graphics-no" />
                   <Label htmlFor="graphics-no" className="cursor-pointer">No, I have my own graphics</Label>

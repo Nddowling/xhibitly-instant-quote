@@ -46,24 +46,36 @@ export default function Loading() {
       // Simulate minimum loading time for UX (AI processing takes time)
       const minLoadTime = new Promise(resolve => setTimeout(resolve, 8000));
       
-      // Step 1: Analyze brand identity from website
+      // Step 1: Analyze brand identity from website - extract comprehensive branding
       const brandAnalysis = await base44.integrations.Core.InvokeLLM({
-        prompt: `Analyze this website and extract the brand identity: ${websiteUrl}
+        prompt: `Analyze this website (${websiteUrl}) and extract comprehensive brand identity and design elements.
         
         Extract and return JSON with:
-        - primary_color: hex color
-        - secondary_color: hex color  
+        - logo_url: direct URL to their main logo image (find the actual logo file URL)
+        - primary_color: hex color (main brand color)
+        - secondary_color: hex color (secondary brand color)
+        - accent_color_1: hex color (third brand/accent color)
+        - accent_color_2: hex color (fourth brand/accent color if exists, otherwise complementary)
+        - typography_primary: main font family name used on site
+        - typography_secondary: secondary/heading font family if different
         - brand_personality: 2-3 words describing the brand feel
         - industry: industry/sector
         - target_audience: who they serve
         - design_style: array of style keywords from [Modern, Industrial, Minimalist, Luxury, Tech, Organic, Bold, Classic, Creative]
-        - brand_essence: one sentence capturing their brand essence`,
+        - brand_essence: one sentence capturing their brand essence
+        
+        IMPORTANT: Extract 4 distinct colors from their branding. Look at their logo, headers, buttons, and key visual elements.`,
         add_context_from_internet: true,
         response_json_schema: {
           type: "object",
           properties: {
+            logo_url: { type: "string" },
             primary_color: { type: "string" },
             secondary_color: { type: "string" },
+            accent_color_1: { type: "string" },
+            accent_color_2: { type: "string" },
+            typography_primary: { type: "string" },
+            typography_secondary: { type: "string" },
             brand_personality: { type: "string" },
             industry: { type: "string" },
             target_audience: { type: "string" },
