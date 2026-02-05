@@ -95,8 +95,8 @@ export default function Loading() {
         p.booth_sizes && p.booth_sizes.includes(boothSize)
       );
 
-      // Step 3: Use AI to curate 2 booth designs
-      const designPrompt = `You are an expert trade show booth designer. Create 2 unique booth experience designs (Hybrid and Custom tiers) for a ${boothSize} booth.
+      // Step 3: Use AI to curate 3 booth designs
+      const designPrompt = `You are an expert trade show booth designer. Create 3 unique booth experience designs (Modular, Hybrid, and Custom tiers) for a ${boothSize} booth.
 
 Brand Identity:
 ${JSON.stringify(brandAnalysis, null, 2)}
@@ -124,7 +124,7 @@ ${JSON.stringify(compatibleProducts.map(p => ({
   features: p.features
 })), null, 2)}
 
-For each tier (Hybrid and Custom), create a curated booth EXPERIENCE that:
+For each tier (Modular, Hybrid, and Custom), create a curated booth EXPERIENCE that:
 1. Tells a story and creates a memorable journey
 2. Matches the brand identity AND customer requirements
 3. Addresses the customer's stated objectives (${customerProfile?.objectives.join(', ') || 'general lead generation'})
@@ -134,9 +134,9 @@ For each tier (Hybrid and Custom), create a curated booth EXPERIENCE that:
 7. ${customerProfile?.needs_demo_space ? 'Includes demonstration/presentation space' : ''}
 8. ${customerProfile?.needs_conference_area ? 'Includes a conference/meeting area' : ''}
 9. Explains the visitor flow and key moments
-10. Total price should be: Hybrid $8-18K, Custom $18-50K+
+10. Total price should be: Modular $3-8K, Hybrid $8-18K, Custom $18-50K+
 
-Return JSON with 2 designs.`;
+Return JSON with 3 designs.`;
 
       const designs = await base44.integrations.Core.InvokeLLM({
         prompt: designPrompt,

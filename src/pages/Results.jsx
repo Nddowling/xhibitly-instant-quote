@@ -59,6 +59,13 @@ export default function Results() {
 
   const getTierStyles = (tier) => {
     switch (tier) {
+      case 'Modular':
+        return {
+          border: 'border-slate-200',
+          badge: 'bg-slate-100 text-slate-700',
+          gradient: 'from-slate-50 to-slate-100',
+          highlight: false
+        };
       case 'Hybrid':
         return {
           border: 'border-[#e2231a] ring-2 ring-[#e2231a]/20',
@@ -157,7 +164,7 @@ export default function Results() {
         )}
 
         {/* Booth Design Cards */}
-        <div className="grid md:grid-cols-2 gap-6 lg:gap-8 max-w-5xl mx-auto">
+        <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
           {boothDesigns.map((design, index) => {
             const styles = getTierStyles(design.tier);
             
