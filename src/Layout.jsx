@@ -73,8 +73,8 @@ export default function Layout({ children, currentPageName }) {
               <nav className="flex items-center gap-2">
                 <Link to={createPageUrl('QuoteRequest')}>
                   <Button 
-                    variant={currentPageName === 'QuoteRequest' ? 'secondary' : 'ghost'} 
-                    className="text-white hover:bg-white/10"
+                    variant="ghost"
+                    className="text-white hover:bg-white/20 border border-white/30"
                   >
                     <Plus className="w-4 h-4 mr-2" />
                     New Quote
