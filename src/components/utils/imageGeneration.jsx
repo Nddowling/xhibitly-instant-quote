@@ -16,6 +16,10 @@ CRITICAL: The booth must be ${design.booth_size} in dimensions. Show the correct
 BRAND IDENTITY (MUST USE):
 - Primary Brand Color: ${brandIdentity.primary_color} (use prominently in booth design, graphics, and accents)
 - Secondary Brand Color: ${brandIdentity.secondary_color} (use for supporting elements)
+- Accent Color 1: ${brandIdentity.accent_color_1 || brandIdentity.primary_color} (additional brand color)
+- Accent Color 2: ${brandIdentity.accent_color_2 || brandIdentity.secondary_color} (additional brand color)
+- Typography: ${brandIdentity.typography_primary || 'Modern sans-serif'} style for visible text
+${brandIdentity.logo_url ? `- Logo Reference: Incorporate logo design elements and styling` : ''}
 - Brand Personality: ${brandIdentity.brand_personality}
 - Industry: ${brandIdentity.industry}
 - Brand Style: ${brandIdentity.design_style?.join(', ') || 'Modern'}
@@ -36,12 +40,14 @@ ${design.key_moments?.map(m => `- ${m}`).join('\n')}
 
 RENDERING REQUIREMENTS:
 - Show booth from 3/4 angle view
-- Professional trade show lighting
+- Professional trade show lighting with dramatic spotlights
 - Realistic trade show floor environment with carpet
-- MUST incorporate the brand colors (${brandIdentity.primary_color} and ${brandIdentity.secondary_color}) throughout the booth design
-- Include branded graphics, signage, and displays matching the brand identity
+- CRITICAL: Use ALL brand colors (${brandIdentity.primary_color}, ${brandIdentity.secondary_color}, ${brandIdentity.accent_color_1 || 'accent'}, ${brandIdentity.accent_color_2 || 'accent'}) throughout the booth in graphics, signage, lighting accents, and structural elements
+- Include branded graphics, signage, and displays matching the exact brand identity
+- Typography visible on signage should match ${brandIdentity.typography_primary || 'modern'} style
+${brandIdentity.logo_url ? `- Incorporate design elements inspired by the company logo style and colors` : ''}
 - ${design.tier === 'Budget' ? 'Simple, clean design with essential elements' : design.tier === 'Hybrid' ? 'Professional design with balanced features' : 'Premium, sophisticated design with advanced features'}
-- Photorealistic quality, professional photography style`;
+- Photorealistic quality, professional photography style with vibrant, accurate brand colors`;
 
 
   const result = await base44.functions.invoke('generateBoothImage', {
