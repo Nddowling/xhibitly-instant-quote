@@ -172,7 +172,7 @@ export default function QuoteRequest() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-slate-50 p-6 md:p-10">
+    <div className="min-h-[calc(100vh-64px)] bg-slate-100 p-6 md:p-10">
       <div className="max-w-3xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -288,24 +288,7 @@ export default function QuoteRequest() {
           </Card>
         </motion.div>
 
-        {/* Info Cards */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="grid grid-cols-3 gap-4 mt-8"
-        >
-          {[
-            { label: 'Budget', desc: 'Smart & Memorable' },
-            { label: 'Hybrid', desc: 'Curated Experience' },
-            { label: 'Custom', desc: 'Immersive Journey' },
-          ].map((tier, i) => (
-            <div key={tier.label} className="bg-white rounded-xl p-4 text-center shadow-sm border border-slate-100">
-              <div className="text-[#e2231a] font-semibold">{tier.label}</div>
-              <div className="text-slate-400 text-sm mt-1">{tier.desc}</div>
-            </div>
-          ))}
-        </motion.div>
+
       </div>
     </div>
   );
