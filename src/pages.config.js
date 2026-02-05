@@ -56,6 +56,7 @@ import ProductDetail from './pages/ProductDetail';
 import QuoteRequest from './pages/QuoteRequest';
 import Results from './pages/Results';
 import Landing from './pages/Landing';
+import OrderDetail from './pages/OrderDetail';
 import __Layout from './Layout.jsx';
 
 
@@ -69,6 +70,7 @@ export const PAGES = {
     "QuoteRequest": QuoteRequest,
     "Results": Results,
     "Landing": Landing,
+    "OrderDetail": OrderDetail,
 }
 
 export const pagesConfig = {

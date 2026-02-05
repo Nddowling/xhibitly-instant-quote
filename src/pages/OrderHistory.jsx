@@ -105,7 +105,10 @@ export default function OrderHistory() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
               >
-                <Card className="border-0 shadow-md hover:shadow-lg transition-all duration-300">
+                <Card 
+                  className="border-0 shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer"
+                  onClick={() => navigate(createPageUrl('OrderDetail') + `?id=${order.id}`)}
+                >
                   <CardContent className="p-6">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                       {/* Left Side - Order Info */}
