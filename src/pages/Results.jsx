@@ -48,41 +48,8 @@ export default function Results() {
   }, []);
 
   const generateImagesForDesigns = async (designs, brand, quote) => {
-    const customerProfile = quote.customerProfile;
-
-    for (const design of designs) {
-      // Skip if image already exists
-      if (design.design_image_url) continue;
-
-      // Mark as generating
-      setGeneratingImages(prev => ({ ...prev, [design.id]: true }));
-
-      try {
-        const imageUrl = await generateBoothImage(design, brand, customerProfile);
-
-        // Update database
-        await base44.entities.BoothDesign.update(design.id, {
-          design_image_url: imageUrl
-        });
-
-        // Update local state
-        setBoothDesigns(prev => {
-          const updated = prev.map(d =>
-            d.id === design.id ? { ...d, design_image_url: imageUrl } : d
-          );
-          // Update sessionStorage so images persist when navigating back
-          sessionStorage.setItem('boothDesigns', JSON.stringify(updated));
-          return updated;
-        });
-
-        // Mark as complete
-        setGeneratingImages(prev => ({ ...prev, [design.id]: false }));
-      } catch (error) {
-        console.error(`Failed to generate image for ${design.tier}:`, error);
-        // Mark as failed, keep placeholder
-        setGeneratingImages(prev => ({ ...prev, [design.id]: false }));
-      }
-    }
+    // Image generation disabled - placeholder view only
+    console.log('Image generation disabled for designs');
   };
 
   const handleSelectDesign = (design) => {
@@ -92,13 +59,6 @@ export default function Results() {
 
   const getTierStyles = (tier) => {
     switch (tier) {
-      case 'Budget':
-        return {
-          border: 'border-slate-200',
-          badge: 'bg-slate-100 text-slate-700',
-          gradient: 'from-slate-50 to-slate-100',
-          highlight: false
-        };
       case 'Hybrid':
         return {
           border: 'border-[#e2231a] ring-2 ring-[#e2231a]/20',
@@ -197,7 +157,7 @@ export default function Results() {
         )}
 
         {/* Booth Design Cards */}
-        <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
+        <div className="grid md:grid-cols-2 gap-6 lg:gap-8 max-w-5xl mx-auto">
           {boothDesigns.map((design, index) => {
             const styles = getTierStyles(design.tier);
             
@@ -222,23 +182,10 @@ export default function Results() {
                   <CardContent className={`p-6 ${design.tier === 'Hybrid' ? 'pt-14' : ''}`}>
                     {/* Visual Header */}
                     <div className={`aspect-[4/3] bg-gradient-to-br ${styles.gradient} rounded-xl mb-6 overflow-hidden flex items-center justify-center border border-slate-200`}>
-                      {design.design_image_url ? (
-                        <img
-                          src={design.design_image_url}
-                          alt={design.design_name}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : generatingImages[design.id] ? (
-                        <div className="text-center p-6">
-                          <Loader2 className="w-16 h-16 text-slate-400 mx-auto mb-3 animate-spin" />
-                          <div className="text-sm text-slate-500 font-medium">Generating booth visualization...</div>
-                        </div>
-                      ) : (
-                        <div className="text-center p-6">
-                          <Sparkles className="w-16 h-16 text-slate-400 mx-auto mb-3" />
-                          <div className="text-sm text-slate-500 font-medium">Curated from {design.product_skus?.length || 0} Products</div>
-                        </div>
-                      )}
+                      <div className="text-center p-6">
+                        <Sparkles className="w-16 h-16 text-slate-400 mx-auto mb-3" />
+                        <div className="text-sm text-slate-500 font-medium">Curated from {design.product_skus?.length || 0} Products</div>
+                      </div>
                     </div>
 
                     {/* Tier Badge */}
