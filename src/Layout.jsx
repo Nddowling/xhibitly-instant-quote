@@ -82,8 +82,8 @@ export default function Layout({ children, currentPageName }) {
                 </Link>
                 <Link to={createPageUrl('OrderHistory')}>
                   <Button 
-                    variant={currentPageName === 'OrderHistory' ? 'secondary' : 'ghost'} 
-                    className="text-white hover:bg-white/10"
+                    variant="ghost"
+                    className={`text-white hover:bg-white/20 ${currentPageName === 'OrderHistory' ? 'border border-white/30' : ''}`}
                   >
                     <FileText className="w-4 h-4 mr-2" />
                     Order History
