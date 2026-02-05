@@ -1,0 +1,64 @@
+{
+  "models": [
+    {
+      "id": "booth-sample-1",
+      "name": "Sample Exhibition Booth",
+      "path": "/assets/models/booth-sample-1.glb",
+      "tier": "Budget",
+      "description": "Basic trade show booth structure with display areas",
+      "size": "10x10",
+      "features": ["wall panels", "display area", "lighting"]
+    },
+    {
+      "id": "booth-hybrid",
+      "name": "Hybrid Exhibition Booth",
+      "path": "/assets/models/booth-hybrid.glb",
+      "tier": "Hybrid",
+      "description": "Mid-tier booth with enhanced features",
+      "size": "10x20",
+      "features": ["wall panels", "product displays", "meeting area", "lighting", "signage"]
+    },
+    {
+      "id": "booth-custom",
+      "name": "Custom Exhibition Booth",
+      "path": "/assets/models/booth-custom.glb",
+      "tier": "Custom",
+      "description": "Premium booth with full customization",
+      "size": "20x20",
+      "features": ["custom walls", "interactive displays", "private meeting room", "premium lighting", "branded signage"]
+    }
+  ],
+  "furniture": [
+    {
+      "id": "display-table",
+      "name": "Display Table",
+      "path": "/assets/models/furniture/display-table.glb",
+      "category": "furniture"
+    },
+    {
+      "id": "info-desk",
+      "name": "Information Desk",
+      "path": "/assets/models/furniture/info-desk.glb",
+      "category": "furniture"
+    }
+  ],
+  "displays": [
+    {
+      "id": "banner-stand",
+      "name": "Banner Stand",
+      "path": "/assets/models/displays/banner-stand.glb",
+      "category": "display"
+    },
+    {
+      "id": "monitor-stand",
+      "name": "Monitor Stand",
+      "path": "/assets/models/displays/monitor-stand.glb",
+      "category": "display"
+    }
+  ],
+  "metadata": {
+    "version": "1.0.0",
+    "lastUpdated": "2024-02-05",
+    "note": "Placeholder models for POC. Will be replaced with actual Orbus product models."
+  }
+}
