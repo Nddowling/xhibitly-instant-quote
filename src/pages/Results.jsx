@@ -5,10 +5,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
-import { Star, ArrowRight, Sparkles, Lightbulb, Palette, Loader2, View } from 'lucide-react';
+import { Star, ArrowRight, Sparkles, Lightbulb, Palette, Loader2 } from 'lucide-react';
 import { generateBoothImage } from '@/components/utils/imageGeneration';
 import { base44 } from '@/api/base44Client';
-import BoothWalkthrough3D from '@/components/BoothWalkthrough3D';
 
 export default function Results() {
   const navigate = useNavigate();
@@ -16,7 +15,6 @@ export default function Results() {
   const [brandIdentity, setBrandIdentity] = useState(null);
   const [quoteData, setQuoteData] = useState(null);
   const [generatingImages, setGeneratingImages] = useState({});
-  const [viewing3D, setViewing3D] = useState(null); // Track which design is being viewed in 3D
 
   useEffect(() => {
     const storedDesigns = sessionStorage.getItem('boothDesigns');
@@ -90,14 +88,6 @@ export default function Results() {
   const handleSelectDesign = (design) => {
     sessionStorage.setItem('selectedDesign', JSON.stringify(design));
     navigate(createPageUrl('ProductDetail'));
-  };
-
-  const handleView3D = (design) => {
-    setViewing3D(design);
-  };
-
-  const handleClose3D = () => {
-    setViewing3D(null);
   };
 
   const getTierStyles = (tier) => {
@@ -297,23 +287,8 @@ export default function Results() {
                       <div className="text-slate-400 text-sm">Complete Experience</div>
                     </div>
 
-                    {/* Action Buttons */}
-                    <div className="space-y-3">
-                      {/* 3D Walkthrough Button */}
-                      <Button
-                        onClick={() => handleView3D(design)}
-                        variant="outline"
-                        className={`w-full h-11 text-base font-semibold border-2 transition-all ${
-                          design.tier === 'Hybrid'
-                            ? 'border-[#e2231a] text-[#e2231a] hover:bg-[#e2231a] hover:text-white'
-                            : 'border-slate-300 text-slate-700 hover:bg-slate-100'
-                        }`}
-                      >
-                        <View className="w-5 h-5 mr-2" />
-                        View in 3D
-                      </Button>
-
-                      {/* Select Button */}
+                    {/* Action Button */}
+                    <div>
                       <Button
                         onClick={() => handleSelectDesign(design)}
                         className={`w-full h-12 text-base font-semibold transition-all ${
@@ -324,8 +299,8 @@ export default function Results() {
                       >
                         Explore Experience
                         <ArrowRight className="w-5 h-5 ml-2" />
-                      </Button>
-                    </div>
+                        </Button>
+                        </div>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -346,19 +321,9 @@ export default function Results() {
             className="text-slate-500"
           >
             ← Start New Design
-          </Button>
-        </motion.div>
-      </div>
-
-      {/* 3D Walkthrough Modal */}
-      {viewing3D && (
-        <BoothWalkthrough3D
-          isOpen={true}
-          onClose={handleClose3D}
-          design={viewing3D}
-          brandIdentity={brandIdentity}
-        />
-      )}
-    </div>
+            </Button>
+            </motion.div>
+            </div>
+            </div>
   );
 }
