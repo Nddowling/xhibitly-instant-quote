@@ -6,7 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
-import { ArrowLeft, ShoppingCart, Star, Lightbulb, Route, Package, Loader2, Check, Sparkles } from 'lucide-react';
+import { ArrowLeft, ShoppingCart, Star, Lightbulb, Route, Package, Loader2, Check, Sparkles, Eye, Grid3X3 } from 'lucide-react';
+import BoothViewer3D from '../components/booth/BoothViewer3D';
+import ProductSwapper from '../components/booth/ProductSwapper';
 
 export default function ProductDetail() {
   const navigate = useNavigate();
@@ -15,6 +17,8 @@ export default function ProductDetail() {
   const [products, setProducts] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [show3DView, setShow3DView] = useState(false);
+  const [selectedProductForSwap, setSelectedProductForSwap] = useState(null);
 
   useEffect(() => {
     loadDesignDetails();
@@ -148,9 +152,34 @@ Please contact the dealer within 2 hours to begin customization.
     );
   }
 
+  const handleProductSwap = async (oldProduct, newProduct) => {
+    // Update products array
+    const updatedProducts = products.map(p => 
+      p.id === oldProduct.id ? newProduct : p
+    );
+    setProducts(updatedProducts);
+
+    // Update design with new product SKU
+    const updatedSKUs = design.product_skus.map(sku =>
+      sku === oldProduct.sku ? newProduct.sku : sku
+    );
+    
+    // Recalculate total price
+    const newTotal = updatedProducts.reduce((sum, p) => sum + p.base_price, 0);
+    
+    setDesign({
+      ...design,
+      product_skus: updatedSKUs,
+      total_price: newTotal
+    });
+
+    // Close swapper
+    setSelectedProductForSwap(null);
+  };
+
   const getTierBadgeStyle = (tier) => {
     switch (tier) {
-      case 'Budget': return 'bg-slate-100 text-slate-700';
+      case 'Modular': return 'bg-slate-100 text-slate-700';
       case 'Hybrid': return 'bg-[#e2231a] text-white';
       case 'Custom': return 'bg-amber-100 text-amber-800';
       default: return 'bg-slate-100 text-slate-700';
@@ -205,28 +234,61 @@ Please contact the dealer within 2 hours to begin customization.
               </p>
             </motion.div>
 
-            {/* Booth Visualization */}
+            {/* 3D Toggle Buttons */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.15 }}
+              className="flex gap-3"
             >
-              <Card className="border-0 shadow-lg overflow-hidden">
-                <div className="aspect-[16/10] bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center">
-                  {design.design_image_url ? (
-                    <img
-                      src={design.design_image_url}
-                      alt={design.design_name}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="text-center p-8">
-                      <Sparkles className="w-20 h-20 text-slate-300 mx-auto mb-4" />
-                      <p className="text-slate-400 font-medium">Booth Visualization</p>
-                    </div>
-                  )}
-                </div>
-              </Card>
+              <Button
+                variant={!show3DView ? "default" : "outline"}
+                onClick={() => setShow3DView(false)}
+                className={!show3DView ? "bg-[#e2231a] hover:bg-[#b01b13]" : ""}
+              >
+                <Sparkles className="w-4 h-4 mr-2" />
+                2D Visualization
+              </Button>
+              <Button
+                variant={show3DView ? "default" : "outline"}
+                onClick={() => setShow3DView(true)}
+                className={show3DView ? "bg-[#e2231a] hover:bg-[#b01b13]" : ""}
+              >
+                <Eye className="w-4 h-4 mr-2" />
+                3D Walkthrough
+              </Button>
+            </motion.div>
+
+            {/* Booth Visualization */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              {show3DView ? (
+                <BoothViewer3D 
+                  products={products}
+                  brandIdentity={design.brand_identity}
+                  onProductClick={(product) => setSelectedProductForSwap(product)}
+                />
+              ) : (
+                <Card className="border-0 shadow-lg overflow-hidden">
+                  <div className="aspect-[16/10] bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center">
+                    {design.design_image_url ? (
+                      <img
+                        src={design.design_image_url}
+                        alt={design.design_name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="text-center p-8">
+                        <Sparkles className="w-20 h-20 text-slate-300 mx-auto mb-4" />
+                        <p className="text-slate-400 font-medium">Booth Visualization</p>
+                      </div>
+                    )}
+                  </div>
+                </Card>
+              )}
             </motion.div>
 
             {/* Experience Story */}
@@ -337,14 +399,38 @@ Please contact the dealer within 2 hours to begin customization.
                   <CardContent>
                     <div className="grid grid-cols-2 gap-3">
                       {products.map((product, i) => (
-                        <div key={i} className="flex items-center gap-2 text-sm text-slate-600 bg-white p-3 rounded-lg border border-slate-200">
+                        <button
+                          key={i}
+                          onClick={() => setSelectedProductForSwap(product)}
+                          className="flex items-center gap-2 text-sm text-slate-600 bg-white p-3 rounded-lg border border-slate-200 hover:border-[#e2231a] hover:bg-slate-50 transition-all text-left"
+                        >
                           <Check className="w-4 h-4 text-green-500 flex-shrink-0" />
                           <span className="truncate">{product.name}</span>
-                        </div>
+                          <Grid3X3 className="w-3 h-3 text-slate-400 ml-auto" />
+                        </button>
                       ))}
                     </div>
+                    <p className="text-xs text-slate-500 mt-3 text-center">
+                      Click any product to explore swap options
+                    </p>
                   </CardContent>
                 </Card>
+              </motion.div>
+            )}
+
+            {/* Product Swapper */}
+            {selectedProductForSwap && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+              >
+                <ProductSwapper
+                  currentProduct={selectedProductForSwap}
+                  onSwap={handleProductSwap}
+                  boothSize={quoteData.boothSize}
+                  tier={design.tier}
+                />
               </motion.div>
             )}
           </div>

@@ -50,13 +50,13 @@
 import Confirmation from './pages/Confirmation';
 import CustomerProfile from './pages/CustomerProfile';
 import Home from './pages/Home';
+import Landing from './pages/Landing';
 import Loading from './pages/Loading';
+import OrderDetail from './pages/OrderDetail';
 import OrderHistory from './pages/OrderHistory';
 import ProductDetail from './pages/ProductDetail';
 import QuoteRequest from './pages/QuoteRequest';
 import Results from './pages/Results';
-import Landing from './pages/Landing';
-import OrderDetail from './pages/OrderDetail';
 import __Layout from './Layout.jsx';
 
 
@@ -64,13 +64,13 @@ export const PAGES = {
     "Confirmation": Confirmation,
     "CustomerProfile": CustomerProfile,
     "Home": Home,
+    "Landing": Landing,
     "Loading": Loading,
+    "OrderDetail": OrderDetail,
     "OrderHistory": OrderHistory,
     "ProductDetail": ProductDetail,
     "QuoteRequest": QuoteRequest,
     "Results": Results,
-    "Landing": Landing,
-    "OrderDetail": OrderDetail,
 }
 
 export const pagesConfig = {
