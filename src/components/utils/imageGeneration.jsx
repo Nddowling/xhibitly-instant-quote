@@ -46,7 +46,7 @@ RENDERING REQUIREMENTS:
 - Include branded graphics, signage, and displays matching the exact brand identity
 - Typography visible on signage should match ${brandIdentity.typography_primary || 'modern'} style
 ${brandIdentity.logo_url ? `- Incorporate design elements inspired by the company logo style and colors` : ''}
-- ${design.tier === 'Budget' ? 'Simple, clean design with essential elements' : design.tier === 'Hybrid' ? 'Professional design with balanced features' : 'Premium, sophisticated design with advanced features'}
+- ${design.tier === 'Hybrid' ? 'Professional design with balanced features' : 'Premium, sophisticated design with advanced features'}
 - Photorealistic quality, professional photography style with vibrant, accurate brand colors`;
 
 
