@@ -207,7 +207,6 @@ export default function QuoteRequest() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="10x10" className="text-lg py-3">10' x 10' (100 sq ft)</SelectItem>
-                      <SelectItem value="10x20" className="text-lg py-3">10' x 20' (200 sq ft)</SelectItem>
                       <SelectItem value="20x20" className="text-lg py-3">20' x 20' (400 sq ft)</SelectItem>
                     </SelectContent>
                   </Select>
