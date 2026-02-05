@@ -38,8 +38,8 @@ export default function Landing() {
       >
         {/* Hero Image */}
         <img
-          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/42f4e7814_ChatGPTImageFeb5202603_16_45PM.png"
-          alt="Orbus Showroom"
+          src="/assets/orbus-booth-hero.png"
+          alt="Orbus Trade Show Booth Solutions"
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
         />
 
