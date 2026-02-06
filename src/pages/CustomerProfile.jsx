@@ -26,7 +26,6 @@ export default function CustomerProfile() {
   const [desiredLook, setDesiredLook] = useState([]);
   const [desiredFeel, setDesiredFeel] = useState([]);
   const [needsLogistics, setNeedsLogistics] = useState('');
-  const [additionalNotes, setAdditionalNotes] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -75,10 +74,8 @@ export default function CustomerProfile() {
     );
   };
 
-  // Memoize textarea handler to prevent re-render lag
-  const handleNotesChange = useCallback((e) => {
-    setAdditionalNotes(e.target.value);
-  }, []);
+  // Use local state for textarea to prevent re-render lag
+  const [additionalNotes, setAdditionalNotes] = useState('');
 
   const handleSubmit = async () => {
     if (objectives.length === 0 || desiredLook.length === 0 || desiredFeel.length === 0) {
@@ -497,8 +494,8 @@ export default function CustomerProfile() {
             </CardHeader>
             <CardContent>
               <Textarea
-                value={additionalNotes}
-                onChange={handleNotesChange}
+                defaultValue={additionalNotes}
+                onChange={(e) => setAdditionalNotes(e.target.value)}
                 placeholder="e.g., specific brand colors, product sizes, accessibility needs, etc."
                 rows={4}
                 className="w-full"
