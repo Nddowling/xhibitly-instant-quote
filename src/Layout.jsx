@@ -34,7 +34,7 @@ export default function Layout({ children, currentPageName }) {
   };
 
   // Pages that don't need the header
-  const noHeaderPages = ['Loading', 'Home', 'Landing', 'UserTypeSelection'];
+  const noHeaderPages = ['Loading', 'Home', 'Landing', 'UserTypeSelection', 'SalesDashboard'];
   const showHeader = !noHeaderPages.includes(currentPageName) && user;
 
   if (isLoading) {
