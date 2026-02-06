@@ -81,6 +81,14 @@ export default function Layout({ children, currentPageName }) {
                         Dashboard
                       </Button>
                     </Link>
+                    <Link to={createPageUrl('Contacts')}>
+                      <Button 
+                        variant="ghost"
+                        className={`text-white hover:bg-white/20 ${currentPageName === 'Contacts' ? 'border border-white/30' : ''}`}
+                      >
+                        Contacts
+                      </Button>
+                    </Link>
                     <Link to={createPageUrl('SalesQuoteStart')}>
                       <Button 
                         variant="ghost"

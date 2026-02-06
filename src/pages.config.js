@@ -60,6 +60,7 @@ import Results from './pages/Results';
 import SalesDashboard from './pages/SalesDashboard';
 import UserTypeSelection from './pages/UserTypeSelection';
 import SalesQuoteStart from './pages/SalesQuoteStart';
+import Contacts from './pages/Contacts';
 import __Layout from './Layout.jsx';
 
 
@@ -77,6 +78,7 @@ export const PAGES = {
     "SalesDashboard": SalesDashboard,
     "UserTypeSelection": UserTypeSelection,
     "SalesQuoteStart": SalesQuoteStart,
+    "Contacts": Contacts,
 }
 
 export const pagesConfig = {
