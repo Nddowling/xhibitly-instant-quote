@@ -28,20 +28,18 @@ export default function Home() {
         const user = await base44.auth.me();
         
         if (!user.user_type) {
-          // First time user - select type
           navigate(createPageUrl('UserTypeSelection'));
         } else if (user.is_sales_rep) {
-          // Sales rep home
           navigate(createPageUrl('SalesDashboard'));
         } else {
-          // Dealer/customer home
           navigate(createPageUrl('QuoteRequest'));
         }
+      } else {
+        setIsLoading(false);
       }
     } catch (e) {
-      // Not authenticated - stay on home
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   const handleLogin = () => {
