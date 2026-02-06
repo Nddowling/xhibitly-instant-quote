@@ -55,14 +55,14 @@ import Landing from './pages/Landing';
 import Loading from './pages/Loading';
 import OrderDetail from './pages/OrderDetail';
 import OrderHistory from './pages/OrderHistory';
+import Product3DManager from './pages/Product3DManager';
 import ProductDetail from './pages/ProductDetail';
 import QuoteRequest from './pages/QuoteRequest';
 import Results from './pages/Results';
 import SalesDashboard from './pages/SalesDashboard';
 import SalesQuoteStart from './pages/SalesQuoteStart';
-import UserTypeSelection from './pages/UserTypeSelection';
 import Settings from './pages/Settings';
-import Product3DManager from './pages/Product3DManager';
+import UserTypeSelection from './pages/UserTypeSelection';
 import __Layout from './Layout.jsx';
 
 
@@ -75,14 +75,14 @@ export const PAGES = {
     "Loading": Loading,
     "OrderDetail": OrderDetail,
     "OrderHistory": OrderHistory,
+    "Product3DManager": Product3DManager,
     "ProductDetail": ProductDetail,
     "QuoteRequest": QuoteRequest,
     "Results": Results,
     "SalesDashboard": SalesDashboard,
     "SalesQuoteStart": SalesQuoteStart,
-    "UserTypeSelection": UserTypeSelection,
     "Settings": Settings,
-    "Product3DManager": Product3DManager,
+    "UserTypeSelection": UserTypeSelection,
 }
 
 export const pagesConfig = {

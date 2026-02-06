@@ -7,7 +7,9 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { User, Trash2, Moon, Sun, Shield } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { User, Trash2, Moon, Sun, Shield, Edit, Save, X } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function Settings() {
@@ -15,6 +17,15 @@ export default function Settings() {
   const [user, setUser] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [editForm, setEditForm] = useState({
+    contact_name: '',
+    company_name: '',
+    phone: '',
+    user_type: '',
+    is_sales_rep: false
+  });
 
   React.useEffect(() => {
     loadUser();
@@ -25,6 +36,13 @@ export default function Settings() {
     try {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
+      setEditForm({
+        contact_name: currentUser.contact_name || currentUser.full_name || '',
+        company_name: currentUser.company_name || '',
+        phone: currentUser.phone || '',
+        user_type: currentUser.user_type || 'customer',
+        is_sales_rep: currentUser.is_sales_rep || false
+      });
     } catch (e) {
       navigate(createPageUrl('Home'));
     }
@@ -39,6 +57,56 @@ export default function Settings() {
     document.documentElement.classList.toggle('dark');
     setDarkMode(!darkMode);
     localStorage.setItem('darkMode', !darkMode ? 'true' : 'false');
+  };
+
+  const handleSaveProfile = async () => {
+    setIsSaving(true);
+    try {
+      const isSalesRep = editForm.user_type === 'sales_rep';
+      
+      await base44.auth.updateMe({
+        contact_name: editForm.contact_name,
+        company_name: editForm.company_name,
+        phone: editForm.phone,
+        user_type: editForm.user_type,
+        is_sales_rep: isSalesRep
+      });
+
+      // If switching to sales rep, create SalesRep record if needed
+      if (isSalesRep && !user.is_sales_rep) {
+        const existingReps = await base44.entities.SalesRep.filter({ user_id: user.id });
+        if (existingReps.length === 0) {
+          await base44.entities.SalesRep.create({
+            user_id: user.id,
+            email: user.email,
+            company_name: editForm.company_name,
+            contact_name: editForm.contact_name,
+            phone: editForm.phone
+          });
+        }
+      }
+
+      await loadUser();
+      setIsEditing(false);
+      
+      // Redirect to appropriate dashboard
+      if (isSalesRep) {
+        navigate(createPageUrl('SalesDashboard'));
+      } else {
+        navigate(createPageUrl('QuoteRequest'));
+      }
+    } catch (e) {
+      console.error('Error saving profile:', e);
+    }
+    setIsSaving(false);
+  };
+
+  const handleUserTypeChange = (type) => {
+    setEditForm({
+      ...editForm,
+      user_type: type,
+      is_sales_rep: type === 'sales_rep'
+    });
   };
 
   const handleDeleteAccount = async () => {
@@ -116,29 +184,123 @@ export default function Settings() {
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="space-y-3">
-              <div>
-                <Label className="text-slate-500 dark:text-slate-400 text-sm">Name</Label>
-                <p className="text-slate-900 dark:text-white font-medium">
-                  {user.contact_name || user.full_name || 'Not set'}
-                </p>
-              </div>
-              <div>
-                <Label className="text-slate-500 dark:text-slate-400 text-sm">Email</Label>
-                <p className="text-slate-900 dark:text-white font-medium">{user.email}</p>
-              </div>
-              {user.company_name && (
-                <div>
-                  <Label className="text-slate-500 dark:text-slate-400 text-sm">Company</Label>
-                  <p className="text-slate-900 dark:text-white font-medium">{user.company_name}</p>
-                </div>
+            <CardContent className="space-y-4">
+              {!isEditing ? (
+                <>
+                  <div>
+                    <Label className="text-slate-500 dark:text-slate-400 text-sm">Name</Label>
+                    <p className="text-slate-900 dark:text-white font-medium">
+                      {user.contact_name || user.full_name || 'Not set'}
+                    </p>
+                  </div>
+                  <div>
+                    <Label className="text-slate-500 dark:text-slate-400 text-sm">Email</Label>
+                    <p className="text-slate-900 dark:text-white font-medium">{user.email}</p>
+                  </div>
+                  {user.company_name && (
+                    <div>
+                      <Label className="text-slate-500 dark:text-slate-400 text-sm">Company</Label>
+                      <p className="text-slate-900 dark:text-white font-medium">{user.company_name}</p>
+                    </div>
+                  )}
+                  {user.phone && (
+                    <div>
+                      <Label className="text-slate-500 dark:text-slate-400 text-sm">Phone</Label>
+                      <p className="text-slate-900 dark:text-white font-medium">{user.phone}</p>
+                    </div>
+                  )}
+                  <div>
+                    <Label className="text-slate-500 dark:text-slate-400 text-sm">Account Type</Label>
+                    <p className="text-slate-900 dark:text-white font-medium">
+                      {user.is_sales_rep ? 'Sales Representative' : 'Customer'}
+                    </p>
+                  </div>
+                  <Button
+                    onClick={() => setIsEditing(true)}
+                    variant="outline"
+                    className="w-full"
+                  >
+                    <Edit className="w-4 h-4 mr-2" />
+                    Edit Profile
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <div>
+                    <Label>Full Name</Label>
+                    <Input
+                      value={editForm.contact_name}
+                      onChange={(e) => setEditForm({ ...editForm, contact_name: e.target.value })}
+                      className="mt-1"
+                    />
+                  </div>
+                  <div>
+                    <Label>Company Name</Label>
+                    <Input
+                      value={editForm.company_name}
+                      onChange={(e) => setEditForm({ ...editForm, company_name: e.target.value })}
+                      className="mt-1"
+                    />
+                  </div>
+                  <div>
+                    <Label>Phone</Label>
+                    <Input
+                      value={editForm.phone}
+                      onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
+                      className="mt-1"
+                    />
+                  </div>
+                  <div>
+                    <Label>Account Type</Label>
+                    <Select value={editForm.user_type} onValueChange={handleUserTypeChange}>
+                      <SelectTrigger className="mt-1">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="customer">Customer</SelectItem>
+                        <SelectItem value="sales_rep">Sales Representative</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <p className="text-xs text-slate-500 mt-1">
+                      {editForm.user_type === 'sales_rep' 
+                        ? 'You will have access to the sales dashboard and tools'
+                        : 'You will have access to request quotes and view your orders'}
+                    </p>
+                  </div>
+                  <div className="flex gap-2 pt-2">
+                    <Button
+                      onClick={handleSaveProfile}
+                      disabled={isSaving}
+                      className="flex-1 bg-[#e2231a] hover:bg-[#b01b13]"
+                    >
+                      {isSaving ? (
+                        'Saving...'
+                      ) : (
+                        <>
+                          <Save className="w-4 h-4 mr-2" />
+                          Save Changes
+                        </>
+                      )}
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        setIsEditing(false);
+                        setEditForm({
+                          contact_name: user.contact_name || user.full_name || '',
+                          company_name: user.company_name || '',
+                          phone: user.phone || '',
+                          user_type: user.user_type || 'customer',
+                          is_sales_rep: user.is_sales_rep || false
+                        });
+                      }}
+                      variant="outline"
+                      disabled={isSaving}
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </>
               )}
-              <div>
-                <Label className="text-slate-500 dark:text-slate-400 text-sm">Account Type</Label>
-                <p className="text-slate-900 dark:text-white font-medium">
-                  {user.is_sales_rep ? 'Sales Representative' : 'Customer'}
-                </p>
-              </div>
             </CardContent>
           </Card>
         </motion.div>
