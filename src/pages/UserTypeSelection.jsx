@@ -94,7 +94,7 @@ export default function UserTypeSelection() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
-          {/* Dealer Option */}
+          {/* Customer Option */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -110,9 +110,9 @@ export default function UserTypeSelection() {
                 <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Building2 className="w-10 h-10 text-white" />
                 </div>
-                <CardTitle className="text-2xl">Design a Superior Booth</CardTitle>
+                <CardTitle className="text-2xl">I Need a Booth Designed</CardTitle>
                 <CardDescription className="text-base mt-2">
-                  Looking to design and order trade show booths for my company
+                  For customers looking to design and order trade show booths
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3 pt-4 border-t">
