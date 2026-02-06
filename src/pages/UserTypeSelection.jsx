@@ -60,8 +60,12 @@ export default function UserTypeSelection() {
         });
       }
       
-      // Redirect to complete profile
-      navigate(createPageUrl('QuoteRequest'));
+      // Redirect based on user type
+      if (type === 'sales_rep') {
+        navigate(createPageUrl('SalesDashboard'));
+      } else {
+        navigate(createPageUrl('QuoteRequest'));
+      }
     } catch (e) {
       console.error('Error setting user type:', e);
     }

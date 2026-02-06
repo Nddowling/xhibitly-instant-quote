@@ -58,6 +58,7 @@ import ProductDetail from './pages/ProductDetail';
 import QuoteRequest from './pages/QuoteRequest';
 import Results from './pages/Results';
 import UserTypeSelection from './pages/UserTypeSelection';
+import SalesDashboard from './pages/SalesDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -73,6 +74,7 @@ export const PAGES = {
     "QuoteRequest": QuoteRequest,
     "Results": Results,
     "UserTypeSelection": UserTypeSelection,
+    "SalesDashboard": SalesDashboard,
 }
 
 export const pagesConfig = {
