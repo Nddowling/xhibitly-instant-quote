@@ -221,47 +221,29 @@ Return JSON with 3 designs.`;
         }
       });
 
-      // Save booth designs to database and generate 2D images
-      const savedDesigns = [];
-      for (const design of designs.designs) {
-        // Get full product details for this design
+      // Generate all 2D images in parallel for speed
+      const imagePromises = designs.designs.map(async (design) => {
         const designProducts = compatibleProducts.filter(p => design.product_skus.includes(p.sku));
         
-        // Generate 2D photorealistic image for this booth design
-        const imagePrompt = `Create a photorealistic 3D rendering of a ${boothSize} trade show booth with these specifications:
+        const imagePrompt = `Photorealistic trade show booth: ${boothSize} (${design.tier} tier). Brand: ${brandAnalysis.brand_personality}, colors ${brandAnalysis.primary_color} and ${brandAnalysis.secondary_color}. Products: ${designProducts.map(p => p.name).join(', ')}. ${design.experience_story}. Professional architectural rendering, clean, modern, trade show photography style.`;
 
-BOOTH DESIGN: ${design.design_name} (${design.tier} tier)
-BOOTH SIZE: ${boothSize} (${boothSize === '10x10' ? '10ft x 10ft' : boothSize === '10x20' ? '20ft x 10ft' : '20ft x 20ft'})
+        try {
+          const imageResult = await base44.integrations.Core.GenerateImage({
+            prompt: imagePrompt
+          });
+          return imageResult.url;
+        } catch (error) {
+          console.error('Image generation failed:', error);
+          return null;
+        }
+      });
 
-BRAND IDENTITY:
-- Primary Color: ${brandAnalysis.primary_color}
-- Secondary Color: ${brandAnalysis.secondary_color}
-- Brand Personality: ${brandAnalysis.brand_personality}
-- Industry: ${brandAnalysis.industry}
+      const generatedImages = await Promise.all(imagePromises);
 
-PRODUCTS INCLUDED:
-${designProducts.map(p => `- ${p.name}: ${p.description}`).join('\n')}
-
-DESIGN CONCEPT:
-${design.experience_story}
-
-VISITOR JOURNEY:
-${design.visitor_journey}
-
-Create a high-quality, professional trade show booth rendering that shows:
-1. All products arranged as specified in the spatial layout
-2. Brand colors prominently featured on customizable surfaces
-3. Professional lighting and atmosphere
-4. Realistic materials and textures
-5. Professional trade show environment in background
-6. Clean, modern aesthetic matching the ${brandAnalysis.brand_personality} personality
-
-Style: Professional architectural rendering, photorealistic, magazine-quality, trade show photography`;
-
-        const imageResult = await base44.integrations.Core.GenerateImage({
-          prompt: imagePrompt
-        });
-
+      // Save booth designs to database
+      const savedDesigns = [];
+      for (let i = 0; i < designs.designs.length; i++) {
+        const design = designs.designs[i];
         const boothDesign = await base44.entities.BoothDesign.create({
           dealer_id: dealerId,
           booth_size: boothSize,
@@ -275,7 +257,7 @@ Style: Professional architectural rendering, photorealistic, magazine-quality, t
           total_price: design.total_price,
           design_rationale: design.design_rationale,
           spatial_layout: design.spatial_layout,
-          design_image_url: imageResult.url
+          design_image_url: generatedImages[i]
         });
         savedDesigns.push(boothDesign);
       }
