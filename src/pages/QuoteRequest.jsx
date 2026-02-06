@@ -30,6 +30,7 @@ export default function QuoteRequest() {
 
   useEffect(() => {
     checkAuth();
+    checkSalesCustomerData();
   }, []);
 
   const checkAuth = async () => {
@@ -42,8 +43,9 @@ export default function QuoteRequest() {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
       
-      // Check if profile is complete
-      if (!currentUser.company_name || !currentUser.contact_name || !currentUser.phone) {
+      // Check if profile is complete (but skip for sales rep quotes)
+      const salesCustomerData = sessionStorage.getItem('salesCustomerData');
+      if (!salesCustomerData && (!currentUser.company_name || !currentUser.contact_name || !currentUser.phone)) {
         setNeedsProfile(true);
         setCompanyName(currentUser.company_name || '');
         setContactName(currentUser.contact_name || '');
@@ -53,6 +55,17 @@ export default function QuoteRequest() {
       navigate(createPageUrl('Home'));
     }
     setIsLoading(false);
+  };
+
+  const checkSalesCustomerData = () => {
+    const salesCustomerData = sessionStorage.getItem('salesCustomerData');
+    if (salesCustomerData) {
+      const data = JSON.parse(salesCustomerData);
+      setCompanyName(data.dealerCompany || '');
+      setContactName(data.dealerName || '');
+      setPhone(data.dealerPhone || '');
+      setNeedsProfile(false);
+    }
   };
 
   const handleSaveProfile = async () => {
@@ -72,8 +85,21 @@ export default function QuoteRequest() {
   const handleSubmit = () => {
     if (!boothSize || !showDate || !websiteUrl) return;
     
-    // Store quote request in session and navigate to loading
-    const quoteData = {
+    // Check if this is a sales rep creating a quote for a customer
+    const salesCustomerData = sessionStorage.getItem('salesCustomerData');
+    
+    const quoteData = salesCustomerData ? {
+      boothSize,
+      showDate: format(showDate, 'yyyy-MM-dd'),
+      showName,
+      websiteUrl,
+      dealerEmail: JSON.parse(salesCustomerData).dealerEmail,
+      dealerCompany: companyName,
+      dealerName: contactName,
+      dealerPhone: phone,
+      dealerId: null, // Customer might not have an account yet
+      isSalesRepQuote: true
+    } : {
       boothSize,
       showDate: format(showDate, 'yyyy-MM-dd'),
       showName,
@@ -86,6 +112,12 @@ export default function QuoteRequest() {
     };
     
     sessionStorage.setItem('quoteRequest', JSON.stringify(quoteData));
+    
+    // Clear sales customer data after using it
+    if (salesCustomerData) {
+      sessionStorage.removeItem('salesCustomerData');
+    }
+    
     navigate(createPageUrl('CustomerProfile'));
   };
 

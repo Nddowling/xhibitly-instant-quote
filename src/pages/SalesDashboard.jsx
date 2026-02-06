@@ -224,7 +224,7 @@ export default function SalesDashboard() {
                     <CardDescription>Prospects requiring attention today</CardDescription>
                   </div>
                   <Button 
-                    onClick={() => navigate(createPageUrl('QuoteRequest'))}
+                    onClick={() => navigate(createPageUrl('SalesQuoteStart'))}
                     className="bg-[#e2231a] hover:bg-[#b01b13]"
                   >
                     <Plus className="w-4 h-4 mr-2" />
@@ -373,7 +373,7 @@ export default function SalesDashboard() {
                   <Target className="w-12 h-12 mx-auto mb-3 text-slate-300" />
                   <p>No active opportunities</p>
                   <Button 
-                    onClick={() => navigate(createPageUrl('QuoteRequest'))}
+                    onClick={() => navigate(createPageUrl('SalesQuoteStart'))}
                     className="mt-4 bg-[#e2231a] hover:bg-[#b01b13]"
                   >
                     Create Your First Quote

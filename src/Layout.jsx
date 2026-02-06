@@ -72,24 +72,36 @@ export default function Layout({ children, currentPageName }) {
               
               <nav className="flex items-center gap-2">
                 {user?.is_sales_rep ? (
-                  <Link to={createPageUrl('SalesDashboard')}>
+                  <>
+                    <Link to={createPageUrl('SalesDashboard')}>
+                      <Button 
+                        variant="ghost"
+                        className={`text-white hover:bg-white/20 ${currentPageName === 'SalesDashboard' ? 'border border-white/30' : ''}`}
+                      >
+                        Dashboard
+                      </Button>
+                    </Link>
+                    <Link to={createPageUrl('SalesQuoteStart')}>
+                      <Button 
+                        variant="ghost"
+                        className="text-white hover:bg-white/20 border border-white/30"
+                      >
+                        <Plus className="w-4 h-4 mr-2" />
+                        New Quote
+                      </Button>
+                    </Link>
+                  </>
+                ) : (
+                  <Link to={createPageUrl('QuoteRequest')}>
                     <Button 
                       variant="ghost"
-                      className={`text-white hover:bg-white/20 ${currentPageName === 'SalesDashboard' ? 'border border-white/30' : ''}`}
+                      className="text-white hover:bg-white/20 border border-white/30"
                     >
-                      Dashboard
+                      <Plus className="w-4 h-4 mr-2" />
+                      New Quote
                     </Button>
                   </Link>
-                ) : null}
-                <Link to={createPageUrl('QuoteRequest')}>
-                  <Button 
-                    variant="ghost"
-                    className="text-white hover:bg-white/20 border border-white/30"
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    New Quote
-                  </Button>
-                </Link>
+                )}
                 <Link to={createPageUrl('OrderHistory')}>
                   <Button 
                     variant="ghost"

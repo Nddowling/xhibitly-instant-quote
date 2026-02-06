@@ -57,8 +57,9 @@ import OrderHistory from './pages/OrderHistory';
 import ProductDetail from './pages/ProductDetail';
 import QuoteRequest from './pages/QuoteRequest';
 import Results from './pages/Results';
-import UserTypeSelection from './pages/UserTypeSelection';
 import SalesDashboard from './pages/SalesDashboard';
+import UserTypeSelection from './pages/UserTypeSelection';
+import SalesQuoteStart from './pages/SalesQuoteStart';
 import __Layout from './Layout.jsx';
 
 
@@ -73,8 +74,9 @@ export const PAGES = {
     "ProductDetail": ProductDetail,
     "QuoteRequest": QuoteRequest,
     "Results": Results,
-    "UserTypeSelection": UserTypeSelection,
     "SalesDashboard": SalesDashboard,
+    "UserTypeSelection": UserTypeSelection,
+    "SalesQuoteStart": SalesQuoteStart,
 }
 
 export const pagesConfig = {
