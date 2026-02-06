@@ -91,7 +91,7 @@ export default function Layout({ children, currentPageName }) {
                 </Link>
                 <div className="h-6 w-px bg-white/20 mx-2" />
                 <div className="text-sm text-white/80 mr-2">
-                  {user?.company_name || user?.email}
+                  Hello, {user?.full_name?.split(' ')[0] || user?.contact_name?.split(' ')[0] || user?.email}
                 </div>
                 <Button 
                   variant="ghost" 
