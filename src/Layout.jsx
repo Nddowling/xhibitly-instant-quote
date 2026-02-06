@@ -100,25 +100,27 @@ export default function Layout({ children, currentPageName }) {
                     </Link>
                   </>
                 ) : (
-                  <Link to={createPageUrl('QuoteRequest')}>
-                    <Button 
-                      variant="ghost"
-                      className="text-white hover:bg-white/20 border border-white/30"
-                    >
-                      <Plus className="w-4 h-4 mr-2" />
-                      New Quote
-                    </Button>
-                  </Link>
+                  <>
+                    <Link to={createPageUrl('QuoteRequest')}>
+                      <Button 
+                        variant="ghost"
+                        className="text-white hover:bg-white/20 border border-white/30"
+                      >
+                        <Plus className="w-4 h-4 mr-2" />
+                        New Quote
+                      </Button>
+                    </Link>
+                    <Link to={createPageUrl('OrderHistory')}>
+                      <Button 
+                        variant="ghost"
+                        className={`text-white hover:bg-white/20 ${currentPageName === 'OrderHistory' ? 'border border-white/30' : ''}`}
+                      >
+                        <FileText className="w-4 h-4 mr-2" />
+                        Order History
+                      </Button>
+                    </Link>
+                  </>
                 )}
-                <Link to={createPageUrl('OrderHistory')}>
-                  <Button 
-                    variant="ghost"
-                    className={`text-white hover:bg-white/20 ${currentPageName === 'OrderHistory' ? 'border border-white/30' : ''}`}
-                  >
-                    <FileText className="w-4 h-4 mr-2" />
-                    Order History
-                  </Button>
-                </Link>
                 <div className="h-6 w-px bg-white/20 mx-2" />
                 <div className="text-sm text-white/80 mr-2">
                   Hello, {user?.full_name?.split(' ')[0] || user?.contact_name?.split(' ')[0]}
