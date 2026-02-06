@@ -41,8 +41,7 @@ export default function Home() {
   };
 
   const handleLogin = () => {
-    // After login, user will be redirected back to Home, which will then route to UserTypeSelection
-    base44.auth.redirectToLogin();
+    base44.auth.redirectToLogin(createPageUrl('UserTypeSelection'));
   };
 
   if (isLoading) {

@@ -30,8 +30,7 @@ export default function Landing() {
   };
 
   const handleClick = () => {
-    // After login, user will be redirected back to Landing, which will then route to UserTypeSelection
-    base44.auth.redirectToLogin();
+    base44.auth.redirectToLogin(createPageUrl('UserTypeSelection'));
   };
 
   return (
