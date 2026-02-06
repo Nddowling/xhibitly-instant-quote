@@ -7,7 +7,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Upload, Box, Image, CheckCircle, Loader2, Search } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Upload, Box, Image, CheckCircle, Loader2, Search, X } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function Product3DManager() {
@@ -19,6 +20,7 @@ export default function Product3DManager() {
   const [searchTerm, setSearchTerm] = useState('');
   const [uploadingProduct, setUploadingProduct] = useState(null);
   const [uploadProgress, setUploadProgress] = useState({});
+  const [showCreateForm, setShowCreateForm] = useState(false);
 
   useEffect(() => {
     checkAuth();
@@ -109,13 +111,35 @@ export default function Product3DManager() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
-            3D Product Manager
-          </h1>
-          <p className="text-slate-600 dark:text-slate-400">
-            Upload and manage 3D models for booth visualization
-          </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
+                3D Product Manager
+              </h1>
+              <p className="text-slate-600 dark:text-slate-400">
+                Upload and manage 3D models for booth visualization
+              </p>
+            </div>
+            <Button
+              onClick={() => setShowCreateForm(true)}
+              className="bg-[#e2231a] hover:bg-[#b01b13]"
+            >
+              <Upload className="w-4 h-4 mr-2" />
+              Create New Product
+            </Button>
+          </div>
         </motion.div>
+
+        {/* Create Form */}
+        {showCreateForm && (
+          <CreateProductForm
+            onClose={() => setShowCreateForm(false)}
+            onSuccess={async () => {
+              setShowCreateForm(false);
+              await loadProducts();
+            }}
+          />
+        )}
 
         {/* Search */}
         <Card className="mb-6">
@@ -394,6 +418,128 @@ function ProductCard({ product, uploadProgress, onFileUpload, onDimensionsUpdate
               </Button>
             </div>
           )}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function CreateProductForm({ onClose, onSuccess }) {
+  const [formData, setFormData] = useState({
+    name: '',
+    sku: '',
+    category: 'Displays',
+    price_tier: 'Modular',
+    base_price: 0,
+    description: ''
+  });
+  const [isCreating, setIsCreating] = useState(false);
+
+  const handleCreate = async () => {
+    if (!formData.name || !formData.sku || !formData.base_price) return;
+    
+    setIsCreating(true);
+    try {
+      await base44.entities.Product.create(formData);
+      onSuccess();
+    } catch (error) {
+      console.error('Failed to create product:', error);
+    }
+    setIsCreating(false);
+  };
+
+  return (
+    <Card className="mb-6 border-[#e2231a]">
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle>Create New Product</CardTitle>
+          <Button variant="ghost" size="icon" onClick={onClose}>
+            <X className="w-4 h-4" />
+          </Button>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="grid md:grid-cols-2 gap-4">
+          <div>
+            <Label>Product Name *</Label>
+            <Input
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              placeholder="e.g., Radius 10ft Backwall"
+              className="mt-1"
+            />
+          </div>
+          <div>
+            <Label>SKU *</Label>
+            <Input
+              value={formData.sku}
+              onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
+              placeholder="e.g., BW-RAD-10"
+              className="mt-1"
+            />
+          </div>
+          <div>
+            <Label>Category *</Label>
+            <Select value={formData.category} onValueChange={(val) => setFormData({ ...formData, category: val })}>
+              <SelectTrigger className="mt-1">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Displays">Displays</SelectItem>
+                <SelectItem value="Counters">Counters</SelectItem>
+                <SelectItem value="Lighting">Lighting</SelectItem>
+                <SelectItem value="Flooring">Flooring</SelectItem>
+                <SelectItem value="Signage">Signage</SelectItem>
+                <SelectItem value="Technology">Technology</SelectItem>
+                <SelectItem value="Furniture">Furniture</SelectItem>
+                <SelectItem value="Structures">Structures</SelectItem>
+                <SelectItem value="Graphics">Graphics</SelectItem>
+                <SelectItem value="Accessories">Accessories</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label>Price Tier *</Label>
+            <Select value={formData.price_tier} onValueChange={(val) => setFormData({ ...formData, price_tier: val })}>
+              <SelectTrigger className="mt-1">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Modular">Modular</SelectItem>
+                <SelectItem value="Hybrid">Hybrid</SelectItem>
+                <SelectItem value="Custom">Custom</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label>Base Price (USD) *</Label>
+            <Input
+              type="number"
+              value={formData.base_price}
+              onChange={(e) => setFormData({ ...formData, base_price: parseFloat(e.target.value) || 0 })}
+              placeholder="0"
+              className="mt-1"
+            />
+          </div>
+          <div className="md:col-span-2">
+            <Label>Description</Label>
+            <Input
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              placeholder="Brief product description"
+              className="mt-1"
+            />
+          </div>
+        </div>
+        <div className="flex gap-2 mt-6">
+          <Button
+            onClick={handleCreate}
+            disabled={isCreating || !formData.name || !formData.sku || !formData.base_price}
+            className="flex-1 bg-[#e2231a] hover:bg-[#b01b13]"
+          >
+            {isCreating ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Creating...</> : 'Create Product'}
+          </Button>
+          <Button variant="outline" onClick={onClose}>Cancel</Button>
         </div>
       </CardContent>
     </Card>
