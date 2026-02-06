@@ -48,6 +48,7 @@
  * The mainPage value must match a key in the PAGES object exactly.
  */
 import Confirmation from './pages/Confirmation';
+import Contacts from './pages/Contacts';
 import CustomerProfile from './pages/CustomerProfile';
 import Home from './pages/Home';
 import Landing from './pages/Landing';
@@ -58,14 +59,15 @@ import ProductDetail from './pages/ProductDetail';
 import QuoteRequest from './pages/QuoteRequest';
 import Results from './pages/Results';
 import SalesDashboard from './pages/SalesDashboard';
-import UserTypeSelection from './pages/UserTypeSelection';
 import SalesQuoteStart from './pages/SalesQuoteStart';
-import Contacts from './pages/Contacts';
+import UserTypeSelection from './pages/UserTypeSelection';
+import Settings from './pages/Settings';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "Confirmation": Confirmation,
+    "Contacts": Contacts,
     "CustomerProfile": CustomerProfile,
     "Home": Home,
     "Landing": Landing,
@@ -76,9 +78,9 @@ export const PAGES = {
     "QuoteRequest": QuoteRequest,
     "Results": Results,
     "SalesDashboard": SalesDashboard,
-    "UserTypeSelection": UserTypeSelection,
     "SalesQuoteStart": SalesQuoteStart,
-    "Contacts": Contacts,
+    "UserTypeSelection": UserTypeSelection,
+    "Settings": Settings,
 }
 
 export const pagesConfig = {

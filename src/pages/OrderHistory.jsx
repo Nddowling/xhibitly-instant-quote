@@ -13,11 +13,51 @@ export default function OrderHistory() {
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [pullDistance, setPullDistance] = useState(0);
+  const startY = React.useRef(0);
   const [user, setUser] = useState(null);
 
   useEffect(() => {
     loadOrders();
-  }, []);
+    
+    // Pull-to-refresh handlers
+    const handleTouchStart = (e) => {
+      if (window.scrollY === 0) {
+        startY.current = e.touches[0].clientY;
+      }
+    };
+
+    const handleTouchMove = (e) => {
+      if (window.scrollY === 0 && startY.current > 0) {
+        const currentY = e.touches[0].clientY;
+        const distance = currentY - startY.current;
+        if (distance > 0 && distance < 150) {
+          setPullDistance(distance);
+        }
+      }
+    };
+
+    const handleTouchEnd = async () => {
+      if (pullDistance > 80) {
+        setIsRefreshing(true);
+        await loadOrders();
+        setIsRefreshing(false);
+      }
+      setPullDistance(0);
+      startY.current = 0;
+    };
+
+    window.addEventListener('touchstart', handleTouchStart);
+    window.addEventListener('touchmove', handleTouchMove);
+    window.addEventListener('touchend', handleTouchEnd);
+
+    return () => {
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [pullDistance]);
 
   const loadOrders = async () => {
     try {

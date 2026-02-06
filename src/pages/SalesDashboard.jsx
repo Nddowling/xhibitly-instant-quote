@@ -27,6 +27,9 @@ export default function SalesDashboard() {
   const [orders, setOrders] = useState([]);
   const [activities, setActivities] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [pullDistance, setPullDistance] = useState(0);
+  const startY = React.useRef(0);
 
   useEffect(() => {
     loadDashboardData();
@@ -130,7 +133,19 @@ export default function SalesDashboard() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-slate-50 p-6 md:p-10">
+    <div className="min-h-[calc(100vh-64px)] bg-slate-50 dark:bg-slate-950 p-6 pb-24 md:pb-10">
+      {/* Pull-to-refresh indicator */}
+      {pullDistance > 0 && (
+        <div 
+          className="fixed top-16 left-0 right-0 flex justify-center z-40 transition-opacity"
+          style={{ opacity: Math.min(pullDistance / 80, 1) }}
+        >
+          <div className="bg-white dark:bg-slate-900 rounded-full p-2 shadow-lg">
+            <div className={`w-6 h-6 border-4 border-[#e2231a] border-t-transparent rounded-full ${isRefreshing ? 'animate-spin' : ''}`} />
+          </div>
+        </div>
+      )}
+      
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div
