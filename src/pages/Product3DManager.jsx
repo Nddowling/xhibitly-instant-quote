@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Upload, Box, Image, CheckCircle, Loader2, Search, X } from 'lucide-react';
+import { Upload, Box, Image, CheckCircle, Loader2, Search, X, Trash2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function Product3DManager() {
@@ -95,6 +95,18 @@ export default function Product3DManager() {
     }
   };
 
+  const handleDeleteProduct = async (productId) => {
+    if (!confirm('Are you sure you want to delete this product? This cannot be undone.')) {
+      return;
+    }
+    try {
+      await base44.entities.Product.delete(productId);
+      await loadProducts();
+    } catch (error) {
+      console.error('Failed to delete product:', error);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
@@ -125,7 +137,7 @@ export default function Product3DManager() {
               className="bg-[#e2231a] hover:bg-[#b01b13]"
             >
               <Upload className="w-4 h-4 mr-2" />
-              Create New Product
+              Import New Asset
             </Button>
           </div>
         </motion.div>
@@ -193,6 +205,7 @@ export default function Product3DManager() {
               uploadProgress={uploadProgress}
               onFileUpload={handleFileUpload}
               onDimensionsUpdate={handleDimensionsUpdate}
+              onDelete={handleDeleteProduct}
             />
           ))}
         </div>
@@ -212,7 +225,7 @@ export default function Product3DManager() {
   );
 }
 
-function ProductCard({ product, uploadProgress, onFileUpload, onDimensionsUpdate }) {
+function ProductCard({ product, uploadProgress, onFileUpload, onDimensionsUpdate, onDelete }) {
   const [dimensions, setDimensions] = useState(
     product.model_dimensions || { width: 0, height: 0, depth: 0 }
   );
@@ -245,11 +258,21 @@ function ProductCard({ product, uploadProgress, onFileUpload, onDimensionsUpdate
               )}
             </CardDescription>
           </div>
-          <div className="text-right">
-            <div className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-              ${product.base_price?.toLocaleString()}
+          <div className="flex items-center gap-2">
+            <div className="text-right">
+              <div className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                ${product.base_price?.toLocaleString()}
+              </div>
+              <div className="text-xs text-slate-500">{product.price_tier}</div>
             </div>
-            <div className="text-xs text-slate-500">{product.price_tier}</div>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => onDelete(product.id)}
+              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+            >
+              <Trash2 className="w-4 h-4" />
+            </Button>
           </div>
         </div>
       </CardHeader>
