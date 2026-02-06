@@ -126,6 +126,14 @@ export default function Layout({ children, currentPageName }) {
                         Contacts
                       </Button>
                     </Link>
+                    <Link to={createPageUrl('Product3DManager')}>
+                      <Button 
+                        variant="ghost"
+                        className={`text-white hover:bg-white/20 ${currentPageName === 'Product3DManager' ? 'border border-white/30' : ''}`}
+                      >
+                        3D Manager
+                      </Button>
+                    </Link>
                     <Link to={createPageUrl('SalesQuoteStart')}>
                       <Button 
                         variant="ghost"

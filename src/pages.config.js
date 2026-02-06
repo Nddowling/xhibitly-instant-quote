@@ -62,6 +62,7 @@ import SalesDashboard from './pages/SalesDashboard';
 import SalesQuoteStart from './pages/SalesQuoteStart';
 import UserTypeSelection from './pages/UserTypeSelection';
 import Settings from './pages/Settings';
+import Product3DManager from './pages/Product3DManager';
 import __Layout from './Layout.jsx';
 
 
@@ -81,6 +82,7 @@ export const PAGES = {
     "SalesQuoteStart": SalesQuoteStart,
     "UserTypeSelection": UserTypeSelection,
     "Settings": Settings,
+    "Product3DManager": Product3DManager,
 }
 
 export const pagesConfig = {
