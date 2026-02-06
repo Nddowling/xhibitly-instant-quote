@@ -48,14 +48,20 @@ export default function UserTypeSelection() {
       if (type === 'sales_rep') {
         // Create SalesRep entity
         const user = await base44.auth.me();
-        await base44.entities.SalesRep.create({
-          user_id: user.id,
-          email: user.email,
-          company_name: user.company_name || '',
-          contact_name: user.full_name || '',
-          phone: user.phone || '',
-          is_active: true
-        });
+        
+        // Check if SalesRep record already exists
+        const existingReps = await base44.entities.SalesRep.filter({ user_id: user.id });
+        
+        if (existingReps.length === 0) {
+          await base44.entities.SalesRep.create({
+            user_id: user.id,
+            email: user.email,
+            company_name: user.company_name || '',
+            contact_name: user.full_name || '',
+            phone: user.phone || '',
+            is_active: true
+          });
+        }
       }
       
       // Redirect based on user type
