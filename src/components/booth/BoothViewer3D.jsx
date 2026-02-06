@@ -167,9 +167,12 @@ export default function BoothViewer3D({ products, brandIdentity, spatialLayout, 
   };
 
   const createPlaceholder = (position, rotation, scale, product, layout, index, models) => {
-    const geometry = new THREE.BoxGeometry(2, 2, 2);
+    // Create realistic product representation based on category
+    let geometry, material;
+    const productHeight = product.footprint?.depth || 2;
+    const productWidth = product.footprint?.width || 2;
     
-    // Use branding color if specified, otherwise default
+    // Use branding color if specified
     let color = 0x666666;
     if (layout?.branding?.apply_brand_color && layout?.branding?.color) {
       color = new THREE.Color(layout.branding.color);
@@ -177,13 +180,54 @@ export default function BoothViewer3D({ products, brandIdentity, spatialLayout, 
       color = new THREE.Color(brandIdentity.primary_color);
     }
     
-    const material = new THREE.MeshStandardMaterial({ 
-      color: color,
-      roughness: 0.5,
-      metalness: 0.3
-    });
+    // Create geometry based on product type
+    if (product.category === 'Counters' || product.product_type?.includes('Counter')) {
+      // Rectangular counter shape
+      geometry = new THREE.BoxGeometry(productWidth, 3, productHeight * 0.8);
+      material = new THREE.MeshStandardMaterial({ 
+        color: color,
+        roughness: 0.4,
+        metalness: 0.6
+      });
+    } else if (product.category === 'Displays' || product.product_type?.includes('Wall')) {
+      // Tall display/wall
+      geometry = new THREE.BoxGeometry(productWidth, 7, 0.5);
+      material = new THREE.MeshStandardMaterial({ 
+        color: color,
+        roughness: 0.3,
+        metalness: 0.1
+      });
+    } else if (product.category === 'Furniture') {
+      // Low furniture pieces
+      geometry = new THREE.BoxGeometry(productWidth * 0.7, 2.5, productHeight * 0.7);
+      material = new THREE.MeshStandardMaterial({ 
+        color: color,
+        roughness: 0.6,
+        metalness: 0.2
+      });
+    } else if (product.category === 'Structures') {
+      // Large structural elements
+      geometry = new THREE.BoxGeometry(productWidth, 8, productHeight);
+      material = new THREE.MeshStandardMaterial({ 
+        color: color,
+        roughness: 0.4,
+        metalness: 0.2
+      });
+    } else {
+      // Default shape
+      geometry = new THREE.BoxGeometry(productWidth, 4, productHeight);
+      material = new THREE.MeshStandardMaterial({ 
+        color: color,
+        roughness: 0.5,
+        metalness: 0.3
+      });
+    }
+    
     const mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(position.x, position.y + 1, position.z);
+    
+    // Position at ground level (y offset based on half height)
+    const heightOffset = geometry.parameters.height / 2;
+    mesh.position.set(position.x, position.y + heightOffset, position.z);
     mesh.rotation.set(
       (rotation.x || 0) * Math.PI / 180, 
       (rotation.y || 0) * Math.PI / 180, 
@@ -203,10 +247,10 @@ export default function BoothViewer3D({ products, brandIdentity, spatialLayout, 
           transparent: true
         });
         const logoPlane = new THREE.Mesh(
-          new THREE.PlaneGeometry(1.5, 1.5),
+          new THREE.PlaneGeometry(productWidth * 0.6, productWidth * 0.6),
           logoMaterial
         );
-        logoPlane.position.set(0, 1, 1.01);
+        logoPlane.position.set(0, heightOffset * 0.5, (productHeight / 2) + 0.01);
         mesh.add(logoPlane);
       });
     }
