@@ -95,8 +95,10 @@ export default function Loading() {
         p.booth_sizes && p.booth_sizes.includes(boothSize)
       );
 
-      // Step 3: Use AI to curate 3 booth designs
-      const designPrompt = `You are an expert trade show booth designer. Create 3 unique booth experience designs (Modular, Hybrid, and Custom tiers) for a ${boothSize} booth.
+      // Step 3: Use AI to curate 3 booth designs with spatial layouts
+      const boothDimensions = boothSize === '10x10' ? { width: 10, depth: 10 } : boothSize === '10x20' ? { width: 20, depth: 10 } : { width: 20, depth: 20 };
+      
+      const designPrompt = `You are an expert trade show booth designer. Create 3 unique booth experience designs (Modular, Hybrid, and Custom tiers) for a ${boothSize} booth (${boothDimensions.width}ft x ${boothDimensions.depth}ft).
 
 Brand Identity:
 ${JSON.stringify(brandAnalysis, null, 2)}
@@ -118,10 +120,15 @@ ${JSON.stringify(compatibleProducts.map(p => ({
   sku: p.sku,
   name: p.name,
   category: p.category,
+  product_type: p.product_type,
   price_tier: p.price_tier,
   base_price: p.base_price,
   design_style: p.design_style,
-  features: p.features
+  features: p.features,
+  placement_type: p.placement_type,
+  footprint: p.footprint,
+  customizable: p.customizable,
+  branding_surfaces: p.branding_surfaces
 })), null, 2)}
 
 For each tier (Modular, Hybrid, and Custom), create a curated booth EXPERIENCE that:
@@ -135,6 +142,21 @@ For each tier (Modular, Hybrid, and Custom), create a curated booth EXPERIENCE t
 8. ${customerProfile?.needs_conference_area ? 'Includes a conference/meeting area' : ''}
 9. Explains the visitor flow and key moments
 10. Total price should be: Modular $3-8K, Hybrid $8-18K, Custom $18-50K+
+
+CRITICAL - 3D SPATIAL LAYOUT:
+For each product selected, provide a spatial_layout array with exact 3D positioning:
+- position: {x, y, z} coordinates in feet (origin at booth center, x=-width/2 to width/2, z=-depth/2 to depth/2, y=0 for floor)
+- rotation: {x, y, z} in degrees (y-axis most important for orientation)
+- scale: size multiplier (usually 1.0)
+- branding: specify which products get brand colors/logo applied
+
+Apply branding strategically:
+- Use primary_color on 2-3 key structural pieces
+- Use secondary_color on 1-2 accent pieces  
+- Apply logo to 1-2 prominent surfaces (reception counter, main wall)
+- Only apply to products marked as customizable
+
+Arrange products logically for booth flow, leave pathways, create zones.
 
 Return JSON with 3 designs.`;
 
@@ -155,7 +177,43 @@ Return JSON with 3 designs.`;
                   key_moments: { type: "array", items: { type: "string" } },
                   product_skus: { type: "array", items: { type: "string" } },
                   design_rationale: { type: "string" },
-                  total_price: { type: "number" }
+                  total_price: { type: "number" },
+                  spatial_layout: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      properties: {
+                        product_sku: { type: "string" },
+                        position: {
+                          type: "object",
+                          properties: {
+                            x: { type: "number" },
+                            y: { type: "number" },
+                            z: { type: "number" }
+                          }
+                        },
+                        rotation: {
+                          type: "object",
+                          properties: {
+                            x: { type: "number" },
+                            y: { type: "number" },
+                            z: { type: "number" }
+                          }
+                        },
+                        scale: { type: "number" },
+                        branding: {
+                          type: "object",
+                          properties: {
+                            apply_brand_color: { type: "boolean" },
+                            color_zone: { type: "string" },
+                            color: { type: "string" },
+                            apply_logo: { type: "boolean" },
+                            logo_zone: { type: "string" }
+                          }
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -177,7 +235,8 @@ Return JSON with 3 designs.`;
           key_moments: design.key_moments,
           product_skus: design.product_skus,
           total_price: design.total_price,
-          design_rationale: design.design_rationale
+          design_rationale: design.design_rationale,
+          spatial_layout: design.spatial_layout
         });
         savedDesigns.push(boothDesign);
       }

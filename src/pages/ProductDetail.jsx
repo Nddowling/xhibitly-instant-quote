@@ -269,6 +269,7 @@ Please contact the dealer within 2 hours to begin customization.
                 <BoothViewer3D 
                   products={products}
                   brandIdentity={design.brand_identity}
+                  spatialLayout={design.spatial_layout}
                   onProductClick={(product) => setSelectedProductForSwap(product)}
                 />
               ) : (

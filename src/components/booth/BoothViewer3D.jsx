@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Loader2, RefreshCw, Maximize2, Info } from 'lucide-react';
 
-export default function BoothViewer3D({ products, brandIdentity, onProductClick }) {
+export default function BoothViewer3D({ products, brandIdentity, spatialLayout, onProductClick }) {
   const mountRef = useRef(null);
   const sceneRef = useRef(null);
   const cameraRef = useRef(null);
@@ -109,18 +109,14 @@ export default function BoothViewer3D({ products, brandIdentity, onProductClick 
     const loader = new GLTFLoader();
     const models = [];
 
-    // Position products in the booth space
-    const positions = [
-      { x: -5, z: -5 }, // Back left
-      { x: 0, z: -5 },  // Back center
-      { x: 5, z: -5 },  // Back right
-      { x: -3, z: 0 },  // Middle left
-      { x: 3, z: 0 },   // Middle right
-      { x: 0, z: 3 },   // Front center
-    ];
-
-    for (let i = 0; i < products.length && i < positions.length; i++) {
+    for (let i = 0; i < products.length; i++) {
       const product = products[i];
+      
+      // Get spatial layout for this product
+      const layout = spatialLayout?.find(l => l.product_sku === product.sku);
+      const position = layout?.position || { x: (i % 3) * 3 - 3, y: 0, z: Math.floor(i / 3) * 3 - 3 };
+      const rotation = layout?.rotation || { x: 0, y: 0, z: 0 };
+      const scale = layout?.scale || 1;
       
       // If product has 3D model URL, load it
       if (product.model_3d_url) {
@@ -130,13 +126,19 @@ export default function BoothViewer3D({ products, brandIdentity, onProductClick 
           });
           
           const model = gltf.scene;
-          model.position.set(positions[i].x, 0, positions[i].z);
+          model.position.set(position.x, position.y, position.z);
+          model.rotation.set(
+            (rotation.x || 0) * Math.PI / 180, 
+            (rotation.y || 0) * Math.PI / 180, 
+            (rotation.z || 0) * Math.PI / 180
+          );
+          model.scale.set(scale, scale, scale);
           model.castShadow = true;
           model.receiveShadow = true;
 
-          // Apply brand colors if customizable
-          if (product.customizable && brandIdentity) {
-            applyBranding(model, brandIdentity);
+          // Apply branding based on layout configuration
+          if (layout?.branding) {
+            applyBrandingFromLayout(model, layout.branding, brandIdentity);
           }
 
           // Make model clickable
@@ -151,12 +153,12 @@ export default function BoothViewer3D({ products, brandIdentity, onProductClick 
           models.push({ product, model });
         } catch (error) {
           console.log('Failed to load model:', product.name);
-          // Create placeholder box
-          createPlaceholder(positions[i], product, i, models);
+          // Create placeholder box with layout
+          createPlaceholder(position, rotation, scale, product, layout, i, models);
         }
       } else {
-        // Create placeholder box
-        createPlaceholder(positions[i], product, i, models);
+        // Create placeholder box with layout
+        createPlaceholder(position, rotation, scale, product, layout, i, models);
       }
     }
 
@@ -164,18 +166,50 @@ export default function BoothViewer3D({ products, brandIdentity, onProductClick 
     setIsLoading(false);
   };
 
-  const createPlaceholder = (position, product, index, models) => {
+  const createPlaceholder = (position, rotation, scale, product, layout, index, models) => {
     const geometry = new THREE.BoxGeometry(2, 2, 2);
+    
+    // Use branding color if specified, otherwise default
+    let color = 0x666666;
+    if (layout?.branding?.apply_brand_color && layout?.branding?.color) {
+      color = new THREE.Color(layout.branding.color);
+    } else if (brandIdentity?.primary_color) {
+      color = new THREE.Color(brandIdentity.primary_color);
+    }
+    
     const material = new THREE.MeshStandardMaterial({ 
-      color: brandIdentity?.primary_color ? new THREE.Color(brandIdentity.primary_color) : 0x666666,
+      color: color,
       roughness: 0.5,
       metalness: 0.3
     });
     const mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(position.x, 1, position.z);
+    mesh.position.set(position.x, position.y + 1, position.z);
+    mesh.rotation.set(
+      (rotation.x || 0) * Math.PI / 180, 
+      (rotation.y || 0) * Math.PI / 180, 
+      (rotation.z || 0) * Math.PI / 180
+    );
+    mesh.scale.set(scale, scale, scale);
     mesh.castShadow = true;
     mesh.receiveShadow = true;
     mesh.userData = { product, index };
+    
+    // Apply logo texture if specified
+    if (layout?.branding?.apply_logo && brandIdentity?.logo_url) {
+      const textureLoader = new THREE.TextureLoader();
+      textureLoader.load(brandIdentity.logo_url, (texture) => {
+        const logoMaterial = new THREE.MeshStandardMaterial({ 
+          map: texture,
+          transparent: true
+        });
+        const logoPlane = new THREE.Mesh(
+          new THREE.PlaneGeometry(1.5, 1.5),
+          logoMaterial
+        );
+        logoPlane.position.set(0, 1, 1.01);
+        mesh.add(logoPlane);
+      });
+    }
     
     sceneRef.current.add(mesh);
     models.push({ product, model: mesh });
@@ -191,6 +225,32 @@ export default function BoothViewer3D({ products, brandIdentity, onProductClick 
         }
       }
     });
+  };
+
+  const applyBrandingFromLayout = (model, branding, brandIdentity) => {
+    // Apply brand color if specified
+    if (branding.apply_brand_color && branding.color) {
+      model.traverse((child) => {
+        if (child.isMesh && child.name.includes(branding.color_zone || '')) {
+          child.material = child.material.clone();
+          child.material.color = new THREE.Color(branding.color);
+        }
+      });
+    }
+
+    // Apply logo texture if specified
+    if (branding.apply_logo && brandIdentity?.logo_url) {
+      const textureLoader = new THREE.TextureLoader();
+      textureLoader.load(brandIdentity.logo_url, (texture) => {
+        model.traverse((child) => {
+          if (child.isMesh && child.name.includes(branding.logo_zone || '')) {
+            child.material = child.material.clone();
+            child.material.map = texture;
+            child.material.needsUpdate = true;
+          }
+        });
+      });
+    }
   };
 
   const handleCanvasClick = (event) => {
