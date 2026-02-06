@@ -34,7 +34,7 @@ export default function Layout({ children, currentPageName }) {
   };
 
   // Pages that don't need the header
-  const noHeaderPages = ['Loading', 'Home'];
+  const noHeaderPages = ['Loading', 'Home', 'Landing', 'UserTypeSelection'];
   const showHeader = !noHeaderPages.includes(currentPageName) && user;
 
   if (isLoading) {
@@ -71,6 +71,16 @@ export default function Layout({ children, currentPageName }) {
               </div>
               
               <nav className="flex items-center gap-2">
+                {user?.is_sales_rep ? (
+                  <Link to={createPageUrl('SalesDashboard')}>
+                    <Button 
+                      variant="ghost"
+                      className={`text-white hover:bg-white/20 ${currentPageName === 'SalesDashboard' ? 'border border-white/30' : ''}`}
+                    >
+                      Dashboard
+                    </Button>
+                  </Link>
+                ) : null}
                 <Link to={createPageUrl('QuoteRequest')}>
                   <Button 
                     variant="ghost"
@@ -91,7 +101,7 @@ export default function Layout({ children, currentPageName }) {
                 </Link>
                 <div className="h-6 w-px bg-white/20 mx-2" />
                 <div className="text-sm text-white/80 mr-2">
-                  Hello, {user?.full_name?.split(' ')[0] || user?.contact_name?.split(' ')[0] || user?.email}
+                  Hello, {user?.full_name?.split(' ')[0] || user?.contact_name?.split(' ')[0]}
                 </div>
                 <Button 
                   variant="ghost" 
