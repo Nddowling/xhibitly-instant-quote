@@ -68,7 +68,7 @@ export default function Home() {
       >
         {/* Hero Image */}
         <img
-          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/acf930752_OrbusHero.jpeg?t=1738876800000"
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/1d7db6e3d_ChatGPTImageFeb5202603_16_45PM.png"
           alt="Orbus Showroom"
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
         />
