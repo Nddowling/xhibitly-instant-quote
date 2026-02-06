@@ -20,15 +20,13 @@ export default function UserTypeSelection() {
     try {
       const user = await base44.auth.me();
       
-      // If user already has a type set, redirect them
-      if (user.user_type && user.user_type !== 'dealer') {
-        navigate(createPageUrl('QuoteRequest'));
-        return;
-      }
-      
-      // If user is a regular dealer with profile complete, redirect
-      if (user.company_name && user.contact_name && user.phone) {
-        navigate(createPageUrl('QuoteRequest'));
+      // If user already has a type set, redirect them to appropriate dashboard
+      if (user.user_type) {
+        if (user.is_sales_rep) {
+          navigate(createPageUrl('SalesDashboard'));
+        } else {
+          navigate(createPageUrl('QuoteRequest'));
+        }
         return;
       }
     } catch (e) {

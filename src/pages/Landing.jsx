@@ -20,6 +20,8 @@ export default function Landing() {
         // Check if user has selected their type
         if (!user.user_type) {
           navigate(createPageUrl('UserTypeSelection'));
+        } else if (user.is_sales_rep) {
+          navigate(createPageUrl('SalesDashboard'));
         } else {
           navigate(createPageUrl('QuoteRequest'));
         }
@@ -30,7 +32,7 @@ export default function Landing() {
   };
 
   const handleClick = () => {
-    base44.auth.redirectToLogin(createPageUrl('UserTypeSelection'));
+    base44.auth.redirectToLogin();
   };
 
   return (

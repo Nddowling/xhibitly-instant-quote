@@ -30,6 +30,8 @@ export default function Home() {
         // Check if user has selected their type
         if (!user.user_type) {
           navigate(createPageUrl('UserTypeSelection'));
+        } else if (user.is_sales_rep) {
+          navigate(createPageUrl('SalesDashboard'));
         } else {
           navigate(createPageUrl('QuoteRequest'));
         }
@@ -41,7 +43,7 @@ export default function Home() {
   };
 
   const handleLogin = () => {
-    base44.auth.redirectToLogin(createPageUrl('UserTypeSelection'));
+    base44.auth.redirectToLogin();
   };
 
   if (isLoading) {
