@@ -108,7 +108,7 @@ export default function UserTypeSelection() {
                 <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Building2 className="w-10 h-10 text-white" />
                 </div>
-                <CardTitle className="text-2xl">I'm a Dealer/Customer</CardTitle>
+                <CardTitle className="text-2xl">Design a Superior Booth</CardTitle>
                 <CardDescription className="text-base mt-2">
                   Looking to design and order trade show booths for my company
                 </CardDescription>
