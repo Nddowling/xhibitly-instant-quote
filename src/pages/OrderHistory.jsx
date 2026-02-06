@@ -110,7 +110,19 @@ export default function OrderHistory() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-slate-50 p-6 md:p-10">
+    <div className="min-h-[calc(100vh-64px)] bg-slate-50 dark:bg-slate-950 p-6 pb-24 md:pb-10">
+      {/* Pull-to-refresh indicator */}
+      {pullDistance > 0 && (
+        <div 
+          className="fixed top-16 left-0 right-0 flex justify-center z-40 transition-opacity"
+          style={{ opacity: Math.min(pullDistance / 80, 1) }}
+        >
+          <div className="bg-white dark:bg-slate-900 rounded-full p-2 shadow-lg">
+            <div className={`w-6 h-6 border-4 border-[#e2231a] border-t-transparent rounded-full ${isRefreshing ? 'animate-spin' : ''}`} />
+          </div>
+        </div>
+      )}
+      
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <motion.div
@@ -119,10 +131,10 @@ export default function OrderHistory() {
           className="flex items-center justify-between mb-8"
         >
           <div>
-            <h1 className="text-3xl font-bold text-[#e2231a] mb-2">
+            <h1 className="text-3xl font-bold text-[#e2231a] dark:text-[#e2231a] mb-2">
               Order History
             </h1>
-            <p className="text-slate-500">
+            <p className="text-slate-500 dark:text-slate-400">
               Track all your quote requests and orders
             </p>
           </div>

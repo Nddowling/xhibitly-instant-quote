@@ -33,7 +33,44 @@ export default function SalesDashboard() {
 
   useEffect(() => {
     loadDashboardData();
-  }, []);
+    
+    // Pull-to-refresh handlers
+    const handleTouchStart = (e) => {
+      if (window.scrollY === 0) {
+        startY.current = e.touches[0].clientY;
+      }
+    };
+
+    const handleTouchMove = (e) => {
+      if (window.scrollY === 0 && startY.current > 0) {
+        const currentY = e.touches[0].clientY;
+        const distance = currentY - startY.current;
+        if (distance > 0 && distance < 150) {
+          setPullDistance(distance);
+        }
+      }
+    };
+
+    const handleTouchEnd = async () => {
+      if (pullDistance > 80) {
+        setIsRefreshing(true);
+        await loadDashboardData();
+        setIsRefreshing(false);
+      }
+      setPullDistance(0);
+      startY.current = 0;
+    };
+
+    window.addEventListener('touchstart', handleTouchStart);
+    window.addEventListener('touchmove', handleTouchMove);
+    window.addEventListener('touchend', handleTouchEnd);
+
+    return () => {
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [pullDistance]);
 
   const loadDashboardData = async () => {
     try {
@@ -153,10 +190,10 @@ export default function SalesDashboard() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
             Welcome back, {user?.full_name?.split(' ')[0] || user?.contact_name?.split(' ')[0]}!
           </h1>
-          <p className="text-slate-500">Here's what's happening with your sales today</p>
+          <p className="text-slate-500 dark:text-slate-400">Here's what's happening with your sales today</p>
         </motion.div>
 
         {/* Metrics Cards */}
