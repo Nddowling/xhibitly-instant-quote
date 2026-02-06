@@ -15,7 +15,14 @@ export default function Landing() {
     try {
       const isAuth = await base44.auth.isAuthenticated();
       if (isAuth) {
-        navigate(createPageUrl('QuoteRequest'));
+        const user = await base44.auth.me();
+        
+        // Check if user has selected their type
+        if (!user.user_type) {
+          navigate(createPageUrl('UserTypeSelection'));
+        } else {
+          navigate(createPageUrl('QuoteRequest'));
+        }
       }
     } catch (e) {
       // Not authenticated - stay on landing
@@ -23,7 +30,7 @@ export default function Landing() {
   };
 
   const handleClick = () => {
-    base44.auth.redirectToLogin(createPageUrl('QuoteRequest'));
+    base44.auth.redirectToLogin(createPageUrl('UserTypeSelection'));
   };
 
   return (
