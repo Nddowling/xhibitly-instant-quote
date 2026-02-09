@@ -6,11 +6,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Sparkles, CheckCircle, Palette, Layers, Lightbulb } from 'lucide-react';
 
 const loadingSteps = [
-  { icon: Search, text: "Analyzing your brand identity..." },
-  { icon: Palette, text: "Extracting colors and style..." },
+  { icon: Search, text: "Scanning your website..." },
+  { icon: Palette, text: "Extracting your logo & brand colors..." },
   { icon: Layers, text: "Curating from 500+ products..." },
   { icon: Lightbulb, text: "Designing your experience..." },
-  { icon: Sparkles, text: "Crafting the perfect story..." },
+  { icon: Sparkles, text: "Generating booth visuals with your logo..." },
   { icon: CheckCircle, text: "Finalizing your booth designs..." },
 ];
 
@@ -46,30 +46,66 @@ export default function Loading() {
       // Simulate minimum loading time for UX (AI processing takes time)
       const minLoadTime = new Promise(resolve => setTimeout(resolve, 8000));
       
-      // Step 1: Analyze brand identity from website - extract comprehensive branding
+      // Step 1: Scrape the website to find the logo URL
+      const logoScrape = await base44.integrations.Core.InvokeLLM({
+        prompt: `Visit this website: ${websiteUrl}
+        
+        Your ONLY job is to find the company's main logo image URL.
+        Look for:
+        1. <img> tags in the header/nav area
+        2. Logo in <link rel="icon"> or <meta property="og:image">
+        3. SVG logos embedded or linked
+        4. Any image file in the header that is clearly the company logo
+        
+        Return the DIRECT, ABSOLUTE URL to the logo image file (not a page URL).
+        If the logo is an SVG inline, describe it so we can reference it.
+        If you find multiple logos, pick the primary/main one (usually in the header).
+        
+        CRITICAL: The logo_url MUST be a real, working image URL from their website.`,
+        add_context_from_internet: true,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            logo_url: { type: "string" },
+            logo_description: { type: "string" },
+            company_name: { type: "string" }
+          }
+        }
+      });
+
+      const scrapedLogoUrl = logoScrape.logo_url || '';
+      const logoDescription = logoScrape.logo_description || '';
+      const scrapedCompanyName = logoScrape.company_name || '';
+
+      // Step 2: Full brand identity analysis (with logo context)
       const brandAnalysis = await base44.integrations.Core.InvokeLLM({
-        prompt: `Analyze this website (${websiteUrl}) and extract comprehensive brand identity and design elements.
+        prompt: `Analyze this website (${websiteUrl}) and extract comprehensive brand identity.
+        
+        We already found their logo: ${scrapedLogoUrl ? `URL: ${scrapedLogoUrl}` : `Description: ${logoDescription}`}
+        Company name: ${scrapedCompanyName}
         
         Extract and return JSON with:
-        - logo_url: direct URL to their main logo image (find the actual logo file URL)
-        - primary_color: hex color (main brand color)
+        - logo_url: "${scrapedLogoUrl}" (use exactly this URL we already scraped)
+        - logo_description: detailed description of what the logo looks like (colors, shapes, text, style) so it can be recreated in booth renderings
+        - primary_color: hex color (main brand color from logo and website)
         - secondary_color: hex color (secondary brand color)
         - accent_color_1: hex color (third brand/accent color)
-        - accent_color_2: hex color (fourth brand/accent color if exists, otherwise complementary)
-        - typography_primary: main font family name used on site
-        - typography_secondary: secondary/heading font family if different
+        - accent_color_2: hex color (fourth brand/accent color)
+        - typography_primary: main font family name
+        - typography_secondary: secondary font family
         - brand_personality: 2-3 words describing the brand feel
         - industry: industry/sector
         - target_audience: who they serve
         - design_style: array of style keywords from [Modern, Industrial, Minimalist, Luxury, Tech, Organic, Bold, Classic, Creative]
         - brand_essence: one sentence capturing their brand essence
         
-        IMPORTANT: Extract 4 distinct colors from their branding. Look at their logo, headers, buttons, and key visual elements.`,
+        IMPORTANT: Extract 4 distinct colors. The primary_color should match the dominant color in their logo.`,
         add_context_from_internet: true,
         response_json_schema: {
           type: "object",
           properties: {
             logo_url: { type: "string" },
+            logo_description: { type: "string" },
             primary_color: { type: "string" },
             secondary_color: { type: "string" },
             accent_color_1: { type: "string" },
@@ -84,6 +120,11 @@ export default function Loading() {
           }
         }
       });
+      
+      // Ensure the scraped logo URL is preserved in the brand analysis
+      if (scrapedLogoUrl) {
+        brandAnalysis.logo_url = scrapedLogoUrl;
+      }
 
       // Step 2: Get all available products for this booth size
       const allProducts = await base44.entities.Product.filter({
@@ -221,16 +262,38 @@ Return JSON with 3 designs.`;
         }
       });
 
-      // Generate all 2D images in parallel for speed
+      // Generate all 2D images in parallel using Base44 GenerateImage
+      // Include the logo as a reference image so it appears in the booth rendering
       const imagePromises = designs.designs.map(async (design) => {
         const designProducts = compatibleProducts.filter(p => design.product_skus.includes(p.sku));
         
-        const imagePrompt = `Photorealistic trade show booth: ${boothSize} (${design.tier} tier). Brand: ${brandAnalysis.brand_personality}, colors ${brandAnalysis.primary_color} and ${brandAnalysis.secondary_color}. Products: ${designProducts.map(p => p.name).join(', ')}. ${design.experience_story}. Professional architectural rendering, clean, modern, trade show photography style.`;
+        const imagePrompt = `Photorealistic 3D rendering of a trade show booth.
+
+BOOTH: ${boothSize} booth, ${design.tier} tier design called "${design.design_name}".
+
+BRAND LOGO (MUST BE VISIBLE ON BOOTH):
+${brandAnalysis.logo_description ? `The company logo looks like: ${brandAnalysis.logo_description}` : `Company: ${scrapedCompanyName}`}
+The logo MUST appear prominently on the main backwall and reception counter of the booth. Show it as a large, clearly visible graphic element.
+
+BRAND COLORS (USE THROUGHOUT):
+- Primary: ${brandAnalysis.primary_color} (dominant color on walls, structures)
+- Secondary: ${brandAnalysis.secondary_color} (accents, counters)
+- Accent: ${brandAnalysis.accent_color_1} (lighting, details)
+
+DESIGN CONCEPT: ${design.experience_story}
+
+PRODUCTS IN BOOTH: ${designProducts.map(p => p.name).join(', ')}
+
+RENDERING STYLE: Professional architectural visualization, 3/4 angle view, trade show floor with carpet, dramatic lighting, photorealistic quality. The booth must look like a real trade show exhibit with the company's branding clearly displayed.`;
 
         try {
-          const imageResult = await base44.integrations.Core.GenerateImage({
-            prompt: imagePrompt
-          });
+          // Pass the logo URL as a reference image if available
+          const generateParams = { prompt: imagePrompt };
+          if (brandAnalysis.logo_url) {
+            generateParams.existing_image_urls = [brandAnalysis.logo_url];
+          }
+          
+          const imageResult = await base44.integrations.Core.GenerateImage(generateParams);
           return imageResult.url;
         } catch (error) {
           console.error('Image generation failed:', error);
