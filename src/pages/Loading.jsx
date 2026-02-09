@@ -194,8 +194,10 @@ For each product selected, provide a spatial_layout array with exact 3D position
 Apply branding strategically:
 - Use primary_color on 2-3 key structural pieces
 - Use secondary_color on 1-2 accent pieces  
-- Apply logo to 1-2 prominent surfaces (reception counter, main wall)
-- Only apply to products marked as customizable
+- CRITICAL: The company logo MUST be applied to at least 2 prominent surfaces (main backwall and reception counter). This is a REQUIRED element.
+- Logo description: ${brandAnalysis.logo_description || 'Company logo'}
+- Logo URL: ${brandAnalysis.logo_url || 'Not available'}
+- Only apply custom colors to products marked as customizable
 
 Arrange products logically for booth flow, leave pathways, create zones.
 
