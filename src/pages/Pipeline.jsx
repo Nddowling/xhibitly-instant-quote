@@ -12,6 +12,9 @@ import { motion } from 'framer-motion';
 
 export default function Pipeline() {
   const navigate = useNavigate();
+  const urlParams = new URLSearchParams(window.location.search);
+  const view = urlParams.get('view'); // 'active', 'followups', 'wins', or null (all pipeline)
+  
   const [user, setUser] = useState(null);
   const [salesRep, setSalesRep] = useState(null);
   const [orders, setOrders] = useState([]);
@@ -46,9 +49,35 @@ export default function Pipeline() {
 
       if (reps.length > 0) {
         setSalesRep(reps[0]);
-        const assignedOrders = await base44.entities.Order.filter({ 
+        let assignedOrders = await base44.entities.Order.filter({ 
           assigned_sales_rep_id: reps[0].id 
         });
+        
+        // Demo fallback: if no orders assigned, show all
+        if (assignedOrders.length === 0) {
+          assignedOrders = await base44.entities.Order.list('-created_date', 50);
+        }
+
+        // Pre-filter based on view param
+        if (view === 'active') {
+          assignedOrders = assignedOrders.filter(o => 
+            ['Pending', 'Contacted', 'Quoted', 'Negotiating'].includes(o.status)
+          );
+        } else if (view === 'followups') {
+          const today = new Date();
+          assignedOrders = assignedOrders.filter(o => {
+            const followUp = o.follow_up_date ? new Date(o.follow_up_date) : null;
+            return followUp && 
+                   followUp.toDateString() === today.toDateString() &&
+                   ['Pending', 'Contacted', 'Quoted', 'Negotiating'].includes(o.status);
+          });
+        } else if (view === 'wins') {
+          assignedOrders = assignedOrders.filter(o => 
+            o.status === 'Confirmed' && 
+            new Date(o.created_date) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+          );
+        }
+
         setOrders(assignedOrders);
       }
     } catch (error) {
@@ -166,7 +195,12 @@ export default function Pipeline() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-6">
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">Sales Pipeline</h1>
+          <h1 className="text-3xl font-bold text-slate-900 mb-2">
+            {view === 'active' ? 'Active Opportunities' :
+             view === 'followups' ? "Today's Follow-ups" :
+             view === 'wins' ? 'Recent Wins (30d)' :
+             'Sales Pipeline'}
+          </h1>
           <p className="text-slate-500">
             {filteredOrders.length} {filteredOrders.length === 1 ? 'opportunity' : 'opportunities'}
           </p>

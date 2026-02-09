@@ -230,7 +230,10 @@ export default function SalesDashboard() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card 
+            className="cursor-pointer hover:shadow-lg transition-shadow"
+            onClick={() => navigate(createPageUrl('Pipeline') + '?view=active')}
+          >
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -244,7 +247,10 @@ export default function SalesDashboard() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card 
+            className="cursor-pointer hover:shadow-lg transition-shadow"
+            onClick={() => navigate(createPageUrl('Pipeline') + '?view=followups')}
+          >
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -258,7 +264,10 @@ export default function SalesDashboard() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card 
+            className="cursor-pointer hover:shadow-lg transition-shadow"
+            onClick={() => navigate(createPageUrl('Pipeline') + '?view=wins')}
+          >
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
