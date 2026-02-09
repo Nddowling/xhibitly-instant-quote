@@ -294,7 +294,7 @@ export default function SalesDashboard() {
                       <div
                         key={order.id}
                         className="p-4 border border-slate-200 rounded-lg hover:border-[#e2231a] transition-colors cursor-pointer"
-                        onClick={() => navigate(createPageUrl('OrderDetail') + '?orderId=' + order.id)}
+                        onClick={() => navigate(createPageUrl('OrderDetail') + '?id=' + order.id)}
                       >
                         <div className="flex items-start justify-between mb-2">
                           <div>
@@ -391,7 +391,7 @@ export default function SalesDashboard() {
                     <div
                       key={order.id}
                       className="p-4 border border-slate-200 rounded-lg hover:border-[#e2231a] transition-colors cursor-pointer"
-                      onClick={() => navigate(createPageUrl('OrderDetail') + '?orderId=' + order.id)}
+                      onClick={() => navigate(createPageUrl('OrderDetail') + '?id=' + order.id)}
                     >
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex-1">

@@ -165,7 +165,7 @@ export default function ContactDetail() {
               <Card
                 key={order.id}
                 className="cursor-pointer hover:shadow-lg hover:border-[#e2231a] transition-all"
-                onClick={() => navigate(createPageUrl('OrderDetail') + '?orderId=' + order.id)}
+                onClick={() => navigate(createPageUrl('OrderDetail') + '?id=' + order.id)}
               >
                 <CardContent className="p-5">
                   <div className="flex items-start justify-between mb-3">

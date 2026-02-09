@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Package, Calendar, MapPin, Loader2 } from 'lucide-react';
+import { Package, Calendar, MapPin, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
 
 export default function OrderDetail() {
@@ -111,15 +111,6 @@ export default function OrderDetail() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <Button 
-            variant="ghost" 
-            onClick={() => navigate(createPageUrl('OrderHistory'))}
-            className="mb-4 text-slate-600 hover:text-slate-900"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Orders
-          </Button>
-
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
               <div className="flex items-center gap-3 mb-2">
