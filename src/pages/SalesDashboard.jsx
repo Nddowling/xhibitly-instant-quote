@@ -90,19 +90,29 @@ export default function SalesDashboard() {
       }
 
       // Get orders assigned to this rep
-      const repOrders = await base44.entities.Order.filter(
+      let repOrders = await base44.entities.Order.filter(
         { assigned_sales_rep_id: salesReps[0]?.id },
         '-created_date',
         50
       );
+
+      // Demo fallback: if no orders assigned to this rep, show all orders
+      if (repOrders.length === 0) {
+        repOrders = await base44.entities.Order.list('-created_date', 50);
+      }
       setOrders(repOrders);
 
       // Get recent activities
-      const repActivities = await base44.entities.Activity.filter(
+      let repActivities = await base44.entities.Activity.filter(
         { sales_rep_id: salesReps[0]?.id },
         '-created_date',
         10
       );
+
+      // Demo fallback: if no activities for this rep, show all activities
+      if (repActivities.length === 0) {
+        repActivities = await base44.entities.Activity.list('-created_date', 10);
+      }
       setActivities(repActivities);
 
     } catch (e) {

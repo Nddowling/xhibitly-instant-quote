@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
-import { Package, Calendar, MapPin, Loader2 } from 'lucide-react';
+import { Package, Calendar, MapPin, Loader2, ShoppingCart } from 'lucide-react';
 import { format } from 'date-fns';
 
 export default function OrderDetail() {
@@ -16,6 +16,7 @@ export default function OrderDetail() {
   const [order, setOrder] = useState(null);
   const [boothDesign, setBoothDesign] = useState(null);
   const [products, setProducts] = useState([]);
+  const [lineItems, setLineItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -56,6 +57,13 @@ export default function OrderDetail() {
           }
         }
       }
+
+      // Load line items for this order
+      const orderLineItems = await base44.entities.LineItem.filter(
+        { order_id: orderId },
+        'created_date'
+      );
+      setLineItems(orderLineItems);
     } catch (e) {
       console.error('Error loading order details:', e);
       navigate(-1);
@@ -221,8 +229,92 @@ export default function OrderDetail() {
           </motion.div>
         )}
 
-        {/* Itemized Products */}
-        {products.length > 0 && (
+        {/* Line Items */}
+        {lineItems.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25 }}
+            className="mb-6"
+          >
+            <Card className="border-0 shadow-md">
+              <CardHeader>
+                <div className="flex items-center gap-2">
+                  <ShoppingCart className="w-5 h-5 text-[#e2231a]" />
+                  <CardTitle className="text-xl text-slate-800">
+                    Quote Line Items
+                  </CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {lineItems.map((item) => (
+                    <div 
+                      key={item.id}
+                      className="flex items-start gap-4 p-4 bg-slate-50 rounded-lg"
+                    >
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-semibold text-slate-800 mb-1">
+                          {item.product_name}
+                        </h4>
+                        {item.description && (
+                          <p className="text-sm text-slate-500 mb-2 line-clamp-2">
+                            {item.description}
+                          </p>
+                        )}
+                        <div className="flex flex-wrap gap-2">
+                          {item.category && (
+                            <Badge variant="outline" className="text-xs">{item.category}</Badge>
+                          )}
+                          {item.sku && (
+                            <span className="text-xs text-slate-400 font-mono">{item.sku}</span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="text-right flex-shrink-0">
+                        <div className="text-lg font-bold text-slate-900">
+                          {formatPrice(item.total_price)}
+                        </div>
+                        {item.quantity > 1 && (
+                          <p className="text-xs text-slate-500">
+                            {item.quantity} × {formatPrice(item.unit_price)}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Total */}
+                <div className="mt-6 pt-6 border-t-2 border-slate-200">
+                  <div className="flex items-center justify-between">
+                    <div className="text-lg font-semibold text-slate-800">
+                      Quote Total
+                    </div>
+                    <div className="text-3xl font-bold text-[#e2231a]">
+                      {formatPrice(order.quoted_price)}
+                    </div>
+                  </div>
+                  {order.discount_amount > 0 && (
+                    <div className="flex items-center justify-between mt-2 text-sm">
+                      <span className="text-green-600">Discount Applied</span>
+                      <span className="text-green-600 font-medium">-{formatPrice(order.discount_amount)}</span>
+                    </div>
+                  )}
+                  {order.final_price && order.final_price !== order.quoted_price && (
+                    <div className="flex items-center justify-between mt-2">
+                      <span className="text-lg font-semibold text-slate-800">Final Price</span>
+                      <span className="text-2xl font-bold text-green-700">{formatPrice(order.final_price)}</span>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
+
+        {/* Itemized Products (from booth design) */}
+        {products.length > 0 && lineItems.length === 0 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
