@@ -308,11 +308,11 @@ export default function Layout({ children, currentPageName }) {
                     <span className="text-xs">Pipeline</span>
                   </Button>
                 </Link>
-                <Link to={createPageUrl('Contacts')} className="flex-1">
+                <Link to={createPageUrl('SalesQuoteStart')} className="flex-1">
                   <Button
                     variant="ghost"
                     className={`w-full h-full flex flex-col items-center justify-center gap-1 ${
-                      currentPageName === 'Contacts' ? 'text-[#e2231a]' : 'text-slate-600 dark:text-slate-400'
+                      currentPageName === 'SalesQuoteStart' ? 'text-[#e2231a]' : 'text-slate-600 dark:text-slate-400'
                     }`}
                   >
                     <Plus className="w-5 h-5" />
