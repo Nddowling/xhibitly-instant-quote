@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { createPageUrl } from '../utils';
 import { base44 } from '@/api/base44Client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -32,7 +31,7 @@ export default function OrderDetail() {
       // Load the order
       const orderData = await base44.entities.Order.filter({ id: orderId });
       if (!orderData || orderData.length === 0) {
-        navigate(createPageUrl('OrderHistory'));
+        navigate(-1);
         return;
       }
       const currentOrder = orderData[0];
@@ -59,7 +58,7 @@ export default function OrderDetail() {
       }
     } catch (e) {
       console.error('Error loading order details:', e);
-      navigate(createPageUrl('OrderHistory'));
+      navigate(-1);
     }
     setIsLoading(false);
   };
