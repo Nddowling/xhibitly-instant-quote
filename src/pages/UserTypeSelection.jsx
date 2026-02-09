@@ -5,7 +5,7 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { motion } from 'framer-motion';
-import { Building2, Users, GraduationCap } from 'lucide-react';
+import { Building2, Users, GraduationCap, ArrowRight } from 'lucide-react';
 
 export default function UserTypeSelection() {
   const navigate = useNavigate();
@@ -37,17 +37,21 @@ export default function UserTypeSelection() {
     setIsLoading(false);
   };
 
-  const handleSelectType = async (type) => {
+  const handleSelectType = (type) => {
     setSelectedType(type);
+  };
+
+  const handleConfirm = async () => {
+    if (!selectedType) return;
     
     try {
       // Update user type
       await base44.auth.updateMe({
-        user_type: type,
-        is_sales_rep: type === 'sales_rep'
+        user_type: selectedType,
+        is_sales_rep: selectedType === 'sales_rep'
       });
       
-      if (type === 'sales_rep') {
+      if (selectedType === 'sales_rep') {
         // Create SalesRep entity
         const user = await base44.auth.me();
         
@@ -67,8 +71,10 @@ export default function UserTypeSelection() {
       }
       
       // Redirect based on user type
-      if (type === 'sales_rep') {
+      if (selectedType === 'sales_rep') {
         navigate(createPageUrl('SalesDashboard'));
+      } else if (selectedType === 'student') {
+        navigate(createPageUrl('StudentHome'));
       } else {
         navigate(createPageUrl('QuoteRequest'));
       }
@@ -216,6 +222,22 @@ export default function UserTypeSelection() {
             </Card>
           </motion.div>
         </div>
+
+        {selectedType && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-8 flex justify-center"
+          >
+            <Button
+              onClick={handleConfirm}
+              className="bg-[#e2231a] hover:bg-[#b01b13] h-14 px-12 text-lg font-semibold"
+            >
+              Continue as {selectedType === 'sales_rep' ? 'Sales Representative' : selectedType === 'student' ? 'Student' : 'Customer'}
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </Button>
+          </motion.div>
+        )}
       </motion.div>
     </div>
   );
