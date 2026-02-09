@@ -117,10 +117,10 @@ export default function Results() {
           className="text-center mb-8"
         >
           <h1 className="text-3xl md:text-4xl font-bold text-[#e2231a] mb-3">
-            Your Curated Booth Experiences
+            Curated {quoteData.boothSize} Experience for {quoteData.dealerCompany}
           </h1>
           <p className="text-slate-500 text-lg mb-4">
-            {quoteData.boothSize} booth designed for {quoteData.dealerCompany}
+            Personalized booth designs based on your brand
           </p>
           
           {brandIdentity && (
