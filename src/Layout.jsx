@@ -98,7 +98,7 @@ export default function Layout({ children, currentPageName }) {
   const showHeader = !noHeaderPages.includes(currentPageName) && user;
 
   // Root dashboard pages (no back button)
-  const rootPages = ['SalesDashboard', 'QuoteRequest', 'OrderHistory'];
+  const rootPages = ['SalesDashboard', 'QuoteRequest', 'OrderHistory', 'Contacts', 'StudentHome'];
   const showBackButton = showHeader && !rootPages.includes(currentPageName);
 
   // Pages where mobile bottom nav is shown

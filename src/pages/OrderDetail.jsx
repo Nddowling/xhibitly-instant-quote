@@ -12,7 +12,7 @@ import { format } from 'date-fns';
 export default function OrderDetail() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const orderId = searchParams.get('id');
+  const orderId = searchParams.get('id') || searchParams.get('orderId');
   
   const [order, setOrder] = useState(null);
   const [boothDesign, setBoothDesign] = useState(null);
@@ -21,7 +21,7 @@ export default function OrderDetail() {
 
   useEffect(() => {
     if (!orderId) {
-      navigate(createPageUrl('OrderHistory'));
+      navigate(-1);
       return;
     }
     loadOrderDetails();
