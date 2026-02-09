@@ -96,16 +96,7 @@ export default function Contacts() {
   };
 
   const handleContactClick = (contact) => {
-    // Navigate to create a new quote for this customer
-    const customerData = {
-      dealerEmail: contact.email,
-      dealerCompany: contact.company_name,
-      dealerName: contact.contact_name,
-      dealerPhone: contact.phone,
-      isSalesRepQuote: true
-    };
-    sessionStorage.setItem('salesCustomerData', JSON.stringify(customerData));
-    navigate(createPageUrl('SalesQuoteStart'));
+    navigate(createPageUrl('ContactDetail') + '?email=' + encodeURIComponent(contact.email));
   };
 
   const formatPrice = (price) => {
@@ -146,7 +137,7 @@ export default function Contacts() {
               className="bg-[#e2231a] hover:bg-[#b01b13]"
             >
               <Plus className="w-4 h-4 mr-2" />
-              New Quote
+              New Contact
             </Button>
           </div>
 

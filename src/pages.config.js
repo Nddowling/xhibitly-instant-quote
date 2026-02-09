@@ -55,6 +55,7 @@ import Landing from './pages/Landing';
 import Loading from './pages/Loading';
 import OrderDetail from './pages/OrderDetail';
 import OrderHistory from './pages/OrderHistory';
+import Pipeline from './pages/Pipeline';
 import Product3DManager from './pages/Product3DManager';
 import ProductDetail from './pages/ProductDetail';
 import QuoteRequest from './pages/QuoteRequest';
@@ -64,7 +65,7 @@ import SalesQuoteStart from './pages/SalesQuoteStart';
 import Settings from './pages/Settings';
 import StudentHome from './pages/StudentHome';
 import UserTypeSelection from './pages/UserTypeSelection';
-import Pipeline from './pages/Pipeline';
+import ContactDetail from './pages/ContactDetail';
 import __Layout from './Layout.jsx';
 
 
@@ -77,6 +78,7 @@ export const PAGES = {
     "Loading": Loading,
     "OrderDetail": OrderDetail,
     "OrderHistory": OrderHistory,
+    "Pipeline": Pipeline,
     "Product3DManager": Product3DManager,
     "ProductDetail": ProductDetail,
     "QuoteRequest": QuoteRequest,
@@ -86,7 +88,7 @@ export const PAGES = {
     "Settings": Settings,
     "StudentHome": StudentHome,
     "UserTypeSelection": UserTypeSelection,
-    "Pipeline": Pipeline,
+    "ContactDetail": ContactDetail,
 }
 
 export const pagesConfig = {
