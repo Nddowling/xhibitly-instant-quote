@@ -25,16 +25,21 @@ export default function Home() {
     try {
       const isAuth = await base44.auth.isAuthenticated();
       if (isAuth) {
-        const user = await base44.auth.me();
-        
-        if (!user.user_type) {
-          navigate(createPageUrl('UserTypeSelection'));
-        } else if (user.is_sales_rep) {
-          navigate(createPageUrl('SalesDashboard'));
-        } else if (user.user_type === 'student') {
-          navigate(createPageUrl('StudentHome'));
-        } else {
-          navigate(createPageUrl('QuoteRequest'));
+        try {
+          const user = await base44.auth.me();
+          
+          if (!user.user_type) {
+            navigate(createPageUrl('UserTypeSelection'));
+          } else if (user.is_sales_rep) {
+            navigate(createPageUrl('SalesDashboard'));
+          } else if (user.user_type === 'student') {
+            navigate(createPageUrl('StudentHome'));
+          } else {
+            navigate(createPageUrl('QuoteRequest'));
+          }
+        } catch (userError) {
+          // User is authenticated but we can't get user data - let them continue to login
+          setIsLoading(false);
         }
       } else {
         setIsLoading(false);
