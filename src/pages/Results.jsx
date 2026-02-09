@@ -124,7 +124,17 @@ export default function Results() {
           </p>
           
           {brandIdentity && (
-            <div className="flex items-center justify-center gap-6 text-sm">
+            <div className="flex items-center justify-center gap-6 text-sm flex-wrap">
+              {brandIdentity.logo_url && (
+                <div className="flex items-center gap-2">
+                  <img 
+                    src={brandIdentity.logo_url} 
+                    alt="Brand Logo" 
+                    className="h-8 max-w-[120px] object-contain"
+                    onError={(e) => { e.target.style.display = 'none'; }}
+                  />
+                </div>
+              )}
               <div className="flex items-center gap-2">
                 <Palette className="w-4 h-4 text-slate-400" />
                 <div className="flex gap-1.5">
