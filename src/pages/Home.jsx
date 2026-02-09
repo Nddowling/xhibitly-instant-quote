@@ -31,6 +31,8 @@ export default function Home() {
           navigate(createPageUrl('UserTypeSelection'));
         } else if (user.is_sales_rep) {
           navigate(createPageUrl('SalesDashboard'));
+        } else if (user.user_type === 'student') {
+          navigate(createPageUrl('StudentHome'));
         } else {
           navigate(createPageUrl('QuoteRequest'));
         }

@@ -63,6 +63,7 @@ import SalesDashboard from './pages/SalesDashboard';
 import SalesQuoteStart from './pages/SalesQuoteStart';
 import Settings from './pages/Settings';
 import UserTypeSelection from './pages/UserTypeSelection';
+import StudentHome from './pages/StudentHome';
 import __Layout from './Layout.jsx';
 
 
@@ -83,6 +84,7 @@ export const PAGES = {
     "SalesQuoteStart": SalesQuoteStart,
     "Settings": Settings,
     "UserTypeSelection": UserTypeSelection,
+    "StudentHome": StudentHome,
 }
 
 export const pagesConfig = {

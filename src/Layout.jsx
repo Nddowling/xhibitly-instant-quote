@@ -70,6 +70,8 @@ export default function Layout({ children, currentPageName }) {
 
       if (isSalesRep) {
         navigate(createPageUrl('SalesDashboard'));
+      } else if (newType === 'student') {
+        navigate(createPageUrl('StudentHome'));
       } else {
         navigate(createPageUrl('QuoteRequest'));
       }
@@ -190,6 +192,16 @@ export default function Layout({ children, currentPageName }) {
                       </Button>
                     </Link>
                   </>
+                ) : user?.user_type === 'student' ? (
+                  <Link to={createPageUrl('StudentHome')}>
+                    <Button 
+                      variant="ghost"
+                      className={`text-white hover:bg-white/20 ${currentPageName === 'StudentHome' ? 'border border-white/30' : ''}`}
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      My Submissions
+                    </Button>
+                  </Link>
                 ) : (
                   <>
                     <Link to={createPageUrl('QuoteRequest')}>
@@ -299,6 +311,41 @@ export default function Layout({ children, currentPageName }) {
                     <span className="text-xs">Contacts</span>
                   </Button>
                 </Link>
+                <Link to={createPageUrl('Settings')} className="flex-1">
+                  <Button
+                    variant="ghost"
+                    className={`w-full h-full flex flex-col items-center justify-center gap-1 ${
+                      currentPageName === 'Settings' ? 'text-[#e2231a]' : 'text-slate-600 dark:text-slate-400'
+                    }`}
+                  >
+                    <SettingsIcon className="w-5 h-5" />
+                    <span className="text-xs">Settings</span>
+                  </Button>
+                </Link>
+              </>
+            ) : user?.user_type === 'student' ? (
+              <>
+                <Link to={createPageUrl('StudentHome')} className="flex-1">
+                  <Button
+                    variant="ghost"
+                    className={`w-full h-full flex flex-col items-center justify-center gap-1 ${
+                      currentPageName === 'StudentHome' ? 'text-[#e2231a]' : 'text-slate-600 dark:text-slate-400'
+                    }`}
+                  >
+                    <HomeIcon className="w-5 h-5" />
+                    <span className="text-xs">Home</span>
+                  </Button>
+                </Link>
+                <Link to={createPageUrl('StudentHome')} className="flex-1">
+                  <Button
+                    variant="ghost"
+                    className="w-full h-full flex flex-col items-center justify-center gap-1 text-slate-600 dark:text-slate-400"
+                  >
+                    <Plus className="w-5 h-5" />
+                    <span className="text-xs">Upload</span>
+                  </Button>
+                </Link>
+                <div className="flex-1" />
                 <Link to={createPageUrl('Settings')} className="flex-1">
                   <Button
                     variant="ghost"

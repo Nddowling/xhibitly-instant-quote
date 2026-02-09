@@ -25,7 +25,7 @@ export default function UserTypeSelection() {
         if (user.is_sales_rep) {
           navigate(createPageUrl('SalesDashboard'));
         } else if (user.user_type === 'student') {
-          navigate(createPageUrl('QuoteRequest'));
+          navigate(createPageUrl('StudentHome'));
         } else {
           navigate(createPageUrl('QuoteRequest'));
         }
