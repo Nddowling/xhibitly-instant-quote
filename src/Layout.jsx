@@ -166,14 +166,6 @@ export default function Layout({ children, currentPageName }) {
                         Dashboard
                       </Button>
                     </Link>
-                    <Link to={createPageUrl('Pipeline')}>
-                      <Button 
-                        variant="ghost"
-                        className={`text-white hover:bg-white/20 ${currentPageName === 'Pipeline' ? 'border border-white/30' : ''}`}
-                      >
-                        Pipeline
-                      </Button>
-                    </Link>
                     <Link to={createPageUrl('Contacts')}>
                       <Button 
                         variant="ghost"
@@ -297,17 +289,6 @@ export default function Layout({ children, currentPageName }) {
                     <span className="text-xs">Dashboard</span>
                   </Button>
                 </Link>
-                <Link to={createPageUrl('Pipeline')} className="flex-1">
-                  <Button
-                    variant="ghost"
-                    className={`w-full h-full flex flex-col items-center justify-center gap-1 ${
-                      currentPageName === 'Pipeline' ? 'text-[#e2231a]' : 'text-slate-600 dark:text-slate-400'
-                    }`}
-                  >
-                    <FileText className="w-5 h-5" />
-                    <span className="text-xs">Pipeline</span>
-                  </Button>
-                </Link>
                 <Link to={createPageUrl('SalesQuoteStart')} className="flex-1">
                   <Button
                     variant="ghost"
@@ -317,6 +298,17 @@ export default function Layout({ children, currentPageName }) {
                   >
                     <Plus className="w-5 h-5" />
                     <span className="text-xs">New Quote</span>
+                  </Button>
+                </Link>
+                <Link to={createPageUrl('Contacts')} className="flex-1">
+                  <Button
+                    variant="ghost"
+                    className={`w-full h-full flex flex-col items-center justify-center gap-1 ${
+                      currentPageName === 'Contacts' ? 'text-[#e2231a]' : 'text-slate-600 dark:text-slate-400'
+                    }`}
+                  >
+                    <FileText className="w-5 h-5" />
+                    <span className="text-xs">Contacts</span>
                   </Button>
                 </Link>
                 <Link to={createPageUrl('Settings')} className="flex-1">
