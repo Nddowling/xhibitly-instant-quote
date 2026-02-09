@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from './utils';
 import { base44 } from '@/api/base44Client';
-import { LogOut, FileText, Plus, Home as HomeIcon, Settings as SettingsIcon, ArrowLeft, LayoutDashboard } from 'lucide-react';
+import { LogOut, FileText, Plus, Home as HomeIcon, Settings as SettingsIcon, ArrowLeft, LayoutDashboard, ChevronDown, User, Users, GraduationCap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
@@ -43,6 +44,51 @@ export default function Layout({ children, currentPageName }) {
 
   const handleBack = () => {
     navigate(-1);
+  };
+
+  const handleSwitchUserType = async (newType) => {
+    try {
+      const isSalesRep = newType === 'sales_rep';
+      
+      await base44.auth.updateMe({
+        user_type: newType,
+        is_sales_rep: isSalesRep
+      });
+
+      if (isSalesRep && !user.is_sales_rep) {
+        const existingReps = await base44.entities.SalesRep.filter({ user_id: user.id });
+        if (existingReps.length === 0) {
+          await base44.entities.SalesRep.create({
+            user_id: user.id,
+            email: user.email,
+            company_name: user.company_name || '',
+            contact_name: user.contact_name || user.full_name || '',
+            phone: user.phone || ''
+          });
+        }
+      }
+
+      if (isSalesRep) {
+        navigate(createPageUrl('SalesDashboard'));
+      } else {
+        navigate(createPageUrl('QuoteRequest'));
+      }
+      window.location.reload();
+    } catch (e) {
+      console.error('Error switching user type:', e);
+    }
+  };
+
+  const getUserTypeLabel = () => {
+    if (user?.is_sales_rep) return 'Sales Rep';
+    if (user?.user_type === 'student') return 'Student';
+    return 'Customer';
+  };
+
+  const getUserTypeIcon = () => {
+    if (user?.is_sales_rep) return Users;
+    if (user?.user_type === 'student') return GraduationCap;
+    return User;
   };
 
   // Pages that don't need the header
@@ -170,6 +216,29 @@ export default function Layout({ children, currentPageName }) {
                 <div className="text-sm text-white/80 mr-2">
                   Hello, {user?.full_name?.split(' ')[0] || user?.contact_name?.split(' ')[0]}
                 </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="text-white hover:bg-white/20 gap-2">
+                      {React.createElement(getUserTypeIcon(), { className: "w-4 h-4" })}
+                      {getUserTypeLabel()}
+                      <ChevronDown className="w-4 h-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48">
+                    <DropdownMenuItem onClick={() => handleSwitchUserType('customer')}>
+                      <User className="w-4 h-4 mr-2" />
+                      Customer
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleSwitchUserType('sales_rep')}>
+                      <Users className="w-4 h-4 mr-2" />
+                      Sales Rep
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleSwitchUserType('student')}>
+                      <GraduationCap className="w-4 h-4 mr-2" />
+                      Student
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
                 <Button 
                   variant="ghost" 
                   size="icon"
