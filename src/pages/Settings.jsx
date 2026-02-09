@@ -212,7 +212,7 @@ export default function Settings() {
                   <div>
                     <Label className="text-slate-500 dark:text-slate-400 text-sm">Account Type</Label>
                     <p className="text-slate-900 dark:text-white font-medium">
-                      {user.is_sales_rep ? 'Sales Representative' : 'Customer'}
+                      {user.is_sales_rep ? 'Sales Representative' : user.user_type === 'student' ? 'Student' : 'Customer'}
                     </p>
                   </div>
                   <Button
@@ -259,11 +259,14 @@ export default function Settings() {
                       <SelectContent>
                         <SelectItem value="customer">Customer</SelectItem>
                         <SelectItem value="sales_rep">Sales Representative</SelectItem>
+                        <SelectItem value="student">Student</SelectItem>
                       </SelectContent>
                     </Select>
                     <p className="text-xs text-slate-500 mt-1">
                       {editForm.user_type === 'sales_rep' 
                         ? 'You will have access to the sales dashboard and tools'
+                        : editForm.user_type === 'student'
+                        ? 'You will have access to learning resources and project tools'
                         : 'You will have access to request quotes and view your orders'}
                     </p>
                   </div>

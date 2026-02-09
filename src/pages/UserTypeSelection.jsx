@@ -5,7 +5,7 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { motion } from 'framer-motion';
-import { Building2, Users, ArrowRight } from 'lucide-react';
+import { Building2, Users, GraduationCap } from 'lucide-react';
 
 export default function UserTypeSelection() {
   const navigate = useNavigate();
@@ -24,6 +24,8 @@ export default function UserTypeSelection() {
       if (user.user_type) {
         if (user.is_sales_rep) {
           navigate(createPageUrl('SalesDashboard'));
+        } else if (user.user_type === 'student') {
+          navigate(createPageUrl('QuoteRequest'));
         } else {
           navigate(createPageUrl('QuoteRequest'));
         }
@@ -99,7 +101,7 @@ export default function UserTypeSelection() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-3 gap-6">
           {/* Customer Option */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -171,6 +173,44 @@ export default function UserTypeSelection() {
                 <div className="flex items-start gap-2 text-sm text-slate-600">
                   <div className="w-1.5 h-1.5 rounded-full bg-[#e2231a] mt-2 flex-shrink-0" />
                   <span>View performance analytics and goals</span>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Student Option */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <Card 
+              className={`cursor-pointer transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 ${
+                selectedType === 'student' ? 'ring-4 ring-[#e2231a] shadow-xl' : 'hover:ring-2 hover:ring-slate-300'
+              }`}
+              onClick={() => handleSelectType('student')}
+            >
+              <CardHeader className="text-center pb-4">
+                <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <GraduationCap className="w-10 h-10 text-white" />
+                </div>
+                <CardTitle className="text-2xl">I'm a Student</CardTitle>
+                <CardDescription className="text-base mt-2">
+                  Learning about trade show booth design and marketing
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3 pt-4 border-t">
+                <div className="flex items-start gap-2 text-sm text-slate-600">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#e2231a] mt-2 flex-shrink-0" />
+                  <span>Explore booth design tools</span>
+                </div>
+                <div className="flex items-start gap-2 text-sm text-slate-600">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#e2231a] mt-2 flex-shrink-0" />
+                  <span>Request quotes for projects</span>
+                </div>
+                <div className="flex items-start gap-2 text-sm text-slate-600">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#e2231a] mt-2 flex-shrink-0" />
+                  <span>Access learning resources</span>
                 </div>
               </CardContent>
             </Card>
