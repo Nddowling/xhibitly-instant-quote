@@ -54,7 +54,7 @@ export default function Results() {
 
   const handleSelectDesign = (design) => {
     sessionStorage.setItem('selectedDesign', JSON.stringify(design));
-    navigate(createPageUrl('ProductDetail'));
+    navigate(createPageUrl('DesignConfigurator'));
   };
 
   const getTierStyles = (tier) => {
@@ -273,7 +273,7 @@ export default function Results() {
                           : 'bg-slate-800 hover:bg-slate-900'
                       }`}
                     >
-                      Explore Experience
+                      Customize in 3D
                       <ArrowRight className="w-5 h-5 ml-2" />
                     </Button>
                   </CardContent>
