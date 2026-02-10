@@ -286,7 +286,9 @@ Return JSON with 3 designs.`;
       // Generate all 2D images in parallel using Base44 GenerateImage
       // Include the logo as a reference image so it appears in the booth rendering
       const imagePromises = designs.designs.map(async (design) => {
-        const designProducts = compatibleProducts.filter(p => design.product_skus.includes(p.sku));
+        const designProducts = compatibleProducts.filter(p => 
+          design.product_skus.includes(p.manufacturer_sku || p.sku)
+        );
         
         const imagePrompt = `Photorealistic 3D rendering of a trade show booth.
 
@@ -308,17 +310,25 @@ PRODUCTS IN BOOTH: ${designProducts.map(p => p.name).join(', ')}
 RENDERING STYLE: Professional architectural visualization, 3/4 angle view, trade show floor with carpet, dramatic lighting, photorealistic quality. The booth must look like a real trade show exhibit with the company's branding clearly displayed.`;
 
         try {
-          // Pass the logo URL as a reference image if available
+          // Pass the logo URL as a reference image only if it looks like a valid image URL
           const generateParams = { prompt: imagePrompt };
-          if (brandAnalysis.logo_url) {
-            generateParams.existing_image_urls = [brandAnalysis.logo_url];
+          const logoUrl = brandAnalysis.logo_url || '';
+          if (logoUrl && /\.(png|jpg|jpeg|gif|webp|bmp|tiff|svg)(\?|$)/i.test(logoUrl)) {
+            generateParams.existing_image_urls = [logoUrl];
           }
           
           const imageResult = await base44.integrations.Core.GenerateImage(generateParams);
           return imageResult.url;
         } catch (error) {
           console.error('Image generation failed:', error);
-          return null;
+          // Retry without reference image
+          try {
+            const retryResult = await base44.integrations.Core.GenerateImage({ prompt: imagePrompt });
+            return retryResult.url;
+          } catch (retryError) {
+            console.error('Image retry also failed:', retryError);
+            return null;
+          }
         }
       });
 
@@ -355,8 +365,9 @@ RENDERING STYLE: Professional architectural visualization, 3/4 angle view, trade
       
     } catch (error) {
       console.error('Design generation error:', error);
-      // Fallback to basic flow
-      navigate(createPageUrl('QuoteRequest'));
+      // Fallback — go to Results page with whatever we have, not back to QuoteRequest
+      // which would loop the user or show profile form again
+      navigate(createPageUrl('Results'));
     }
   };
 
