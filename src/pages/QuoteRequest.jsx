@@ -43,9 +43,10 @@ export default function QuoteRequest() {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
       
-      // Check if profile is complete (but skip for sales rep quotes)
+      // Check if profile is complete (skip for sales reps and sales rep quotes)
       const salesCustomerData = sessionStorage.getItem('salesCustomerData');
-      if (!salesCustomerData && (!currentUser.company_name || !currentUser.contact_name || !currentUser.phone)) {
+      const isSalesRep = currentUser.is_sales_rep || currentUser.user_type === 'sales_rep';
+      if (!salesCustomerData && !isSalesRep && (!currentUser.company_name || !currentUser.contact_name || !currentUser.phone)) {
         setNeedsProfile(true);
         setCompanyName(currentUser.company_name || '');
         setContactName(currentUser.contact_name || '');
