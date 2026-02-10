@@ -97,12 +97,15 @@ export default function Layout({ children, currentPageName }) {
   const noHeaderPages = ['Loading', 'Home', 'Landing', 'UserTypeSelection'];
   const showHeader = !noHeaderPages.includes(currentPageName) && user;
 
+  // Pages where we hide the bottom nav (full-screen experiences)
+  const fullScreenPages = ['DesignConfigurator'];
+
   // Root dashboard pages (no back button)
   const rootPages = ['SalesDashboard', 'QuoteRequest', 'OrderHistory', 'Contacts', 'StudentHome'];
   const showBackButton = showHeader && !rootPages.includes(currentPageName);
 
   // Pages where mobile bottom nav is shown
-  const showMobileNav = showHeader && !noHeaderPages.includes(currentPageName);
+  const showMobileNav = showHeader && !noHeaderPages.includes(currentPageName) && !fullScreenPages.includes(currentPageName);
 
   if (isLoading) {
     return (

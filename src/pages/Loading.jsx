@@ -26,7 +26,15 @@ export default function Loading() {
       return;
     }
 
-    const { boothSize } = JSON.parse(quoteData);
+    const parsed = JSON.parse(quoteData);
+    const { boothSize } = parsed;
+    
+    // Track analytics
+    base44.analytics.track({
+      eventName: "quote_started",
+      properties: { booth_size: boothSize }
+    });
+    
     loadProducts(boothSize);
   }, []);
 
