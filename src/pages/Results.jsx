@@ -273,7 +273,7 @@ export default function Results() {
                           : 'bg-slate-800 hover:bg-slate-900'
                       }`}
                     >
-                      Customize in 3D
+                      View & Reserve
                       <ArrowRight className="w-5 h-5 ml-2" />
                     </Button>
                   </CardContent>

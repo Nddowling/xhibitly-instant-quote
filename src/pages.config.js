@@ -51,6 +51,7 @@ import Confirmation from './pages/Confirmation';
 import ContactDetail from './pages/ContactDetail';
 import Contacts from './pages/Contacts';
 import CustomerProfile from './pages/CustomerProfile';
+import DesignConfigurator from './pages/DesignConfigurator';
 import Home from './pages/Home';
 import Landing from './pages/Landing';
 import Loading from './pages/Loading';
@@ -66,7 +67,6 @@ import SalesQuoteStart from './pages/SalesQuoteStart';
 import Settings from './pages/Settings';
 import StudentHome from './pages/StudentHome';
 import UserTypeSelection from './pages/UserTypeSelection';
-import DesignConfigurator from './pages/DesignConfigurator';
 import __Layout from './Layout.jsx';
 
 
@@ -75,6 +75,7 @@ export const PAGES = {
     "ContactDetail": ContactDetail,
     "Contacts": Contacts,
     "CustomerProfile": CustomerProfile,
+    "DesignConfigurator": DesignConfigurator,
     "Home": Home,
     "Landing": Landing,
     "Loading": Loading,
@@ -90,7 +91,6 @@ export const PAGES = {
     "Settings": Settings,
     "StudentHome": StudentHome,
     "UserTypeSelection": UserTypeSelection,
-    "DesignConfigurator": DesignConfigurator,
 }
 
 export const pagesConfig = {
