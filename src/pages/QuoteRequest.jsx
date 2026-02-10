@@ -112,6 +112,12 @@ export default function QuoteRequest() {
     };
     
     sessionStorage.setItem('quoteRequest', JSON.stringify(quoteData));
+
+    // Track analytics
+    base44.analytics.track({
+      eventName: "quote_started",
+      properties: { booth_size: boothSize, website_url: websiteUrl }
+    });
     
     // Clear sales customer data after using it
     if (salesCustomerData) {

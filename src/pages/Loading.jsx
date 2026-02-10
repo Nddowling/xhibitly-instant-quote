@@ -127,18 +127,30 @@ export default function Loading() {
       }
 
       // Step 2: Get all available products for this booth size
-      const allProducts = await base44.entities.Product.filter({
-        is_active: true
-      });
-
-      // Filter by booth size compatibility
-      const compatibleProducts = allProducts.filter(p =>
-        p.booth_sizes && p.booth_sizes.includes(boothSize)
-      );
+      // Try ProductVariant first (new system), fall back to Product (legacy)
+      let compatibleProducts = [];
+      const allVariants = await base44.entities.ProductVariant.filter({ is_active: true });
+      if (allVariants.length > 0) {
+        compatibleProducts = allVariants.filter(p =>
+          p.booth_sizes && p.booth_sizes.includes(boothSize)
+        );
+      }
+      if (compatibleProducts.length === 0) {
+        const allProducts = await base44.entities.Product.filter({ is_active: true });
+        compatibleProducts = allProducts.filter(p =>
+          p.booth_sizes && p.booth_sizes.includes(boothSize)
+        );
+      }
 
       // Step 3: Use AI to curate 3 booth designs with spatial layouts
       const boothDimensions = boothSize === '10x10' ? { width: 10, depth: 10 } : boothSize === '10x20' ? { width: 20, depth: 10 } : { width: 20, depth: 20 };
       
+      // Track analytics
+      base44.analytics.track({
+        eventName: "design_generated",
+        properties: { booth_size: boothSize, website_url: websiteUrl }
+      });
+
       const designPrompt = `You are an expert trade show booth designer. Create 3 unique booth experience designs (Modular, Hybrid, and Custom tiers) for a ${boothSize} booth (${boothDimensions.width}ft x ${boothDimensions.depth}ft).
 
 Brand Identity:
@@ -158,16 +170,15 @@ ${customerProfile.additional_notes ? `- Additional Notes: ${customerProfile.addi
 
 Available Products (select from these):
 ${JSON.stringify(compatibleProducts.map(p => ({
-  sku: p.sku,
-  name: p.name,
-  category: p.category,
-  product_type: p.product_type,
+  sku: p.manufacturer_sku || p.sku,
+  name: p.display_name || p.name,
+  category: p.category_name || p.category,
+  product_type: p.geometry_type || p.product_type,
   price_tier: p.price_tier,
   base_price: p.base_price,
   design_style: p.design_style,
   features: p.features,
-  placement_type: p.placement_type,
-  footprint: p.footprint,
+  dimensions: p.dimensions || p.footprint,
   customizable: p.customizable,
   branding_surfaces: p.branding_surfaces
 })), null, 2)}
