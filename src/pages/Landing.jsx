@@ -6,14 +6,6 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Zap, Palette, Package, PhoneCall, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-// Static images — no generation needed, loads instantly for all visitors
-const STATIC_IMAGES = {
-  hero: 'https://images.unsplash.com/photo-1587825140708-dfaf18c4f8bd?w=1200&q=80',
-  install: 'https://images.unsplash.com/photo-1561489413-985b06da5bee?w=800&q=80',
-  standout: 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=800&q=80',
-  detail: 'https://images.unsplash.com/photo-1531058020387-3be344556be6?w=800&q=80',
-};
-
 export default function Landing() {
   const navigate = useNavigate();
   const [checking, setChecking] = useState(true);
