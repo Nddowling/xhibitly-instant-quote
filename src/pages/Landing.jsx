@@ -7,9 +7,9 @@ import { ArrowRight, Zap, Palette, Package, PhoneCall, Star, ChevronRight } from
 import { Button } from '@/components/ui/button';
 
 const BOOTH_IMAGES = [
-  'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80',
-  'https://images.unsplash.com/photo-1591115765373-5207764f72e7?w=800&q=80',
-  'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=800&q=80',
+  'https://images.unsplash.com/photo-1560439514-4e9645039924?w=800&q=80',
+  'https://images.unsplash.com/photo-1632383380175-812d44ec112b?w=800&q=80',
+  'https://images.unsplash.com/photo-1632383380286-80f79eb1bae1?w=800&q=80',
 ];
 
 export default function Landing() {
@@ -90,7 +90,8 @@ export default function Landing() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-[#e2231a]/8 rounded-full blur-[150px] pointer-events-none" />
         
         <div className="relative max-w-7xl mx-auto px-6">
-          <div className="max-w-3xl">
+          <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
+          <div>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -138,17 +139,42 @@ export default function Landing() {
                 Get Your Instant Quote
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
-              <div className="flex items-center gap-2 text-sm text-white/30 sm:ml-2">
-                <div className="flex -space-x-2">
-                  {[1,2,3].map(i => (
-                    <div key={i} className="w-7 h-7 rounded-full bg-white/10 border-2 border-[#0a0a0a] flex items-center justify-center">
-                      <Star className="w-3 h-3 text-[#e2231a]" />
-                    </div>
-                  ))}
-                </div>
-                <span>Trusted by 500+ exhibitors</span>
-              </div>
             </motion.div>
+
+            <p className="text-xs text-white/25 mt-6">No credit card required • A specialist calls within 10 minutes</p>
+          </div>
+
+          {/* Hero Visual — right side */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.7, delay: 0.35 }}
+            className="hidden md:block relative"
+          >
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-black/40 border border-white/5">
+              <img
+                src="https://images.unsplash.com/photo-1560439514-4e9645039924?w=900&q=80"
+                alt="Trade show exhibition floor"
+                className="w-full aspect-[4/5] object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-6">
+                <div className="flex items-end justify-between">
+                  <div>
+                    <p className="text-white/60 text-xs font-medium uppercase tracking-wider mb-1">Complete Packages From</p>
+                    <p className="text-white text-3xl font-bold">$4,500</p>
+                  </div>
+                  <div className="bg-white/10 backdrop-blur-md border border-white/10 px-3 py-1.5 rounded-lg">
+                    <p className="text-white text-xs font-semibold">10×10 Booth</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* Floating accent card */}
+            <div className="absolute -bottom-4 -left-4 bg-[#e2231a] text-white px-4 py-3 rounded-xl shadow-lg shadow-[#e2231a]/30">
+              <p className="text-xs font-semibold">✦ AI-Curated to Your Brand</p>
+            </div>
+          </motion.div>
           </div>
 
           {/* Hero image grid */}
