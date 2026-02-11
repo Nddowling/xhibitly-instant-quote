@@ -52,8 +52,8 @@ export default function Loading() {
       // Simulate minimum loading time for UX
       const minLoadTime = new Promise(resolve => setTimeout(resolve, 5000));
       
-      // Step 1: Combined logo scrape + brand identity analysis (single AI call)
-      const brandAnalysis = await base44.integrations.Core.InvokeLLM({
+      // Step 1: Run brand analysis AND product fetching in parallel
+      const brandAnalysisPromise = base44.integrations.Core.InvokeLLM({
         prompt: `Analyze this website: ${websiteUrl}
 
 Do TWO things in one pass:
@@ -99,22 +99,23 @@ IMPORTANT: Extract 4 distinct colors. The primary_color should match the dominan
         }
       });
 
-      const scrapedCompanyName = brandAnalysis.company_name || '';
+      // Fetch products in parallel with brand analysis
+      const productsPromise = (async () => {
+        let products = [];
+        const allVariants = await base44.entities.ProductVariant.filter({ is_active: true });
+        if (allVariants.length > 0) {
+          products = allVariants.filter(p => p.booth_sizes && p.booth_sizes.includes(boothSize));
+        }
+        if (products.length === 0) {
+          const allProducts = await base44.entities.Product.filter({ is_active: true });
+          products = allProducts.filter(p => p.booth_sizes && p.booth_sizes.includes(boothSize));
+        }
+        return products;
+      })();
 
-      // Step 2: Get all available products for this booth size (was fetched in parallel)
-      let compatibleProducts = [];
-      const allVariants = await base44.entities.ProductVariant.filter({ is_active: true });
-      if (allVariants.length > 0) {
-        compatibleProducts = allVariants.filter(p =>
-          p.booth_sizes && p.booth_sizes.includes(boothSize)
-        );
-      }
-      if (compatibleProducts.length === 0) {
-        const allProducts = await base44.entities.Product.filter({ is_active: true });
-        compatibleProducts = allProducts.filter(p =>
-          p.booth_sizes && p.booth_sizes.includes(boothSize)
-        );
-      }
+      // Wait for both to complete
+      const [brandAnalysis, compatibleProducts] = await Promise.all([brandAnalysisPromise, productsPromise]);
+      const scrapedCompanyName = brandAnalysis.company_name || '';
 
       // Step 3: Use AI to curate 3 booth designs with spatial layouts
       const boothDimensions = boothSize === '10x10' ? { width: 10, depth: 10 } : boothSize === '10x20' ? { width: 20, depth: 10 } : { width: 20, depth: 20 };
