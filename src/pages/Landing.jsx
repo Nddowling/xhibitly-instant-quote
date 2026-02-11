@@ -157,18 +157,7 @@ export default function Landing() {
                 alt="Trade show exhibition floor"
                 className="w-full aspect-[4/5] object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 p-6">
-                <div className="flex items-end justify-between">
-                  <div>
-                    <p className="text-white/60 text-xs font-medium uppercase tracking-wider mb-1">Complete Packages From</p>
-                    <p className="text-white text-3xl font-bold">$4,500</p>
-                  </div>
-                  <div className="bg-white/10 backdrop-blur-md border border-white/10 px-3 py-1.5 rounded-lg">
-                    <p className="text-white text-xs font-semibold">10×10 Booth</p>
-                  </div>
-                </div>
-              </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
             </div>
             {/* Floating accent card */}
             <div className="absolute -bottom-4 -left-4 bg-[#e2231a] text-white px-4 py-3 rounded-xl shadow-lg shadow-[#e2231a]/30">
@@ -201,13 +190,7 @@ export default function Landing() {
                 </div>
               ))}
             </div>
-            <div className="mt-3 flex items-center justify-center gap-6 text-xs text-white/25">
-              <span>10×10 Packages from $4,500</span>
-              <span className="w-1 h-1 rounded-full bg-white/20" />
-              <span>10×20 from $8,200</span>
-              <span className="w-1 h-1 rounded-full bg-white/20" />
-              <span>20×20 from $14,000</span>
-            </div>
+
           </motion.div>
         </div>
       </section>
