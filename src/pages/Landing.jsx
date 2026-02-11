@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { ArrowRight, Zap, Palette, Package, PhoneCall, Star, ChevronRight, Loader2 } from 'lucide-react';
+import { ArrowRight, Zap, Palette, Package, PhoneCall, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 // Static images — no generation needed, loads instantly for all visitors
