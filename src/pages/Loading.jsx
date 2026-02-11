@@ -301,11 +301,9 @@ RENDERING STYLE: Professional architectural visualization, 3/4 angle view, trade
 
       const generatedImages = await Promise.all(imagePromises);
 
-      // Save booth designs to database
-      const savedDesigns = [];
-      for (let i = 0; i < designs.designs.length; i++) {
-        const design = designs.designs[i];
-        const boothDesign = await base44.entities.BoothDesign.create({
+      // Save booth designs to database (in parallel)
+      const savePromises = designs.designs.map((design, i) => {
+        return base44.entities.BoothDesign.create({
           dealer_id: dealerId,
           booth_size: boothSize,
           tier: design.tier,
@@ -320,8 +318,8 @@ RENDERING STYLE: Professional architectural visualization, 3/4 angle view, trade
           spatial_layout: design.spatial_layout,
           design_image_url: generatedImages[i]
         });
-        savedDesigns.push(boothDesign);
-      }
+      });
+      const savedDesigns = await Promise.all(savePromises);
 
       await minLoadTime;
       
