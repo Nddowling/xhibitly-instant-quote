@@ -8,10 +8,10 @@ import { Button } from '@/components/ui/button';
 
 // Static images — no generation needed, loads instantly for all visitors
 const STATIC_IMAGES = {
-  hero: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1200&q=80',
-  install: 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=800&q=80',
-  standout: 'https://images.unsplash.com/photo-1591115765373-5207764f72e7?w=800&q=80',
-  detail: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=800&q=80',
+  hero: 'https://images.unsplash.com/photo-1587825140708-dfaf18c4f8bd?w=1200&q=80',
+  install: 'https://images.unsplash.com/photo-1561489413-985b06da5bee?w=800&q=80',
+  standout: 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=800&q=80',
+  detail: 'https://images.unsplash.com/photo-1531058020387-3be344556be6?w=800&q=80',
 };
 
 export default function Landing() {
