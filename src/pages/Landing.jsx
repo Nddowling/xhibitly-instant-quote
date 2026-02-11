@@ -166,13 +166,13 @@ export default function Landing() {
               </div>
               {/* Floating accent cards */}
               <div className="absolute top-8 right-0 bg-white/[0.04] backdrop-blur-sm border border-white/10 text-white px-4 py-2.5 rounded-xl">
-                <p className="text-xs font-semibold text-[#e2231a]">✦ Brand Matched</p>
+                <p className="text-xs font-semibold text-white/70">Brand Matched</p>
               </div>
-              <div className="absolute bottom-12 -left-2 bg-[#e2231a] text-white px-4 py-2.5 rounded-xl shadow-lg shadow-[#e2231a]/30">
-                <p className="text-xs font-semibold">⚡ Under 2 Minutes</p>
+              <div className="absolute bottom-12 -left-2 bg-white/[0.04] backdrop-blur-sm border border-white/10 text-white px-4 py-2.5 rounded-xl">
+                <p className="text-xs font-semibold text-white/70">Under 2 Minutes</p>
               </div>
               <div className="absolute bottom-4 right-4 bg-white/[0.04] backdrop-blur-sm border border-white/10 text-white px-4 py-2.5 rounded-xl">
-                <p className="text-xs font-semibold text-white/70">📦 Ship-Ready</p>
+                <p className="text-xs font-semibold text-white/70">Ship-Ready</p>
               </div>
             </div>
           </motion.div>
