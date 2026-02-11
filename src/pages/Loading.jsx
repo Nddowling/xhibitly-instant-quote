@@ -179,12 +179,13 @@ For each tier (Modular, Hybrid, and Custom), create a curated booth EXPERIENCE t
 2. Matches the brand identity AND customer requirements
 3. Addresses the customer's stated objectives (${customerProfile?.objectives.join(', ') || 'general lead generation'})
 4. Incorporates the desired look (${customerProfile?.desired_look.join(', ') || 'modern'}) and feel (${customerProfile?.desired_feel.join(', ') || 'open'})
-5. Selects 3-10 products ONLY from the catalog above (use exact SKUs)
+5. Selects products ONLY from the catalog above (use exact SKUs). Modular: 4-8 items, Hybrid: 6-12 items, Custom: 8-15+ items. More items = richer, more impressive booth. Fill the space!
 6. ${customerProfile?.display_products ? 'Includes product display areas' : ''}
 7. ${customerProfile?.needs_demo_space ? 'Includes demonstration/presentation space' : ''}
 8. ${customerProfile?.needs_conference_area ? 'Includes a conference/meeting area' : ''}
 9. Explains the visitor flow and key moments
 10. Total price is calculated by summing the actual base_price of selected products. Modular tier should target lower-priced items, Custom tier should include premium items.
+11. IMPORTANT: A great booth is NOT sparse. Every tier should include at minimum: a backwall, a counter or kiosk, lighting, and flooring. Hybrid and Custom tiers should also include banner stands, monitor stands, towers, or other accent pieces. The booth should look FULLY FURNISHED and impressive — not empty with just a backwall.
 
 CRITICAL - 3D SPATIAL LAYOUT:
 For each product selected, provide a spatial_layout array with exact 3D positioning:
