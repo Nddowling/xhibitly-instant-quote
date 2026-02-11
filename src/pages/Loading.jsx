@@ -144,21 +144,27 @@ ${customerProfile.additional_notes ? `- Additional Notes: ${customerProfile.addi
 ` : 'No specific customer requirements provided.'}
 
 PRODUCT CATALOG (YOU MUST ONLY SELECT FROM THIS LIST — NO OTHER PRODUCTS ALLOWED):
-${JSON.stringify(compatibleProducts.map(p => ({
-  sku: p.manufacturer_sku || p.sku,
-  name: p.display_name || p.name,
-  category: p.category_name || p.category,
-  product_line: p.product_line,
-  price_tier: p.price_tier,
-  base_price: p.base_price,
-  rental_price: p.rental_price || null,
-  is_rental: p.is_rental || false,
-  design_style: p.design_style,
-  features: p.features,
-  dimensions: p.dimensions || p.footprint,
-  customizable: p.customizable,
-  branding_surfaces: p.branding_surfaces
-})), null, 2)}
+${JSON.stringify(compatibleProducts.map(p => {
+  const dims = p.dimensions || {};
+  return {
+    sku: p.manufacturer_sku || p.sku,
+    name: p.display_name || p.name,
+    category: p.category_name || p.category,
+    geometry_type: p.geometry_type,
+    price_tier: p.price_tier,
+    base_price: p.base_price,
+    rental_price: p.rental_price || null,
+    is_rental: p.is_rental || false,
+    dimensions_ft: dims.width ? `${dims.width}W x ${dims.height}H x ${dims.depth}D` : 'standard',
+    width_ft: dims.width || null,
+    height_ft: dims.height || null,
+    depth_ft: dims.depth || null,
+    design_style: p.design_style,
+    customizable: p.customizable,
+    branding_surfaces: p.branding_surfaces,
+    image_url: p.image_url || null
+  };
+}), null, 2)}
 
 CRITICAL RULES:
 - You may ONLY use products listed above. Do NOT invent, fabricate, or reference any product not in this catalog.
