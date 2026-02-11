@@ -313,36 +313,47 @@ Return JSON with 3 designs.`;
           line_total: p.is_rental ? (p.rental_price || p.base_price) : p.base_price
         }));
 
-        // Build a detailed product manifest with exact dimensions for the AI renderer
-        const productManifest = designProducts.map(p => {
+        // Build a detailed product manifest with exact dimensions and visual descriptions for the AI renderer
+        const productManifest = designProducts.map((p, idx) => {
           const dims = p.dimensions || {};
           const dimStr = dims.width ? `${dims.width}ft W × ${dims.height || '?'}ft H × ${dims.depth || '?'}ft D` : 'standard size';
-          return `- ${p.display_name || p.name} (${p.category_name || p.category}, ${dimStr})`;
+          const desc = p.description || '';
+          const features = (p.features || []).slice(0, 3).join(', ');
+          return `${idx + 1}. "${p.display_name || p.name}" — ${p.category_name || p.category}, ${dimStr}. ${desc}${features ? ` Features: ${features}.` : ''}`;
         }).join('\n');
         
-        const imagePrompt = `Photorealistic 3D rendering of a trade show booth. This is a PRODUCT QUOTE IMAGE — the customer will purchase EXACTLY these items.
+        const imagePrompt = `Photorealistic 3D architectural rendering of a trade show booth from the Orbus Exhibit & Display catalog.
 
-CRITICAL RULES:
-- Render ONLY the products listed below. Do NOT add ANY furniture, decor, screens, plants, accessories, or items not on this list.
-- Each product must be recognizable as the specific item described (backwall, counter, banner stand, etc.)
-- Use the exact dimensions provided to scale items relative to each other and the booth space.
-- The booth should look like a real trade show — grey carpet aisle, pipe-and-drape neighbors, ceiling grid — but the ONLY display items are the ones listed.
+THIS IS A SALES QUOTE — the customer will receive EXACTLY these ${designProducts.length} products. Accuracy is critical.
 
-BOOTH SPACE: ${boothSize} (${boothDimensions.width}ft wide × ${boothDimensions.depth}ft deep), open front facing the aisle.
+ABSOLUTE RESTRICTIONS:
+- Render ONLY the ${designProducts.length} numbered products below. Nothing else.
+- Do NOT add: TV screens, monitors, video walls, YouTube banners, social media logos, potted plants, flowers, hanging banners (unless listed), chairs (unless listed), tables (unless listed), brochure holders (unless listed), carpet (unless listed), any item not on this list.
+- If only ${designProducts.length} items are listed, the booth should contain exactly ${designProducts.length} display items plus the booth space itself (floor, back drape if no backwall covers it).
+- Every item must match its description below — a "banner stand" is a retractable pull-up banner on a narrow base, a "reception counter" is a podium-height counter with fabric wrap, a "backwall" is a large flat fabric display, etc.
 
-BRAND IDENTITY:
-${brandAnalysis.logo_description ? `Logo: ${brandAnalysis.logo_description}` : `Company: ${scrapedCompanyName}`}
-- Primary color: ${brandAnalysis.primary_color}
-- Secondary color: ${brandAnalysis.secondary_color}
-- Apply the logo prominently on the backwall graphic and counter wrap.
-- Use brand colors on all fabric graphics.
+BOOTH SPACE: ${boothSize} footprint (${boothDimensions.width}ft wide × ${boothDimensions.depth}ft deep). Open front facing the aisle. Standard trade show environment: grey carpet aisle, pipe-and-drape on neighbor sides, overhead convention center ceiling.
 
-EXACT PRODUCT LIST (render ONLY these ${designProducts.length} items, nothing else):
+BRAND COLORS & LOGO:
+${brandAnalysis.logo_description ? `Company logo: ${brandAnalysis.logo_description}` : `Company name: ${scrapedCompanyName}`}
+Primary color: ${brandAnalysis.primary_color} — use on backwall graphic, banner stand graphics
+Secondary color: ${brandAnalysis.secondary_color} — use on counter wrap, accent graphics
+The company logo and name should appear large and centered on the main backwall graphic. Smaller logo on the counter front.
+
+PRODUCTS TO RENDER (exactly ${designProducts.length} items):
 ${productManifest}
 
-LAYOUT: Place the backwall(s) against the back, counter(s) in front-center or side, banner stands flanking the entrance, tables/kiosks where logical. Leave an open walkway at the front.
+PLACEMENT GUIDE:
+- Backwall(s): flush against the back wall of the booth space
+- Counter(s): front-center or right side, angled toward the aisle
+- Banner stand(s): flanking the left and/or right entrance edges
+- Monitor/iPad stand(s): beside the counter or near the backwall
+- Lighting: clamp-mounted on the backwall frame or overhead truss
+- Flooring: covers the entire booth footprint if listed
+- Tower(s): at booth corners
+- Literature rack: beside the counter
 
-CAMERA: 3/4 elevated angle from the front-left aisle, showing the full booth footprint. Professional architectural visualization lighting.`;
+CAMERA & STYLE: 3/4 elevated angle from the front-left aisle. Professional architectural visualization. Clean, well-lit. The booth should look inviting, professional, and fully set up for a real trade show.`;
 
         try {
           // Pass the logo URL as a reference image only if it looks like a valid image URL
