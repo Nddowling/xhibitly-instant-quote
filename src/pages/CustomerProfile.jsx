@@ -497,7 +497,7 @@ export default function CustomerProfile() {
             </CardHeader>
             <CardContent>
               <Textarea
-                defaultValue={additionalNotes}
+                value={additionalNotes}
                 onChange={(e) => setAdditionalNotes(e.target.value)}
                 placeholder="e.g., specific brand colors, product sizes, accessibility needs, etc."
                 rows={4}

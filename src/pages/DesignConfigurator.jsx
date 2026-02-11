@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
-import { ArrowLeft, ShoppingCart, Loader2, Sparkles, Check, Package, Palette, DollarSign } from 'lucide-react';
+import { ArrowLeft, ShoppingCart, Loader2, Sparkles, Check, Package, Palette, DollarSign, X, ZoomIn } from 'lucide-react';
 
 export default function DesignConfigurator() {
   const navigate = useNavigate();
@@ -15,6 +15,7 @@ export default function DesignConfigurator() {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showFullImage, setShowFullImage] = useState(false);
 
   useEffect(() => {
     loadDesign();
@@ -202,9 +203,19 @@ ACTION REQUIRED: Call the customer immediately to finalize the order.
         {/* AI Render Hero */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <Card className="border-0 shadow-lg overflow-hidden">
-            <div className="aspect-[16/9] md:aspect-[21/9] bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
+            <div
+              className="aspect-[16/9] md:aspect-[21/9] bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center relative group cursor-pointer"
+              onClick={() => design.design_image_url && setShowFullImage(true)}
+            >
               {design.design_image_url ? (
-                <img src={design.design_image_url} alt={design.design_name} className="w-full h-full object-cover" />
+                <>
+                  <img src={design.design_image_url} alt={design.design_name} className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all flex items-center justify-center">
+                    <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 rounded-full p-3">
+                      <ZoomIn className="w-6 h-6 text-slate-700" />
+                    </div>
+                  </div>
+                </>
               ) : (
                 <div className="text-center p-8">
                   <Sparkles className="w-16 h-16 text-slate-300 mx-auto mb-3" />
@@ -214,6 +225,29 @@ ACTION REQUIRED: Call the customer immediately to finalize the order.
             </div>
           </Card>
         </motion.div>
+
+        {/* Full Image Modal */}
+        {showFullImage && design.design_image_url && (
+          <div
+            className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4"
+            onClick={() => setShowFullImage(false)}
+          >
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute top-4 right-4 text-white hover:bg-white/20 z-10"
+              onClick={() => setShowFullImage(false)}
+            >
+              <X className="w-6 h-6" />
+            </Button>
+            <img
+              src={design.design_image_url}
+              alt={design.design_name}
+              className="max-w-full max-h-full object-contain rounded-lg"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
+        )}
 
         {/* Experience Story + Key Moments */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
