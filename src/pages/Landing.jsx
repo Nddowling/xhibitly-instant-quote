@@ -154,17 +154,11 @@ export default function Landing() {
             className="hidden md:block relative"
           >
             <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-black/40 border border-white/5">
-              {generatedImages.hero ? (
-                <img
-                  src={generatedImages.hero}
-                  alt="Premium trade show booth"
-                  className="w-full aspect-[4/5] object-cover"
-                />
-              ) : (
-                <div className="w-full aspect-[4/5] bg-white/5 flex items-center justify-center">
-                  <Loader2 className="w-8 h-8 text-white/20 animate-spin" />
-                </div>
-              )}
+              <img
+                src={STATIC_IMAGES.hero}
+                alt="Premium trade show booth"
+                className="w-full aspect-[4/5] object-cover"
+              />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
             </div>
             {/* Floating accent card */}
