@@ -367,7 +367,8 @@ RENDERING STYLE: Professional architectural visualization, 3/4 angle view, trade
           total_price: design.total_price,
           design_rationale: design.design_rationale,
           spatial_layout: design.spatial_layout,
-          design_image_url: generatedImages[i]
+          design_image_url: generatedImages[i],
+          line_items: design.line_items
         });
       });
       const savedDesigns = await Promise.all(savePromises);
