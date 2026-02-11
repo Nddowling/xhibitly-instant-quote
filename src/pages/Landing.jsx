@@ -3,8 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { ArrowRight, Clock, Palette, Package, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, Zap, Palette, Package, PhoneCall, Star, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+
+const BOOTH_IMAGES = [
+  'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80',
+  'https://images.unsplash.com/photo-1591115765373-5207764f72e7?w=800&q=80',
+  'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=800&q=80',
+];
 
 export default function Landing() {
   const navigate = useNavigate();
@@ -30,9 +36,7 @@ export default function Landing() {
         }
         return;
       }
-    } catch (e) {
-      // Not authenticated — stay on landing
-    }
+    } catch (e) {}
     setChecking(false);
   };
 
@@ -49,205 +53,301 @@ export default function Landing() {
   }
 
   return (
-    <div className="min-h-screen bg-white overflow-hidden">
+    <div className="min-h-screen bg-[#0a0a0a] text-white selection:bg-[#e2231a]/30">
 
-      {/* ─── Nav ─── */}
-      <nav className="relative z-20 max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
-        <img
-          src="/assets/orbus-logo.png"
-          alt="Orbus Exhibit & Display Group"
-          className="h-9"
-        />
-        <Button
-          onClick={handleGetStarted}
-          variant="outline"
-          className="border-slate-300 text-slate-700 hover:bg-slate-50 font-medium"
-        >
-          Sign In
-        </Button>
+      {/* ─── Navbar ─── */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-white/5">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-[#e2231a] rounded-lg flex items-center justify-center">
+              <span className="text-white font-black text-sm">X</span>
+            </div>
+            <span className="text-lg font-bold tracking-tight">Xhibitly</span>
+            <span className="hidden sm:inline text-xs text-white/30 ml-1 font-medium">by Orbus</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <Button
+              onClick={handleGetStarted}
+              variant="ghost"
+              className="text-white/60 hover:text-white hover:bg-white/5 text-sm hidden sm:inline-flex"
+            >
+              Sign In
+            </Button>
+            <Button
+              onClick={handleGetStarted}
+              className="bg-[#e2231a] hover:bg-[#c91e16] text-white h-9 px-5 text-sm font-semibold rounded-lg"
+            >
+              Get a Quote
+              <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
+            </Button>
+          </div>
+        </div>
       </nav>
 
       {/* ─── Hero ─── */}
-      <section className="relative max-w-7xl mx-auto px-6 pt-12 md:pt-20 pb-20 md:pb-28">
-        <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
-          {/* Copy */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <div className="inline-flex items-center gap-2 bg-[#e2231a]/8 text-[#e2231a] text-sm font-semibold px-4 py-1.5 rounded-full mb-6">
-              <Clock className="w-3.5 h-3.5" />
-              Instant Quote in Under 2 Minutes
-            </div>
+      <section className="relative pt-32 pb-20 md:pt-44 md:pb-32 overflow-hidden">
+        {/* Background glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-[#e2231a]/8 rounded-full blur-[150px] pointer-events-none" />
+        
+        <div className="relative max-w-7xl mx-auto px-6">
+          <div className="max-w-3xl">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 text-white/70 text-xs font-medium px-3.5 py-1.5 rounded-full mb-8">
+                <Zap className="w-3 h-3 text-[#e2231a]" />
+                AI-Curated Booth Experiences
+              </div>
+            </motion.div>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-[1.1] tracking-tight mb-6">
-              Your Brand.{' '}
-              <span className="text-[#e2231a]">Your Booth.</span>{' '}
-              <span className="block mt-1">Done for You.</span>
-            </h1>
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="text-5xl md:text-7xl font-extrabold leading-[1.05] tracking-tight mb-6"
+            >
+              Stop building
+              <br />
+              your booth
+              <br />
+              <span className="text-[#e2231a]">piece by piece.</span>
+            </motion.h1>
 
-            <p className="text-lg md:text-xl text-slate-500 leading-relaxed max-w-lg mb-8">
-              Tell us your website, and our AI curator builds a complete trade show booth 
-              experience matched to your brand — products selected, priced, and ready to ship.
-            </p>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="text-lg md:text-xl text-white/50 leading-relaxed max-w-xl mb-10"
+            >
+              Share your website. Get a complete, branded trade show booth — 
+              products selected, priced, and ready to ship. In under two minutes.
+            </motion.p>
 
-            <div className="flex flex-col sm:flex-row gap-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="flex flex-col sm:flex-row gap-4"
+            >
               <Button
                 onClick={handleGetStarted}
-                className="bg-[#e2231a] hover:bg-[#b01b13] h-14 px-8 text-lg font-semibold shadow-lg shadow-[#e2231a]/20"
+                className="bg-[#e2231a] hover:bg-[#c91e16] h-14 px-8 text-base font-semibold rounded-xl shadow-lg shadow-[#e2231a]/20 transition-all hover:shadow-[#e2231a]/30 hover:scale-[1.02]"
               >
                 Get Your Instant Quote
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
-            </div>
-
-            <p className="text-xs text-slate-400 mt-4">
-              No credit card required • A specialist calls you within 10 minutes
-            </p>
-          </motion.div>
-
-          {/* Hero Image */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="relative"
-          >
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-              <img
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/1d7db6e3d_ChatGPTImageFeb5202603_16_45PM.png"
-                alt="Trade show booth showcase"
-                className="w-full aspect-[4/3] object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-              <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between">
-                <div className="text-white">
-                  <p className="text-sm font-medium opacity-80">Starting from</p>
-                  <p className="text-3xl font-bold">$4,500</p>
+              <div className="flex items-center gap-2 text-sm text-white/30 sm:ml-2">
+                <div className="flex -space-x-2">
+                  {[1,2,3].map(i => (
+                    <div key={i} className="w-7 h-7 rounded-full bg-white/10 border-2 border-[#0a0a0a] flex items-center justify-center">
+                      <Star className="w-3 h-3 text-[#e2231a]" />
+                    </div>
+                  ))}
                 </div>
-                <div className="bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-700">
-                  10×10 Complete Package
-                </div>
+                <span>Trusted by 500+ exhibitors</span>
               </div>
+            </motion.div>
+          </div>
+
+          {/* Hero image grid */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.4 }}
+            className="mt-16 md:mt-20"
+          >
+            <div className="grid grid-cols-3 gap-3 md:gap-4">
+              {BOOTH_IMAGES.map((img, i) => (
+                <div
+                  key={i}
+                  className={`relative overflow-hidden rounded-xl md:rounded-2xl ${
+                    i === 1 ? 'aspect-[4/3]' : 'aspect-[4/3]'
+                  }`}
+                >
+                  <img
+                    src={img}
+                    alt={`Trade show booth ${i + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                </div>
+              ))}
             </div>
-            {/* Decorative dot pattern */}
-            <div className="hidden md:block absolute -bottom-6 -right-6 w-32 h-32 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEuNSIgZmlsbD0iI2UyMjMxYSIgb3BhY2l0eT0iMC4xNSIvPjwvc3ZnPg==')] opacity-60 -z-10" />
+            <div className="mt-3 flex items-center justify-center gap-6 text-xs text-white/25">
+              <span>10×10 Packages from $4,500</span>
+              <span className="w-1 h-1 rounded-full bg-white/20" />
+              <span>10×20 from $8,200</span>
+              <span className="w-1 h-1 rounded-full bg-white/20" />
+              <span>20×20 from $14,000</span>
+            </div>
           </motion.div>
         </div>
       </section>
 
       {/* ─── How It Works ─── */}
-      <section className="bg-slate-50 border-y border-slate-200">
-        <div className="max-w-7xl mx-auto px-6 py-16 md:py-20">
+      <section className="relative border-t border-white/5">
+        <div className="max-w-7xl mx-auto px-6 py-20 md:py-28">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-12"
+            className="text-center mb-16"
           >
-            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-3">
-              Three Steps to Your Trade Show Booth
+            <p className="text-[#e2231a] text-sm font-semibold uppercase tracking-widest mb-3">How It Works</p>
+            <h2 className="text-3xl md:text-4xl font-bold">
+              From website to booth in three steps
             </h2>
-            <p className="text-slate-500 max-w-xl mx-auto">
-              No back-and-forth. No guesswork. Just a curated experience built around your brand.
-            </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-8 md:gap-12">
+          <div className="grid md:grid-cols-3 gap-6 md:gap-8">
             {[
               {
-                step: '01',
                 icon: Palette,
                 title: 'Share Your Brand',
-                desc: 'Drop in your website URL and booth size. Our AI analyzes your colors, logo, and brand personality in seconds.'
+                desc: 'Enter your website URL and booth size. Our AI pulls your colors, logo, personality, and industry in seconds.',
+                detail: '~30 seconds'
               },
               {
-                step: '02',
                 icon: Package,
-                title: 'Review Your Options',
-                desc: 'Get three curated booth packages — Modular, Hybrid, or Custom — each hand-picked from premium Orbus products.'
+                title: 'Pick Your Package',
+                desc: 'Review three curated booth options — each assembled from premium Orbus products, branded to match you.',
+                detail: '~60 seconds'
               },
               {
-                step: '03',
-                icon: CheckCircle2,
-                title: 'Reserve & We Handle the Rest',
-                desc: 'Lock in your design. A booth specialist calls you within 10 minutes to finalize every detail.'
+                icon: PhoneCall,
+                title: 'Reserve & Relax',
+                desc: 'Lock in your design. A dedicated booth specialist calls within 10 minutes to handle every last detail.',
+                detail: 'Done'
               }
-            ].map((item, i) => (
+            ].map((step, i) => (
               <motion.div
-                key={item.step}
+                key={step.title}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.15 }}
-                className="relative"
+                transition={{ delay: i * 0.12 }}
+                className="group relative bg-white/[0.02] border border-white/5 rounded-2xl p-8 hover:bg-white/[0.04] hover:border-white/10 transition-all duration-300"
               >
-                <div className="text-6xl font-black text-slate-100 absolute -top-2 -left-1 select-none pointer-events-none">
-                  {item.step}
-                </div>
-                <div className="relative pt-8">
-                  <div className="w-11 h-11 rounded-xl bg-[#e2231a]/10 flex items-center justify-center mb-4">
-                    <item.icon className="w-5 h-5 text-[#e2231a]" />
+                <div className="flex items-center justify-between mb-6">
+                  <div className="w-12 h-12 rounded-xl bg-[#e2231a]/10 flex items-center justify-center">
+                    <step.icon className="w-5 h-5 text-[#e2231a]" />
                   </div>
-                  <h3 className="text-lg font-bold text-slate-900 mb-2">{item.title}</h3>
-                  <p className="text-slate-500 text-sm leading-relaxed">{item.desc}</p>
+                  <span className="text-xs font-mono text-white/20">{step.detail}</span>
                 </div>
+                <h3 className="text-lg font-bold text-white mb-2">{step.title}</h3>
+                <p className="text-sm text-white/40 leading-relaxed">{step.desc}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ─── Social Proof / Trust Bar ─── */}
-      <section className="max-w-7xl mx-auto px-6 py-14 md:py-16">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          {[
-            { value: '500+', label: 'Booths Delivered' },
-            { value: '< 2 min', label: 'To Get a Quote' },
-            { value: '10 min', label: 'Specialist Callback' },
-            { value: '4.9/5', label: 'Customer Rating' },
-          ].map((stat, i) => (
+      {/* ─── Value Props ─── */}
+      <section className="border-t border-white/5 bg-[#0f0f0f]">
+        <div className="max-w-7xl mx-auto px-6 py-20 md:py-28">
+          <div className="grid md:grid-cols-2 gap-16 items-center">
             <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
             >
-              <div className="text-2xl md:text-3xl font-extrabold text-slate-900">{stat.value}</div>
-              <div className="text-sm text-slate-500 mt-1">{stat.label}</div>
+              <p className="text-[#e2231a] text-sm font-semibold uppercase tracking-widest mb-3">Why Xhibitly</p>
+              <h2 className="text-3xl md:text-4xl font-bold mb-6 leading-tight">
+                Premium booth service,
+                <br />
+                without the premium hassle
+              </h2>
+              <p className="text-white/40 leading-relaxed mb-8">
+                Most exhibitors spend weeks sourcing individual displays, counters, lighting, 
+                and graphics — juggling vendors, hoping it all looks good together. We eliminate that.
+              </p>
+
+              <div className="space-y-4">
+                {[
+                  'AI-matched products based on your actual brand identity',
+                  'Complete packages — structure, graphics, lighting, furniture',
+                  'Transparent, all-in pricing with no surprise line items',
+                  'Dedicated specialist from quote to show floor'
+                ].map((item, i) => (
+                  <div key={i} className="flex items-start gap-3">
+                    <div className="w-5 h-5 rounded-full bg-[#e2231a]/15 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <ChevronRight className="w-3 h-3 text-[#e2231a]" />
+                    </div>
+                    <p className="text-sm text-white/60">{item}</p>
+                  </div>
+                ))}
+              </div>
             </motion.div>
-          ))}
+
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="relative"
+            >
+              <div className="grid grid-cols-2 gap-4">
+                {[
+                  { value: '< 2 min', label: 'Time to quote' },
+                  { value: '10 min', label: 'Specialist callback' },
+                  { value: '500+', label: 'Booths delivered' },
+                  { value: '4.9★', label: 'Customer rating' }
+                ].map((stat, i) => (
+                  <div key={i} className="bg-white/[0.03] border border-white/5 rounded-xl p-6 text-center">
+                    <div className="text-2xl md:text-3xl font-extrabold text-white mb-1">{stat.value}</div>
+                    <div className="text-xs text-white/30">{stat.label}</div>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
       {/* ─── Final CTA ─── */}
-      <section className="bg-slate-900">
-        <div className="max-w-4xl mx-auto px-6 py-16 md:py-20 text-center">
+      <section className="border-t border-white/5">
+        <div className="max-w-4xl mx-auto px-6 py-20 md:py-28 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Stop Piecing Together Your Booth
+            <h2 className="text-3xl md:text-5xl font-bold mb-5 leading-tight">
+              Ready to look like the
+              <br />
+              <span className="text-[#e2231a]">biggest booth on the floor?</span>
             </h2>
-            <p className="text-slate-400 text-lg max-w-2xl mx-auto mb-8">
-              Let us curate a complete, branded experience so you can focus on 
-              what matters — winning business at the show.
+            <p className="text-white/40 text-lg max-w-xl mx-auto mb-10">
+              Get a branded, complete booth package in under two minutes. 
+              No commitments — just see what's possible.
             </p>
             <Button
               onClick={handleGetStarted}
-              className="bg-[#e2231a] hover:bg-[#b01b13] h-14 px-10 text-lg font-semibold shadow-lg shadow-[#e2231a]/30"
+              className="bg-[#e2231a] hover:bg-[#c91e16] h-14 px-10 text-lg font-semibold rounded-xl shadow-lg shadow-[#e2231a]/25 transition-all hover:shadow-[#e2231a]/40 hover:scale-[1.02]"
             >
-              Get Started — It's Free
+              Get Your Instant Quote
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
-            <p className="text-slate-500 text-xs mt-4">Powered by Orbus Exhibit & Display Group</p>
+            <p className="text-white/20 text-xs mt-5">No credit card required • Powered by Orbus Exhibit & Display Group</p>
           </motion.div>
         </div>
       </section>
+
+      {/* ─── Footer ─── */}
+      <footer className="border-t border-white/5 py-8">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2 text-white/20 text-sm">
+            <div className="w-5 h-5 bg-[#e2231a] rounded flex items-center justify-center">
+              <span className="text-white font-black text-[10px]">X</span>
+            </div>
+            <span>Xhibitly © {new Date().getFullYear()}</span>
+          </div>
+          <div className="text-xs text-white/15">
+            A product of Orbus Exhibit & Display Group
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
