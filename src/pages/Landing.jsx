@@ -17,8 +17,6 @@ const STATIC_IMAGES = {
 export default function Landing() {
   const navigate = useNavigate();
   const [checking, setChecking] = useState(true);
-  const [generatedImages, setGeneratedImages] = useState({});
-  const [generating, setGenerating] = useState(false);
 
   useEffect(() => {
     checkAuth();
