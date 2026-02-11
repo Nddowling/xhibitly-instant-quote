@@ -178,35 +178,7 @@ export default function Landing() {
           </motion.div>
           </div>
 
-          {/* Graphic feature strip */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.4 }}
-            className="mt-16 md:mt-20"
-          >
-            <div className="grid grid-cols-3 gap-3 md:gap-4">
-              {[
-                { label: 'Fast & Reliable', icon: '⚡', color: 'from-[#e2231a]/15 to-[#e2231a]/5' },
-                { label: 'Stand Out', icon: '✦', color: 'from-white/[0.06] to-white/[0.02]' },
-                { label: 'Full Service', icon: '◆', color: 'from-[#e2231a]/10 to-transparent' },
-              ].map((item, i) => (
-                <div
-                  key={item.label}
-                  className="relative overflow-hidden rounded-xl md:rounded-2xl aspect-[4/3] group border border-white/5 bg-gradient-to-br hover:border-white/10 transition-all duration-300"
-                  style={{ backgroundImage: `linear-gradient(135deg, ${i === 0 ? 'rgba(226,35,26,0.15), rgba(226,35,26,0.03)' : i === 1 ? 'rgba(255,255,255,0.06), rgba(255,255,255,0.01)' : 'rgba(226,35,26,0.1), transparent'})` }}
-                >
-                  {/* Decorative lines */}
-                  <div className="absolute top-0 right-0 w-24 h-24 border-r border-t border-white/[0.04] rounded-tr-2xl" />
-                  <div className="absolute bottom-0 left-0 w-16 h-16 border-l border-b border-[#e2231a]/10 rounded-bl-2xl" />
-                  <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className="text-3xl mb-3 opacity-60">{item.icon}</span>
-                    <span className="text-sm font-semibold text-white/70">{item.label}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </motion.div>
+
         </div>
       </section>
 
