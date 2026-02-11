@@ -151,6 +151,7 @@ ${JSON.stringify(compatibleProducts.map(p => {
     name: p.display_name || p.name,
     category: p.category_name || p.category,
     geometry_type: p.geometry_type,
+    visual_description: p.visual_description || p.description || '',
     price_tier: p.price_tier,
     base_price: p.base_price,
     rental_price: p.rental_price || null,
@@ -162,7 +163,7 @@ ${JSON.stringify(compatibleProducts.map(p => {
     design_style: p.design_style,
     customizable: p.customizable,
     branding_surfaces: p.branding_surfaces,
-    image_url: p.image_url || null
+    thumbnail_url: p.thumbnail_url || p.image_url || null
   };
 }), null, 2)}
 
@@ -317,10 +318,16 @@ Return JSON with 3 designs.`;
         const productManifest = designProducts.map((p, idx) => {
           const dims = p.dimensions || {};
           const dimStr = dims.width ? `${dims.width}ft W × ${dims.height || '?'}ft H × ${dims.depth || '?'}ft D` : 'standard size';
-          const desc = p.description || '';
-          const features = (p.features || []).slice(0, 3).join(', ');
-          return `${idx + 1}. "${p.display_name || p.name}" — ${p.category_name || p.category}, ${dimStr}. ${desc}${features ? ` Features: ${features}.` : ''}`;
+          const visualDesc = p.visual_description || p.description || '';
+          return `${idx + 1}. "${p.display_name || p.name}" — ${p.category_name || p.category}, ${dimStr}. VISUAL: ${visualDesc}`;
         }).join('\n');
+        
+        // Collect product thumbnail URLs as reference images for the AI image generator
+        const productThumbnails = designProducts
+          .map(p => p.thumbnail_url || p.image_url)
+          .filter(url => url && /\.(png|jpg|jpeg|gif|webp|bmp|tiff|svg)(\?|$)/i.test(url));
+        // Deduplicate
+        const uniqueThumbnails = [...new Set(productThumbnails)];
         
         const imagePrompt = `Photorealistic 3D architectural rendering of a trade show booth from the Orbus Exhibit & Display catalog.
 
@@ -356,11 +363,17 @@ PLACEMENT GUIDE:
 CAMERA & STYLE: 3/4 elevated angle from the front-left aisle. Professional architectural visualization. Clean, well-lit. The booth should look inviting, professional, and fully set up for a real trade show.`;
 
         try {
-          // Pass the logo URL as a reference image only if it looks like a valid image URL
+          // Pass the logo URL + product thumbnails as reference images
           const generateParams = { prompt: imagePrompt };
+          const referenceImages = [];
           const logoUrl = brandAnalysis.logo_url || '';
           if (logoUrl && /\.(png|jpg|jpeg|gif|webp|bmp|tiff|svg)(\?|$)/i.test(logoUrl)) {
-            generateParams.existing_image_urls = [logoUrl];
+            referenceImages.push(logoUrl);
+          }
+          // Add up to 4 product thumbnails as visual references
+          referenceImages.push(...uniqueThumbnails.slice(0, 4));
+          if (referenceImages.length > 0) {
+            generateParams.existing_image_urls = referenceImages;
           }
           
           const imageResult = await base44.integrations.Core.GenerateImage(generateParams);
