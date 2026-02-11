@@ -317,8 +317,8 @@ export default function Landing() {
                 {[
                   { value: '< 2 min', label: 'Time to quote' },
                   { value: '10 min', label: 'Specialist callback' },
-                  { value: '500+', label: 'Booths delivered' },
-                  { value: '4.9★', label: 'Customer rating' }
+                  { value: '3', label: 'Curated options' },
+                  { value: '100%', label: 'Done for you' }
                 ].map((stat, i) => (
                   <div key={i} className="bg-white/[0.03] border border-white/5 rounded-xl p-6 text-center">
                     <div className="text-2xl md:text-3xl font-extrabold text-white mb-1">{stat.value}</div>
