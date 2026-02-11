@@ -35,6 +35,7 @@ export default function Landing() {
 
   useEffect(() => {
     checkAuth();
+    loadOrGenerateImages();
   }, []);
 
   const checkAuth = async () => {
@@ -55,6 +56,36 @@ export default function Landing() {
       }
     } catch (e) {}
     setChecking(false);
+  };
+
+  const loadOrGenerateImages = async () => {
+    // Check cache first
+    const cached = localStorage.getItem(CACHE_KEY);
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      setGeneratedImages(parsed);
+      return;
+    }
+
+    // Generate all 4 images
+    setImagesLoading(true);
+    const results = {};
+    const promises = IMAGE_PROMPTS.map(async ({ key, prompt }) => {
+      const existingUrls = [
+        'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/5f8ad27f9_image.png',
+        'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/8e0582084_OrbusFactory.jpeg'
+      ];
+      const { url } = await base44.integrations.Core.GenerateImage({
+        prompt,
+        existing_image_urls: existingUrls
+      });
+      results[key] = url;
+    });
+
+    await Promise.all(promises);
+    setGeneratedImages(results);
+    localStorage.setItem(CACHE_KEY, JSON.stringify(results));
+    setImagesLoading(false);
   };
 
   const handleGetStarted = () => {
