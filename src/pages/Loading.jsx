@@ -271,6 +271,22 @@ Return JSON with 3 designs.`;
         }
       });
 
+      // Validate: strip any SKUs not in our actual catalog
+      const validSkus = new Set(compatibleProducts.map(p => p.manufacturer_sku || p.sku));
+      for (const design of designs.designs) {
+        design.product_skus = design.product_skus.filter(sku => validSkus.has(sku));
+        if (design.line_items) {
+          design.line_items = design.line_items.filter(li => validSkus.has(li.sku));
+        }
+        // Recalculate total from actual catalog prices
+        let recalcTotal = 0;
+        for (const sku of design.product_skus) {
+          const product = compatibleProducts.find(p => (p.manufacturer_sku || p.sku) === sku);
+          if (product) recalcTotal += (product.is_rental ? (product.rental_price || product.base_price) : product.base_price);
+        }
+        design.total_price = recalcTotal;
+      }
+
       // Generate all 2D images in parallel using Base44 GenerateImage
       // Include the logo as a reference image so it appears in the booth rendering
       const imagePromises = designs.designs.map(async (design) => {
