@@ -42,45 +42,6 @@ export default function Landing() {
     setChecking(false);
   };
 
-  useEffect(() => {
-    loadImages();
-  }, []);
-
-  const loadImages = async () => {
-    // Check localStorage cache first
-    const cached = localStorage.getItem(LANDING_IMAGES_KEY);
-    if (cached) {
-      try {
-        const parsed = JSON.parse(cached);
-        if (parsed.hero && parsed.install && parsed.standout && parsed.detail) {
-          setGeneratedImages(parsed);
-          return;
-        }
-      } catch (e) {}
-    }
-    // No valid cache — generate one at a time so images appear as they're ready
-    setGenerating(true);
-    const results = {};
-    const referenceUrls = [
-      'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/5f8ad27f9_image.png',
-      'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/8e0582084_OrbusFactory.jpeg'
-    ];
-    for (const { key, prompt } of IMAGE_PROMPTS) {
-      try {
-        const res = await base44.integrations.Core.GenerateImage({
-          prompt,
-          existing_image_urls: referenceUrls
-        });
-        results[key] = res.url;
-        setGeneratedImages(prev => ({ ...prev, [key]: res.url }));
-      } catch (e) {
-        console.log('Image generation failed for', key, e);
-      }
-    }
-    localStorage.setItem(LANDING_IMAGES_KEY, JSON.stringify(results));
-    setGenerating(false);
-  };
-
   const handleGetStarted = () => {
     base44.auth.redirectToLogin();
   };
