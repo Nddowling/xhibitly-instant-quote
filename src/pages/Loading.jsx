@@ -295,14 +295,15 @@ Return JSON with 3 designs.`;
       // ── STEP 4: RULES ENGINE — enforce, correct, upgrade, auto-add ──
       // Fetch services for auto-injection
       const allServices = await base44.entities.Service.filter({ is_active: true });
-      const customerProfile = parsed.customerProfile || null;
+      const quoteDataParsed = JSON.parse(sessionStorage.getItem('quoteRequest'));
+      const profileForRules = quoteDataParsed?.customerProfile || customerProfile || null;
       
       const validatedDesigns = enforceAllDesigns(
         designs.designs,
         compatibleProducts,
         allServices,
         boothSize,
-        customerProfile
+        profileForRules
       );
       
       // Log corrections for debugging
