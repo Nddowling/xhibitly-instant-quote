@@ -3,13 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Sparkles, CheckCircle, Palette, Layers, Lightbulb } from 'lucide-react';
+import { Search, Sparkles, CheckCircle, Palette, Layers, Lightbulb, ShieldCheck } from 'lucide-react';
+import { enforceAllDesigns } from '../components/utils/boothRulesEngine';
 
 const loadingSteps = [
   { icon: Search, text: "Scanning your website..." },
   { icon: Palette, text: "Extracting your logo & brand colors..." },
   { icon: Layers, text: "Curating from 500+ products..." },
   { icon: Lightbulb, text: "Designing your experience..." },
+  { icon: ShieldCheck, text: "Validating design & pricing rules..." },
   { icon: Sparkles, text: "Generating booth visuals with your logo..." },
   { icon: CheckCircle, text: "Finalizing your booth designs..." },
 ];
