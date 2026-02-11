@@ -318,19 +318,11 @@ Return JSON with 3 designs.`;
       // ── STEP 5: Generate booth images from LOCKED product lists ──
       // Include the logo as a reference image so it appears in the booth rendering
       const imagePromises = designs.designs.map(async (design) => {
+        // Products are already validated and locked by the rules engine
         const designProducts = compatibleProducts.filter(p => 
           design.product_skus.includes(p.manufacturer_sku || p.sku)
         );
-
-        // Build accurate line items from catalog data
-        design.line_items = designProducts.map(p => ({
-          sku: p.manufacturer_sku || p.sku,
-          name: p.display_name || p.name,
-          category: p.category_name || p.category,
-          quantity: 1,
-          unit_price: p.is_rental ? (p.rental_price || p.base_price) : p.base_price,
-          line_total: p.is_rental ? (p.rental_price || p.base_price) : p.base_price
-        }));
+        // line_items are already built by the rules engine (includes services)
 
         // Build a detailed product manifest with exact dimensions and visual descriptions for the AI renderer
         const productManifest = designProducts.map((p, idx) => {
