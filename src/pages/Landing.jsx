@@ -185,17 +185,11 @@ export default function Landing() {
                   key={slot.key}
                   className="relative overflow-hidden rounded-xl md:rounded-2xl aspect-[4/3] group"
                 >
-                  {generatedImages[slot.key] ? (
-                    <img
-                      src={generatedImages[slot.key]}
-                      alt={slot.alt}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-white/5 flex items-center justify-center">
-                      <Loader2 className="w-6 h-6 text-white/20 animate-spin" />
-                    </div>
-                  )}
+                  <img
+                    src={STATIC_IMAGES[slot.key]}
+                    alt={slot.alt}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                   <div className="absolute bottom-3 left-3">
                     <span className="text-xs font-semibold text-white/80 bg-black/30 backdrop-blur-sm px-2.5 py-1 rounded-md">{slot.label}</span>
