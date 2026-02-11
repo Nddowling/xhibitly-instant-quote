@@ -213,6 +213,19 @@ Return JSON with 3 designs.`;
                   visitor_journey: { type: "string" },
                   key_moments: { type: "array", items: { type: "string" } },
                   product_skus: { type: "array", items: { type: "string" } },
+                  line_items: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      properties: {
+                        sku: { type: "string" },
+                        name: { type: "string" },
+                        quantity: { type: "number" },
+                        unit_price: { type: "number" },
+                        line_total: { type: "number" }
+                      }
+                    }
+                  },
                   design_rationale: { type: "string" },
                   total_price: { type: "number" },
                   spatial_layout: {
