@@ -313,32 +313,39 @@ ACTION REQUIRED: Call the customer immediately to finalize the order.
 
               {products.length > 0 ? (
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {products.map((product) => (
-                    <div key={product.id} className="flex items-start gap-3 p-3 rounded-lg bg-slate-50 border border-slate-100">
-                      {product.image_url ? (
-                        <img 
-                          src={product.image_url} 
-                          alt={product.display_name || product.name}
-                          className="w-14 h-14 rounded-lg object-cover flex-shrink-0 bg-white border"
-                        />
-                      ) : (
-                        <div className="w-14 h-14 rounded-lg bg-white border flex items-center justify-center flex-shrink-0">
-                          <Package className="w-6 h-6 text-slate-300" />
+                  {products.map((product) => {
+                    const dims = product.dimensions || {};
+                    const dimStr = dims.width ? `${dims.width}' W × ${dims.height}' H × ${dims.depth}' D` : null;
+                    return (
+                      <div key={product.id} className="flex items-start gap-3 p-3 rounded-lg bg-slate-50 border border-slate-100">
+                        {product.image_url ? (
+                          <img 
+                            src={product.image_url} 
+                            alt={product.display_name || product.name}
+                            className="w-16 h-16 rounded-lg object-contain flex-shrink-0 bg-white border p-1"
+                          />
+                        ) : (
+                          <div className="w-16 h-16 rounded-lg bg-white border flex items-center justify-center flex-shrink-0">
+                            <Package className="w-6 h-6 text-slate-300" />
+                          </div>
+                        )}
+                        <div className="min-w-0">
+                          <p className="text-sm font-semibold text-slate-800 truncate">
+                            {product.display_name || product.name}
+                          </p>
+                          <p className="text-xs text-slate-500 truncate">
+                            {product.category_name || product.category}
+                          </p>
+                          {dimStr && (
+                            <p className="text-xs text-slate-400 mt-0.5">{dimStr}</p>
+                          )}
+                          <p className="text-xs font-medium text-[#e2231a] mt-1">
+                            {formatPrice(product.base_price)}
+                          </p>
                         </div>
-                      )}
-                      <div className="min-w-0">
-                        <p className="text-sm font-semibold text-slate-800 truncate">
-                          {product.display_name || product.name}
-                        </p>
-                        <p className="text-xs text-slate-500 truncate">
-                          {product.category_name || product.category}
-                        </p>
-                        <p className="text-xs font-medium text-[#e2231a] mt-1">
-                          {formatPrice(product.base_price)}
-                        </p>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               ) : (
                 <div className="text-center py-8">
