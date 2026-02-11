@@ -143,14 +143,16 @@ ${customerProfile ? `
 ${customerProfile.additional_notes ? `- Additional Notes: ${customerProfile.additional_notes}` : ''}
 ` : 'No specific customer requirements provided.'}
 
-Available Products (select from these):
+PRODUCT CATALOG (YOU MUST ONLY SELECT FROM THIS LIST — NO OTHER PRODUCTS ALLOWED):
 ${JSON.stringify(compatibleProducts.map(p => ({
   sku: p.manufacturer_sku || p.sku,
   name: p.display_name || p.name,
   category: p.category_name || p.category,
-  product_type: p.geometry_type || p.product_type,
+  product_line: p.product_line,
   price_tier: p.price_tier,
   base_price: p.base_price,
+  rental_price: p.rental_price || null,
+  is_rental: p.is_rental || false,
   design_style: p.design_style,
   features: p.features,
   dimensions: p.dimensions || p.footprint,
@@ -158,17 +160,23 @@ ${JSON.stringify(compatibleProducts.map(p => ({
   branding_surfaces: p.branding_surfaces
 })), null, 2)}
 
+CRITICAL RULES:
+- You may ONLY use products listed above. Do NOT invent, fabricate, or reference any product not in this catalog.
+- Every product_sku in your response MUST exactly match a "sku" value from the catalog above.
+- The total_price for each design MUST equal the sum of base_price (or rental_price for rental items) of all selected products.
+- Include a "line_items" array with each product's sku, name, quantity, unit_price, and line_total.
+
 For each tier (Modular, Hybrid, and Custom), create a curated booth EXPERIENCE that:
 1. Tells a story and creates a memorable journey
 2. Matches the brand identity AND customer requirements
 3. Addresses the customer's stated objectives (${customerProfile?.objectives.join(', ') || 'general lead generation'})
 4. Incorporates the desired look (${customerProfile?.desired_look.join(', ') || 'modern'}) and feel (${customerProfile?.desired_feel.join(', ') || 'open'})
-5. Selects 5-12 compatible products from the catalog
+5. Selects 3-10 products ONLY from the catalog above (use exact SKUs)
 6. ${customerProfile?.display_products ? 'Includes product display areas' : ''}
 7. ${customerProfile?.needs_demo_space ? 'Includes demonstration/presentation space' : ''}
 8. ${customerProfile?.needs_conference_area ? 'Includes a conference/meeting area' : ''}
 9. Explains the visitor flow and key moments
-10. Total price should be: Modular $3-8K, Hybrid $8-18K, Custom $18-50K+
+10. Total price is calculated by summing the actual base_price of selected products. Modular tier should target lower-priced items, Custom tier should include premium items.
 
 CRITICAL - 3D SPATIAL LAYOUT:
 For each product selected, provide a spatial_layout array with exact 3D positioning:
