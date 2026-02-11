@@ -347,6 +347,22 @@ ACTION REQUIRED: Call the customer immediately to finalize the order.
                     );
                   })}
                 </div>
+              ) : design.line_items?.length > 0 ? (
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {design.line_items.map((item, i) => (
+                    <div key={i} className="flex items-start gap-3 p-3 rounded-lg bg-slate-50 border border-slate-100">
+                      <div className="w-16 h-16 rounded-lg bg-white border flex items-center justify-center flex-shrink-0">
+                        <Package className="w-6 h-6 text-slate-300" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold text-slate-800 truncate">{item.name}</p>
+                        <p className="text-xs text-slate-500 truncate">{item.category}</p>
+                        <p className="text-xs text-slate-400 mt-0.5">Qty: {item.quantity || 1}</p>
+                        <p className="text-xs font-medium text-[#e2231a] mt-1">{formatPrice(item.unit_price)}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               ) : (
                 <div className="text-center py-8">
                   <Package className="w-12 h-12 text-slate-300 mx-auto mb-2" />
