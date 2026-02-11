@@ -49,71 +49,41 @@ export default function Loading() {
     const { websiteUrl, dealerId, customerProfile } = JSON.parse(sessionStorage.getItem('quoteRequest'));
     
     try {
-      // Always generate fresh designs (sessionStorage preserves them for back button navigation)
+      // Simulate minimum loading time for UX
+      const minLoadTime = new Promise(resolve => setTimeout(resolve, 5000));
       
-      // Simulate minimum loading time for UX (AI processing takes time)
-      const minLoadTime = new Promise(resolve => setTimeout(resolve, 8000));
-      
-      // Step 1: Scrape the website to find the logo URL
-      const logoScrape = await base44.integrations.Core.InvokeLLM({
-        prompt: `Visit this website: ${websiteUrl}
-        
-        Your ONLY job is to find the company's main logo image URL.
-        Look for:
-        1. <img> tags in the header/nav area
-        2. Logo in <link rel="icon"> or <meta property="og:image">
-        3. SVG logos embedded or linked
-        4. Any image file in the header that is clearly the company logo
-        
-        Return the DIRECT, ABSOLUTE URL to the logo image file (not a page URL).
-        If the logo is an SVG inline, describe it so we can reference it.
-        If you find multiple logos, pick the primary/main one (usually in the header).
-        
-        CRITICAL: The logo_url MUST be a real, working image URL from their website.`,
-        add_context_from_internet: true,
-        response_json_schema: {
-          type: "object",
-          properties: {
-            logo_url: { type: "string" },
-            logo_description: { type: "string" },
-            company_name: { type: "string" }
-          }
-        }
-      });
-
-      const scrapedLogoUrl = logoScrape.logo_url || '';
-      const logoDescription = logoScrape.logo_description || '';
-      const scrapedCompanyName = logoScrape.company_name || '';
-
-      // Step 2: Full brand identity analysis (with logo context)
+      // Step 1: Combined logo scrape + brand identity analysis (single AI call)
       const brandAnalysis = await base44.integrations.Core.InvokeLLM({
-        prompt: `Analyze this website (${websiteUrl}) and extract comprehensive brand identity.
-        
-        We already found their logo: ${scrapedLogoUrl ? `URL: ${scrapedLogoUrl}` : `Description: ${logoDescription}`}
-        Company name: ${scrapedCompanyName}
-        
-        Extract and return JSON with:
-        - logo_url: "${scrapedLogoUrl}" (use exactly this URL we already scraped)
-        - logo_description: detailed description of what the logo looks like (colors, shapes, text, style) so it can be recreated in booth renderings
-        - primary_color: hex color (main brand color from logo and website)
-        - secondary_color: hex color (secondary brand color)
-        - accent_color_1: hex color (third brand/accent color)
-        - accent_color_2: hex color (fourth brand/accent color)
-        - typography_primary: main font family name
-        - typography_secondary: secondary font family
-        - brand_personality: 2-3 words describing the brand feel
-        - industry: industry/sector
-        - target_audience: who they serve
-        - design_style: array of style keywords from [Modern, Industrial, Minimalist, Luxury, Tech, Organic, Bold, Classic, Creative]
-        - brand_essence: one sentence capturing their brand essence
-        
-        IMPORTANT: Extract 4 distinct colors. The primary_color should match the dominant color in their logo.`,
+        prompt: `Analyze this website: ${websiteUrl}
+
+Do TWO things in one pass:
+
+1. FIND THE LOGO: Look for the company's main logo image URL in <img> tags (header/nav), <link rel="icon">, <meta property="og:image">, or linked SVG files. Return the DIRECT, ABSOLUTE URL to the logo image file.
+
+2. EXTRACT BRAND IDENTITY: Analyze the full website and extract:
+- logo_url: the direct URL to the logo image you found
+- logo_description: detailed description of what the logo looks like (colors, shapes, text, style) so it can be recreated in booth renderings
+- company_name: the company name
+- primary_color: hex color (main brand color from logo and website)
+- secondary_color: hex color (secondary brand color)
+- accent_color_1: hex color (third brand/accent color)
+- accent_color_2: hex color (fourth brand/accent color)
+- typography_primary: main font family name
+- typography_secondary: secondary font family
+- brand_personality: 2-3 words describing the brand feel
+- industry: industry/sector
+- target_audience: who they serve
+- design_style: array of style keywords from [Modern, Industrial, Minimalist, Luxury, Tech, Organic, Bold, Classic, Creative]
+- brand_essence: one sentence capturing their brand essence
+
+IMPORTANT: Extract 4 distinct colors. The primary_color should match the dominant color in their logo. The logo_url MUST be a real, working image URL from their website.`,
         add_context_from_internet: true,
         response_json_schema: {
           type: "object",
           properties: {
             logo_url: { type: "string" },
             logo_description: { type: "string" },
+            company_name: { type: "string" },
             primary_color: { type: "string" },
             secondary_color: { type: "string" },
             accent_color_1: { type: "string" },
@@ -128,11 +98,8 @@ export default function Loading() {
           }
         }
       });
-      
-      // Ensure the scraped logo URL is preserved in the brand analysis
-      if (scrapedLogoUrl) {
-        brandAnalysis.logo_url = scrapedLogoUrl;
-      }
+
+      const scrapedCompanyName = brandAnalysis.company_name || '';
 
       // Step 2: Get all available products for this booth size
       // Try ProductVariant first (new system), fall back to Product (legacy)
