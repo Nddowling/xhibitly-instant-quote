@@ -145,22 +145,40 @@ export default function Landing() {
             transition={{ duration: 0.7, delay: 0.35 }}
             className="hidden md:block relative"
           >
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-black/40 border border-white/5">
-              <img
-                src={STATIC_IMAGES.hero}
-                alt="Premium trade show booth"
-                className="w-full aspect-[4/5] object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-            </div>
-            {/* Floating accent card */}
-            <div className="absolute -bottom-4 -left-4 bg-[#e2231a] text-white px-4 py-3 rounded-xl shadow-lg shadow-[#e2231a]/30">
-              <p className="text-xs font-semibold">✦ AI-Curated to Your Brand</p>
+            <div className="relative aspect-square max-w-md mx-auto">
+              {/* Outer rotating ring */}
+              <div className="absolute inset-0 rounded-full border border-white/5 animate-[spin_30s_linear_infinite]">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-[#e2231a] rounded-full shadow-lg shadow-[#e2231a]/50" />
+              </div>
+              {/* Inner shapes */}
+              <div className="absolute inset-8 rounded-full border border-white/[0.03]" />
+              <div className="absolute inset-16 rounded-3xl bg-gradient-to-br from-[#e2231a]/20 to-transparent border border-[#e2231a]/10 rotate-12" />
+              <div className="absolute inset-20 rounded-2xl bg-gradient-to-tr from-[#e2231a]/10 to-[#e2231a]/5 border border-white/5 -rotate-6" />
+              {/* Center content */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="text-center">
+                  <div className="w-20 h-20 bg-[#e2231a] rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-2xl shadow-[#e2231a]/30">
+                    <span className="text-white font-black text-3xl">X</span>
+                  </div>
+                  <p className="text-sm font-semibold text-white/60">AI-Powered</p>
+                  <p className="text-xs text-white/30">Booth Design</p>
+                </div>
+              </div>
+              {/* Floating accent cards */}
+              <div className="absolute top-8 right-0 bg-white/[0.04] backdrop-blur-sm border border-white/10 text-white px-4 py-2.5 rounded-xl">
+                <p className="text-xs font-semibold text-[#e2231a]">✦ Brand Matched</p>
+              </div>
+              <div className="absolute bottom-12 -left-2 bg-[#e2231a] text-white px-4 py-2.5 rounded-xl shadow-lg shadow-[#e2231a]/30">
+                <p className="text-xs font-semibold">⚡ Under 2 Minutes</p>
+              </div>
+              <div className="absolute bottom-4 right-4 bg-white/[0.04] backdrop-blur-sm border border-white/10 text-white px-4 py-2.5 rounded-xl">
+                <p className="text-xs font-semibold text-white/70">📦 Ship-Ready</p>
+              </div>
             </div>
           </motion.div>
           </div>
 
-          {/* Hero image grid */}
+          {/* Graphic feature strip */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
@@ -169,22 +187,21 @@ export default function Landing() {
           >
             <div className="grid grid-cols-3 gap-3 md:gap-4">
               {[
-                { key: 'install', alt: 'Professional booth installation crew', label: 'Fast & Reliable' },
-                { key: 'standout', alt: 'Booth standing out on exhibition floor', label: 'Stand Out' },
-                { key: 'detail', alt: 'Premium booth detail with integrated tech', label: 'Full Service' },
-              ].map((slot, i) => (
+                { label: 'Fast & Reliable', icon: '⚡', color: 'from-[#e2231a]/15 to-[#e2231a]/5' },
+                { label: 'Stand Out', icon: '✦', color: 'from-white/[0.06] to-white/[0.02]' },
+                { label: 'Full Service', icon: '◆', color: 'from-[#e2231a]/10 to-transparent' },
+              ].map((item, i) => (
                 <div
-                  key={slot.key}
-                  className="relative overflow-hidden rounded-xl md:rounded-2xl aspect-[4/3] group"
+                  key={item.label}
+                  className="relative overflow-hidden rounded-xl md:rounded-2xl aspect-[4/3] group border border-white/5 bg-gradient-to-br hover:border-white/10 transition-all duration-300"
+                  style={{ backgroundImage: `linear-gradient(135deg, ${i === 0 ? 'rgba(226,35,26,0.15), rgba(226,35,26,0.03)' : i === 1 ? 'rgba(255,255,255,0.06), rgba(255,255,255,0.01)' : 'rgba(226,35,26,0.1), transparent'})` }}
                 >
-                  <img
-                    src={STATIC_IMAGES[slot.key]}
-                    alt={slot.alt}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                  <div className="absolute bottom-3 left-3">
-                    <span className="text-xs font-semibold text-white/80 bg-black/30 backdrop-blur-sm px-2.5 py-1 rounded-md">{slot.label}</span>
+                  {/* Decorative lines */}
+                  <div className="absolute top-0 right-0 w-24 h-24 border-r border-t border-white/[0.04] rounded-tr-2xl" />
+                  <div className="absolute bottom-0 left-0 w-16 h-16 border-l border-b border-[#e2231a]/10 rounded-bl-2xl" />
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <span className="text-3xl mb-3 opacity-60">{item.icon}</span>
+                    <span className="text-sm font-semibold text-white/70">{item.label}</span>
                   </div>
                 </div>
               ))}
