@@ -283,23 +283,39 @@ Return JSON with 3 designs.`;
         }
       });
 
-      // Validate: strip any SKUs not in our actual catalog
+      // ── STEP 3: Validate SKUs against catalog ──
       const validSkus = new Set(compatibleProducts.map(p => p.manufacturer_sku || p.sku));
       for (const design of designs.designs) {
         design.product_skus = design.product_skus.filter(sku => validSkus.has(sku));
         if (design.line_items) {
           design.line_items = design.line_items.filter(li => validSkus.has(li.sku));
         }
-        // Recalculate total from actual catalog prices
-        let recalcTotal = 0;
-        for (const sku of design.product_skus) {
-          const product = compatibleProducts.find(p => (p.manufacturer_sku || p.sku) === sku);
-          if (product) recalcTotal += (product.is_rental ? (product.rental_price || product.base_price) : product.base_price);
-        }
-        design.total_price = recalcTotal;
       }
 
-      // Generate all 2D images in parallel using Base44 GenerateImage
+      // ── STEP 4: RULES ENGINE — enforce, correct, upgrade, auto-add ──
+      // Fetch services for auto-injection
+      const allServices = await base44.entities.Service.filter({ is_active: true });
+      const customerProfile = parsed.customerProfile || null;
+      
+      const validatedDesigns = enforceAllDesigns(
+        designs.designs,
+        compatibleProducts,
+        allServices,
+        boothSize,
+        customerProfile
+      );
+      
+      // Log corrections for debugging
+      validatedDesigns.forEach(d => {
+        if (d.rules_corrections.length > 0) {
+          console.log(`[Rules Engine] ${d.tier} corrections:`, d.rules_corrections);
+        }
+      });
+
+      // Replace designs with validated versions
+      designs.designs = validatedDesigns;
+
+      // ── STEP 5: Generate booth images from LOCKED product lists ──
       // Include the logo as a reference image so it appears in the booth rendering
       const imagePromises = designs.designs.map(async (design) => {
         const designProducts = compatibleProducts.filter(p => 
