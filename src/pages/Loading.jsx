@@ -303,6 +303,10 @@ Return JSON with 3 designs.`;
           unit_price: p.is_rental ? (p.rental_price || p.base_price) : p.base_price,
           line_total: p.is_rental ? (p.rental_price || p.base_price) : p.base_price
         }));
+
+        const productDescriptions = designProducts.map(p => 
+          `${p.display_name || p.name} (${p.category_name || p.category} - ${p.dimensions || 'standard size'})`
+        ).join(', ');
         
         const imagePrompt = `Photorealistic 3D rendering of a trade show booth.
 
@@ -319,7 +323,7 @@ BRAND COLORS (USE THROUGHOUT):
 
 DESIGN CONCEPT: ${design.experience_story}
 
-PRODUCTS IN BOOTH: ${designProducts.map(p => p.name).join(', ')}
+SPECIFIC PRODUCTS (from Orbus catalog): ${productDescriptions}
 
 RENDERING STYLE: Professional architectural visualization, 3/4 angle view, trade show floor with carpet, dramatic lighting, photorealistic quality. The booth must look like a real trade show exhibit with the company's branding clearly displayed.`;
 
