@@ -2,42 +2,36 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { base44 } from '@/api/base44Client';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Upload, Box, Image, CheckCircle, Loader2, Search, X, Trash2 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Button } from '@/components/ui/button';
+import { Search, ArrowLeft } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import CategoryCard from '../components/catalog/CategoryCard';
+import ProductRow from '../components/catalog/ProductRow';
+
+const ALL_CATEGORIES = [
+  'Portable Displays',
+  'Fabric Structures',
+  'Modular Exhibits',
+  'Outdoor Displays',
+  'Blaze SEG Light Boxes',
+  'Rental Displays',
+  'Vector Fast Frame',
+  'Wall Signs',
+  'Retail Displays'
+];
 
 export default function Product3DManager() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [uploadingProduct, setUploadingProduct] = useState(null);
-  const [uploadProgress, setUploadProgress] = useState({});
-  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [activeCategory, setActiveCategory] = useState(null);
 
   useEffect(() => {
     checkAuth();
   }, []);
-
-  useEffect(() => {
-    if (searchTerm) {
-      const filtered = products.filter(p => 
-        p.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.sku?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.category?.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      setFilteredProducts(filtered);
-    } else {
-      setFilteredProducts(products);
-    }
-  }, [searchTerm, products]);
 
   const checkAuth = async () => {
     try {
@@ -47,65 +41,34 @@ export default function Product3DManager() {
         return;
       }
       setUser(currentUser);
-      await loadProducts();
+      const allProducts = await base44.entities.Product.list('-created_date', 1000);
+      setProducts(allProducts);
     } catch (e) {
       navigate(createPageUrl('Home'));
     }
     setIsLoading(false);
   };
 
-  const loadProducts = async () => {
-    const allProducts = await base44.entities.Product.list('-created_date', 1000);
-    setProducts(allProducts);
-    setFilteredProducts(allProducts);
-  };
+  // Search across all products
+  const searchResults = searchTerm.length >= 2
+    ? products.filter(p =>
+        p.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.sku?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.product_line?.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : [];
 
-  const handleFileUpload = async (productId, file, type) => {
-    try {
-      setUploadProgress(prev => ({ ...prev, [productId + type]: 'uploading' }));
-      
-      const { data } = await base44.integrations.Core.UploadFile({ file });
-      
-      const updateData = type === 'model' 
-        ? { model_url: data.file_url }
-        : { thumbnail_url: data.file_url };
-      
-      await base44.entities.Product.update(productId, updateData);
-      
-      setUploadProgress(prev => ({ ...prev, [productId + type]: 'success' }));
-      await loadProducts();
-      
-      setTimeout(() => {
-        setUploadProgress(prev => ({ ...prev, [productId + type]: null }));
-      }, 2000);
-    } catch (error) {
-      console.error('Upload failed:', error);
-      setUploadProgress(prev => ({ ...prev, [productId + type]: 'error' }));
-    }
-  };
+  // Products in active category
+  const categoryProducts = activeCategory
+    ? products.filter(p => p.category === activeCategory)
+    : [];
 
-  const handleDimensionsUpdate = async (productId, dimensions) => {
-    try {
-      await base44.entities.Product.update(productId, {
-        model_dimensions: dimensions
-      });
-      await loadProducts();
-    } catch (error) {
-      console.error('Failed to update dimensions:', error);
-    }
-  };
-
-  const handleDeleteProduct = async (productId) => {
-    if (!confirm('Are you sure you want to delete this product? This cannot be undone.')) {
-      return;
-    }
-    try {
-      await base44.entities.Product.delete(productId);
-      await loadProducts();
-    } catch (error) {
-      console.error('Failed to delete product:', error);
-    }
-  };
+  // Count per category
+  const categoryCounts = {};
+  ALL_CATEGORIES.forEach(cat => {
+    categoryCounts[cat] = products.filter(p => p.category === cat).length;
+  });
 
   if (isLoading) {
     return (
@@ -117,454 +80,125 @@ export default function Product3DManager() {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pb-24">
-      <div className="max-w-7xl mx-auto p-6">
+      <div className="max-w-7xl mx-auto p-4 md:p-6">
+
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
+          className="mb-6"
         >
-          <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3 mb-1">
+            {activeCategory && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setActiveCategory(null)}
+                className="text-slate-600 hover:text-slate-900"
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </Button>
+            )}
             <div>
-              <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
-                3D Product Manager
+              <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">
+                {activeCategory || 'Product Catalog'}
               </h1>
-              <p className="text-slate-600 dark:text-slate-400">
-                Upload and manage 3D models for booth visualization
+              <p className="text-slate-500 text-sm">
+                {activeCategory
+                  ? `${categoryProducts.length} product${categoryProducts.length !== 1 ? 's' : ''}`
+                  : `${products.length} products across ${ALL_CATEGORIES.length} categories`
+                }
               </p>
             </div>
-            <Button
-              onClick={() => setShowCreateForm(true)}
-              className="bg-[#e2231a] hover:bg-[#b01b13]"
-            >
-              <Upload className="w-4 h-4 mr-2" />
-              Import New Asset
-            </Button>
           </div>
         </motion.div>
 
-        {/* Create Form */}
-        {showCreateForm && (
-          <CreateProductForm
-            onClose={() => setShowCreateForm(false)}
-            onSuccess={async () => {
-              setShowCreateForm(false);
-              await loadProducts();
+        {/* Search */}
+        <div className="relative mb-6">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
+          <Input
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              if (e.target.value.length >= 2) setActiveCategory(null);
             }}
+            placeholder="Search products by name, SKU, or product line..."
+            className="pl-10 h-12 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800"
           />
+        </div>
+
+        {/* Search Results */}
+        {searchTerm.length >= 2 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="mb-6"
+          >
+            <p className="text-sm text-slate-500 mb-3">
+              {searchResults.length} result{searchResults.length !== 1 ? 's' : ''} for "{searchTerm}"
+            </p>
+            {searchResults.length > 0 ? (
+              <div className="space-y-2">
+                {searchResults.map(p => (
+                  <ProductRow key={p.id} product={p} />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12 text-slate-400">
+                No products match your search.
+              </div>
+            )}
+          </motion.div>
         )}
 
-        {/* Search */}
-        <Card className="mb-6">
-          <CardContent className="pt-6">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
-              <Input
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search by name, SKU, or category..."
-                className="pl-10 h-12"
-              />
-            </div>
-          </CardContent>
-        </Card>
+        {/* Category Grid */}
+        {!activeCategory && searchTerm.length < 2 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+          >
+            {ALL_CATEGORIES.map((cat, i) => (
+              <motion.div
+                key={cat}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.04 }}
+              >
+                <CategoryCard
+                  category={cat}
+                  productCount={categoryCounts[cat]}
+                  onClick={() => {
+                    setActiveCategory(cat);
+                    setSearchTerm('');
+                  }}
+                />
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
 
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <Card>
-            <CardContent className="pt-6">
-              <div className="text-2xl font-bold text-slate-900 dark:text-white">
-                {products.length}
+        {/* Category Detail View */}
+        {activeCategory && searchTerm.length < 2 && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            {categoryProducts.length > 0 ? (
+              <div className="space-y-2">
+                {categoryProducts.map(p => (
+                  <ProductRow key={p.id} product={p} />
+                ))}
               </div>
-              <div className="text-sm text-slate-600 dark:text-slate-400">Total Products</div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="pt-6">
-              <div className="text-2xl font-bold text-green-600">
-                {products.filter(p => p.model_url).length}
+            ) : (
+              <div className="text-center py-16">
+                <p className="text-slate-400 text-lg mb-1">No products in this category yet</p>
+                <p className="text-slate-300 text-sm">Products will appear here once added to the catalog.</p>
               </div>
-              <div className="text-sm text-slate-600 dark:text-slate-400">With 3D Models</div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="pt-6">
-              <div className="text-2xl font-bold text-orange-600">
-                {products.filter(p => !p.model_url).length}
-              </div>
-              <div className="text-sm text-slate-600 dark:text-slate-400">Missing Models</div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Products List */}
-        <div className="space-y-4">
-          {filteredProducts.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              uploadProgress={uploadProgress}
-              onFileUpload={handleFileUpload}
-              onDimensionsUpdate={handleDimensionsUpdate}
-              onDelete={handleDeleteProduct}
-            />
-          ))}
-        </div>
-
-        {filteredProducts.length === 0 && (
-          <Card>
-            <CardContent className="py-12 text-center">
-              <div className="text-slate-400 dark:text-slate-600 mb-2">No products found</div>
-              <div className="text-sm text-slate-500 dark:text-slate-500">
-                Try adjusting your search
-              </div>
-            </CardContent>
-          </Card>
+            )}
+          </motion.div>
         )}
       </div>
     </div>
-  );
-}
-
-function ProductCard({ product, uploadProgress, onFileUpload, onDimensionsUpdate, onDelete }) {
-  const [dimensions, setDimensions] = useState(
-    product.model_dimensions || { width: 0, height: 0, depth: 0 }
-  );
-  const [isEditing, setIsEditing] = useState(false);
-
-  const handleSaveDimensions = () => {
-    onDimensionsUpdate(product.id, dimensions);
-    setIsEditing(false);
-  };
-
-  const modelStatus = uploadProgress[product.id + 'model'];
-  const thumbnailStatus = uploadProgress[product.id + 'thumbnail'];
-
-  return (
-    <Card className="hover:shadow-lg transition-shadow">
-      <CardHeader>
-        <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <CardTitle className="text-lg mb-1">{product.name}</CardTitle>
-            <CardDescription className="flex items-center gap-2">
-              <span>{product.sku}</span>
-              <Badge variant="outline" className="text-xs">
-                {product.category}
-              </Badge>
-              {product.model_url && (
-                <Badge className="bg-green-100 text-green-800 text-xs">
-                  <Box className="w-3 h-3 mr-1" />
-                  3D Ready
-                </Badge>
-              )}
-            </CardDescription>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="text-right">
-              <div className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-                ${product.base_price?.toLocaleString()}
-              </div>
-              <div className="text-xs text-slate-500">{product.price_tier}</div>
-            </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => onDelete(product.id)}
-              className="text-red-600 hover:text-red-700 hover:bg-red-50"
-            >
-              <Trash2 className="w-4 h-4" />
-            </Button>
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div className="grid md:grid-cols-2 gap-6">
-          {/* 3D Model Upload */}
-          <div className="space-y-3">
-            <Label className="text-sm font-medium flex items-center gap-2">
-              <Box className="w-4 h-4" />
-              3D Model (GLB/GLTF)
-            </Label>
-            
-            {product.model_url ? (
-              <div className="flex items-center gap-2">
-                <CheckCircle className="w-5 h-5 text-green-600" />
-                <span className="text-sm text-slate-600 dark:text-slate-400 truncate flex-1">
-                  {product.model_url.split('/').pop()}
-                </span>
-              </div>
-            ) : (
-              <div className="text-sm text-slate-500 dark:text-slate-400">No model uploaded</div>
-            )}
-            
-            <div className="relative">
-              <Input
-                type="file"
-                accept=".glb,.gltf"
-                onChange={(e) => {
-                  if (e.target.files[0]) {
-                    onFileUpload(product.id, e.target.files[0], 'model');
-                  }
-                }}
-                className="absolute inset-0 opacity-0 cursor-pointer"
-              />
-              <Button
-                variant="outline"
-                className="w-full"
-                disabled={modelStatus === 'uploading'}
-              >
-                {modelStatus === 'uploading' ? (
-                  <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Uploading...</>
-                ) : modelStatus === 'success' ? (
-                  <><CheckCircle className="w-4 h-4 mr-2 text-green-600" /> Uploaded</>
-                ) : (
-                  <><Upload className="w-4 h-4 mr-2" /> {product.model_url ? 'Replace' : 'Upload'} Model</>
-                )}
-              </Button>
-            </div>
-          </div>
-
-          {/* Thumbnail Upload */}
-          <div className="space-y-3">
-            <Label className="text-sm font-medium flex items-center gap-2">
-              <Image className="w-4 h-4" />
-              Thumbnail Image
-            </Label>
-            
-            {product.thumbnail_url ? (
-              <div className="flex items-center gap-2">
-                <CheckCircle className="w-5 h-5 text-green-600" />
-                <span className="text-sm text-slate-600 dark:text-slate-400 truncate flex-1">
-                  {product.thumbnail_url.split('/').pop()}
-                </span>
-              </div>
-            ) : (
-              <div className="text-sm text-slate-500 dark:text-slate-400">No thumbnail</div>
-            )}
-            
-            <div className="relative">
-              <Input
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  if (e.target.files[0]) {
-                    onFileUpload(product.id, e.target.files[0], 'thumbnail');
-                  }
-                }}
-                className="absolute inset-0 opacity-0 cursor-pointer"
-              />
-              <Button
-                variant="outline"
-                className="w-full"
-                disabled={thumbnailStatus === 'uploading'}
-              >
-                {thumbnailStatus === 'uploading' ? (
-                  <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Uploading...</>
-                ) : thumbnailStatus === 'success' ? (
-                  <><CheckCircle className="w-4 h-4 mr-2 text-green-600" /> Uploaded</>
-                ) : (
-                  <><Upload className="w-4 h-4 mr-2" /> {product.thumbnail_url ? 'Replace' : 'Upload'} Thumbnail</>
-                )}
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        {/* Model Dimensions */}
-        <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-800">
-          <div className="flex items-center justify-between mb-3">
-            <Label className="text-sm font-medium">Model Dimensions (meters)</Label>
-            {!isEditing && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setIsEditing(true)}
-              >
-                Edit
-              </Button>
-            )}
-          </div>
-          
-          <div className="grid grid-cols-3 gap-3">
-            <div>
-              <Label className="text-xs text-slate-600 dark:text-slate-400">Width</Label>
-              <Input
-                type="number"
-                step="0.1"
-                value={dimensions.width || ''}
-                onChange={(e) => setDimensions({ ...dimensions, width: parseFloat(e.target.value) || 0 })}
-                disabled={!isEditing}
-                className="mt-1"
-              />
-            </div>
-            <div>
-              <Label className="text-xs text-slate-600 dark:text-slate-400">Height</Label>
-              <Input
-                type="number"
-                step="0.1"
-                value={dimensions.height || ''}
-                onChange={(e) => setDimensions({ ...dimensions, height: parseFloat(e.target.value) || 0 })}
-                disabled={!isEditing}
-                className="mt-1"
-              />
-            </div>
-            <div>
-              <Label className="text-xs text-slate-600 dark:text-slate-400">Depth</Label>
-              <Input
-                type="number"
-                step="0.1"
-                value={dimensions.depth || ''}
-                onChange={(e) => setDimensions({ ...dimensions, depth: parseFloat(e.target.value) || 0 })}
-                disabled={!isEditing}
-                className="mt-1"
-              />
-            </div>
-          </div>
-          
-          {isEditing && (
-            <div className="flex gap-2 mt-3">
-              <Button
-                onClick={handleSaveDimensions}
-                className="flex-1 bg-[#e2231a] hover:bg-[#b01b13]"
-                size="sm"
-              >
-                Save Dimensions
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setDimensions(product.model_dimensions || { width: 0, height: 0, depth: 0 });
-                  setIsEditing(false);
-                }}
-                size="sm"
-              >
-                Cancel
-              </Button>
-            </div>
-          )}
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
-
-function CreateProductForm({ onClose, onSuccess }) {
-  const [formData, setFormData] = useState({
-    name: '',
-    sku: '',
-    category: 'Displays',
-    price_tier: 'Modular',
-    base_price: 0,
-    description: ''
-  });
-  const [isCreating, setIsCreating] = useState(false);
-
-  const handleCreate = async () => {
-    if (!formData.name || !formData.sku || !formData.base_price) return;
-    
-    setIsCreating(true);
-    try {
-      await base44.entities.Product.create(formData);
-      onSuccess();
-    } catch (error) {
-      console.error('Failed to create product:', error);
-    }
-    setIsCreating(false);
-  };
-
-  return (
-    <Card className="mb-6 border-[#e2231a]">
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle>Create New Product</CardTitle>
-          <Button variant="ghost" size="icon" onClick={onClose}>
-            <X className="w-4 h-4" />
-          </Button>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div className="grid md:grid-cols-2 gap-4">
-          <div>
-            <Label>Product Name *</Label>
-            <Input
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              placeholder="e.g., Radius 10ft Backwall"
-              className="mt-1"
-            />
-          </div>
-          <div>
-            <Label>SKU *</Label>
-            <Input
-              value={formData.sku}
-              onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
-              placeholder="e.g., BW-RAD-10"
-              className="mt-1"
-            />
-          </div>
-          <div>
-            <Label>Category *</Label>
-            <Select value={formData.category} onValueChange={(val) => setFormData({ ...formData, category: val })}>
-              <SelectTrigger className="mt-1">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Displays">Displays</SelectItem>
-                <SelectItem value="Counters">Counters</SelectItem>
-                <SelectItem value="Lighting">Lighting</SelectItem>
-                <SelectItem value="Flooring">Flooring</SelectItem>
-                <SelectItem value="Signage">Signage</SelectItem>
-                <SelectItem value="Technology">Technology</SelectItem>
-                <SelectItem value="Furniture">Furniture</SelectItem>
-                <SelectItem value="Structures">Structures</SelectItem>
-                <SelectItem value="Graphics">Graphics</SelectItem>
-                <SelectItem value="Accessories">Accessories</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <Label>Price Tier *</Label>
-            <Select value={formData.price_tier} onValueChange={(val) => setFormData({ ...formData, price_tier: val })}>
-              <SelectTrigger className="mt-1">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Modular">Modular</SelectItem>
-                <SelectItem value="Hybrid">Hybrid</SelectItem>
-                <SelectItem value="Custom">Custom</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <Label>Base Price (USD) *</Label>
-            <Input
-              type="number"
-              value={formData.base_price}
-              onChange={(e) => setFormData({ ...formData, base_price: parseFloat(e.target.value) || 0 })}
-              placeholder="0"
-              className="mt-1"
-            />
-          </div>
-          <div className="md:col-span-2">
-            <Label>Description</Label>
-            <Input
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              placeholder="Brief product description"
-              className="mt-1"
-            />
-          </div>
-        </div>
-        <div className="flex gap-2 mt-6">
-          <Button
-            onClick={handleCreate}
-            disabled={isCreating || !formData.name || !formData.sku || !formData.base_price}
-            className="flex-1 bg-[#e2231a] hover:bg-[#b01b13]"
-          >
-            {isCreating ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Creating...</> : 'Create Product'}
-          </Button>
-          <Button variant="outline" onClick={onClose}>Cancel</Button>
-        </div>
-      </CardContent>
-    </Card>
   );
 }

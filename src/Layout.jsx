@@ -182,7 +182,7 @@ export default function Layout({ children, currentPageName }) {
                         variant="ghost"
                         className={`text-white hover:bg-white/20 ${currentPageName === 'Product3DManager' ? 'border border-white/30' : ''}`}
                       >
-                        3D Manager
+                        Product Catalog
                       </Button>
                     </Link>
                     <Link to={createPageUrl('SalesQuoteStart')}>
