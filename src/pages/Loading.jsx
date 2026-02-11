@@ -304,28 +304,36 @@ Return JSON with 3 designs.`;
           line_total: p.is_rental ? (p.rental_price || p.base_price) : p.base_price
         }));
 
-        const productDescriptions = designProducts.map(p => 
-          `${p.display_name || p.name} (${p.category_name || p.category} - ${p.dimensions || 'standard size'})`
-        ).join(', ');
+        // Build a detailed product manifest with exact dimensions for the AI renderer
+        const productManifest = designProducts.map(p => {
+          const dims = p.dimensions || {};
+          const dimStr = dims.width ? `${dims.width}ft W × ${dims.height || '?'}ft H × ${dims.depth || '?'}ft D` : 'standard size';
+          return `- ${p.display_name || p.name} (${p.category_name || p.category}, ${dimStr})`;
+        }).join('\n');
         
-        const imagePrompt = `Photorealistic 3D rendering of a trade show booth.
+        const imagePrompt = `Photorealistic 3D rendering of a trade show booth. This is a PRODUCT QUOTE IMAGE — the customer will purchase EXACTLY these items.
 
-BOOTH: ${boothSize} booth, ${design.tier} tier design called "${design.design_name}".
+CRITICAL RULES:
+- Render ONLY the products listed below. Do NOT add ANY furniture, decor, screens, plants, accessories, or items not on this list.
+- Each product must be recognizable as the specific item described (backwall, counter, banner stand, etc.)
+- Use the exact dimensions provided to scale items relative to each other and the booth space.
+- The booth should look like a real trade show — grey carpet aisle, pipe-and-drape neighbors, ceiling grid — but the ONLY display items are the ones listed.
 
-BRAND LOGO (MUST BE VISIBLE ON BOOTH):
-${brandAnalysis.logo_description ? `The company logo looks like: ${brandAnalysis.logo_description}` : `Company: ${scrapedCompanyName}`}
-The logo MUST appear prominently on the main backwall and reception counter of the booth. Show it as a large, clearly visible graphic element.
+BOOTH SPACE: ${boothSize} (${boothDimensions.width}ft wide × ${boothDimensions.depth}ft deep), open front facing the aisle.
 
-BRAND COLORS (USE THROUGHOUT):
-- Primary: ${brandAnalysis.primary_color} (dominant color on walls, structures)
-- Secondary: ${brandAnalysis.secondary_color} (accents, counters)
-- Accent: ${brandAnalysis.accent_color_1} (lighting, details)
+BRAND IDENTITY:
+${brandAnalysis.logo_description ? `Logo: ${brandAnalysis.logo_description}` : `Company: ${scrapedCompanyName}`}
+- Primary color: ${brandAnalysis.primary_color}
+- Secondary color: ${brandAnalysis.secondary_color}
+- Apply the logo prominently on the backwall graphic and counter wrap.
+- Use brand colors on all fabric graphics.
 
-DESIGN CONCEPT: ${design.experience_story}
+EXACT PRODUCT LIST (render ONLY these ${designProducts.length} items, nothing else):
+${productManifest}
 
-SPECIFIC PRODUCTS (from Orbus catalog): ${productDescriptions}
+LAYOUT: Place the backwall(s) against the back, counter(s) in front-center or side, banner stands flanking the entrance, tables/kiosks where logical. Leave an open walkway at the front.
 
-RENDERING STYLE: Professional architectural visualization, 3/4 angle view, trade show floor with carpet, dramatic lighting, photorealistic quality. The booth must look like a real trade show exhibit with the company's branding clearly displayed.`;
+CAMERA: 3/4 elevated angle from the front-left aisle, showing the full booth footprint. Professional architectural visualization lighting.`;
 
         try {
           // Pass the logo URL as a reference image only if it looks like a valid image URL
