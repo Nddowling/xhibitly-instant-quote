@@ -171,6 +171,8 @@ CRITICAL RULES:
 - Every product_sku in your response MUST exactly match a "sku" value from the catalog above.
 - The total_price for each design MUST equal the sum of base_price (or rental_price for rental items) of all selected products.
 - Include a "line_items" array with each product's sku, name, quantity, unit_price, and line_total.
+- IMPORTANT: The generated booth image will show ONLY the products you select — nothing more. So choose a complete, functional booth setup (backwall + counter + accessories). Do not assume anything extra will be in the booth.
+- Use the dimensions_ft field to ensure products physically fit in the ${boothSize} space (${boothDimensions.width}ft x ${boothDimensions.depth}ft).
 
 For each tier (Modular, Hybrid, and Custom), create a curated booth EXPERIENCE that:
 1. Tells a story and creates a memorable journey
