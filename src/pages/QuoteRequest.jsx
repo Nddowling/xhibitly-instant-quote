@@ -21,6 +21,7 @@ export default function QuoteRequest() {
   const [showName, setShowName] = useState('');
   const [websiteUrl, setWebsiteUrl] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [calendarOpen, setCalendarOpen] = useState(false);
   
   // Profile fields
   const [companyName, setCompanyName] = useState('');
