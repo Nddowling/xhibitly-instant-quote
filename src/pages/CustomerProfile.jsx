@@ -472,7 +472,7 @@ export default function CustomerProfile() {
               <RadioGroup value={needsLogistics} onValueChange={setNeedsLogistics}>
                 <div className="flex items-center space-x-2 mb-2">
                   <RadioGroupItem value="yes" id="logistics-yes" />
-                  <Label htmlFor="logistics-yes" className="cursor-pointer">Yes, full logistics support</Label>
+                  <Label htmlFor="logistics-yes" className="cursor-pointer">Yes, logistics support</Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="no" id="logistics-no" />
