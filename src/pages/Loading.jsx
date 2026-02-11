@@ -101,8 +101,7 @@ IMPORTANT: Extract 4 distinct colors. The primary_color should match the dominan
 
       const scrapedCompanyName = brandAnalysis.company_name || '';
 
-      // Step 2: Get all available products for this booth size
-      // Try ProductVariant first (new system), fall back to Product (legacy)
+      // Step 2: Get all available products for this booth size (was fetched in parallel)
       let compatibleProducts = [];
       const allVariants = await base44.entities.ProductVariant.filter({ is_active: true });
       if (allVariants.length > 0) {
