@@ -3,18 +3,35 @@ import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { ArrowRight, Zap, Palette, Package, PhoneCall, Star, ChevronRight } from 'lucide-react';
+import { ArrowRight, Zap, Palette, Package, PhoneCall, Star, ChevronRight, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-const BOOTH_IMAGES = [
-  'https://images.unsplash.com/photo-1560439514-4e9645039924?w=800&q=80',
-  'https://images.unsplash.com/photo-1632383380175-812d44ec112b?w=800&q=80',
-  'https://images.unsplash.com/photo-1632383380286-80f79eb1bae1?w=800&q=80',
+const IMAGE_PROMPTS = [
+  {
+    key: 'hero',
+    prompt: 'A premium 20x20 trade show booth in a modern convention center, featuring sleek aluminum truss structure, vibrant backlit fabric graphics with blue and teal corporate branding, a white illuminated reception counter, digital display screens, modern white chairs, professional lighting from above. Wide angle view showing the complete booth setup. Photorealistic, high-end commercial photography style, warm exhibition hall lighting.'
+  },
+  {
+    key: 'install',
+    prompt: 'Professional trade show booth installation crew in a convention center, workers in branded polo shirts efficiently assembling a modular aluminum truss display system. Action shot showing teamwork, one person connecting truss sections while another unfurls a large fabric graphic panel. Clean concrete floor, high ceiling with industrial lighting. Photorealistic, editorial photography style, dynamic angle.'
+  },
+  {
+    key: 'standout',
+    prompt: 'Wide angle shot of a stunning trade show booth with a large overhead hanging sign structure, architectural LED lighting strips, and dramatic backlit walls, standing out prominently on a crowded exhibition floor. Other booths visible in background for scale. The booth features a modern minimalist design with clean lines, fabric tension displays, and warm accent lighting. Photorealistic convention center photography, high ceiling visible.'
+  },
+  {
+    key: 'detail',
+    prompt: 'Close-up detail shot of a premium trade show booth feature — a seamless integrated digital touchscreen display mounted in a sleek branded reception counter with edge-lit LED accents and custom printed fabric graphic wrap. Modern materials including brushed aluminum trim and backlit acrylic panels. Shallow depth of field, professional product photography style, warm ambient exhibition lighting.'
+  }
 ];
+
+const CACHE_KEY = 'xhibitly_landing_images_v2';
 
 export default function Landing() {
   const navigate = useNavigate();
   const [checking, setChecking] = useState(true);
+  const [generatedImages, setGeneratedImages] = useState({});
+  const [imagesLoading, setImagesLoading] = useState(false);
 
   useEffect(() => {
     checkAuth();
