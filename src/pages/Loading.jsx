@@ -293,6 +293,16 @@ Return JSON with 3 designs.`;
         const designProducts = compatibleProducts.filter(p => 
           design.product_skus.includes(p.manufacturer_sku || p.sku)
         );
+
+        // Build accurate line items from catalog data
+        design.line_items = designProducts.map(p => ({
+          sku: p.manufacturer_sku || p.sku,
+          name: p.display_name || p.name,
+          category: p.category_name || p.category,
+          quantity: 1,
+          unit_price: p.is_rental ? (p.rental_price || p.base_price) : p.base_price,
+          line_total: p.is_rental ? (p.rental_price || p.base_price) : p.base_price
+        }));
         
         const imagePrompt = `Photorealistic 3D rendering of a trade show booth.
 
