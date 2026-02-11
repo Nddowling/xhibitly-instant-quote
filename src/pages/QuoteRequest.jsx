@@ -257,7 +257,7 @@ export default function QuoteRequest() {
                     <CalendarIcon className="w-5 h-5 text-[#e2231a]" />
                     Show Date
                   </Label>
-                  <Popover>
+                  <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
@@ -271,7 +271,7 @@ export default function QuoteRequest() {
                       <Calendar
                         mode="single"
                         selected={showDate}
-                        onSelect={setShowDate}
+                        onSelect={(date) => { setShowDate(date); setCalendarOpen(false); }}
                         disabled={(date) => date < new Date()}
                         initialFocus
                       />
