@@ -212,6 +212,7 @@ export default function CustomerProfile() {
                     >
                       <Checkbox
                         checked={objectives.includes(option.value)}
+                        onCheckedChange={() => handleObjectiveToggle(option.value)}
                         className="pointer-events-none"
                       />
                       <Icon className="w-5 h-5 text-slate-600" />
@@ -402,6 +403,7 @@ export default function CustomerProfile() {
                   >
                     <Checkbox
                       checked={desiredLook.includes(option.value)}
+                      onCheckedChange={() => handleLookToggle(option.value)}
                       className="pointer-events-none"
                     />
                     <span className="font-medium text-slate-700">{option.label}</span>
@@ -441,6 +443,7 @@ export default function CustomerProfile() {
                   >
                     <Checkbox
                       checked={desiredFeel.includes(option.value)}
+                      onCheckedChange={() => handleFeelToggle(option.value)}
                       className="pointer-events-none"
                     />
                     <span className="font-medium text-slate-700">{option.label}</span>
