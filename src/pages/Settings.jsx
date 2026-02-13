@@ -153,7 +153,7 @@ export default function Settings() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-slate-50 dark:bg-slate-950 p-6 pb-24 md:pb-10">
+    <div className="min-h-[calc(100vh-56px)] md:min-h-[calc(100vh-64px)] bg-slate-50 dark:bg-slate-950 p-4 md:p-6 pb-24 md:pb-10">
       <div className="max-w-2xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

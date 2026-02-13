@@ -180,7 +180,7 @@ export default function SalesDashboard() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-slate-50 dark:bg-slate-950 p-6 pb-24 md:pb-10">
+    <div className="min-h-[calc(100vh-56px)] md:min-h-[calc(100vh-64px)] bg-slate-50 dark:bg-slate-950 p-4 md:p-6 pb-24 md:pb-10">
       {/* Pull-to-refresh indicator */}
       {pullDistance > 0 && (
         <div 
@@ -200,7 +200,7 @@ export default function SalesDashboard() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
+          <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-1">
             Welcome back, {user?.full_name?.split(' ')[0] || user?.contact_name?.split(' ')[0]}!
           </h1>
           <p className="text-slate-500 dark:text-slate-400">Here's what's happening with your sales today</p>
@@ -211,20 +211,20 @@ export default function SalesDashboard() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+          className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 mb-6 md:mb-8"
         >
           <Card 
             className="cursor-pointer hover:shadow-lg transition-shadow"
             onClick={() => navigate(createPageUrl('Pipeline'))}
           >
-            <CardContent className="pt-6">
+            <CardContent className="p-4 md:pt-6">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-slate-500 mb-1">Pipeline Value</p>
-                  <p className="text-2xl font-bold text-slate-900">{formatPrice(totalPipelineValue)}</p>
+                <div className="min-w-0">
+                  <p className="text-xs md:text-sm text-slate-500 mb-0.5">Pipeline</p>
+                  <p className="text-lg md:text-2xl font-bold text-slate-900 truncate">{formatPrice(totalPipelineValue)}</p>
                 </div>
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                  <DollarSign className="w-6 h-6 text-blue-600" />
+                <div className="w-10 h-10 md:w-12 md:h-12 bg-blue-100 rounded-full flex items-center justify-center shrink-0">
+                  <DollarSign className="w-5 h-5 md:w-6 md:h-6 text-blue-600" />
                 </div>
               </div>
             </CardContent>
@@ -234,14 +234,14 @@ export default function SalesDashboard() {
             className="cursor-pointer hover:shadow-lg transition-shadow"
             onClick={() => navigate(createPageUrl('Pipeline') + '?view=active')}
           >
-            <CardContent className="pt-6">
+            <CardContent className="p-4 md:pt-6">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-slate-500 mb-1">Active Opportunities</p>
-                  <p className="text-2xl font-bold text-slate-900">{activeOpportunities.length}</p>
+                <div className="min-w-0">
+                  <p className="text-xs md:text-sm text-slate-500 mb-0.5">Active</p>
+                  <p className="text-lg md:text-2xl font-bold text-slate-900">{activeOpportunities.length}</p>
                 </div>
-                <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
-                  <Target className="w-6 h-6 text-yellow-600" />
+                <div className="w-10 h-10 md:w-12 md:h-12 bg-yellow-100 rounded-full flex items-center justify-center shrink-0">
+                  <Target className="w-5 h-5 md:w-6 md:h-6 text-yellow-600" />
                 </div>
               </div>
             </CardContent>
@@ -251,14 +251,14 @@ export default function SalesDashboard() {
             className="cursor-pointer hover:shadow-lg transition-shadow"
             onClick={() => navigate(createPageUrl('Pipeline') + '?view=followups')}
           >
-            <CardContent className="pt-6">
+            <CardContent className="p-4 md:pt-6">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-slate-500 mb-1">Follow-ups Today</p>
-                  <p className="text-2xl font-bold text-slate-900">{todayProspects.length}</p>
+                <div className="min-w-0">
+                  <p className="text-xs md:text-sm text-slate-500 mb-0.5">Follow-ups</p>
+                  <p className="text-lg md:text-2xl font-bold text-slate-900">{todayProspects.length}</p>
                 </div>
-                <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
-                  <Calendar className="w-6 h-6 text-orange-600" />
+                <div className="w-10 h-10 md:w-12 md:h-12 bg-orange-100 rounded-full flex items-center justify-center shrink-0">
+                  <Calendar className="w-5 h-5 md:w-6 md:h-6 text-orange-600" />
                 </div>
               </div>
             </CardContent>
@@ -268,21 +268,21 @@ export default function SalesDashboard() {
             className="cursor-pointer hover:shadow-lg transition-shadow"
             onClick={() => navigate(createPageUrl('Pipeline') + '?view=wins')}
           >
-            <CardContent className="pt-6">
+            <CardContent className="p-4 md:pt-6">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-slate-500 mb-1">Recent Wins (30d)</p>
-                  <p className="text-2xl font-bold text-slate-900">{recentWins.length}</p>
+                <div className="min-w-0">
+                  <p className="text-xs md:text-sm text-slate-500 mb-0.5">Wins (30d)</p>
+                  <p className="text-lg md:text-2xl font-bold text-slate-900">{recentWins.length}</p>
                 </div>
-                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                  <TrendingUp className="w-6 h-6 text-green-600" />
+                <div className="w-10 h-10 md:w-12 md:h-12 bg-green-100 rounded-full flex items-center justify-center shrink-0">
+                  <TrendingUp className="w-5 h-5 md:w-6 md:h-6 text-green-600" />
                 </div>
               </div>
             </CardContent>
           </Card>
         </motion.div>
 
-        <div className="grid lg:grid-cols-3 gap-6">
+        <div className="grid lg:grid-cols-3 gap-4 md:gap-6">
           {/* Today's Prospects */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -324,13 +324,13 @@ export default function SalesDashboard() {
                             {order.status}
                           </Badge>
                         </div>
-                        <div className="flex items-center gap-4 text-sm text-slate-600">
-                          <span>{order.booth_size} Booth</span>
-                          <span>•</span>
-                          <span>{formatPrice(order.quoted_price)}</span>
-                          <span>•</span>
-                          <span>{order.probability}% Win Probability</span>
-                        </div>
+                        <div className="flex items-center gap-2 md:gap-4 text-xs md:text-sm text-slate-600 flex-wrap">
+                            <span>{order.booth_size}</span>
+                            <span>•</span>
+                            <span>{formatPrice(order.quoted_price)}</span>
+                            <span className="hidden sm:inline">•</span>
+                            <span className="hidden sm:inline">{order.probability}%</span>
+                          </div>
                       </div>
                     ))}
                   </div>
@@ -421,7 +421,7 @@ export default function SalesDashboard() {
                           {order.status}
                         </Badge>
                       </div>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 text-sm">
                         <div>
                           <p className="text-slate-500">Booth Size</p>
                           <p className="font-medium">{order.booth_size}</p>

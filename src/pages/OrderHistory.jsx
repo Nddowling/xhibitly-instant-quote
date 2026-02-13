@@ -110,7 +110,7 @@ export default function OrderHistory() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-slate-50 dark:bg-slate-950 p-6 pb-24 md:pb-10">
+    <div className="min-h-[calc(100vh-56px)] md:min-h-[calc(100vh-64px)] bg-slate-50 dark:bg-slate-950 p-4 md:p-6 pb-24 md:pb-10">
       {/* Pull-to-refresh indicator */}
       {pullDistance > 0 && (
         <div 

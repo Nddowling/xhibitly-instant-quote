@@ -117,7 +117,7 @@ export default function Contacts() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-slate-50 p-6 md:p-10">
+    <div className="min-h-[calc(100vh-56px)] md:min-h-[calc(100vh-64px)] bg-slate-50 p-4 md:p-10 pb-24 md:pb-10">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div
@@ -125,9 +125,9 @@ export default function Contacts() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-3 md:mb-4">
             <div>
-              <h1 className="text-3xl font-bold text-slate-900 mb-2">Contacts</h1>
+              <h1 className="text-2xl md:text-3xl font-bold text-slate-900 mb-1">Contacts</h1>
               <p className="text-slate-500">
                 {filteredContacts.length} contact{filteredContacts.length !== 1 ? 's' : ''} found
               </p>
@@ -159,7 +159,7 @@ export default function Contacts() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6"
         >
           {filteredContacts.length > 0 ? (
             filteredContacts.map((contact, index) => (

@@ -98,7 +98,7 @@ export default function SalesQuoteStart() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-slate-50 p-6 md:p-10">
+    <div className="min-h-[calc(100vh-56px)] md:min-h-[calc(100vh-64px)] bg-slate-50 p-4 md:p-10 pb-24 md:pb-10">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <motion.div
@@ -115,7 +115,7 @@ export default function SalesQuoteStart() {
             Back to Dashboard
           </Button>
 
-          <h1 className="text-3xl md:text-4xl font-bold text-[#e2231a] mb-3">
+          <h1 className="text-2xl md:text-4xl font-bold text-[#e2231a] mb-2">
             Create Quote for Customer
           </h1>
           <p className="text-lg text-slate-600">

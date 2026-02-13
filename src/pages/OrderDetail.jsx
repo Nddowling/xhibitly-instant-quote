@@ -110,7 +110,7 @@ export default function OrderDetail() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-slate-50 p-6 md:p-10">
+    <div className="min-h-[calc(100vh-56px)] md:min-h-[calc(100vh-64px)] bg-slate-50 p-4 md:p-10 pb-24 md:pb-10">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <motion.div
@@ -120,8 +120,8 @@ export default function OrderDetail() {
         >
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <div className="flex items-center gap-3 mb-2">
-                <h1 className="text-3xl font-bold text-[#e2231a]">
+              <div className="flex items-center gap-2 md:gap-3 mb-2 flex-wrap">
+                <h1 className="text-2xl md:text-3xl font-bold text-[#e2231a]">
                   Order Details
                 </h1>
                 <Badge className={`${getStatusBadgeStyle(order.status)} font-medium`}>
@@ -132,8 +132,8 @@ export default function OrderDetail() {
                 {order.reference_number}
               </p>
             </div>
-            <div className="text-right">
-              <div className="text-3xl font-bold text-[#e2231a]">
+            <div className="text-left md:text-right mt-2 md:mt-0">
+              <div className="text-2xl md:text-3xl font-bold text-[#e2231a]">
                 {formatPrice(order.quoted_price)}
               </div>
               <div className="text-slate-400 text-sm">
@@ -151,8 +151,8 @@ export default function OrderDetail() {
           className="mb-6"
         >
           <Card className="border-0 shadow-md">
-            <CardContent className="p-6">
-              <div className="flex flex-wrap gap-6">
+            <CardContent className="p-4 md:p-6">
+              <div className="flex flex-wrap gap-4 md:gap-6">
                 <div className="flex items-center gap-2">
                   <Package className="w-5 h-5 text-slate-400" />
                   <div>

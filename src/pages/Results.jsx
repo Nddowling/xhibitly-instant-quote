@@ -108,7 +108,7 @@ export default function Results() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-slate-50 p-6 md:p-10">
+    <div className="min-h-[calc(100vh-56px)] md:min-h-[calc(100vh-64px)] bg-slate-50 p-4 md:p-10 pb-24 md:pb-10">
       <div className="max-w-7xl mx-auto">
         {/* Header with Brand Identity */}
         <motion.div
@@ -116,7 +116,7 @@ export default function Results() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-8"
         >
-          <h1 className="text-3xl md:text-4xl font-bold text-[#e2231a] mb-3">
+          <h1 className="text-2xl md:text-4xl font-bold text-[#e2231a] mb-2">
             Curated {quoteData.boothSize} Experience for {quoteData.dealerCompany}
           </h1>
           <p className="text-slate-500 text-lg mb-4">
@@ -174,7 +174,7 @@ export default function Results() {
         )}
 
         {/* Booth Design Cards */}
-        <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
           {boothDesigns.map((design, index) => {
             const styles = getTierStyles(design.tier);
             

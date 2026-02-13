@@ -191,17 +191,17 @@ export default function Pipeline() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-slate-50 p-6">
+    <div className="min-h-[calc(100vh-56px)] md:min-h-[calc(100vh-64px)] bg-slate-50 p-4 md:p-6 pb-24 md:pb-10">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">
+        <div className="mb-4 md:mb-6">
+          <h1 className="text-2xl md:text-3xl font-bold text-slate-900 mb-1">
             {view === 'active' ? 'Active Opportunities' :
              view === 'followups' ? "Today's Follow-ups" :
              view === 'wins' ? 'Recent Wins (30d)' :
              'Sales Pipeline'}
           </h1>
-          <p className="text-slate-500">
+          <p className="text-sm md:text-base text-slate-500">
             {filteredOrders.length} {filteredOrders.length === 1 ? 'opportunity' : 'opportunities'}
           </p>
         </div>
@@ -238,70 +238,43 @@ export default function Pipeline() {
           </CardContent>
         </Card>
 
-        {/* Table */}
-        <Card>
+        {/* Desktop Table */}
+        <Card className="hidden md:block">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-slate-50 border-b border-slate-200">
                 <tr>
                   <th className="text-left py-3 px-4">
-                    <button 
-                      onClick={() => handleSort('company')}
-                      className="flex items-center gap-2 text-xs font-semibold text-slate-600 uppercase tracking-wide hover:text-slate-900"
-                    >
-                      <Building2 className="w-4 h-4" />
-                      Company
-                      <ArrowUpDown className="w-3 h-3" />
+                    <button onClick={() => handleSort('company')} className="flex items-center gap-2 text-xs font-semibold text-slate-600 uppercase tracking-wide hover:text-slate-900">
+                      <Building2 className="w-4 h-4" /> Company <ArrowUpDown className="w-3 h-3" />
                     </button>
                   </th>
                   <th className="text-left py-3 px-4">
-                    <button 
-                      onClick={() => handleSort('created_date')}
-                      className="flex items-center gap-2 text-xs font-semibold text-slate-600 uppercase tracking-wide hover:text-slate-900"
-                    >
-                      <Briefcase className="w-4 h-4" />
-                      Reference
-                      <ArrowUpDown className="w-3 h-3" />
+                    <button onClick={() => handleSort('created_date')} className="flex items-center gap-2 text-xs font-semibold text-slate-600 uppercase tracking-wide hover:text-slate-900">
+                      <Briefcase className="w-4 h-4" /> Reference <ArrowUpDown className="w-3 h-3" />
                     </button>
                   </th>
                   <th className="text-left py-3 px-4">
                     <div className="flex items-center gap-2 text-xs font-semibold text-slate-600 uppercase tracking-wide">
-                      <User className="w-4 h-4" />
-                      Contact
+                      <User className="w-4 h-4" /> Contact
                     </div>
                   </th>
                   <th className="text-left py-3 px-4">
-                    <button 
-                      onClick={() => handleSort('amount')}
-                      className="flex items-center gap-2 text-xs font-semibold text-slate-600 uppercase tracking-wide hover:text-slate-900"
-                    >
-                      <DollarSign className="w-4 h-4" />
-                      Amount
-                      <ArrowUpDown className="w-3 h-3" />
+                    <button onClick={() => handleSort('amount')} className="flex items-center gap-2 text-xs font-semibold text-slate-600 uppercase tracking-wide hover:text-slate-900">
+                      <DollarSign className="w-4 h-4" /> Amount <ArrowUpDown className="w-3 h-3" />
                     </button>
                   </th>
                   <th className="text-left py-3 px-4">
-                    <button 
-                      onClick={() => handleSort('show_date')}
-                      className="flex items-center gap-2 text-xs font-semibold text-slate-600 uppercase tracking-wide hover:text-slate-900"
-                    >
-                      <Calendar className="w-4 h-4" />
-                      Show Date
-                      <ArrowUpDown className="w-3 h-3" />
+                    <button onClick={() => handleSort('show_date')} className="flex items-center gap-2 text-xs font-semibold text-slate-600 uppercase tracking-wide hover:text-slate-900">
+                      <Calendar className="w-4 h-4" /> Show Date <ArrowUpDown className="w-3 h-3" />
                     </button>
                   </th>
                   <th className="text-left py-3 px-4">
-                    <div className="flex items-center gap-2 text-xs font-semibold text-slate-600 uppercase tracking-wide">
-                      Status
-                    </div>
+                    <div className="text-xs font-semibold text-slate-600 uppercase tracking-wide">Status</div>
                   </th>
                   <th className="text-left py-3 px-4">
-                    <button 
-                      onClick={() => handleSort('probability')}
-                      className="flex items-center gap-2 text-xs font-semibold text-slate-600 uppercase tracking-wide hover:text-slate-900"
-                    >
-                      Probability
-                      <ArrowUpDown className="w-3 h-3" />
+                    <button onClick={() => handleSort('probability')} className="flex items-center gap-2 text-xs font-semibold text-slate-600 uppercase tracking-wide hover:text-slate-900">
+                      Probability <ArrowUpDown className="w-3 h-3" />
                     </button>
                   </th>
                 </tr>
@@ -329,34 +302,23 @@ export default function Pipeline() {
                       <div className="text-xs text-slate-500">{order.dealer_email}</div>
                     </td>
                     <td className="py-4 px-4">
-                      <div className="font-semibold text-slate-900">
-                        {formatPrice(order.final_price || order.quoted_price)}
-                      </div>
+                      <div className="font-semibold text-slate-900">{formatPrice(order.final_price || order.quoted_price)}</div>
                       {order.discount_amount > 0 && (
-                        <div className="text-xs text-green-600">
-                          -{formatPrice(order.discount_amount)} discount
-                        </div>
+                        <div className="text-xs text-green-600">-{formatPrice(order.discount_amount)} discount</div>
                       )}
                     </td>
                     <td className="py-4 px-4">
                       <div className="text-sm text-slate-700">{formatDate(order.show_date)}</div>
                     </td>
                     <td className="py-4 px-4">
-                      <Badge className={getStatusColor(order.status)}>
-                        {order.status}
-                      </Badge>
+                      <Badge className={getStatusColor(order.status)}>{order.status}</Badge>
                     </td>
                     <td className="py-4 px-4">
                       <div className="flex items-center gap-2">
                         <div className="flex-1 bg-slate-200 rounded-full h-2">
-                          <div 
-                            className="bg-[#e2231a] h-2 rounded-full transition-all"
-                            style={{ width: `${order.probability || 0}%` }}
-                          />
+                          <div className="bg-[#e2231a] h-2 rounded-full transition-all" style={{ width: `${order.probability || 0}%` }} />
                         </div>
-                        <span className="text-sm font-medium text-slate-700 w-10">
-                          {order.probability || 0}%
-                        </span>
+                        <span className="text-sm font-medium text-slate-700 w-10">{order.probability || 0}%</span>
                       </div>
                     </td>
                   </motion.tr>
@@ -364,7 +326,6 @@ export default function Pipeline() {
               </tbody>
             </table>
           </div>
-
           {filteredOrders.length === 0 && (
             <div className="py-12 text-center">
               <Briefcase className="w-12 h-12 text-slate-300 mx-auto mb-3" />
@@ -372,6 +333,48 @@ export default function Pipeline() {
             </div>
           )}
         </Card>
+
+        {/* Mobile Cards */}
+        <div className="md:hidden space-y-3">
+          {filteredOrders.length > 0 ? filteredOrders.map((order, index) => (
+            <motion.div
+              key={order.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.03 }}
+            >
+              <Card
+                className="cursor-pointer active:scale-[0.98] transition-transform"
+                onClick={() => navigate(`${createPageUrl('OrderDetail')}?id=${order.id}`)}
+              >
+                <CardContent className="p-4">
+                  <div className="flex items-start justify-between mb-2">
+                    <div className="min-w-0 flex-1 mr-3">
+                      <h4 className="font-semibold text-slate-900 truncate">{order.dealer_company}</h4>
+                      <p className="text-xs text-slate-500 truncate">{order.dealer_name}</p>
+                    </div>
+                    <Badge className={`${getStatusColor(order.status)} text-xs shrink-0`}>{order.status}</Badge>
+                  </div>
+                  <div className="flex items-center justify-between mt-3">
+                    <div className="text-lg font-bold text-slate-900">{formatPrice(order.final_price || order.quoted_price)}</div>
+                    <div className="text-xs text-slate-500">{order.booth_size} • {formatDate(order.show_date)}</div>
+                  </div>
+                  <div className="mt-2 flex items-center gap-2">
+                    <div className="flex-1 bg-slate-200 rounded-full h-1.5">
+                      <div className="bg-[#e2231a] h-1.5 rounded-full" style={{ width: `${order.probability || 0}%` }} />
+                    </div>
+                    <span className="text-xs font-medium text-slate-600">{order.probability || 0}%</span>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          )) : (
+            <div className="py-12 text-center">
+              <Briefcase className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+              <p className="text-slate-500">No opportunities found</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

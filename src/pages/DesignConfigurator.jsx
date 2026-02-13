@@ -152,45 +152,36 @@ ACTION REQUIRED: Call the customer immediately to finalize the order.
   return (
     <div className="min-h-[calc(100vh-64px)] bg-slate-100">
       {/* Top Bar */}
-      <div className="bg-white border-b border-slate-200 px-4 py-3 sticky top-16 z-40">
-        <div className="max-w-5xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Button variant="ghost" size="sm" onClick={() => navigate(createPageUrl('Results'))}>
-              <ArrowLeft className="w-4 h-4 mr-1" /> Back
+      <div className="bg-white border-b border-slate-200 px-3 md:px-4 py-2 md:py-3 sticky top-14 md:top-16 z-40">
+        <div className="max-w-5xl mx-auto flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0">
+            <Button variant="ghost" size="sm" onClick={() => navigate(createPageUrl('Results'))} className="shrink-0 px-2">
+              <ArrowLeft className="w-4 h-4" />
             </Button>
-            <div className="hidden sm:block h-6 w-px bg-slate-200" />
-            <div className="hidden sm:block">
-              <h1 className="text-sm font-bold text-slate-800">{design.design_name}</h1>
+            <div className="min-w-0 hidden sm:block">
+              <h1 className="text-sm font-bold text-slate-800 truncate">{design.design_name}</h1>
               <div className="flex items-center gap-2">
                 <Badge className="bg-slate-100 text-slate-600 text-[10px]">{design.tier}</Badge>
-                <span className="text-xs text-slate-400">{quoteData.boothSize} Booth</span>
+                <span className="text-xs text-slate-400">{quoteData.boothSize}</span>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            {brandIdentity && (
-              <div className="hidden md:flex items-center gap-1.5 mr-2">
-                <Palette className="w-3.5 h-3.5 text-slate-400" />
-                <div className="w-5 h-5 rounded border" style={{ backgroundColor: brandIdentity.primary_color }} />
-                <div className="w-5 h-5 rounded border" style={{ backgroundColor: brandIdentity.secondary_color }} />
-              </div>
-            )}
-
-            <div className="text-right mr-3">
-              <div className="text-xs text-slate-400">Total Investment</div>
-              <div className="text-lg font-bold text-[#e2231a]">{formatPrice(design.total_price)}</div>
+          <div className="flex items-center gap-2 shrink-0">
+            <div className="text-right mr-1 md:mr-3">
+              <div className="text-[10px] md:text-xs text-slate-400">Total</div>
+              <div className="text-base md:text-lg font-bold text-[#e2231a]">{formatPrice(design.total_price)}</div>
             </div>
 
             <Button
               onClick={handleReserve}
               disabled={isSubmitting}
-              className="bg-[#e2231a] hover:bg-[#b01b13] h-10 px-6 font-semibold"
+              className="bg-[#e2231a] hover:bg-[#b01b13] h-9 md:h-10 px-3 md:px-6 font-semibold text-sm"
             >
               {isSubmitting ? (
-                <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Processing...</>
+                <Loader2 className="w-4 h-4 animate-spin" />
               ) : (
-                <><ShoppingCart className="w-4 h-4 mr-2" /> Reserve This Design</>
+                <><ShoppingCart className="w-4 h-4 md:mr-2" /><span className="hidden md:inline">Reserve This Design</span><span className="md:hidden">Reserve</span></>
               )}
             </Button>
           </div>
@@ -198,7 +189,7 @@ ACTION REQUIRED: Call the customer immediately to finalize the order.
       </div>
 
       {/* Main Content */}
-      <div className="max-w-5xl mx-auto p-4 md:p-6 space-y-6">
+      <div className="max-w-5xl mx-auto p-3 md:p-6 space-y-4 md:space-y-6 pb-24 md:pb-10">
 
         {/* AI Render Hero */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
