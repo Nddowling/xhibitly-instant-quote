@@ -2,18 +2,24 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from './utils';
 import { base44 } from '@/api/base44Client';
-import { LogOut, FileText, Plus, Home as HomeIcon, Settings as SettingsIcon, ArrowLeft, LayoutDashboard, ChevronDown, User, Users, GraduationCap } from 'lucide-react';
+import { LogOut, FileText, Plus, Home as HomeIcon, Settings as SettingsIcon, ArrowLeft, LayoutDashboard, ChevronDown, User, Users, GraduationCap, Menu, X, Package, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     checkAuth();
     initDarkMode();
+  }, [currentPageName]);
+
+  // Close mobile menu on page change
+  useEffect(() => {
+    setMobileMenuOpen(false);
   }, [currentPageName]);
 
   const checkAuth = async () => {
@@ -47,6 +53,7 @@ export default function Layout({ children, currentPageName }) {
   };
 
   const handleSwitchUserType = async (newType) => {
+    setMobileMenuOpen(false);
     try {
       const isSalesRep = newType === 'sales_rep';
       
@@ -136,28 +143,29 @@ export default function Layout({ children, currentPageName }) {
       {showHeader && (
         <header className="bg-[#e2231a] text-white shadow-lg fixed top-0 left-0 right-0 z-50" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-16">
+            <div className="flex items-center justify-between h-14 md:h-16">
               <div className="flex items-center gap-2">
                 {showBackButton ? (
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={handleBack}
-                    className="text-white hover:bg-white/20 mr-2"
+                    className="text-white hover:bg-white/20 mr-1"
                   >
                     <ArrowLeft className="w-5 h-5" />
                   </Button>
                 ) : null}
-                <Link to={createPageUrl(user?.is_sales_rep ? 'SalesDashboard' : 'QuoteRequest')} className="flex items-center gap-3">
+                <Link to={createPageUrl(user?.is_sales_rep ? 'SalesDashboard' : 'QuoteRequest')} className="flex items-center gap-2">
                   <img
                     src="/assets/orbus-logo.png"
                     alt="Orbus"
-                    className="h-8"
+                    className="h-7 md:h-8"
                   />
-                  <span className="text-xl font-semibold tracking-tight hidden sm:inline">Instant Quote</span>
+                  <span className="text-lg md:text-xl font-semibold tracking-tight hidden sm:inline">Instant Quote</span>
                 </Link>
               </div>
               
+              {/* Desktop Nav */}
               <nav className="hidden md:flex items-center gap-2">
                 {user?.is_sales_rep ? (
                   <>
@@ -167,6 +175,14 @@ export default function Layout({ children, currentPageName }) {
                         className={`text-white hover:bg-white/20 ${currentPageName === 'SalesDashboard' ? 'border border-white/30' : ''}`}
                       >
                         Dashboard
+                      </Button>
+                    </Link>
+                    <Link to={createPageUrl('Pipeline')}>
+                      <Button 
+                        variant="ghost"
+                        className={`text-white hover:bg-white/20 ${currentPageName === 'Pipeline' ? 'border border-white/30' : ''}`}
+                      >
+                        Pipeline
                       </Button>
                     </Link>
                     <Link to={createPageUrl('Contacts')}>
@@ -182,7 +198,7 @@ export default function Layout({ children, currentPageName }) {
                         variant="ghost"
                         className={`text-white hover:bg-white/20 ${currentPageName === 'Product3DManager' ? 'border border-white/30' : ''}`}
                       >
-                        Product Catalog
+                        Catalog
                       </Button>
                     </Link>
                     <Link to={createPageUrl('SalesQuoteStart')}>
@@ -201,7 +217,6 @@ export default function Layout({ children, currentPageName }) {
                       variant="ghost"
                       className={`text-white hover:bg-white/20 ${currentPageName === 'StudentHome' ? 'border border-white/30' : ''}`}
                     >
-                      <Plus className="w-4 h-4 mr-2" />
                       My Submissions
                     </Button>
                   </Link>
@@ -263,12 +278,115 @@ export default function Layout({ children, currentPageName }) {
                   <LogOut className="w-5 h-5" />
                 </Button>
               </nav>
+
+              {/* Mobile Hamburger */}
+              <div className="md:hidden flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                  className="text-white hover:bg-white/20"
+                >
+                  {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                </Button>
+              </div>
             </div>
           </div>
+
+          {/* Mobile Slide-Down Menu */}
+          {mobileMenuOpen && (
+            <div className="md:hidden bg-[#b01b13] border-t border-white/10">
+              <div className="px-4 py-3 space-y-1">
+                <div className="px-3 py-2 text-white/70 text-sm">
+                  {user?.full_name?.split(' ')[0] || user?.contact_name?.split(' ')[0]} — {getUserTypeLabel()}
+                </div>
+                <div className="h-px bg-white/10 my-1" />
+
+                {user?.is_sales_rep ? (
+                  <>
+                    <Link to={createPageUrl('SalesDashboard')} onClick={() => setMobileMenuOpen(false)}>
+                      <div className={`flex items-center gap-3 px-3 py-3 rounded-lg ${currentPageName === 'SalesDashboard' ? 'bg-white/15' : 'hover:bg-white/10'}`}>
+                        <LayoutDashboard className="w-5 h-5 text-white/80" />
+                        <span className="text-white font-medium">Dashboard</span>
+                      </div>
+                    </Link>
+                    <Link to={createPageUrl('Pipeline')} onClick={() => setMobileMenuOpen(false)}>
+                      <div className={`flex items-center gap-3 px-3 py-3 rounded-lg ${currentPageName === 'Pipeline' ? 'bg-white/15' : 'hover:bg-white/10'}`}>
+                        <TrendingUp className="w-5 h-5 text-white/80" />
+                        <span className="text-white font-medium">Pipeline</span>
+                      </div>
+                    </Link>
+                    <Link to={createPageUrl('Contacts')} onClick={() => setMobileMenuOpen(false)}>
+                      <div className={`flex items-center gap-3 px-3 py-3 rounded-lg ${currentPageName === 'Contacts' ? 'bg-white/15' : 'hover:bg-white/10'}`}>
+                        <FileText className="w-5 h-5 text-white/80" />
+                        <span className="text-white font-medium">Contacts</span>
+                      </div>
+                    </Link>
+                    <Link to={createPageUrl('Product3DManager')} onClick={() => setMobileMenuOpen(false)}>
+                      <div className={`flex items-center gap-3 px-3 py-3 rounded-lg ${currentPageName === 'Product3DManager' ? 'bg-white/15' : 'hover:bg-white/10'}`}>
+                        <Package className="w-5 h-5 text-white/80" />
+                        <span className="text-white font-medium">Product Catalog</span>
+                      </div>
+                    </Link>
+                    <Link to={createPageUrl('SalesQuoteStart')} onClick={() => setMobileMenuOpen(false)}>
+                      <div className="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-white/10">
+                        <Plus className="w-5 h-5 text-white/80" />
+                        <span className="text-white font-medium">New Quote</span>
+                      </div>
+                    </Link>
+                  </>
+                ) : user?.user_type === 'student' ? (
+                  <Link to={createPageUrl('StudentHome')} onClick={() => setMobileMenuOpen(false)}>
+                    <div className={`flex items-center gap-3 px-3 py-3 rounded-lg ${currentPageName === 'StudentHome' ? 'bg-white/15' : 'hover:bg-white/10'}`}>
+                      <GraduationCap className="w-5 h-5 text-white/80" />
+                      <span className="text-white font-medium">My Submissions</span>
+                    </div>
+                  </Link>
+                ) : (
+                  <>
+                    <Link to={createPageUrl('QuoteRequest')} onClick={() => setMobileMenuOpen(false)}>
+                      <div className={`flex items-center gap-3 px-3 py-3 rounded-lg ${currentPageName === 'QuoteRequest' ? 'bg-white/15' : 'hover:bg-white/10'}`}>
+                        <Plus className="w-5 h-5 text-white/80" />
+                        <span className="text-white font-medium">New Quote</span>
+                      </div>
+                    </Link>
+                    <Link to={createPageUrl('OrderHistory')} onClick={() => setMobileMenuOpen(false)}>
+                      <div className={`flex items-center gap-3 px-3 py-3 rounded-lg ${currentPageName === 'OrderHistory' ? 'bg-white/15' : 'hover:bg-white/10'}`}>
+                        <FileText className="w-5 h-5 text-white/80" />
+                        <span className="text-white font-medium">Order History</span>
+                      </div>
+                    </Link>
+                  </>
+                )}
+
+                <div className="h-px bg-white/10 my-1" />
+                <Link to={createPageUrl('Settings')} onClick={() => setMobileMenuOpen(false)}>
+                  <div className={`flex items-center gap-3 px-3 py-3 rounded-lg ${currentPageName === 'Settings' ? 'bg-white/15' : 'hover:bg-white/10'}`}>
+                    <SettingsIcon className="w-5 h-5 text-white/80" />
+                    <span className="text-white font-medium">Settings</span>
+                  </div>
+                </Link>
+
+                <div className="h-px bg-white/10 my-1" />
+                <div className="px-3 py-2 text-white/60 text-xs font-medium uppercase tracking-wide">Switch Role</div>
+                <div className="flex gap-2 px-3 pb-1">
+                  <button onClick={() => handleSwitchUserType('customer')} className="flex-1 py-2 rounded-lg bg-white/10 text-white text-xs font-medium text-center">Customer</button>
+                  <button onClick={() => handleSwitchUserType('sales_rep')} className="flex-1 py-2 rounded-lg bg-white/10 text-white text-xs font-medium text-center">Sales Rep</button>
+                  <button onClick={() => handleSwitchUserType('student')} className="flex-1 py-2 rounded-lg bg-white/10 text-white text-xs font-medium text-center">Student</button>
+                </div>
+
+                <div className="h-px bg-white/10 my-1" />
+                <button onClick={handleLogout} className="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-white/10 w-full">
+                  <LogOut className="w-5 h-5 text-white/80" />
+                  <span className="text-white font-medium">Log Out</span>
+                </button>
+              </div>
+            </div>
+          )}
         </header>
       )}
       
-      <main className={showHeader ? 'pt-16' : ''}>
+      <main className={showHeader ? 'pt-14 md:pt-16' : ''}>
         {children}
       </main>
 
@@ -278,132 +396,125 @@ export default function Layout({ children, currentPageName }) {
           className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 z-50"
           style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
         >
-          <div className="flex items-center justify-around h-16">
+          <div className="flex items-center justify-around h-14">
             {user?.is_sales_rep ? (
               <>
                 <Link to={createPageUrl('SalesDashboard')} className="flex-1">
-                  <Button
-                    variant="ghost"
-                    className={`w-full h-full flex flex-col items-center justify-center gap-1 ${
-                      currentPageName === 'SalesDashboard' ? 'text-[#e2231a]' : 'text-slate-600 dark:text-slate-400'
+                  <button
+                    className={`w-full h-full flex flex-col items-center justify-center gap-0.5 ${
+                      currentPageName === 'SalesDashboard' ? 'text-[#e2231a]' : 'text-slate-500'
                     }`}
                   >
                     <LayoutDashboard className="w-5 h-5" />
-                    <span className="text-xs">Dashboard</span>
-                  </Button>
+                    <span className="text-[10px] font-medium">Home</span>
+                  </button>
+                </Link>
+                <Link to={createPageUrl('Pipeline')} className="flex-1">
+                  <button
+                    className={`w-full h-full flex flex-col items-center justify-center gap-0.5 ${
+                      currentPageName === 'Pipeline' ? 'text-[#e2231a]' : 'text-slate-500'
+                    }`}
+                  >
+                    <TrendingUp className="w-5 h-5" />
+                    <span className="text-[10px] font-medium">Pipeline</span>
+                  </button>
                 </Link>
                 <Link to={createPageUrl('SalesQuoteStart')} className="flex-1">
-                  <Button
-                    variant="ghost"
-                    className={`w-full h-full flex flex-col items-center justify-center gap-1 ${
-                      currentPageName === 'SalesQuoteStart' ? 'text-[#e2231a]' : 'text-slate-600 dark:text-slate-400'
-                    }`}
-                  >
-                    <Plus className="w-5 h-5" />
-                    <span className="text-xs">New Quote</span>
-                  </Button>
+                  <button className="w-full h-full flex flex-col items-center justify-center gap-0.5">
+                    <div className="w-10 h-10 rounded-full bg-[#e2231a] flex items-center justify-center -mt-4 shadow-lg">
+                      <Plus className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="text-[10px] font-medium text-slate-500 -mt-0.5">Quote</span>
+                  </button>
                 </Link>
                 <Link to={createPageUrl('Contacts')} className="flex-1">
-                  <Button
-                    variant="ghost"
-                    className={`w-full h-full flex flex-col items-center justify-center gap-1 ${
-                      currentPageName === 'Contacts' ? 'text-[#e2231a]' : 'text-slate-600 dark:text-slate-400'
+                  <button
+                    className={`w-full h-full flex flex-col items-center justify-center gap-0.5 ${
+                      currentPageName === 'Contacts' || currentPageName === 'ContactDetail' ? 'text-[#e2231a]' : 'text-slate-500'
                     }`}
                   >
-                    <FileText className="w-5 h-5" />
-                    <span className="text-xs">Contacts</span>
-                  </Button>
+                    <Users className="w-5 h-5" />
+                    <span className="text-[10px] font-medium">Contacts</span>
+                  </button>
                 </Link>
                 <Link to={createPageUrl('Settings')} className="flex-1">
-                  <Button
-                    variant="ghost"
-                    className={`w-full h-full flex flex-col items-center justify-center gap-1 ${
-                      currentPageName === 'Settings' ? 'text-[#e2231a]' : 'text-slate-600 dark:text-slate-400'
+                  <button
+                    className={`w-full h-full flex flex-col items-center justify-center gap-0.5 ${
+                      currentPageName === 'Settings' ? 'text-[#e2231a]' : 'text-slate-500'
                     }`}
                   >
                     <SettingsIcon className="w-5 h-5" />
-                    <span className="text-xs">Settings</span>
-                  </Button>
+                    <span className="text-[10px] font-medium">More</span>
+                  </button>
                 </Link>
               </>
             ) : user?.user_type === 'student' ? (
               <>
                 <Link to={createPageUrl('StudentHome')} className="flex-1">
-                  <Button
-                    variant="ghost"
-                    className={`w-full h-full flex flex-col items-center justify-center gap-1 ${
-                      currentPageName === 'StudentHome' ? 'text-[#e2231a]' : 'text-slate-600 dark:text-slate-400'
+                  <button
+                    className={`w-full h-full flex flex-col items-center justify-center gap-0.5 ${
+                      currentPageName === 'StudentHome' ? 'text-[#e2231a]' : 'text-slate-500'
                     }`}
                   >
                     <HomeIcon className="w-5 h-5" />
-                    <span className="text-xs">Home</span>
-                  </Button>
+                    <span className="text-[10px] font-medium">Home</span>
+                  </button>
                 </Link>
                 <Link to={createPageUrl('StudentHome')} className="flex-1">
-                  <Button
-                    variant="ghost"
-                    className="w-full h-full flex flex-col items-center justify-center gap-1 text-slate-600 dark:text-slate-400"
-                  >
+                  <button className="w-full h-full flex flex-col items-center justify-center gap-0.5 text-slate-500">
                     <Plus className="w-5 h-5" />
-                    <span className="text-xs">Upload</span>
-                  </Button>
+                    <span className="text-[10px] font-medium">Upload</span>
+                  </button>
                 </Link>
                 <div className="flex-1" />
                 <Link to={createPageUrl('Settings')} className="flex-1">
-                  <Button
-                    variant="ghost"
-                    className={`w-full h-full flex flex-col items-center justify-center gap-1 ${
-                      currentPageName === 'Settings' ? 'text-[#e2231a]' : 'text-slate-600 dark:text-slate-400'
+                  <button
+                    className={`w-full h-full flex flex-col items-center justify-center gap-0.5 ${
+                      currentPageName === 'Settings' ? 'text-[#e2231a]' : 'text-slate-500'
                     }`}
                   >
                     <SettingsIcon className="w-5 h-5" />
-                    <span className="text-xs">Settings</span>
-                  </Button>
+                    <span className="text-[10px] font-medium">Settings</span>
+                  </button>
                 </Link>
               </>
             ) : (
               <>
                 <Link to={createPageUrl('QuoteRequest')} className="flex-1">
-                  <Button
-                    variant="ghost"
-                    className={`w-full h-full flex flex-col items-center justify-center gap-1 ${
-                      currentPageName === 'QuoteRequest' ? 'text-[#e2231a]' : 'text-slate-600 dark:text-slate-400'
+                  <button
+                    className={`w-full h-full flex flex-col items-center justify-center gap-0.5 ${
+                      currentPageName === 'QuoteRequest' ? 'text-[#e2231a]' : 'text-slate-500'
                     }`}
                   >
                     <HomeIcon className="w-5 h-5" />
-                    <span className="text-xs">Home</span>
-                  </Button>
+                    <span className="text-[10px] font-medium">Home</span>
+                  </button>
                 </Link>
                 <Link to={createPageUrl('QuoteRequest')} className="flex-1">
-                  <Button
-                    variant="ghost"
-                    className="w-full h-full flex flex-col items-center justify-center gap-1 text-slate-600 dark:text-slate-400"
-                  >
+                  <button className="w-full h-full flex flex-col items-center justify-center gap-0.5 text-slate-500">
                     <Plus className="w-5 h-5" />
-                    <span className="text-xs">New Quote</span>
-                  </Button>
+                    <span className="text-[10px] font-medium">New Quote</span>
+                  </button>
                 </Link>
                 <Link to={createPageUrl('OrderHistory')} className="flex-1">
-                  <Button
-                    variant="ghost"
-                    className={`w-full h-full flex flex-col items-center justify-center gap-1 ${
-                      currentPageName === 'OrderHistory' ? 'text-[#e2231a]' : 'text-slate-600 dark:text-slate-400'
+                  <button
+                    className={`w-full h-full flex flex-col items-center justify-center gap-0.5 ${
+                      currentPageName === 'OrderHistory' ? 'text-[#e2231a]' : 'text-slate-500'
                     }`}
                   >
                     <FileText className="w-5 h-5" />
-                    <span className="text-xs">History</span>
-                  </Button>
+                    <span className="text-[10px] font-medium">History</span>
+                  </button>
                 </Link>
                 <Link to={createPageUrl('Settings')} className="flex-1">
-                  <Button
-                    variant="ghost"
-                    className={`w-full h-full flex flex-col items-center justify-center gap-1 ${
-                      currentPageName === 'Settings' ? 'text-[#e2231a]' : 'text-slate-600 dark:text-slate-400'
+                  <button
+                    className={`w-full h-full flex flex-col items-center justify-center gap-0.5 ${
+                      currentPageName === 'Settings' ? 'text-[#e2231a]' : 'text-slate-500'
                     }`}
                   >
                     <SettingsIcon className="w-5 h-5" />
-                    <span className="text-xs">Settings</span>
-                  </Button>
+                    <span className="text-[10px] font-medium">Settings</span>
+                  </button>
                 </Link>
               </>
             )}
