@@ -269,6 +269,15 @@ export default function Layout({ children, currentPageName }) {
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
+                <Link to={createPageUrl('Settings')}>
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    className="text-white hover:bg-white/10"
+                  >
+                    <SettingsIcon className="w-5 h-5" />
+                  </Button>
+                </Link>
                 <Button 
                   variant="ghost" 
                   size="icon"
