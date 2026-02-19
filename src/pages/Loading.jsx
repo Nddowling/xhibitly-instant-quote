@@ -365,38 +365,29 @@ Return JSON with exactly 3 designs.`;
         // Deduplicate
         const uniqueThumbnails = [...new Set(productThumbnails)];
         
-        const imagePrompt = `Photorealistic 3D architectural rendering of a trade show booth from the Orbus Exhibit & Display catalog.
+        const imagePrompt = `Photorealistic 3D rendering of a ${boothSize} trade show booth (${boothDimensions.width}ft wide × ${boothDimensions.depth}ft deep).
 
-THIS IS A SALES QUOTE — the customer will receive EXACTLY these ${designProducts.length} products. Accuracy is critical.
-
-ABSOLUTE RESTRICTIONS:
-- Render ONLY the ${designProducts.length} numbered products below. Nothing else.
-- Do NOT add: TV screens, monitors, video walls, YouTube banners, social media logos, potted plants, flowers, hanging banners (unless listed), chairs (unless listed), tables (unless listed), brochure holders (unless listed), carpet (unless listed), any item not on this list.
-- If only ${designProducts.length} items are listed, the booth should contain exactly ${designProducts.length} display items plus the booth space itself (floor, back drape if no backwall covers it).
-- Every item must match its description below — a "banner stand" is a retractable pull-up banner on a narrow base, a "reception counter" is a podium-height counter with fabric wrap, a "backwall" is a large flat fabric display, etc.
-
-BOOTH SPACE: ${boothSize} footprint (${boothDimensions.width}ft wide × ${boothDimensions.depth}ft deep). Open front facing the aisle. Standard trade show environment: grey carpet aisle, pipe-and-drape on neighbor sides, overhead convention center ceiling.
-
-BRAND COLORS & LOGO:
-${brandAnalysis.logo_description ? `Company logo: ${brandAnalysis.logo_description}` : `Company name: ${scrapedCompanyName}`}
-Primary color: ${brandAnalysis.primary_color} — use on backwall graphic, banner stand graphics
-Secondary color: ${brandAnalysis.secondary_color} — use on counter wrap, accent graphics
-The company logo and name should appear large and centered on the main backwall graphic. Smaller logo on the counter front.
-
-PRODUCTS TO RENDER (exactly ${designProducts.length} items):
+CRITICAL — RENDER ONLY THESE ${designProducts.length} ITEMS AND NOTHING ELSE:
 ${productManifest}
 
-PLACEMENT GUIDE:
-- Backwall(s): flush against the back wall of the booth space
-- Counter(s): front-center or right side, angled toward the aisle
-- Banner stand(s): flanking the left and/or right entrance edges
-- Monitor/iPad stand(s): beside the counter or near the backwall
-- Lighting: clamp-mounted on the backwall frame or overhead truss
-- Flooring: covers the entire booth footprint if listed
-- Tower(s): at booth corners
-- Literature rack: beside the counter
+DO NOT ADD anything not listed above. No extra monitors, screens, plants, chairs, tables, brochure racks, hanging signs, or decorations unless they appear in the numbered list. The booth contains EXACTLY ${designProducts.length} product items plus the booth shell (floor area, neighboring pipe-and-drape sides, open front to aisle).
 
-CAMERA & STYLE: 3/4 elevated angle from the front-left aisle. Professional architectural visualization. Clean, well-lit. The booth should look inviting, professional, and fully set up for a real trade show.`;
+BRAND IDENTITY:
+${brandAnalysis.logo_description ? `Logo: ${brandAnalysis.logo_description}` : `Company: ${scrapedCompanyName}`}
+Primary color: ${brandAnalysis.primary_color} — apply to backwall graphics and banner stands
+Secondary color: ${brandAnalysis.secondary_color} — apply to counter wraps and accents
+Show the company logo large and centered on the main backwall. Smaller logo on the counter front.
+
+PLACEMENT:
+- Backwall(s): flush against back wall
+- Counter(s): front-center or right side, angled toward aisle
+- Banner stand(s): at left/right entrance edges
+- Monitor/iPad stand(s): beside counter or near backwall
+- Lighting: mounted on backwall frame
+- Flooring: covers entire booth footprint if listed
+- Tower(s): at booth corners
+
+CAMERA: 3/4 elevated angle from front-left aisle. Professional trade show photography style. Clean, well-lit, inviting.`;
 
         try {
           // Pass the logo URL + product thumbnails as reference images
