@@ -168,11 +168,31 @@ function collectReferenceImages(brandAnalysis, products) {
 // LOADING STEPS
 // ═══════════════════════════════════════════════════════════════
 
+const COMPANY_RESEARCH_SCHEMA = {
+  type: "object",
+  properties: {
+    company_name: { type: "string" },
+    industry: { type: "string" },
+    industry_vertical: { type: "string" },
+    core_products_or_services: { type: "array", items: { type: "string" } },
+    brand_voice: { type: "string" },
+    brand_tone: { type: "string" },
+    brand_values: { type: "array", items: { type: "string" } },
+    target_customers: { type: "string" },
+    competitive_positioning: { type: "string" },
+    key_messaging: { type: "array", items: { type: "string" } },
+    trade_show_goals: { type: "string" },
+    booth_atmosphere: { type: "string" },
+    physical_products_to_display: { type: "array", items: { type: "string" } },
+    industry_specific_booth_elements: { type: "array", items: { type: "string" } }
+  }
+};
+
 const loadingSteps = [
   { icon: Search, text: "Scanning your website..." },
   { icon: Palette, text: "Extracting your logo & brand colors..." },
+  { icon: Lightbulb, text: "Researching your brand voice & industry..." },
   { icon: Layers, text: "Curating from 500+ products..." },
-  { icon: Lightbulb, text: "Designing your experience..." },
   { icon: ShieldCheck, text: "Validating design & pricing rules..." },
   { icon: Sparkles, text: "Generating booth visuals with your logo..." },
   { icon: CheckCircle, text: "Finalizing your booth designs..." },
