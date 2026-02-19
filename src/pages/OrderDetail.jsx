@@ -93,16 +93,10 @@ export default function OrderDetail() {
           </TabsList>
 
           <TabsContent value="details">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              {/* Left column */}
-              <div className="space-y-4">
-                <OrderFields order={order} formatPrice={formatPrice} />
-              </div>
-              {/* Right column */}
-              <div className="space-y-4">
-                <DesignSection boothDesign={boothDesign} />
-                <LineItemsSection lineItems={lineItems} products={products} order={order} formatPrice={formatPrice} />
-              </div>
+            <OrderFields order={order} formatPrice={formatPrice} />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+              <DesignSection boothDesign={boothDesign} />
+              <LineItemsSection lineItems={lineItems} products={products} order={order} formatPrice={formatPrice} />
             </div>
           </TabsContent>
 
