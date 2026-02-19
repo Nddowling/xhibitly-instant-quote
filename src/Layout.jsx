@@ -155,13 +155,13 @@ export default function Layout({ children, currentPageName }) {
                     <ArrowLeft className="w-5 h-5" />
                   </Button>
                 ) : null}
-                <Link to={createPageUrl(user?.is_sales_rep ? 'SalesDashboard' : 'QuoteRequest')} className="flex items-center gap-2">
+                <Link to={createPageUrl(user?.is_sales_rep ? 'SalesDashboard' : 'QuoteRequest')} className="flex items-center gap-2 shrink-0">
                   <img
                     src="/assets/orbus-logo.png"
                     alt="Orbus"
                     className="h-7 md:h-8"
                   />
-                  <span className="text-lg md:text-xl font-semibold tracking-tight hidden sm:inline whitespace-nowrap">Instant Quote</span>
+                  <span className="text-sm md:text-base font-semibold tracking-tight hidden lg:inline whitespace-nowrap">Instant Quote</span>
                 </Link>
               </div>
               
