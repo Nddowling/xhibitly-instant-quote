@@ -31,25 +31,31 @@ const FORBIDDEN_SKUS = [
 ];
 
 // ─── FLOORING RULES ───
-const FLOORING_FORBIDDEN_KEYWORDS = ['plain', 'gray', 'grey', 'unbranded', 'bare'];
+// POLICY: Always use branded carpet. Interlocking floors are never offered.
+const FLOORING_FORBIDDEN_KEYWORDS = ['plain', 'gray', 'grey', 'unbranded', 'bare', 'interlocking', 'interlock', 'tile', 'foam', 'rubber'];
 
 function isFlooringForbidden(product) {
   const name = (product.display_name || product.name || '').toLowerCase();
   const desc = (product.description || '').toLowerCase();
   const sku = (product.manufacturer_sku || product.sku || '').toLowerCase();
-  return FLOORING_FORBIDDEN_KEYWORDS.some(kw => name.includes(kw) || desc.includes(kw) || sku.includes(kw));
+  // Reject anything with forbidden keywords
+  if (FLOORING_FORBIDDEN_KEYWORDS.some(kw => name.includes(kw) || desc.includes(kw) || sku.includes(kw))) return true;
+  // Also reject any flooring that is NOT branded carpet
+  return !isFlooringBrandedCarpet(product);
 }
 
-function isFlooringBranded(product) {
+function isFlooringBrandedCarpet(product) {
   const name = (product.display_name || product.name || '').toLowerCase();
   const desc = (product.description || '').toLowerCase();
   return (
-    name.includes('branded') || name.includes('brand') ||
-    name.includes('color-matched') || name.includes('color matched') ||
-    name.includes('carpet') ||
-    desc.includes('branded') || desc.includes('color-matched') ||
-    desc.includes('dye-sub') || desc.includes('custom print')
+    name.includes('carpet') || name.includes('branded carpet') ||
+    desc.includes('carpet') || desc.includes('dye-sub carpet') ||
+    desc.includes('custom print carpet')
   );
+}
+
+function isFlooringBranded(product) {
+  return isFlooringBrandedCarpet(product);
 }
 
 // ─── REQUIRED BASE COMPONENTS ───
@@ -92,22 +98,31 @@ function hasTechnology(products) {
 
 // ─── TIER DEFAULTS (for auto-adding missing components) ───
 function getDefaultFlooringSkuForTier(tier, boothSize, catalog) {
-  // Prefer branded carpet, then color-matched interlocking
-  const flooringProducts = catalog
+  // ONLY branded carpet — never interlocking
+  const carpetProducts = catalog
     .filter(p => p.geometry_type === GEO.FLOORING)
-    .filter(p => !isFlooringForbidden(p))
+    .filter(p => isFlooringBrandedCarpet(p))
     .filter(p => !p.booth_sizes || p.booth_sizes.includes(boothSize));
 
-  // Sort: branded carpet first, then by price ascending for the tier
-  const sorted = flooringProducts.sort((a, b) => {
-    const aIsCarpet = (a.display_name || '').toLowerCase().includes('carpet');
-    const bIsCarpet = (b.display_name || '').toLowerCase().includes('carpet');
-    if (aIsCarpet && !bIsCarpet) return -1;
-    if (!aIsCarpet && bIsCarpet) return 1;
+  // Sort by price for tier
+  carpetProducts.sort((a, b) => {
+    if (tier === 'Custom') return b.base_price - a.base_price;
     return a.base_price - b.base_price;
   });
 
-  return sorted[0] || null;
+  // Fallback: if no carpet products exist, pick any non-interlocking flooring
+  if (carpetProducts.length === 0) {
+    const anyFlooring = catalog
+      .filter(p => p.geometry_type === GEO.FLOORING)
+      .filter(p => !p.booth_sizes || p.booth_sizes.includes(boothSize))
+      .filter(p => {
+        const name = (p.display_name || p.name || '').toLowerCase();
+        return !name.includes('interlocking') && !name.includes('interlock') && !name.includes('tile');
+      });
+    return anyFlooring[0] || null;
+  }
+
+  return carpetProducts[0] || null;
 }
 
 function getDefaultForGeometry(geoType, tier, boothSize, catalog) {

@@ -173,7 +173,7 @@ export default function Results() {
           </motion.div>
         )}
 
-        {/* Booth Design Cards */}
+        {/* Booth Design Cards — click anywhere on the card to select */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
           {boothDesigns.map((design, index) => {
             const styles = getTierStyles(design.tier);
@@ -186,7 +186,8 @@ export default function Results() {
                 transition={{ delay: index * 0.15 + 0.2 }}
               >
                 <Card 
-                  className={`relative overflow-hidden h-full ${styles.border} ${styles.highlight ? 'shadow-xl' : 'shadow-lg'} border-2 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1`}
+                  onClick={() => handleSelectDesign(design)}
+                  className={`relative overflow-hidden h-full cursor-pointer ${styles.border} ${styles.highlight ? 'shadow-xl' : 'shadow-lg'} border-2 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 active:scale-[0.98]`}
                 >
                   {/* Recommended Badge */}
                   {design.tier === 'Hybrid' && (
@@ -198,7 +199,7 @@ export default function Results() {
 
                   <CardContent className={`p-6 ${design.tier === 'Hybrid' ? 'pt-14' : ''}`}>
                     {/* Visual Header - Show Generated Image or Loading */}
-                    <div className={`aspect-[4/3] bg-gradient-to-br ${styles.gradient} rounded-xl mb-6 overflow-hidden flex items-center justify-center border border-slate-200`}>
+                    <div className={`aspect-[4/3] bg-gradient-to-br ${styles.gradient} rounded-xl mb-4 overflow-hidden flex items-center justify-center border border-slate-200`}>
                       {design.design_image_url ? (
                         <img 
                           src={design.design_image_url} 
@@ -218,64 +219,34 @@ export default function Results() {
                       )}
                     </div>
 
-                    {/* Tier Badge */}
-                    <Badge className={`${styles.badge} mb-3 font-medium`}>
+                    {/* Tier Badge + Design Name */}
+                    <Badge className={`${styles.badge} mb-2 font-medium`}>
                       {design.tier} Experience
                     </Badge>
-
-                    {/* Design Name */}
-                    <h3 className="text-xl font-bold text-slate-800 mb-3">
+                    <h3 className="text-lg font-bold text-slate-800 mb-2">
                       {design.design_name}
                     </h3>
 
-                    {/* Experience Story */}
-                    <div className="mb-4">
-                      <div className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2 flex items-center gap-1">
-                        <Lightbulb className="w-3 h-3" />
-                        The Experience
-                      </div>
-                      <p className="text-slate-600 text-sm leading-relaxed line-clamp-4">
-                        {design.experience_story}
-                      </p>
-                    </div>
+                    {/* Experience Story — compact */}
+                    <p className="text-slate-600 text-sm leading-relaxed line-clamp-3 mb-3">
+                      {design.experience_story}
+                    </p>
 
-                    {/* Key Moments */}
-                    {design.key_moments && design.key_moments.length > 0 && (
-                      <div className="mb-4">
-                        <div className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">
-                          Key Moments
+                    {/* Price + CTA row */}
+                    <div className="pt-3 border-t border-slate-200 flex items-end justify-between">
+                      <div>
+                        <div className="text-2xl font-bold text-[#e2231a]">
+                          {formatPrice(design.total_price)}
                         </div>
-                        <div className="space-y-1">
-                          {design.key_moments.slice(0, 3).map((moment, i) => (
-                            <div key={i} className="flex items-start gap-2 text-xs text-slate-600">
-                              <div className="w-1.5 h-1.5 rounded-full bg-[#e2231a] mt-1.5 flex-shrink-0" />
-                              <span className="line-clamp-2">{moment}</span>
-                            </div>
-                          ))}
-                        </div>
+                        <div className="text-slate-400 text-xs">Complete Experience</div>
                       </div>
-                    )}
-
-                    {/* Price */}
-                    <div className="mb-6 pt-4 border-t border-slate-200">
-                      <div className="text-3xl font-bold text-[#e2231a]">
-                        {formatPrice(design.total_price)}
+                      <div className={`flex items-center gap-1 text-sm font-semibold ${
+                        design.tier === 'Hybrid' ? 'text-[#e2231a]' : 'text-slate-700'
+                      }`}>
+                        View Details
+                        <ArrowRight className="w-4 h-4" />
                       </div>
-                      <div className="text-slate-400 text-sm">Complete Experience</div>
                     </div>
-
-                    {/* Select Button */}
-                    <Button 
-                      onClick={() => handleSelectDesign(design)}
-                      className={`w-full h-12 text-base font-semibold transition-all ${
-                        design.tier === 'Hybrid' 
-                          ? 'bg-[#e2231a] hover:bg-[#b01b13]' 
-                          : 'bg-slate-800 hover:bg-slate-900'
-                      }`}
-                    >
-                      View & Reserve
-                      <ArrowRight className="w-5 h-5 ml-2" />
-                    </Button>
                   </CardContent>
                 </Card>
               </motion.div>
