@@ -317,10 +317,11 @@ export default function QuoteRequest() {
                 <Button 
                   onClick={handleSubmit}
                   disabled={!boothSize || !showDate || !websiteUrl}
-                  className="w-full bg-[#e2231a] hover:bg-[#b01b13] h-16 text-xl font-semibold transition-all duration-300 hover:shadow-lg disabled:opacity-50"
+                  className="w-full bg-[#e2231a] hover:bg-[#b01b13] h-14 md:h-16 text-base md:text-xl font-semibold transition-all duration-300 hover:shadow-lg disabled:opacity-50"
                 >
-                  Design My Brand Experience
-                  <ArrowRight className="w-6 h-6 ml-3" />
+                  <span className="hidden sm:inline">Design My Brand Experience</span>
+                  <span className="sm:hidden">Design My Booth</span>
+                  <ArrowRight className="w-5 h-5 md:w-6 md:h-6 ml-2 md:ml-3 shrink-0" />
                 </Button>
               </div>
             </CardContent>
