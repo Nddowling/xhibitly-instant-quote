@@ -128,7 +128,30 @@ IMPORTANT: Extract 4 distinct colors. The primary_color should match the dominan
         properties: { booth_size: boothSize, website_url: websiteUrl }
       });
 
-      const designPrompt = `You are an expert trade show booth designer. Create 3 unique booth experience designs (Modular, Hybrid, and Custom tiers) for a ${boothSize} booth (${boothDimensions.width}ft x ${boothDimensions.depth}ft).
+      // Build a price lookup from the catalog so we can reconcile after LLM responds
+      const catalogPriceLookup = {};
+      compatibleProducts.forEach(p => {
+        const sku = p.manufacturer_sku || p.sku;
+        catalogPriceLookup[sku] = {
+          base_price: p.base_price,
+          rental_price: p.rental_price || null,
+          is_rental: p.is_rental || false,
+          name: p.display_name || p.name,
+          width: p.dimensions?.width || null,
+          depth: p.dimensions?.depth || null,
+          geometry_type: p.geometry_type
+        };
+      });
+
+      const designPrompt = `You are an expert trade show booth designer. Create 3 unique booth experience designs (Modular, Hybrid, and Custom tiers) for a ${boothSize} booth (${boothDimensions.width}ft wide × ${boothDimensions.depth}ft deep).
+
+BOOTH PHYSICAL CONSTRAINTS:
+- Total floor area: ${boothDimensions.width * boothDimensions.depth} sq ft
+- The back wall runs along the full ${boothDimensions.width}ft width
+- Depth from back wall to aisle is ${boothDimensions.depth}ft
+- Open front facing the aisle — leave at least 3ft clear walkway at front
+- Products must not overlap; sum of product widths along any wall cannot exceed that wall's length
+- A product with width_ft=10 takes up 10ft of wall space; two 5ft items fill that same wall
 
 Brand Identity:
 ${JSON.stringify(brandAnalysis, null, 2)}
@@ -145,7 +168,7 @@ ${customerProfile ? `
 ${customerProfile.additional_notes ? `- Additional Notes: ${customerProfile.additional_notes}` : ''}
 ` : 'No specific customer requirements provided.'}
 
-PRODUCT CATALOG (YOU MUST ONLY SELECT FROM THIS LIST — NO OTHER PRODUCTS ALLOWED):
+PRODUCT CATALOG — ONLY SELECT FROM THIS LIST:
 ${JSON.stringify(compatibleProducts.map(p => {
   const dims = p.dimensions || {};
   return {
@@ -153,61 +176,44 @@ ${JSON.stringify(compatibleProducts.map(p => {
     name: p.display_name || p.name,
     category: p.category_name || p.category,
     geometry_type: p.geometry_type,
-    visual_description: p.visual_description || p.description || '',
     price_tier: p.price_tier,
     base_price: p.base_price,
-    rental_price: p.rental_price || null,
-    is_rental: p.is_rental || false,
-    dimensions_ft: dims.width ? `${dims.width}W x ${dims.height}H x ${dims.depth}D` : 'standard',
     width_ft: dims.width || null,
     height_ft: dims.height || null,
     depth_ft: dims.depth || null,
     design_style: p.design_style,
     customizable: p.customizable,
-    branding_surfaces: p.branding_surfaces,
-    thumbnail_url: p.thumbnail_url || p.image_url || null
+    branding_surfaces: p.branding_surfaces
   };
 }), null, 2)}
 
-CRITICAL RULES:
-- You may ONLY use products listed above. Do NOT invent, fabricate, or reference any product not in this catalog.
-- Every product_sku in your response MUST exactly match a "sku" value from the catalog above.
-- The total_price for each design MUST equal the sum of base_price (or rental_price for rental items) of all selected products.
-- Include a "line_items" array with each product's sku, name, quantity, unit_price, and line_total.
-- IMPORTANT: The generated booth image will show ONLY the products you select — nothing more. So choose a complete, functional booth setup (backwall + counter + accessories). Do not assume anything extra will be in the booth.
-- Use the dimensions_ft field to ensure products physically fit in the ${boothSize} space (${boothDimensions.width}ft x ${boothDimensions.depth}ft).
+MANDATORY SELECTION RULES:
+1. ONLY use SKUs from the catalog above — never invent product names or SKUs.
+2. SPATIAL FIT: Before selecting a product, check its width_ft and depth_ft. Add up all product widths placed against the back wall — the total must be ≤ ${boothDimensions.width}ft. Items placed side-by-side on any wall must fit within that wall's length.
+3. PRICING: For each line_item, set unit_price to EXACTLY the base_price shown in the catalog. line_total = unit_price × quantity. total_price = sum of all line_totals. Do NOT round, adjust, or estimate prices — copy them from the catalog.
+4. COMPLETENESS: Every tier must include at minimum a backwall, a counter or kiosk, lighting, and flooring. Hybrid and Custom tiers add banner stands, monitor stands, towers, or accent pieces.
+5. TIER TARGETING: Modular = 4-8 items, prefer lower-priced items. Hybrid = 6-12 items, mid-range. Custom = 8-15+ items, include premium products.
+6. IMAGE ACCURACY: The booth image will render ONLY the products you select — nothing else. Choose a complete, visually impressive setup.
+${customerProfile?.display_products ? '7. Include product display areas.' : ''}
+${customerProfile?.needs_demo_space ? '8. Include demonstration/presentation space.' : ''}
+${customerProfile?.needs_conference_area ? '9. Include a conference/meeting area.' : ''}
 
-For each tier (Modular, Hybrid, and Custom), create a curated booth EXPERIENCE that:
-1. Tells a story and creates a memorable journey
-2. Matches the brand identity AND customer requirements
-3. Addresses the customer's stated objectives (${customerProfile?.objectives.join(', ') || 'general lead generation'})
-4. Incorporates the desired look (${customerProfile?.desired_look.join(', ') || 'modern'}) and feel (${customerProfile?.desired_feel.join(', ') || 'open'})
-5. Selects products ONLY from the catalog above (use exact SKUs). Modular: 4-8 items, Hybrid: 6-12 items, Custom: 8-15+ items. More items = richer, more impressive booth. Fill the space!
-6. ${customerProfile?.display_products ? 'Includes product display areas' : ''}
-7. ${customerProfile?.needs_demo_space ? 'Includes demonstration/presentation space' : ''}
-8. ${customerProfile?.needs_conference_area ? 'Includes a conference/meeting area' : ''}
-9. Explains the visitor flow and key moments
-10. Total price is calculated by summing the actual base_price of selected products. Modular tier should target lower-priced items, Custom tier should include premium items.
-11. IMPORTANT: A great booth is NOT sparse. Every tier should include at minimum: a backwall, a counter or kiosk, lighting, and flooring. Hybrid and Custom tiers should also include banner stands, monitor stands, towers, or other accent pieces. The booth should look FULLY FURNISHED and impressive — not empty with just a backwall.
+For each design provide:
+- tier, design_name, experience_story, visitor_journey, key_moments
+- product_skus: array of exact SKUs
+- line_items: [{sku, name, quantity, unit_price (=catalog base_price), line_total}]
+- total_price: sum of all line_totals
+- design_rationale
+- spatial_layout: for each product, provide position {x,y,z} in feet (origin=booth center), rotation {x,y,z} degrees, scale (usually 1.0), and branding {apply_brand_color, color_zone, color, apply_logo, logo_zone}
 
-CRITICAL - 3D SPATIAL LAYOUT:
-For each product selected, provide a spatial_layout array with exact 3D positioning:
-- position: {x, y, z} coordinates in feet (origin at booth center, x=-width/2 to width/2, z=-depth/2 to depth/2, y=0 for floor)
-- rotation: {x, y, z} in degrees (y-axis most important for orientation)
-- scale: size multiplier (usually 1.0)
-- branding: specify which products get brand colors/logo applied
+BRANDING:
+- Primary color ${brandAnalysis.primary_color} on 2-3 key pieces
+- Secondary color ${brandAnalysis.secondary_color} on 1-2 accents
+- Logo on main backwall and reception counter (required)
+- Logo: ${brandAnalysis.logo_description || 'Company logo'}
+- Only brand products marked customizable=true
 
-Apply branding strategically:
-- Use primary_color on 2-3 key structural pieces
-- Use secondary_color on 1-2 accent pieces  
-- CRITICAL: The company logo MUST be applied to at least 2 prominent surfaces (main backwall and reception counter). This is a REQUIRED element.
-- Logo description: ${brandAnalysis.logo_description || 'Company logo'}
-- Logo URL: ${brandAnalysis.logo_url || 'Not available'}
-- Only apply custom colors to products marked as customizable
-
-Arrange products logically for booth flow, leave pathways, create zones.
-
-Return JSON with 3 designs.`;
+Return JSON with exactly 3 designs.`;
 
       const designs = await base44.integrations.Core.InvokeLLM({
         prompt: designPrompt,
