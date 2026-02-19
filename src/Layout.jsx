@@ -492,13 +492,6 @@ export default function Layout({ children, currentPageName }) {
                     <span className="text-[10px] font-medium">Home</span>
                   </button>
                 </Link>
-                <Link to={createPageUrl('StudentHome')} className="flex-1">
-                  <button className="w-full h-full flex flex-col items-center justify-center gap-0.5 text-slate-500">
-                    <Plus className="w-5 h-5" />
-                    <span className="text-[10px] font-medium">Upload</span>
-                  </button>
-                </Link>
-                <div className="flex-1" />
                 <Link to={createPageUrl('Settings')} className="flex-1">
                   <button
                     className={`w-full h-full flex flex-col items-center justify-center gap-0.5 ${
