@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { motion } from 'framer-motion';
-import { Package, Calendar, MapPin, Loader2, ShoppingCart } from 'lucide-react';
-import { format } from 'date-fns';
+import { Loader2 } from 'lucide-react';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import OrderHeader from '@/components/order/OrderHeader';
+import OrderFields from '@/components/order/OrderFields';
+import DesignSection from '@/components/order/DesignSection';
+import LineItemsSection from '@/components/order/LineItemsSection';
+import RelatedTab from '@/components/order/RelatedTab';
 
 export default function OrderDetail() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const orderId = searchParams.get('id') || searchParams.get('orderId');
-  
+
   const [order, setOrder] = useState(null);
   const [boothDesign, setBoothDesign] = useState(null);
   const [products, setProducts] = useState([]);
@@ -28,74 +29,43 @@ export default function OrderDetail() {
   }, [orderId]);
 
   const loadOrderDetails = async () => {
-    try {
-      // Load the order
-      const orderData = await base44.entities.Order.filter({ id: orderId });
-      if (!orderData || orderData.length === 0) {
-        navigate(-1);
-        return;
-      }
-      const currentOrder = orderData[0];
-      setOrder(currentOrder);
-
-      // Load the booth design
-      if (currentOrder.selected_booth_design_id) {
-        const designData = await base44.entities.BoothDesign.filter({ 
-          id: currentOrder.selected_booth_design_id 
-        });
-        if (designData && designData.length > 0) {
-          const design = designData[0];
-          setBoothDesign(design);
-
-          // Load products based on SKUs
-          if (design.product_skus && design.product_skus.length > 0) {
-            const allProducts = await base44.entities.Product.list();
-            const matchedProducts = allProducts.filter(p => 
-              design.product_skus.includes(p.sku)
-            );
-            setProducts(matchedProducts);
-          }
-        }
-      }
-
-      // Load line items for this order
-      const orderLineItems = await base44.entities.LineItem.filter(
-        { order_id: orderId },
-        'created_date'
-      );
-      setLineItems(orderLineItems);
-    } catch (e) {
-      console.error('Error loading order details:', e);
+    setIsLoading(true);
+    const orderData = await base44.entities.Order.filter({ id: orderId });
+    if (!orderData || orderData.length === 0) {
       navigate(-1);
+      return;
     }
+    const currentOrder = orderData[0];
+    setOrder(currentOrder);
+
+    // Load booth design + line items in parallel
+    const promises = [];
+
+    if (currentOrder.selected_booth_design_id) {
+      promises.push(
+        base44.entities.BoothDesign.filter({ id: currentOrder.selected_booth_design_id }).then(async (designData) => {
+          if (designData?.length > 0) {
+            const design = designData[0];
+            setBoothDesign(design);
+            if (design.product_skus?.length > 0) {
+              const allProducts = await base44.entities.Product.list();
+              setProducts(allProducts.filter(p => design.product_skus.includes(p.sku)));
+            }
+          }
+        })
+      );
+    }
+
+    promises.push(
+      base44.entities.LineItem.filter({ order_id: orderId }, 'created_date').then(setLineItems)
+    );
+
+    await Promise.all(promises);
     setIsLoading(false);
   };
 
-  const getStatusBadgeStyle = (status) => {
-    switch (status) {
-      case 'Pending':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'Contacted':
-        return 'bg-blue-100 text-blue-800';
-      case 'Quoted':
-        return 'bg-purple-100 text-purple-800';
-      case 'Confirmed':
-        return 'bg-green-100 text-green-800';
-      case 'Cancelled':
-        return 'bg-red-100 text-red-800';
-      default:
-        return 'bg-slate-100 text-slate-800';
-    }
-  };
-
-  const formatPrice = (price) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(price);
-  };
+  const formatPrice = (price) =>
+    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(price || 0);
 
   if (isLoading) {
     return (
@@ -105,283 +75,41 @@ export default function OrderDetail() {
     );
   }
 
-  if (!order) {
-    return null;
-  }
+  if (!order) return null;
 
   return (
-    <div className="min-h-[calc(100vh-56px)] md:min-h-[calc(100vh-64px)] bg-slate-50 p-4 md:p-10 pb-24 md:pb-10">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
-        >
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-              <div className="flex items-center gap-2 md:gap-3 mb-2 flex-wrap">
-                <h1 className="text-2xl md:text-3xl font-bold text-[#e2231a]">
-                  Order Details
-                </h1>
-                <Badge className={`${getStatusBadgeStyle(order.status)} font-medium`}>
-                  {order.status}
-                </Badge>
+    <div className="min-h-[calc(100vh-56px)] md:min-h-[calc(100vh-64px)] bg-slate-50 pb-24 md:pb-10">
+      <div className="max-w-6xl mx-auto px-4 md:px-8 pt-5 md:pt-8">
+        <OrderHeader order={order} formatPrice={formatPrice} />
+
+        <Tabs defaultValue="details" className="w-full">
+          <TabsList className="mb-4 bg-white border shadow-sm">
+            <TabsTrigger value="details" className="data-[state=active]:bg-[#e2231a] data-[state=active]:text-white">
+              Details
+            </TabsTrigger>
+            <TabsTrigger value="related" className="data-[state=active]:bg-[#e2231a] data-[state=active]:text-white">
+              Related
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="details">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {/* Left column */}
+              <div className="space-y-4">
+                <OrderFields order={order} formatPrice={formatPrice} />
               </div>
-              <p className="text-slate-500 font-mono text-sm">
-                {order.reference_number}
-              </p>
-            </div>
-            <div className="text-left md:text-right mt-2 md:mt-0">
-              <div className="text-2xl md:text-3xl font-bold text-[#e2231a]">
-                {formatPrice(order.quoted_price)}
-              </div>
-              <div className="text-slate-400 text-sm">
-                {format(new Date(order.created_date), 'MMMM d, yyyy')}
+              {/* Right column */}
+              <div className="space-y-4">
+                <DesignSection boothDesign={boothDesign} />
+                <LineItemsSection lineItems={lineItems} products={products} order={order} formatPrice={formatPrice} />
               </div>
             </div>
-          </div>
-        </motion.div>
+          </TabsContent>
 
-        {/* Order Info */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="mb-6"
-        >
-          <Card className="border-0 shadow-md">
-            <CardContent className="p-4 md:p-6">
-              <div className="flex flex-wrap gap-4 md:gap-6">
-                <div className="flex items-center gap-2">
-                  <Package className="w-5 h-5 text-slate-400" />
-                  <div>
-                    <div className="text-sm text-slate-500">Booth Size</div>
-                    <div className="font-semibold text-slate-800">{order.booth_size}</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Calendar className="w-5 h-5 text-slate-400" />
-                  <div>
-                    <div className="text-sm text-slate-500">Show Date</div>
-                    <div className="font-semibold text-slate-800">{order.show_date}</div>
-                  </div>
-                </div>
-                {order.show_name && (
-                  <div className="flex items-center gap-2">
-                    <MapPin className="w-5 h-5 text-slate-400" />
-                    <div>
-                      <div className="text-sm text-slate-500">Show Name</div>
-                      <div className="font-semibold text-slate-800">{order.show_name}</div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Booth Design */}
-        {boothDesign && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="mb-6"
-          >
-            <Card className="border-0 shadow-md">
-              <CardHeader>
-                <CardTitle className="text-xl text-slate-800">
-                  {boothDesign.design_name}
-                </CardTitle>
-                <Badge className="bg-slate-100 text-slate-700 w-fit">
-                  {boothDesign.tier} Experience
-                </Badge>
-              </CardHeader>
-              <CardContent>
-                {boothDesign.design_image_url && (
-                  <div className="aspect-[16/9] bg-slate-100 rounded-lg overflow-hidden mb-4">
-                    <img
-                      src={boothDesign.design_image_url}
-                      alt={boothDesign.design_name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                )}
-                {boothDesign.experience_story && (
-                  <div className="mb-4">
-                    <h4 className="font-semibold text-slate-700 mb-2">The Experience</h4>
-                    <p className="text-slate-600 leading-relaxed">
-                      {boothDesign.experience_story}
-                    </p>
-                  </div>
-                )}
-                {boothDesign.design_rationale && (
-                  <div>
-                    <h4 className="font-semibold text-slate-700 mb-2">Design Rationale</h4>
-                    <p className="text-slate-600 leading-relaxed">
-                      {boothDesign.design_rationale}
-                    </p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </motion.div>
-        )}
-
-        {/* Line Items */}
-        {lineItems.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25 }}
-            className="mb-6"
-          >
-            <Card className="border-0 shadow-md">
-              <CardHeader>
-                <div className="flex items-center gap-2">
-                  <ShoppingCart className="w-5 h-5 text-[#e2231a]" />
-                  <CardTitle className="text-xl text-slate-800">
-                    Quote Line Items
-                  </CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {lineItems.map((item) => (
-                    <div 
-                      key={item.id}
-                      className="flex items-start gap-4 p-4 bg-slate-50 rounded-lg"
-                    >
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-slate-800 mb-1">
-                          {item.product_name}
-                        </h4>
-                        {item.description && (
-                          <p className="text-sm text-slate-500 mb-2 line-clamp-2">
-                            {item.description}
-                          </p>
-                        )}
-                        <div className="flex flex-wrap gap-2">
-                          {item.category && (
-                            <Badge variant="outline" className="text-xs">{item.category}</Badge>
-                          )}
-                          {item.sku && (
-                            <span className="text-xs text-slate-400 font-mono">{item.sku}</span>
-                          )}
-                        </div>
-                      </div>
-                      <div className="text-right flex-shrink-0">
-                        <div className="text-lg font-bold text-slate-900">
-                          {formatPrice(item.total_price)}
-                        </div>
-                        {item.quantity > 1 && (
-                          <p className="text-xs text-slate-500">
-                            {item.quantity} × {formatPrice(item.unit_price)}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Total */}
-                <div className="mt-6 pt-6 border-t-2 border-slate-200">
-                  <div className="flex items-center justify-between">
-                    <div className="text-lg font-semibold text-slate-800">
-                      Quote Total
-                    </div>
-                    <div className="text-3xl font-bold text-[#e2231a]">
-                      {formatPrice(order.quoted_price)}
-                    </div>
-                  </div>
-                  {order.discount_amount > 0 && (
-                    <div className="flex items-center justify-between mt-2 text-sm">
-                      <span className="text-green-600">Discount Applied</span>
-                      <span className="text-green-600 font-medium">-{formatPrice(order.discount_amount)}</span>
-                    </div>
-                  )}
-                  {order.final_price && order.final_price !== order.quoted_price && (
-                    <div className="flex items-center justify-between mt-2">
-                      <span className="text-lg font-semibold text-slate-800">Final Price</span>
-                      <span className="text-2xl font-bold text-green-700">{formatPrice(order.final_price)}</span>
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        )}
-
-        {/* Itemized Products (from booth design) */}
-        {products.length > 0 && lineItems.length === 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            <Card className="border-0 shadow-md">
-              <CardHeader>
-                <CardTitle className="text-xl text-slate-800">
-                  Itemized Components
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {products.map((product, index) => (
-                    <div 
-                      key={product.id}
-                      className="flex items-center gap-4 p-4 bg-slate-50 rounded-lg"
-                    >
-                      {product.image_url && (
-                        <div className="w-24 h-24 bg-white rounded-lg overflow-hidden flex-shrink-0 border border-slate-200">
-                          <img
-                            src={product.image_url}
-                            alt={product.name}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      )}
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-slate-800 mb-1">
-                          {product.name}
-                        </h4>
-                        <p className="text-sm text-slate-500 mb-2">
-                          {product.category} • {product.product_type}
-                        </p>
-                        {product.description && (
-                          <p className="text-sm text-slate-600 line-clamp-2">
-                            {product.description}
-                          </p>
-                        )}
-                      </div>
-                      <div className="text-right">
-                        <div className="text-lg font-bold text-[#e2231a]">
-                          {formatPrice(product.base_price)}
-                        </div>
-                        <div className="text-xs text-slate-400">
-                          {product.price_tier}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Total */}
-                <div className="mt-6 pt-6 border-t border-slate-200">
-                  <div className="flex items-center justify-between">
-                    <div className="text-lg font-semibold text-slate-800">
-                      Total Experience
-                    </div>
-                    <div className="text-3xl font-bold text-[#e2231a]">
-                      {formatPrice(order.quoted_price)}
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        )}
+          <TabsContent value="related">
+            <RelatedTab order={order} formatPrice={formatPrice} />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
