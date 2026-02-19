@@ -460,6 +460,7 @@ ${CAMERA_STYLE}`;
 
       sessionStorage.setItem('boothDesigns', JSON.stringify(savedDesigns));
       sessionStorage.setItem('brandIdentity', JSON.stringify(brandAnalysis));
+      sessionStorage.setItem('companyResearch', JSON.stringify(companyResearch));
       navigate(createPageUrl('Results'));
 
     } catch (error) {
