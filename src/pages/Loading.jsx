@@ -6,6 +6,168 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Sparkles, CheckCircle, Palette, Layers, Lightbulb, ShieldCheck } from 'lucide-react';
 import { enforceAllDesigns } from '../components/utils/boothRulesEngine';
 
+// ═══════════════════════════════════════════════════════════════
+// STATIC PROMPT FRAGMENTS (never change per request)
+// ═══════════════════════════════════════════════════════════════
+
+const BRAND_EXTRACTION_PROMPT = `Analyze this company website. Extract brand identity and find their logo image URL from <img>, <link rel="icon">, <meta property="og:image">, or linked SVGs. Return a direct, absolute image URL.
+
+Extract 4 distinct brand colors. primary_color must match the dominant logo color. logo_url must be a real, working URL from the site.`;
+
+const BRAND_SCHEMA = {
+  type: "object",
+  properties: {
+    logo_url: { type: "string" },
+    logo_description: { type: "string" },
+    company_name: { type: "string" },
+    primary_color: { type: "string" },
+    secondary_color: { type: "string" },
+    accent_color_1: { type: "string" },
+    accent_color_2: { type: "string" },
+    typography_primary: { type: "string" },
+    typography_secondary: { type: "string" },
+    brand_personality: { type: "string" },
+    industry: { type: "string" },
+    target_audience: { type: "string" },
+    design_style: { type: "array", items: { type: "string" } },
+    brand_essence: { type: "string" }
+  }
+};
+
+const PLACEMENT_GUIDE = `PLACEMENT: Backwall→flush rear. Counter→front-center or right, angled to aisle. Banners→flanking L/R entrance. Monitor/iPad→beside counter or backwall. Lighting→clamped on frame or truss. Flooring→full footprint. Towers→corners. Lit rack→beside counter.`;
+
+const CAMERA_STYLE = `CAMERA: 3/4 elevated angle from front-left aisle. Photorealistic architectural visualization. Clean, well-lit, inviting.`;
+
+const DESIGN_SCHEMA = {
+  type: "object",
+  properties: {
+    designs: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          tier: { type: "string" },
+          design_name: { type: "string" },
+          experience_story: { type: "string" },
+          visitor_journey: { type: "string" },
+          key_moments: { type: "array", items: { type: "string" } },
+          product_skus: { type: "array", items: { type: "string" } },
+          line_items: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                sku: { type: "string" },
+                name: { type: "string" },
+                quantity: { type: "number" },
+                unit_price: { type: "number" },
+                line_total: { type: "number" }
+              }
+            }
+          },
+          design_rationale: { type: "string" },
+          total_price: { type: "number" },
+          spatial_layout: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                product_sku: { type: "string" },
+                position: {
+                  type: "object",
+                  properties: { x: { type: "number" }, y: { type: "number" }, z: { type: "number" } }
+                },
+                rotation: {
+                  type: "object",
+                  properties: { x: { type: "number" }, y: { type: "number" }, z: { type: "number" } }
+                },
+                scale: { type: "number" },
+                branding: {
+                  type: "object",
+                  properties: {
+                    apply_brand_color: { type: "boolean" },
+                    color_zone: { type: "string" },
+                    color: { type: "string" },
+                    apply_logo: { type: "boolean" },
+                    logo_zone: { type: "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════════════════
+
+function slimCatalog(products) {
+  return products.map(p => {
+    const d = p.dimensions || {};
+    return {
+      sku: p.manufacturer_sku || p.sku,
+      name: p.display_name || p.name,
+      category: p.category_name || p.category,
+      geometry: p.geometry_type,
+      visual: p.visual_description || p.description || '',
+      price_tier: p.price_tier,
+      price: p.base_price,
+      rental_price: p.rental_price || null,
+      is_rental: p.is_rental || false,
+      dims: d.width ? `${d.width}W×${d.height}H×${d.depth}D ft` : 'standard',
+      w: d.width || null,
+      h: d.height || null,
+      d: d.depth || null,
+      style: p.design_style,
+      customizable: p.customizable,
+      branding_surfaces: p.branding_surfaces,
+      thumb: p.thumbnail_url || p.image_url || null
+    };
+  });
+}
+
+function formatProfile(cp) {
+  if (!cp) return 'No specific requirements provided.';
+  const lines = [
+    `Objectives: ${cp.objectives.join(', ')}`,
+    `Display products: ${cp.display_products ? 'Yes' : 'No'}`,
+    `Demo space: ${cp.needs_demo_space ? 'Required' : 'No'}`,
+    `Conference area: ${cp.needs_conference_area ? 'Required' : 'No'}`,
+    `Look: ${cp.desired_look.join(', ')}`,
+    `Feel: ${cp.desired_feel.join(', ')}`,
+    `Logistics: ${cp.needs_logistics ? 'Required' : 'No'}`
+  ];
+  if (cp.additional_notes) lines.push(`Notes: ${cp.additional_notes}`);
+  return lines.join(' | ');
+}
+
+function getBoothDims(boothSize) {
+  const map = { '10x10': [10, 10], '10x20': [20, 10], '20x20': [20, 20] };
+  const [w, d] = map[boothSize] || [10, 10];
+  return { width: w, depth: d };
+}
+
+function collectReferenceImages(brandAnalysis, products) {
+  const urls = [];
+  const logoUrl = brandAnalysis.logo_url || '';
+  if (logoUrl && /\.(png|jpg|jpeg|gif|webp|bmp|tiff|svg)(\?|$)/i.test(logoUrl)) {
+    urls.push(logoUrl);
+  }
+  const thumbs = products
+    .map(p => p.thumbnail_url || p.image_url)
+    .filter(url => url && /\.(png|jpg|jpeg|gif|webp|bmp|tiff|svg)(\?|$)/i.test(url));
+  urls.push(...[...new Set(thumbs)].slice(0, 4));
+  return urls;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// LOADING STEPS
+// ═══════════════════════════════════════════════════════════════
+
 const loadingSteps = [
   { icon: Search, text: "Scanning your website..." },
   { icon: Palette, text: "Extracting your logo & brand colors..." },
@@ -16,10 +178,13 @@ const loadingSteps = [
   { icon: CheckCircle, text: "Finalizing your booth designs..." },
 ];
 
+// ═══════════════════════════════════════════════════════════════
+// COMPONENT
+// ═══════════════════════════════════════════════════════════════
+
 export default function Loading() {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
-  const [products, setProducts] = useState([]);
 
   useEffect(() => {
     const quoteData = sessionStorage.getItem('quoteRequest');
@@ -29,15 +194,12 @@ export default function Loading() {
     }
 
     const parsed = JSON.parse(quoteData);
-    const { boothSize } = parsed;
-    
-    // Track analytics
     base44.analytics.track({
       eventName: "quote_started",
-      properties: { booth_size: boothSize }
+      properties: { booth_size: parsed.boothSize }
     });
-    
-    loadProducts(boothSize);
+
+    generateDesigns(parsed);
   }, []);
 
   useEffect(() => {
@@ -47,88 +209,74 @@ export default function Loading() {
     return () => clearInterval(interval);
   }, []);
 
-  const loadProducts = async (boothSize) => {
-    const { websiteUrl, dealerId, customerProfile } = JSON.parse(sessionStorage.getItem('quoteRequest'));
-    
+  // ── MAIN GENERATION FUNCTION ──
+
+  const generateDesigns = async (quoteData) => {
+    const { websiteUrl, boothSize, dealerId, customerProfile } = quoteData;
+    const dims = getBoothDims(boothSize);
+
     try {
-      // Simulate minimum loading time for UX
-      const minLoadTime = new Promise(resolve => setTimeout(resolve, 5000));
-      
-      // Step 1: Run brand analysis AND product fetching in parallel
+      const minLoadTime = new Promise(r => setTimeout(r, 5000));
+
+      // ── STEP 1: Brand analysis + product fetch (parallel) ──
       const brandAnalysisPromise = base44.integrations.Core.InvokeLLM({
-        prompt: `Analyze this website: ${websiteUrl}
-
-Do TWO things in one pass:
-
-1. FIND THE LOGO: Look for the company's main logo image URL in <img> tags (header/nav), <link rel="icon">, <meta property="og:image">, or linked SVG files. Return the DIRECT, ABSOLUTE URL to the logo image file.
-
-2. EXTRACT BRAND IDENTITY: Analyze the full website and extract:
-- logo_url: the direct URL to the logo image you found
-- logo_description: detailed description of what the logo looks like (colors, shapes, text, style) so it can be recreated in booth renderings
-- company_name: the company name
-- primary_color: hex color (main brand color from logo and website)
-- secondary_color: hex color (secondary brand color)
-- accent_color_1: hex color (third brand/accent color)
-- accent_color_2: hex color (fourth brand/accent color)
-- typography_primary: main font family name
-- typography_secondary: secondary font family
-- brand_personality: 2-3 words describing the brand feel
-- industry: industry/sector
-- target_audience: who they serve
-- design_style: array of style keywords from [Modern, Industrial, Minimalist, Luxury, Tech, Organic, Bold, Classic, Creative]
-- brand_essence: one sentence capturing their brand essence
-
-IMPORTANT: Extract 4 distinct colors. The primary_color should match the dominant color in their logo. The logo_url MUST be a real, working image URL from their website.`,
+        prompt: `${BRAND_EXTRACTION_PROMPT}\n\nWebsite: ${websiteUrl}`,
         add_context_from_internet: true,
-        response_json_schema: {
-          type: "object",
-          properties: {
-            logo_url: { type: "string" },
-            logo_description: { type: "string" },
-            company_name: { type: "string" },
-            primary_color: { type: "string" },
-            secondary_color: { type: "string" },
-            accent_color_1: { type: "string" },
-            accent_color_2: { type: "string" },
-            typography_primary: { type: "string" },
-            typography_secondary: { type: "string" },
-            brand_personality: { type: "string" },
-            industry: { type: "string" },
-            target_audience: { type: "string" },
-            design_style: { type: "array", items: { type: "string" } },
-            brand_essence: { type: "string" }
-          }
-        }
+        response_json_schema: BRAND_SCHEMA
       });
 
-      // Fetch products in parallel with brand analysis
       const productsPromise = (async () => {
-        let products = [];
         const allVariants = await base44.entities.ProductVariant.filter({ is_active: true });
-        if (allVariants.length > 0) {
-          products = allVariants.filter(p => p.booth_sizes && p.booth_sizes.includes(boothSize));
-        }
+        let products = allVariants.filter(p => p.booth_sizes?.includes(boothSize));
         if (products.length === 0) {
           const allProducts = await base44.entities.Product.filter({ is_active: true });
-          products = allProducts.filter(p => p.booth_sizes && p.booth_sizes.includes(boothSize));
+          products = allProducts.filter(p => p.booth_sizes?.includes(boothSize));
         }
         return products;
       })();
 
-      // Wait for both to complete
       const [brandAnalysis, compatibleProducts] = await Promise.all([brandAnalysisPromise, productsPromise]);
-      const scrapedCompanyName = brandAnalysis.company_name || '';
+      const catalog = slimCatalog(compatibleProducts);
+      const profileStr = formatProfile(customerProfile);
 
-      // Step 3: Use AI to curate 3 booth designs with spatial layouts
-      const boothDimensions = boothSize === '10x10' ? { width: 10, depth: 10 } : boothSize === '10x20' ? { width: 20, depth: 10 } : { width: 20, depth: 20 };
-      
-      // Track analytics
       base44.analytics.track({
         eventName: "design_generated",
         properties: { booth_size: boothSize, website_url: websiteUrl }
       });
 
-      // Build a price lookup from the catalog so we can reconcile after LLM responds
+      // ── STEP 2: AI booth design curation ──
+      const designPrompt = `You are an expert trade show booth designer. Create 3 booth designs (Modular, Hybrid, Custom tiers) for a ${boothSize} booth (${dims.width}ft × ${dims.depth}ft).
+
+BRAND: ${JSON.stringify({ name: brandAnalysis.company_name, primary: brandAnalysis.primary_color, secondary: brandAnalysis.secondary_color, accent1: brandAnalysis.accent_color_1, accent2: brandAnalysis.accent_color_2, personality: brandAnalysis.brand_personality, logo: brandAnalysis.logo_description })}
+
+CUSTOMER: ${profileStr}
+
+CONSTRAINT: Use ONLY products from the catalog below. Every product_sku must exactly match a catalog "sku". Any fabricated SKU invalidates the output.
+
+CATALOG:
+${JSON.stringify(catalog, null, 1)}
+
+REQUIREMENTS PER TIER:
+- Modular: 4-8 items, lower-priced. Hybrid: 6-12 items, mixed. Custom: 8-15+ items, premium.
+- Every tier minimum: backwall + counter/kiosk + lighting + flooring. Hybrid/Custom add banners, towers, monitor stands, accents.
+- total_price = exact sum of selected products' base_price (or rental_price for rentals). Include line_items with sku, name, quantity, unit_price, line_total.
+- Booth must look FULLY FURNISHED, not sparse.
+
+SPATIAL FIT: Before selecting, check product dims. Sum of widths along back wall must be ≤ ${dims.width}ft. Items must not overlap. Leave ≥3ft walkway at front.
+
+SPATIAL LAYOUT: For each product provide position {x,y,z} in feet (origin=booth center, x=[-${dims.width / 2},${dims.width / 2}], z=[-${dims.depth / 2},${dims.depth / 2}], y=0=floor), rotation {x,y,z} degrees, scale (usually 1.0).
+
+BRANDING: primary_color on 2-3 structural pieces. secondary_color on 1-2 accents. Logo MUST appear on main backwall + counter (minimum). Only apply colors to customizable products.
+
+FOR EACH DESIGN: include tier, design_name, experience_story, visitor_journey, key_moments[], product_skus[], line_items[], design_rationale, total_price, spatial_layout[].`;
+
+      const designs = await base44.integrations.Core.InvokeLLM({
+        prompt: designPrompt,
+        response_json_schema: DESIGN_SCHEMA
+      });
+
+      // ── STEP 3: Validate SKUs and FORCE correct catalog prices ──
+      const validSkus = new Set(compatibleProducts.map(p => p.manufacturer_sku || p.sku));
       const catalogPriceLookup = {};
       compatibleProducts.forEach(p => {
         const sku = p.manufacturer_sku || p.sku;
@@ -136,163 +284,11 @@ IMPORTANT: Extract 4 distinct colors. The primary_color should match the dominan
           base_price: p.base_price,
           rental_price: p.rental_price || null,
           is_rental: p.is_rental || false,
-          name: p.display_name || p.name,
-          width: p.dimensions?.width || null,
-          depth: p.dimensions?.depth || null,
-          geometry_type: p.geometry_type
+          name: p.display_name || p.name
         };
       });
 
-      const designPrompt = `You are an expert trade show booth designer. Create 3 unique booth experience designs (Modular, Hybrid, and Custom tiers) for a ${boothSize} booth (${boothDimensions.width}ft wide × ${boothDimensions.depth}ft deep).
-
-BOOTH PHYSICAL CONSTRAINTS:
-- Total floor area: ${boothDimensions.width * boothDimensions.depth} sq ft
-- The back wall runs along the full ${boothDimensions.width}ft width
-- Depth from back wall to aisle is ${boothDimensions.depth}ft
-- Open front facing the aisle — leave at least 3ft clear walkway at front
-- Products must not overlap; sum of product widths along any wall cannot exceed that wall's length
-- A product with width_ft=10 takes up 10ft of wall space; two 5ft items fill that same wall
-
-Brand Identity:
-${JSON.stringify(brandAnalysis, null, 2)}
-
-Customer Requirements:
-${customerProfile ? `
-- Objectives: ${customerProfile.objectives.join(', ')}
-- Display Products: ${customerProfile.display_products ? 'Yes' : 'No'}
-- Demo/Presentation Space: ${customerProfile.needs_demo_space ? 'Required' : 'Not needed'}
-- Conference Area: ${customerProfile.needs_conference_area ? 'Required' : 'Not needed'}
-- Desired Look: ${customerProfile.desired_look.join(', ')}
-- Desired Feel: ${customerProfile.desired_feel.join(', ')}
-- Logistics Support: ${customerProfile.needs_logistics ? 'Required' : 'Not needed'}
-${customerProfile.additional_notes ? `- Additional Notes: ${customerProfile.additional_notes}` : ''}
-` : 'No specific customer requirements provided.'}
-
-PRODUCT CATALOG — ONLY SELECT FROM THIS LIST:
-${JSON.stringify(compatibleProducts.map(p => {
-  const dims = p.dimensions || {};
-  return {
-    sku: p.manufacturer_sku || p.sku,
-    name: p.display_name || p.name,
-    category: p.category_name || p.category,
-    geometry_type: p.geometry_type,
-    price_tier: p.price_tier,
-    base_price: p.base_price,
-    width_ft: dims.width || null,
-    height_ft: dims.height || null,
-    depth_ft: dims.depth || null,
-    design_style: p.design_style,
-    customizable: p.customizable,
-    branding_surfaces: p.branding_surfaces
-  };
-}), null, 2)}
-
-MANDATORY SELECTION RULES:
-1. ONLY use SKUs from the catalog above — never invent product names or SKUs.
-2. SPATIAL FIT: Before selecting a product, check its width_ft and depth_ft. Add up all product widths placed against the back wall — the total must be ≤ ${boothDimensions.width}ft. Items placed side-by-side on any wall must fit within that wall's length.
-3. PRICING: For each line_item, set unit_price to EXACTLY the base_price shown in the catalog. line_total = unit_price × quantity. total_price = sum of all line_totals. Do NOT round, adjust, or estimate prices — copy them from the catalog.
-4. COMPLETENESS: Every tier must include at minimum a backwall, a counter or kiosk, lighting, and flooring. Hybrid and Custom tiers add banner stands, monitor stands, towers, or accent pieces.
-5. TIER TARGETING: Modular = 4-8 items, prefer lower-priced items. Hybrid = 6-12 items, mid-range. Custom = 8-15+ items, include premium products.
-6. IMAGE ACCURACY: The booth image will render ONLY the products you select — nothing else. Choose a complete, visually impressive setup.
-${customerProfile?.display_products ? '7. Include product display areas.' : ''}
-${customerProfile?.needs_demo_space ? '8. Include demonstration/presentation space.' : ''}
-${customerProfile?.needs_conference_area ? '9. Include a conference/meeting area.' : ''}
-
-For each design provide:
-- tier, design_name, experience_story, visitor_journey, key_moments
-- product_skus: array of exact SKUs
-- line_items: [{sku, name, quantity, unit_price (=catalog base_price), line_total}]
-- total_price: sum of all line_totals
-- design_rationale
-- spatial_layout: for each product, provide position {x,y,z} in feet (origin=booth center), rotation {x,y,z} degrees, scale (usually 1.0), and branding {apply_brand_color, color_zone, color, apply_logo, logo_zone}
-
-BRANDING:
-- Primary color ${brandAnalysis.primary_color} on 2-3 key pieces
-- Secondary color ${brandAnalysis.secondary_color} on 1-2 accents
-- Logo on main backwall and reception counter (required)
-- Logo: ${brandAnalysis.logo_description || 'Company logo'}
-- Only brand products marked customizable=true
-
-Return JSON with exactly 3 designs.`;
-
-      const designs = await base44.integrations.Core.InvokeLLM({
-        prompt: designPrompt,
-        response_json_schema: {
-          type: "object",
-          properties: {
-            designs: {
-              type: "array",
-              items: {
-                type: "object",
-                properties: {
-                  tier: { type: "string" },
-                  design_name: { type: "string" },
-                  experience_story: { type: "string" },
-                  visitor_journey: { type: "string" },
-                  key_moments: { type: "array", items: { type: "string" } },
-                  product_skus: { type: "array", items: { type: "string" } },
-                  line_items: {
-                    type: "array",
-                    items: {
-                      type: "object",
-                      properties: {
-                        sku: { type: "string" },
-                        name: { type: "string" },
-                        quantity: { type: "number" },
-                        unit_price: { type: "number" },
-                        line_total: { type: "number" }
-                      }
-                    }
-                  },
-                  design_rationale: { type: "string" },
-                  total_price: { type: "number" },
-                  spatial_layout: {
-                    type: "array",
-                    items: {
-                      type: "object",
-                      properties: {
-                        product_sku: { type: "string" },
-                        position: {
-                          type: "object",
-                          properties: {
-                            x: { type: "number" },
-                            y: { type: "number" },
-                            z: { type: "number" }
-                          }
-                        },
-                        rotation: {
-                          type: "object",
-                          properties: {
-                            x: { type: "number" },
-                            y: { type: "number" },
-                            z: { type: "number" }
-                          }
-                        },
-                        scale: { type: "number" },
-                        branding: {
-                          type: "object",
-                          properties: {
-                            apply_brand_color: { type: "boolean" },
-                            color_zone: { type: "string" },
-                            color: { type: "string" },
-                            apply_logo: { type: "boolean" },
-                            logo_zone: { type: "string" }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      });
-
-      // ── STEP 3: Validate SKUs and FORCE correct catalog prices ──
-      const validSkus = new Set(compatibleProducts.map(p => p.manufacturer_sku || p.sku));
       for (const design of designs.designs) {
-        // Remove any hallucinated SKUs
         design.product_skus = design.product_skus.filter(sku => validSkus.has(sku));
         if (design.line_items) {
           design.line_items = design.line_items.filter(li => validSkus.has(li.sku));
@@ -301,15 +297,13 @@ Return JSON with exactly 3 designs.`;
         let recalcTotal = 0;
         if (design.line_items) {
           design.line_items = design.line_items.map(li => {
-            const catalogEntry = catalogPriceLookup[li.sku];
-            if (catalogEntry) {
-              const correctPrice = catalogEntry.is_rental && catalogEntry.rental_price
-                ? catalogEntry.rental_price
-                : catalogEntry.base_price;
+            const entry = catalogPriceLookup[li.sku];
+            if (entry) {
+              const correctPrice = entry.is_rental && entry.rental_price ? entry.rental_price : entry.base_price;
               const qty = li.quantity || 1;
               const lineTotal = correctPrice * qty;
               recalcTotal += lineTotal;
-              return { ...li, unit_price: correctPrice, line_total: lineTotal, name: catalogEntry.name };
+              return { ...li, unit_price: correctPrice, line_total: lineTotal, name: entry.name };
             }
             return li;
           });
@@ -317,12 +311,10 @@ Return JSON with exactly 3 designs.`;
         design.total_price = recalcTotal;
       }
 
-      // ── STEP 4: RULES ENGINE — enforce, correct, upgrade, auto-add ──
-      // Fetch services for auto-injection
+      // ── STEP 4: Rules engine ──
       const allServices = await base44.entities.Service.filter({ is_active: true });
-      const quoteDataParsed = JSON.parse(sessionStorage.getItem('quoteRequest'));
-      const profileForRules = quoteDataParsed?.customerProfile || customerProfile || null;
-      
+      const profileForRules = quoteData.customerProfile || customerProfile || null;
+
       const validatedDesigns = enforceAllDesigns(
         designs.designs,
         compatibleProducts,
@@ -330,89 +322,53 @@ Return JSON with exactly 3 designs.`;
         boothSize,
         profileForRules
       );
-      
-      // Log corrections for debugging
+
       validatedDesigns.forEach(d => {
-        if (d.rules_corrections.length > 0) {
-          console.log(`[Rules Engine] ${d.tier} corrections:`, d.rules_corrections);
+        if (d.rules_corrections?.length > 0) {
+          console.log(`[Rules] ${d.tier}:`, d.rules_corrections);
         }
       });
 
-      // Replace designs with validated versions
       designs.designs = validatedDesigns;
 
-      // ── STEP 5: Generate booth images from LOCKED product lists ──
-      // Include the logo as a reference image so it appears in the booth rendering
+      // ── STEP 5: Generate booth images (parallel) ──
       const imagePromises = designs.designs.map(async (design) => {
-        // Products are already validated and locked by the rules engine
-        const designProducts = compatibleProducts.filter(p => 
+        const designProducts = compatibleProducts.filter(p =>
           design.product_skus.includes(p.manufacturer_sku || p.sku)
         );
-        // line_items are already built by the rules engine (includes services)
 
-        // Build a detailed product manifest with exact dimensions and visual descriptions for the AI renderer
-        const productManifest = designProducts.map((p, idx) => {
-          const dims = p.dimensions || {};
-          const dimStr = dims.width ? `${dims.width}ft W × ${dims.height || '?'}ft H × ${dims.depth || '?'}ft D` : 'standard size';
-          const visualDesc = p.visual_description || p.description || '';
-          return `${idx + 1}. "${p.display_name || p.name}" — ${p.category_name || p.category}, ${dimStr}. VISUAL: ${visualDesc}`;
+        const manifest = designProducts.map((p, i) => {
+          const d = p.dimensions || {};
+          const dimStr = d.width ? `${d.width}W×${d.height}H×${d.depth}D ft` : 'standard';
+          return `${i + 1}. "${p.display_name || p.name}" — ${p.category_name || p.category}, ${dimStr}. ${p.visual_description || p.description || ''}`;
         }).join('\n');
-        
-        // Collect product thumbnail URLs as reference images for the AI image generator
-        const productThumbnails = designProducts
-          .map(p => p.thumbnail_url || p.image_url)
-          .filter(url => url && /\.(png|jpg|jpeg|gif|webp|bmp|tiff|svg)(\?|$)/i.test(url));
-        // Deduplicate
-        const uniqueThumbnails = [...new Set(productThumbnails)];
-        
-        const imagePrompt = `Photorealistic 3D rendering of a ${boothSize} trade show booth (${boothDimensions.width}ft wide × ${boothDimensions.depth}ft deep).
 
-CRITICAL — RENDER ONLY THESE ${designProducts.length} ITEMS AND NOTHING ELSE:
-${productManifest}
+        const imagePrompt = `Photorealistic 3D trade show booth rendering (Orbus Exhibit & Display catalog).
 
-DO NOT ADD anything not listed above. No extra monitors, screens, plants, chairs, tables, brochure racks, hanging signs, or decorations unless they appear in the numbered list. The booth contains EXACTLY ${designProducts.length} product items plus the booth shell (floor area, neighboring pipe-and-drape sides, open front to aisle).
+BOOTH: ${boothSize} (${dims.width}×${dims.depth}ft). Open front facing aisle. Grey carpet aisle, pipe-and-drape neighbors, convention center ceiling.
 
-BRAND IDENTITY:
-${brandAnalysis.logo_description ? `Logo: ${brandAnalysis.logo_description}` : `Company: ${scrapedCompanyName}`}
-Primary color: ${brandAnalysis.primary_color} — apply to backwall graphics and banner stands
-Secondary color: ${brandAnalysis.secondary_color} — apply to counter wraps and accents
-Show the company logo large and centered on the main backwall. Smaller logo on the counter front.
+BRAND: Logo="${brandAnalysis.logo_description || brandAnalysis.company_name}" | Primary=${brandAnalysis.primary_color} (backwall, banners) | Secondary=${brandAnalysis.secondary_color} (counter, accents). Logo large+centered on main backwall, smaller on counter.
 
-PLACEMENT:
-- Backwall(s): flush against back wall
-- Counter(s): front-center or right side, angled toward aisle
-- Banner stand(s): at left/right entrance edges
-- Monitor/iPad stand(s): beside counter or near backwall
-- Lighting: mounted on backwall frame
-- Flooring: covers entire booth footprint if listed
-- Tower(s): at booth corners
+RENDER EXACTLY these ${designProducts.length} products — NOTHING ELSE. No invented screens, plants, chairs, monitors, or items not listed:
+${manifest}
 
-CAMERA: 3/4 elevated angle from front-left aisle. Professional trade show photography style. Clean, well-lit, inviting.`;
+${PLACEMENT_GUIDE}
+
+${CAMERA_STYLE}`;
+
+        const refImages = collectReferenceImages(brandAnalysis, designProducts);
+        const params = { prompt: imagePrompt };
+        if (refImages.length > 0) params.existing_image_urls = refImages;
 
         try {
-          // Pass the logo URL + product thumbnails as reference images
-          const generateParams = { prompt: imagePrompt };
-          const referenceImages = [];
-          const logoUrl = brandAnalysis.logo_url || '';
-          if (logoUrl && /\.(png|jpg|jpeg|gif|webp|bmp|tiff|svg)(\?|$)/i.test(logoUrl)) {
-            referenceImages.push(logoUrl);
-          }
-          // Add up to 4 product thumbnails as visual references
-          referenceImages.push(...uniqueThumbnails.slice(0, 4));
-          if (referenceImages.length > 0) {
-            generateParams.existing_image_urls = referenceImages;
-          }
-          
-          const imageResult = await base44.integrations.Core.GenerateImage(generateParams);
-          return imageResult.url;
-        } catch (error) {
-          console.error('Image generation failed:', error);
-          // Retry without reference image
+          const result = await base44.integrations.Core.GenerateImage(params);
+          return result.url;
+        } catch (err) {
+          console.error('Image gen failed:', err);
           try {
-            const retryResult = await base44.integrations.Core.GenerateImage({ prompt: imagePrompt });
-            return retryResult.url;
-          } catch (retryError) {
-            console.error('Image retry also failed:', retryError);
+            return (await base44.integrations.Core.GenerateImage({ prompt: imagePrompt })).url;
+          } catch (retryErr) {
+            console.error('Image retry failed:', retryErr);
             return null;
           }
         }
@@ -420,9 +376,9 @@ CAMERA: 3/4 elevated angle from front-left aisle. Professional trade show photog
 
       const generatedImages = await Promise.all(imagePromises);
 
-      // Save booth designs to database (in parallel)
-      const savePromises = designs.designs.map((design, i) => {
-        return base44.entities.BoothDesign.create({
+      // ── STEP 6: Save to DB (parallel) ──
+      const savePromises = designs.designs.map((design, i) =>
+        base44.entities.BoothDesign.create({
           dealer_id: dealerId,
           booth_size: boothSize,
           tier: design.tier,
@@ -437,24 +393,25 @@ CAMERA: 3/4 elevated angle from front-left aisle. Professional trade show photog
           spatial_layout: design.spatial_layout,
           design_image_url: generatedImages[i],
           line_items: design.line_items
-        });
-      });
+        })
+      );
       const savedDesigns = await Promise.all(savePromises);
 
       await minLoadTime;
-      
-      // Store designs and navigate
+
       sessionStorage.setItem('boothDesigns', JSON.stringify(savedDesigns));
       sessionStorage.setItem('brandIdentity', JSON.stringify(brandAnalysis));
       navigate(createPageUrl('Results'));
-      
+
     } catch (error) {
       console.error('Design generation error:', error);
-      // Fallback — go to Results page with whatever we have, not back to QuoteRequest
-      // which would loop the user or show profile form again
       navigate(createPageUrl('Results'));
     }
   };
+
+  // ═══════════════════════════════════════════════════════════════
+  // RENDER
+  // ═══════════════════════════════════════════════════════════════
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#e2231a] via-[#b01b13] to-[#0F1D2E] flex flex-col items-center justify-center p-6">
@@ -463,23 +420,14 @@ CAMERA: 3/4 elevated angle from front-left aisle. Professional trade show photog
         animate={{ opacity: 1, scale: 1 }}
         className="text-center"
       >
-        {/* Animated Logo */}
         <motion.div
-          animate={{ 
-            scale: [1, 1.05, 1],
-            rotate: [0, 5, -5, 0]
-          }}
-          transition={{ 
-            duration: 2,
-            repeat: Infinity,
-            repeatType: "loop"
-          }}
+          animate={{ scale: [1, 1.05, 1], rotate: [0, 5, -5, 0] }}
+          transition={{ duration: 2, repeat: Infinity, repeatType: "loop" }}
           className="w-24 h-24 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-10 border border-white/20"
         >
           <span className="text-5xl font-bold text-white">X</span>
         </motion.div>
 
-        {/* Loading Steps */}
         <div className="h-20 flex items-center justify-center">
           <AnimatePresence mode="wait">
             <motion.div
@@ -500,33 +448,22 @@ CAMERA: 3/4 elevated angle from front-left aisle. Professional trade show photog
           </AnimatePresence>
         </div>
 
-        {/* Progress Dots */}
         <div className="flex items-center justify-center gap-2 mt-10">
           {loadingSteps.map((_, i) => (
             <motion.div
               key={i}
-              animate={{
-                scale: currentStep === i ? 1.5 : 1,
-                opacity: currentStep === i ? 1 : 0.4
-              }}
+              animate={{ scale: currentStep === i ? 1.5 : 1, opacity: currentStep === i ? 1 : 0.4 }}
               className="w-2 h-2 bg-white rounded-full"
             />
           ))}
         </div>
 
-        {/* Animated Bars */}
         <div className="flex items-center justify-center gap-1 mt-12">
           {[...Array(5)].map((_, i) => (
             <motion.div
               key={i}
-              animate={{
-                height: [16, 32, 16],
-              }}
-              transition={{
-                duration: 0.6,
-                repeat: Infinity,
-                delay: i * 0.1,
-              }}
+              animate={{ height: [16, 32, 16] }}
+              transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.1 }}
               className="w-2 bg-white/40 rounded-full"
               style={{ height: 16 }}
             />
