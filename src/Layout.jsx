@@ -279,8 +279,31 @@ export default function Layout({ children, currentPageName }) {
                 </Button>
               </nav>
 
-              {/* Mobile Hamburger */}
-              <div className="md:hidden flex items-center gap-2">
+              {/* Mobile: Role Switcher + Hamburger */}
+              <div className="md:hidden flex items-center gap-1">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm" className="text-white hover:bg-white/20 gap-1 px-2 text-xs">
+                      {React.createElement(getUserTypeIcon(), { className: "w-4 h-4" })}
+                      <span className="max-w-[60px] truncate">{getUserTypeLabel()}</span>
+                      <ChevronDown className="w-3 h-3" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-44">
+                    <DropdownMenuItem onClick={() => handleSwitchUserType('customer')}>
+                      <User className="w-4 h-4 mr-2" />
+                      Customer
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleSwitchUserType('sales_rep')}>
+                      <Users className="w-4 h-4 mr-2" />
+                      Sales Rep
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleSwitchUserType('student')}>
+                      <GraduationCap className="w-4 h-4 mr-2" />
+                      Student
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
                 <Button
                   variant="ghost"
                   size="icon"
