@@ -161,7 +161,7 @@ export default function Layout({ children, currentPageName }) {
                     alt="Orbus"
                     className="h-7 md:h-8"
                   />
-                  <span className="text-lg md:text-xl font-semibold tracking-tight hidden sm:inline">Instant Quote</span>
+                  <span className="text-lg md:text-xl font-semibold tracking-tight hidden sm:inline whitespace-nowrap">Instant Quote</span>
                 </Link>
               </div>
               
