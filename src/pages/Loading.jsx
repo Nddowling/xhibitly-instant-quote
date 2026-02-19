@@ -289,13 +289,32 @@ Return JSON with exactly 3 designs.`;
         }
       });
 
-      // ── STEP 3: Validate SKUs against catalog ──
+      // ── STEP 3: Validate SKUs and FORCE correct catalog prices ──
       const validSkus = new Set(compatibleProducts.map(p => p.manufacturer_sku || p.sku));
       for (const design of designs.designs) {
+        // Remove any hallucinated SKUs
         design.product_skus = design.product_skus.filter(sku => validSkus.has(sku));
         if (design.line_items) {
           design.line_items = design.line_items.filter(li => validSkus.has(li.sku));
         }
+        // Force prices from catalog — never trust LLM pricing
+        let recalcTotal = 0;
+        if (design.line_items) {
+          design.line_items = design.line_items.map(li => {
+            const catalogEntry = catalogPriceLookup[li.sku];
+            if (catalogEntry) {
+              const correctPrice = catalogEntry.is_rental && catalogEntry.rental_price
+                ? catalogEntry.rental_price
+                : catalogEntry.base_price;
+              const qty = li.quantity || 1;
+              const lineTotal = correctPrice * qty;
+              recalcTotal += lineTotal;
+              return { ...li, unit_price: correctPrice, line_total: lineTotal, name: catalogEntry.name };
+            }
+            return li;
+          });
+        }
+        design.total_price = recalcTotal;
       }
 
       // ── STEP 4: RULES ENGINE — enforce, correct, upgrade, auto-add ──
