@@ -484,12 +484,7 @@ export default function CustomerProfile() {
         </motion.div>
 
         {/* Question 10: Additional Notes */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.0 }}
-          className="mb-8"
-        >
+        <div className="mb-8">
           <Card className="border-0 shadow-md">
             <CardHeader>
               <CardTitle>Any additional requirements or notes?</CardTitle>
@@ -501,11 +496,11 @@ export default function CustomerProfile() {
                 onChange={(e) => setAdditionalNotes(e.target.value)}
                 placeholder="e.g., specific brand colors, product sizes, accessibility needs, etc."
                 rows={4}
-                className="w-full"
+                className="w-full resize-none"
               />
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
 
         {/* Submit Button */}
         <motion.div
