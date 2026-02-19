@@ -158,8 +158,8 @@ ACTION REQUIRED: Call the customer immediately to finalize the order.
             <Button variant="ghost" size="sm" onClick={() => navigate(createPageUrl('Results'))} className="shrink-0 px-2">
               <ArrowLeft className="w-4 h-4" />
             </Button>
-            <div className="min-w-0 hidden sm:block">
-              <h1 className="text-sm font-bold text-slate-800 truncate">{design.design_name}</h1>
+            <div className="min-w-0">
+              <h1 className="text-xs sm:text-sm font-bold text-slate-800 truncate">{design.design_name}</h1>
               <div className="flex items-center gap-2">
                 <Badge className="bg-slate-100 text-slate-600 text-[10px]">{design.tier}</Badge>
                 <span className="text-xs text-slate-400">{quoteData.boothSize}</span>
