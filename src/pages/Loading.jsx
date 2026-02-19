@@ -400,9 +400,11 @@ FOR EACH DESIGN: include tier, design_name, experience_story, visitor_journey, k
           return `${i + 1}. "${p.display_name || p.name}" — ${p.category_name || p.category}, ${dimStr}. ${p.visual_description || p.description || ''}`;
         }).join('\n');
 
-        const imagePrompt = `Photorealistic 3D trade show booth rendering (Orbus Exhibit & Display catalog).
+        const imagePrompt = `Photorealistic 3D trade show booth rendering for a ${companyResearch.industry || brandAnalysis.industry || ''} company (${brandAnalysis.company_name}).
 
 BOOTH: ${boothSize} (${dims.width}×${dims.depth}ft). Open front facing aisle. Grey carpet aisle, pipe-and-drape neighbors, convention center ceiling.
+
+COMPANY CONTEXT: This is a ${companyResearch.industry || brandAnalysis.industry || ''} company. Brand atmosphere: ${companyResearch.booth_atmosphere || brandAnalysis.brand_personality || 'professional'}. The booth should feel like visiting ${brandAnalysis.company_name}'s showroom.
 
 BRAND: Logo="${brandAnalysis.logo_description || brandAnalysis.company_name}" | Primary=${brandAnalysis.primary_color} (backwall, banners) | Secondary=${brandAnalysis.secondary_color} (counter, accents). Logo large+centered on main backwall, smaller on counter.
 
