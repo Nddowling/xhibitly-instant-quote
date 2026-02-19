@@ -205,14 +205,15 @@ export default function SalesQuoteStart() {
               <Button
                 onClick={handleSearch}
                 disabled={!email || isSearching}
-                className="w-full bg-[#e2231a] hover:bg-[#b01b13] h-14 text-lg font-medium"
+                className="w-full bg-[#e2231a] hover:bg-[#b01b13] h-12 md:h-14 text-sm md:text-lg font-medium"
               >
                 {isSearching ? (
                   'Searching...'
                 ) : (
                   <>
-                    <Search className="w-5 h-5 mr-2" />
-                    Check Customer & Previous Quotes
+                    <Search className="w-5 h-5 mr-2 shrink-0" />
+                    <span className="hidden sm:inline">Check Customer & Previous Quotes</span>
+                    <span className="sm:hidden">Check Customer</span>
                   </>
                 )}
               </Button>
@@ -239,10 +240,11 @@ export default function SalesQuoteStart() {
                     </div>
                     <Button
                       onClick={handleStartNewQuote}
-                      className="bg-[#e2231a] hover:bg-[#b01b13]"
+                      className="bg-[#e2231a] hover:bg-[#b01b13] text-xs md:text-sm shrink-0"
                     >
-                      <Plus className="w-4 h-4 mr-2" />
-                      Start New Quote
+                      <Plus className="w-4 h-4 mr-1 md:mr-2" />
+                      <span className="hidden sm:inline">Start New Quote</span>
+                      <span className="sm:hidden">New</span>
                     </Button>
                   </div>
                 </CardHeader>
@@ -309,9 +311,9 @@ export default function SalesQuoteStart() {
                     </p>
                     <Button
                       onClick={handleStartNewQuote}
-                      className="bg-[#e2231a] hover:bg-[#b01b13] h-14 px-8"
+                      className="bg-[#e2231a] hover:bg-[#b01b13] h-12 md:h-14 px-6 md:px-8 text-sm md:text-base"
                     >
-                      <Plus className="w-5 h-5 mr-2" />
+                      <Plus className="w-5 h-5 mr-2 shrink-0" />
                       Start New Quote
                     </Button>
                   </div>

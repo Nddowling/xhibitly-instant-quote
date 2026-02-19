@@ -299,10 +299,11 @@ export default function SalesDashboard() {
                   </div>
                   <Button 
                     onClick={() => navigate(createPageUrl('SalesQuoteStart'))}
-                    className="bg-[#e2231a] hover:bg-[#b01b13]"
+                    className="bg-[#e2231a] hover:bg-[#b01b13] text-xs md:text-sm shrink-0"
                   >
-                    <Plus className="w-4 h-4 mr-2" />
-                    New Quote
+                    <Plus className="w-4 h-4 mr-1 md:mr-2" />
+                    <span className="hidden sm:inline">New Quote</span>
+                    <span className="sm:hidden">New</span>
                   </Button>
                 </div>
               </CardHeader>
@@ -448,9 +449,9 @@ export default function SalesDashboard() {
                   <p>No active opportunities</p>
                   <Button 
                     onClick={() => navigate(createPageUrl('SalesQuoteStart'))}
-                    className="mt-4 bg-[#e2231a] hover:bg-[#b01b13]"
+                    className="mt-4 bg-[#e2231a] hover:bg-[#b01b13] text-sm"
                   >
-                    Create Your First Quote
+                    Create First Quote
                   </Button>
                 </div>
               )}
