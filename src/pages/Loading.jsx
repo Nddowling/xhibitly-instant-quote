@@ -264,21 +264,58 @@ export default function Loading() {
         properties: { booth_size: boothSize, website_url: websiteUrl }
       });
 
+      // ── STEP 1b: Deep company research (brand voice, industry context) ──
+      const companyResearch = await base44.integrations.Core.InvokeLLM({
+        prompt: `Research this company thoroughly: ${websiteUrl}
+Company name: ${brandAnalysis.company_name || 'Unknown'}
+Industry detected: ${brandAnalysis.industry || 'Unknown'}
+
+Provide a deep analysis focused on how this company should present itself at a trade show booth. Consider:
+- What industry are they in? (automotive, electronics, healthcare, food & beverage, tech, etc.)
+- What physical products or services do they sell that should be showcased?
+- What is their brand voice? (authoritative, playful, technical, luxurious, down-to-earth, etc.)
+- What tone do they use in marketing? (formal, casual, inspirational, data-driven, etc.)
+- What are their core brand values?
+- Who are their target customers visiting a trade show?
+- What should the booth atmosphere feel like based on their brand?
+- What industry-specific elements belong in their booth? (e.g., automotive → vehicle display area, product demo zones; electronics → interactive screens, charging stations; healthcare → clean/clinical feel, consultation area; food → sampling station, refrigerated display)
+
+Be specific and actionable. This research will directly guide product selection for their trade show booth.`,
+        add_context_from_internet: true,
+        response_json_schema: COMPANY_RESEARCH_SCHEMA
+      });
+
       // ── STEP 2: AI booth design curation ──
       const designPrompt = `You are an expert trade show booth designer. Create 3 booth designs (Modular, Hybrid, Custom tiers) for a ${boothSize} booth (${dims.width}ft × ${dims.depth}ft).
 
 BRAND: ${JSON.stringify({ name: brandAnalysis.company_name, primary: brandAnalysis.primary_color, secondary: brandAnalysis.secondary_color, accent1: brandAnalysis.accent_color_1, accent2: brandAnalysis.accent_color_2, personality: brandAnalysis.brand_personality, logo: brandAnalysis.logo_description })}
 
-CUSTOMER: ${profileStr}
+COMPANY CONTEXT (use this to guide product selection and booth storytelling):
+- Industry: ${companyResearch.industry} / ${companyResearch.industry_vertical}
+- Products/Services: ${(companyResearch.core_products_or_services || []).join(', ')}
+- Brand Voice: ${companyResearch.brand_voice} | Tone: ${companyResearch.brand_tone}
+- Brand Values: ${(companyResearch.brand_values || []).join(', ')}
+- Target Customers: ${companyResearch.target_customers}
+- Competitive Position: ${companyResearch.competitive_positioning}
+- Key Messaging: ${(companyResearch.key_messaging || []).join('; ')}
+- Ideal Booth Atmosphere: ${companyResearch.booth_atmosphere}
+- Physical Items to Display: ${(companyResearch.physical_products_to_display || []).join(', ')}
+- Industry-Specific Booth Elements: ${(companyResearch.industry_specific_booth_elements || []).join(', ')}
+
+IMPORTANT: Design the booth to reflect this company's actual business. If they sell cars, the booth should have space for vehicle display. If they sell software, emphasize demo stations and screens. If they sell food, include tasting/sampling areas. The experience_story, visitor_journey, and key_moments MUST align with what this company actually does.
+
+CUSTOMER REQUIREMENTS: ${profileStr}
 
 CONSTRAINT: Use ONLY products from the catalog below. Every product_sku must exactly match a catalog "sku". Any fabricated SKU invalidates the output.
+
+FLOORING RULE: ALWAYS select branded carpet for flooring. NEVER select interlocking floor tiles.
 
 CATALOG:
 ${JSON.stringify(catalog, null, 1)}
 
 REQUIREMENTS PER TIER:
 - Modular: 4-8 items, lower-priced. Hybrid: 6-12 items, mixed. Custom: 8-15+ items, premium.
-- Every tier minimum: backwall + counter/kiosk + lighting + flooring. Hybrid/Custom add banners, towers, monitor stands, accents.
+- Every tier minimum: backwall + counter/kiosk + lighting + branded carpet flooring. Hybrid/Custom add banners, towers, monitor stands, accents.
 - total_price = exact sum of selected products' base_price (or rental_price for rentals). Include line_items with sku, name, quantity, unit_price, line_total.
 - Booth must look FULLY FURNISHED, not sparse.
 
