@@ -799,10 +799,18 @@ BRANDING: primary_color on 2-3 structural pieces. secondary_color on 1-2 accents
 
 FOR EACH DESIGN: include tier, design_name, experience_story, visitor_journey, key_moments[], product_skus[], line_items[], design_rationale, total_price, spatial_layout[].`;
 
-      const designs = await base44.integrations.Core.InvokeLLM({
+      const designsRaw = await base44.integrations.Core.InvokeLLM({
         prompt: designPrompt,
         response_json_schema: DESIGN_SCHEMA
       });
+
+      // Ensure designs array exists
+      const designs = { designs: Array.isArray(designsRaw?.designs) ? designsRaw.designs : (Array.isArray(designsRaw) ? designsRaw : []) };
+      if (designs.designs.length === 0) {
+        console.error('[Design] LLM returned no designs, raw:', designsRaw);
+        navigate(createPageUrl('QuoteRequest'));
+        return;
+      }
 
       // ── STEP 3: Validate SKUs and FORCE correct catalog prices ──
       const validSkus = new Set(compatibleProducts.map(p => p.manufacturer_sku || p.sku));
