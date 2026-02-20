@@ -80,6 +80,10 @@ export default function Landing() {
 
       {/* ─── Hero ─── */}
       <section className="relative pt-32 pb-20 md:pt-44 md:pb-32 overflow-hidden">
+        {/* Background gridlines */}
+        <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.07) 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
+        {/* Brighter cross lines at intersections */}
+        <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.12) 1px, transparent 1px)', backgroundSize: '180px 180px' }} />
         {/* Background glow */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-[#e2231a]/8 rounded-full blur-[150px] pointer-events-none" />
         
