@@ -309,6 +309,7 @@ function parseBrandfetchResponse(brandfetchData) {
       accent_color_1: null,
       accent_color_2: null,
       logo_url: null,
+      logo_options: [], // NEW: Store all logo options for user selection
       logo_description: null,
       brand_personality: null,
       industry: null
@@ -327,17 +328,27 @@ function parseBrandfetchResponse(brandfetchData) {
       if (colors[3]) result.accent_color_2 = colors[3];
     }
 
-    // Extract logo from Brandfetch (prefer SVG, then PNG)
+    // Extract ALL logo options from Brandfetch for user selection
     if (brandfetchData.logos && brandfetchData.logos.length > 0) {
-      const logo = brandfetchData.logos.find(l => l.formats && l.formats.length > 0);
-      if (logo && logo.formats) {
-        // Prefer SVG or PNG formats
-        const preferredFormat = logo.formats.find(f => f.format === 'svg' || f.format === 'png');
-        if (preferredFormat && preferredFormat.src) {
-          result.logo_url = preferredFormat.src;
-        } else if (logo.formats[0].src) {
-          result.logo_url = logo.formats[0].src;
+      brandfetchData.logos.forEach(logo => {
+        if (logo.formats && logo.formats.length > 0) {
+          logo.formats.forEach(format => {
+            if (format.src && (format.format === 'svg' || format.format === 'png')) {
+              result.logo_options.push({
+                url: format.src,
+                format: format.format,
+                width: format.width,
+                height: format.height,
+                type: logo.type || 'logo'
+              });
+            }
+          });
         }
+      });
+
+      // Set default logo_url to first option
+      if (result.logo_options.length > 0) {
+        result.logo_url = result.logo_options[0].url;
       }
     }
 
@@ -354,7 +365,8 @@ function parseBrandfetchResponse(brandfetchData) {
     console.log('[Brandfetch] Parsed brand data:', {
       name: result.company_name,
       colors: [result.primary_color, result.secondary_color, result.accent_color_1, result.accent_color_2].filter(Boolean).length,
-      hasLogo: !!result.logo_url
+      hasLogo: !!result.logo_url,
+      logoOptions: result.logo_options.length
     });
 
     return result;
@@ -664,22 +676,40 @@ export default function Loading() {
 
       // ── STEP 1: Brand analysis + product fetch (parallel) ──
       updateProgress(1, 'Extracting your brand identity...');
-      // Uses extractBrandIdentity with full validation pipeline
+
+      // Check if user has already confirmed their branding
+      const confirmedBrandData = sessionStorage.getItem('confirmedBrand');
       let brandAnalysis;
-      try {
-        brandAnalysis = await extractBrandIdentity(websiteUrl);
-      } catch (err) {
-        console.error('[Brand] Extraction failed, using fallback:', err);
-        brandAnalysis = {
-          company_name: 'Your Company',
-          primary_color: '#003b71',
-          secondary_color: '#0066b3',
-          accent_color_1: '#f7941d',
-          accent_color_2: '#ffffff',
-          logo_description: 'Company logo',
-          brand_personality: 'Professional',
-          industry: 'Business Services'
-        };
+
+      if (confirmedBrandData) {
+        // User has verified their brand, use confirmed data
+        console.log('[Brand] Using user-confirmed brand data');
+        brandAnalysis = JSON.parse(confirmedBrandData);
+        // Clear confirmed brand so user can verify again on next quote
+        sessionStorage.removeItem('confirmedBrand');
+      } else {
+        // Extract brand and navigate to verification page
+        try {
+          brandAnalysis = await extractBrandIdentity(websiteUrl);
+        } catch (err) {
+          console.error('[Brand] Extraction failed, using fallback:', err);
+          brandAnalysis = {
+            company_name: 'Your Company',
+            primary_color: '#003b71',
+            secondary_color: '#0066b3',
+            accent_color_1: '#f7941d',
+            accent_color_2: '#ffffff',
+            logo_description: 'Company logo',
+            brand_personality: 'Professional',
+            industry: 'Business Services'
+          };
+        }
+
+        // Save brand data for verification and navigate to verification page
+        console.log('[Brand] Navigating to brand verification page');
+        sessionStorage.setItem('brandVerification', JSON.stringify(brandAnalysis));
+        navigate(createPageUrl('BrandVerification'));
+        return; // Stop here and wait for user verification
       }
 
       // ── STEP 2: Product catalog ──
