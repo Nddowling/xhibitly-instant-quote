@@ -54,7 +54,6 @@ import CustomerProfile from './pages/CustomerProfile';
 import DesignConfigurator from './pages/DesignConfigurator';
 import Home from './pages/Home';
 import Landing from './pages/Landing';
-import Loading from './pages/Loading';
 import OrderDetail from './pages/OrderDetail';
 import OrderHistory from './pages/OrderHistory';
 import Pipeline from './pages/Pipeline';
@@ -67,6 +66,7 @@ import SalesQuoteStart from './pages/SalesQuoteStart';
 import Settings from './pages/Settings';
 import StudentHome from './pages/StudentHome';
 import UserTypeSelection from './pages/UserTypeSelection';
+import Loading from './pages/Loading';
 import __Layout from './Layout.jsx';
 
 
@@ -78,7 +78,6 @@ export const PAGES = {
     "DesignConfigurator": DesignConfigurator,
     "Home": Home,
     "Landing": Landing,
-    "Loading": Loading,
     "OrderDetail": OrderDetail,
     "OrderHistory": OrderHistory,
     "Pipeline": Pipeline,
@@ -91,6 +90,7 @@ export const PAGES = {
     "Settings": Settings,
     "StudentHome": StudentHome,
     "UserTypeSelection": UserTypeSelection,
+    "Loading": Loading,
 }
 
 export const pagesConfig = {
