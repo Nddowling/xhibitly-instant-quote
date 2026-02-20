@@ -532,15 +532,14 @@ function slimCatalog(products) {
 
 function formatProfile(cp) {
   if (!cp) return 'No specific requirements provided.';
-  const lines = [
-    `Objectives: ${cp.objectives.join(', ')}`,
-    `Display products: ${cp.display_products ? 'Yes' : 'No'}`,
-    `Demo space: ${cp.needs_demo_space ? 'Required' : 'No'}`,
-    `Conference area: ${cp.needs_conference_area ? 'Required' : 'No'}`,
-    `Look: ${cp.desired_look.join(', ')}`,
-    `Feel: ${cp.desired_feel.join(', ')}`,
-    `Logistics: ${cp.needs_logistics ? 'Required' : 'No'}`
-  ];
+  const lines = [];
+  if (cp.objectives?.length) lines.push(`Objectives: ${cp.objectives.join(', ')}`);
+  lines.push(`Display products: ${cp.display_products ? 'Yes' : 'No'}`);
+  lines.push(`Demo space: ${cp.needs_demo_space ? 'Required' : 'No'}`);
+  lines.push(`Conference area: ${cp.needs_conference_area ? 'Required' : 'No'}`);
+  if (cp.desired_look?.length) lines.push(`Look: ${cp.desired_look.join(', ')}`);
+  if (cp.desired_feel?.length) lines.push(`Feel: ${cp.desired_feel.join(', ')}`);
+  lines.push(`Logistics: ${cp.needs_logistics ? 'Required' : 'No'}`);
   if (cp.additional_notes) lines.push(`Notes: ${cp.additional_notes}`);
   return lines.join(' | ');
 }
