@@ -255,13 +255,150 @@ TYPOGRAPHY:
 Return only data from the CURRENT live website.`;
 }
 
-async function extractBrandIdentity(websiteUrl) {
-  const raw = await base44.integrations.Core.InvokeLLM({
-    prompt: buildBrandPrompt(websiteUrl),
-    add_context_from_internet: true,
-    response_json_schema: BRAND_SCHEMA
-  });
+// ═══════════════════════════════════════════════════════════════
+// BRANDFETCH API INTEGRATION
+// ═══════════════════════════════════════════════════════════════
 
+const BRANDFETCH_API_KEY = 'QgFqwUYE61C7nVi0BM2zSifQWKrTA3-Uto7zpoJ4BGf5M_9DjWUyDCc8a6LbkT-OdUjt9b5Sxskug3pZ2MhpJg';
+
+function extractDomain(url) {
+  try {
+    const cleanUrl = url.replace(/^https?:\/\/(www\.)?/, '');
+    const domain = cleanUrl.split('/')[0].split('?')[0];
+    return domain;
+  } catch {
+    return url;
+  }
+}
+
+async function fetchBrandfetchData(websiteUrl) {
+  const domain = extractDomain(websiteUrl);
+  console.log(`[Brandfetch] Fetching brand data for: ${domain}`);
+
+  try {
+    const url = `https://api.brandfetch.io/v2/brands/${domain}`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${BRANDFETCH_API_KEY}`
+      }
+    });
+
+    if (!response.ok) {
+      console.log(`[Brandfetch] API returned ${response.status}, falling back to LLM`);
+      return null;
+    }
+
+    const data = await response.json();
+    console.log('[Brandfetch] Successfully fetched brand data');
+    return data;
+  } catch (err) {
+    console.error('[Brandfetch] API error:', err.message);
+    return null;
+  }
+}
+
+function parseBrandfetchResponse(brandfetchData) {
+  if (!brandfetchData) return null;
+
+  try {
+    const result = {
+      company_name: brandfetchData.name || null,
+      primary_color: null,
+      secondary_color: null,
+      accent_color_1: null,
+      accent_color_2: null,
+      logo_url: null,
+      logo_description: null,
+      brand_personality: null,
+      industry: null
+    };
+
+    // Extract colors from Brandfetch
+    if (brandfetchData.colors && brandfetchData.colors.length > 0) {
+      const colors = brandfetchData.colors
+        .filter(c => c.hex && c.hex.startsWith('#'))
+        .map(c => c.hex.toLowerCase())
+        .slice(0, 4);
+
+      if (colors[0]) result.primary_color = colors[0];
+      if (colors[1]) result.secondary_color = colors[1];
+      if (colors[2]) result.accent_color_1 = colors[2];
+      if (colors[3]) result.accent_color_2 = colors[3];
+    }
+
+    // Extract logo from Brandfetch (prefer SVG, then PNG)
+    if (brandfetchData.logos && brandfetchData.logos.length > 0) {
+      const logo = brandfetchData.logos.find(l => l.formats && l.formats.length > 0);
+      if (logo && logo.formats) {
+        // Prefer SVG or PNG formats
+        const preferredFormat = logo.formats.find(f => f.format === 'svg' || f.format === 'png');
+        if (preferredFormat && preferredFormat.src) {
+          result.logo_url = preferredFormat.src;
+        } else if (logo.formats[0].src) {
+          result.logo_url = logo.formats[0].src;
+        }
+      }
+    }
+
+    // Generate logo description from company name
+    if (result.company_name) {
+      result.logo_description = `Logo for ${result.company_name}. Professional corporate branding.`;
+    }
+
+    // Extract industry if available
+    if (brandfetchData.industries && brandfetchData.industries.length > 0) {
+      result.industry = brandfetchData.industries[0];
+    }
+
+    console.log('[Brandfetch] Parsed brand data:', {
+      name: result.company_name,
+      colors: [result.primary_color, result.secondary_color, result.accent_color_1, result.accent_color_2].filter(Boolean).length,
+      hasLogo: !!result.logo_url
+    });
+
+    return result;
+  } catch (err) {
+    console.error('[Brandfetch] Parse error:', err.message);
+    return null;
+  }
+}
+
+async function extractBrandIdentity(websiteUrl) {
+  // Try Brandfetch API first
+  const brandfetchData = await fetchBrandfetchData(websiteUrl);
+  let raw = parseBrandfetchResponse(brandfetchData);
+
+  // If Brandfetch didn't provide complete data, use LLM to fill gaps
+  if (!raw || !raw.company_name || !raw.primary_color || !raw.logo_url) {
+    console.log('[Brand] Brandfetch incomplete, using LLM for missing fields');
+
+    const llmData = await base44.integrations.Core.InvokeLLM({
+      prompt: buildBrandPrompt(websiteUrl),
+      add_context_from_internet: true,
+      response_json_schema: BRAND_SCHEMA
+    });
+
+    // Merge: prefer Brandfetch data, but fill gaps with LLM data
+    raw = {
+      company_name: raw?.company_name || llmData.company_name,
+      primary_color: raw?.primary_color || llmData.primary_color,
+      secondary_color: raw?.secondary_color || llmData.secondary_color,
+      accent_color_1: raw?.accent_color_1 || llmData.accent_color_1,
+      accent_color_2: raw?.accent_color_2 || llmData.accent_color_2,
+      logo_url: raw?.logo_url || llmData.logo_url,
+      logo_description: raw?.logo_description || llmData.logo_description,
+      brand_personality: raw?.brand_personality || llmData.brand_personality,
+      industry: raw?.industry || llmData.industry,
+      typography_primary: llmData.typography_primary,
+      typography_secondary: llmData.typography_secondary,
+      target_audience: llmData.target_audience,
+      design_style: llmData.design_style,
+      brand_essence: llmData.brand_essence
+    };
+  }
+
+  // Run validation pipeline (same as before)
   let result = validateCompanyName(raw, websiteUrl);
   result = validateColors(result);
   result = validateLogo(result);
@@ -274,6 +411,7 @@ async function extractBrandIdentity(websiteUrl) {
     accent1: result.accent_color_1,
     accent2: result.accent_color_2
   });
+  console.log("[Brand] Logo URL:", result.logo_url);
 
   return result;
 }
