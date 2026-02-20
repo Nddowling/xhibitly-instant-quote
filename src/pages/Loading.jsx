@@ -826,7 +826,7 @@ FOR EACH DESIGN: include tier, design_name, experience_story, visitor_journey, k
       });
 
       for (const design of designs.designs) {
-        design.product_skus = design.product_skus.filter(sku => validSkus.has(sku));
+        design.product_skus = (design.product_skus || []).filter(sku => validSkus.has(sku));
         if (design.line_items) {
           design.line_items = design.line_items.filter(li => validSkus.has(li.sku));
         }
