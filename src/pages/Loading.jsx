@@ -837,31 +837,32 @@ FOR EACH DESIGN: include tier, design_name, experience_story, visitor_journey, k
       });
 
       for (const design of designs.designs) {
-        design.product_skus = (design.product_skus || []).filter(sku => validSkus.has(sku));
-        if (design.line_items) {
-          design.line_items = design.line_items.filter(li => validSkus.has(li.sku));
-        }
+        design.product_skus = Array.isArray(design.product_skus) 
+          ? design.product_skus.filter(sku => validSkus.has(sku)) 
+          : [];
+        design.line_items = Array.isArray(design.line_items) 
+          ? design.line_items.filter(li => li && validSkus.has(li.sku)) 
+          : [];
         // Force prices from catalog — never trust LLM pricing
         let recalcTotal = 0;
-        if (design.line_items) {
-          design.line_items = design.line_items.map(li => {
-            const entry = catalogPriceLookup[li.sku];
-            if (entry) {
-              const correctPrice = entry.is_rental && entry.rental_price ? entry.rental_price : entry.base_price;
-              const qty = li.quantity || 1;
-              const lineTotal = correctPrice * qty;
-              recalcTotal += lineTotal;
-              return { ...li, unit_price: correctPrice, line_total: lineTotal, name: entry.name };
-            }
-            return li;
-          });
-        }
+        design.line_items = design.line_items.map(li => {
+          const entry = catalogPriceLookup[li.sku];
+          if (entry) {
+            const correctPrice = entry.is_rental && entry.rental_price ? entry.rental_price : entry.base_price;
+            const qty = li.quantity || 1;
+            const lineTotal = correctPrice * qty;
+            recalcTotal += lineTotal;
+            return { ...li, unit_price: correctPrice, line_total: lineTotal, name: entry.name };
+          }
+          return li;
+        });
         design.total_price = recalcTotal;
       }
 
       // ── STEP 5: Rules engine ──
       updateProgress(5, 'Validating designs & pricing...');
-      const allServices = await base44.entities.Service.filter({ is_active: true });
+      const allServicesRaw = await base44.entities.Service.filter({ is_active: true });
+      const allServices = allServicesRaw || [];
       const profileForRules = quoteData.customerProfile || customerProfile || null;
 
       const validatedDesigns = enforceAllDesigns(
