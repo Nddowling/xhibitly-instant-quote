@@ -716,10 +716,19 @@ export default function Loading() {
       updateProgress(2, 'Loading product catalog...');
       const compatibleProducts = await (async () => {
         const allVariants = await base44.entities.ProductVariant.filter({ is_active: true });
-        let products = allVariants.filter(p => p.booth_sizes?.includes(boothSize));
+        let products = (allVariants || []).filter(p => p.booth_sizes?.includes(boothSize));
         if (products.length === 0) {
           const allProducts = await base44.entities.Product.filter({ is_active: true });
-          products = allProducts.filter(p => p.booth_sizes?.includes(boothSize));
+          products = (allProducts || []).filter(p => p.booth_sizes?.includes(boothSize));
+        }
+        if (products.length === 0) {
+          // If still no products, use all variants/products unfiltered
+          const allVariants2 = await base44.entities.ProductVariant.list();
+          products = allVariants2 || [];
+          if (products.length === 0) {
+            const allProducts2 = await base44.entities.Product.list();
+            products = allProducts2 || [];
+          }
         }
         return products;
       })();
