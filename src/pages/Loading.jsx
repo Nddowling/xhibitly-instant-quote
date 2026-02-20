@@ -399,6 +399,7 @@ async function extractBrandIdentity(websiteUrl) {
       accent_color_1: raw?.accent_color_1 || llmData.accent_color_1,
       accent_color_2: raw?.accent_color_2 || llmData.accent_color_2,
       logo_url: raw?.logo_url || llmData.logo_url,
+      logo_options: raw?.logo_options || [],
       logo_description: raw?.logo_description || llmData.logo_description,
       brand_personality: raw?.brand_personality || llmData.brand_personality,
       industry: raw?.industry || llmData.industry,
