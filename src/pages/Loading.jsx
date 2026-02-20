@@ -455,6 +455,14 @@ const loadingSteps = [
 export default function Loading() {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
+  const [progress, setProgress] = useState({
+    current: 0,
+    total: 6,
+    step: 'Initializing...',
+    elapsed: 0,
+    estimated: 25,
+    startTime: null
+  });
 
   useEffect(() => {
     const quoteData = sessionStorage.getItem('quoteRequest');
@@ -479,6 +487,30 @@ export default function Loading() {
     return () => clearInterval(interval);
   }, []);
 
+  // Timer for elapsed time
+  useEffect(() => {
+    if (!progress.startTime) return;
+
+    const timer = setInterval(() => {
+      setProgress(prev => ({
+        ...prev,
+        elapsed: Math.floor((Date.now() - prev.startTime) / 1000)
+      }));
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [progress.startTime]);
+
+  // ── PROGRESS TRACKING ──
+
+  const updateProgress = (step, stepName) => {
+    setProgress(prev => ({
+      ...prev,
+      current: step,
+      step: stepName
+    }));
+  };
+
   // ── MAIN GENERATION FUNCTION ──
 
   const generateDesigns = async (quoteData) => {
@@ -486,9 +518,14 @@ export default function Loading() {
     const dims = getBoothDims(boothSize);
 
     try {
+      // Start timer
+      const startTime = Date.now();
+      setProgress(prev => ({ ...prev, startTime, current: 1 }));
+
       const minLoadTime = new Promise(r => setTimeout(r, 5000));
 
       // ── STEP 1: Brand analysis + product fetch (parallel) ──
+      updateProgress(1, 'Extracting your brand identity...');
       // Uses extractBrandIdentity with full validation pipeline
       let brandAnalysis;
       try {
@@ -507,6 +544,8 @@ export default function Loading() {
         };
       }
 
+      // ── STEP 2: Product catalog ──
+      updateProgress(2, 'Loading product catalog...');
       const compatibleProducts = await (async () => {
         const allVariants = await base44.entities.ProductVariant.filter({ is_active: true });
         let products = allVariants.filter(p => p.booth_sizes?.includes(boothSize));
@@ -524,7 +563,8 @@ export default function Loading() {
         properties: { booth_size: boothSize, website_url: websiteUrl }
       });
 
-      // ── STEP 1b: Deep company research (brand voice, industry context) ──
+      // ── STEP 3: Deep company research (brand voice, industry context) ──
+      updateProgress(3, 'Researching your company & industry...');
       const companyResearch = await base44.integrations.Core.InvokeLLM({
         prompt: `Research this company thoroughly: ${websiteUrl}
 Company name: ${brandAnalysis.company_name || 'Unknown'}
@@ -545,7 +585,8 @@ Be specific and actionable. This research will directly guide product selection 
         response_json_schema: COMPANY_RESEARCH_SCHEMA
       });
 
-      // ── STEP 2: AI booth design curation ──
+      // ── STEP 4: AI booth design curation ──
+      updateProgress(4, 'Creating booth designs...');
       const designPrompt = `You are an expert trade show booth designer. Create 3 booth designs (Modular, Hybrid, Custom tiers) for a ${boothSize} booth (${dims.width}ft × ${dims.depth}ft).
 
 BRAND: ${JSON.stringify({ name: brandAnalysis.company_name, primary: brandAnalysis.primary_color, secondary: brandAnalysis.secondary_color, accent1: brandAnalysis.accent_color_1, accent2: brandAnalysis.accent_color_2, personality: brandAnalysis.brand_personality, logo: brandAnalysis.logo_description })}
@@ -632,7 +673,8 @@ FOR EACH DESIGN: include tier, design_name, experience_story, visitor_journey, k
         design.total_price = recalcTotal;
       }
 
-      // ── STEP 4: Rules engine ──
+      // ── STEP 5: Rules engine ──
+      updateProgress(5, 'Validating designs & pricing...');
       const allServices = await base44.entities.Service.filter({ is_active: true });
       const profileForRules = quoteData.customerProfile || customerProfile || null;
 
@@ -652,7 +694,8 @@ FOR EACH DESIGN: include tier, design_name, experience_story, visitor_journey, k
 
       designs.designs = validatedDesigns;
 
-      // ── STEP 5: Generate booth images (parallel) ──
+      // ── STEP 6: Generate booth images (parallel) ──
+      updateProgress(6, 'Generating booth renderings...');
       const imagePromises = designs.designs.map(async (design) => {
         const designProducts = compatibleProducts.filter(p =>
           design.product_skus.includes(p.manufacturer_sku || p.sku)
@@ -754,24 +797,41 @@ ${CAMERA_STYLE}`;
           <span className="text-5xl font-bold text-white">X</span>
         </motion.div>
 
-        <div className="h-20 flex items-center justify-center">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentStep}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-              className="flex items-center gap-4"
+        {/* Progress Tracker */}
+        <div className="w-full max-w-md space-y-6">
+          {/* Progress Bar */}
+          <div className="space-y-2">
+            <div className="bg-white/10 rounded-full h-3 overflow-hidden">
+              <motion.div
+                className="bg-white rounded-full h-full"
+                initial={{ width: 0 }}
+                animate={{ width: `${(progress.current / progress.total) * 100}%` }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+              />
+            </div>
+          </div>
+
+          {/* Current Step */}
+          <div className="text-center">
+            <p className="text-white text-xl font-light mb-2">{progress.step}</p>
+          </div>
+
+          {/* Progress Info */}
+          <div className="flex justify-between items-center text-white/60 text-sm">
+            <span>Step {progress.current} of {progress.total}</span>
+            <span>{progress.elapsed}s elapsed</span>
+          </div>
+
+          {/* Estimated Time Remaining */}
+          {progress.elapsed > 5 && progress.current < progress.total && (
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-white/40 text-xs text-center"
             >
-              {React.createElement(loadingSteps[currentStep].icon, {
-                className: "w-8 h-8 text-white/80"
-              })}
-              <span className="text-2xl text-white font-light">
-                {loadingSteps[currentStep].text}
-              </span>
-            </motion.div>
-          </AnimatePresence>
+              Estimated: ~{Math.max(0, progress.estimated - progress.elapsed)}s remaining
+            </motion.p>
+          )}
         </div>
 
         <div className="flex items-center justify-center gap-2 mt-10">
