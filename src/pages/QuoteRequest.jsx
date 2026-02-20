@@ -361,8 +361,7 @@ export default function QuoteRequest() {
             </CardContent>
           </Card>
         </motion.div>
-
-
+        </div>
       </div>
     </div>
   );
