@@ -212,27 +212,61 @@ export default function QuoteRequest() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-slate-100 p-6 md:p-10">
-      <div className="max-w-3xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-10"
-        >
-          <h1 className="text-3xl md:text-4xl font-bold text-[#e2231a] mb-3">
-            Get Your Instant Quote
-          </h1>
-          <p className="text-slate-500 text-lg">
-            Tell us about your booth requirements and we'll show you the best options
-          </p>
-        </motion.div>
+    <div className="min-h-[calc(100vh-64px)] bg-slate-100 relative overflow-hidden">
+      {/* ── Hero Background ── */}
+      <div className="relative bg-gradient-to-br from-[#0F1D2E] via-[#1a2d44] to-[#0F1D2E] pt-10 pb-32 md:pb-40 px-6 overflow-hidden">
+        {/* Geometric accent shapes */}
+        <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
+          {/* Large red glow */}
+          <div className="absolute -top-20 -right-20 w-[500px] h-[500px] bg-[#e2231a]/10 rounded-full blur-[120px]" />
+          <div className="absolute bottom-0 -left-20 w-[400px] h-[400px] bg-[#e2231a]/5 rounded-full blur-[100px]" />
+          {/* Grid pattern overlay */}
+          <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'linear-gradient(white 1px, transparent 1px), linear-gradient(90deg, white 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
+          {/* Diagonal accent lines */}
+          <div className="absolute top-20 right-10 w-64 h-64 border border-white/[0.04] rounded-3xl rotate-12" />
+          <div className="absolute top-32 right-24 w-48 h-48 border border-[#e2231a]/10 rounded-2xl rotate-[25deg]" />
+          <div className="absolute -bottom-10 left-10 w-56 h-56 border border-white/[0.03] rounded-3xl -rotate-12" />
+          {/* Floating red accent dots */}
+          <motion.div animate={{ y: [0, -12, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }} className="absolute top-24 left-[15%] w-2 h-2 bg-[#e2231a] rounded-full shadow-lg shadow-[#e2231a]/40" />
+          <motion.div animate={{ y: [0, 10, 0] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }} className="absolute top-16 right-[25%] w-1.5 h-1.5 bg-[#e2231a]/60 rounded-full" />
+          <motion.div animate={{ y: [0, -8, 0] }} transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }} className="absolute bottom-20 right-[15%] w-2.5 h-2.5 bg-white/20 rounded-full" />
+        </div>
 
+        <div className="relative max-w-3xl mx-auto text-center">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+            <div className="inline-flex items-center gap-2 bg-white/[0.06] border border-white/10 text-white/60 text-xs font-medium px-4 py-1.5 rounded-full mb-6">
+              <span className="w-1.5 h-1.5 bg-[#e2231a] rounded-full animate-pulse" />
+              Powered by AI Brand Analysis
+            </div>
+          </motion.div>
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="text-3xl md:text-5xl font-extrabold text-white leading-tight mb-4 tracking-tight"
+          >
+            Design Your <span className="text-[#e2231a]">Brand Experience</span>
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="text-white/40 text-base md:text-lg max-w-xl mx-auto"
+          >
+            Tell us about your booth and we'll create a fully branded trade show experience — in under 2 minutes
+          </motion.p>
+        </div>
+      </div>
+
+      {/* ── Form Card (overlapping hero) ── */}
+      <div className="relative -mt-20 md:-mt-24 px-6 pb-10 md:pb-16">
+        <div className="max-w-3xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
+          transition={{ delay: 0.3 }}
         >
-          <Card className="shadow-xl border-0">
+          <Card className="shadow-2xl border-0 ring-1 ring-black/[0.04]">
             <CardContent className="p-8 md:p-10">
               <div className="space-y-8">
                 {/* Booth Size */}
