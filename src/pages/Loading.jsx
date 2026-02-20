@@ -5,6 +5,7 @@ import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Sparkles, CheckCircle, Palette, Layers, Lightbulb, ShieldCheck } from 'lucide-react';
 import { enforceAllDesigns } from '../components/utils/boothRulesEngine';
+import { getMarkerPromptInstructions } from '../utils/brandCompositor';
 
 // ═══════════════════════════════════════════════════════════════
 // BRAND EXTRACTION — VALIDATION UTILITIES
@@ -902,14 +903,15 @@ COMPANY CONTEXT: This is a ${companyResearch.industry || brandAnalysis.industry 
 
 INDUSTRY ELEMENTS to suggest in the scene: ${companyResearch.physical_products_to_display.join(', ')}` : ''}
 
-BRAND: Logo="${brandAnalysis.logo_description || brandAnalysis.company_name}" | Primary=${brandAnalysis.primary_color} (backwall, banners) | Secondary=${brandAnalysis.secondary_color} (counter, accents). Logo large+centered on main backwall, smaller on counter.
+BRAND COLORS (apply to surfaces): Primary=${brandAnalysis.primary_color} (backwall frame, structural accents) | Secondary=${brandAnalysis.secondary_color} (counter body, trim).
 
 RENDER EXACTLY these ${designProducts.length} products — NOTHING ELSE. No invented screens, plants, chairs, monitors, or items not listed:
 ${manifest}
 
 ${PLACEMENT_GUIDE}
 
-${CAMERA_STYLE}`;
+${CAMERA_STYLE}
+${getMarkerPromptInstructions()}`;
 
         const refImages = collectReferenceImages(brandAnalysis, designProducts);
         const params = { prompt: imagePrompt };
@@ -932,6 +934,7 @@ ${CAMERA_STYLE}`;
       const generatedImages = await Promise.all(imagePromises);
 
       // ── STEP 6: Save to DB (parallel) ──
+      // Store both raw image (with marker zones) and final composited image
       const savePromises = designs.designs.map((design, i) =>
         base44.entities.BoothDesign.create({
           dealer_id: dealerId,
@@ -947,6 +950,7 @@ ${CAMERA_STYLE}`;
           design_rationale: design.design_rationale,
           spatial_layout: design.spatial_layout,
           design_image_url: generatedImages[i],
+          raw_image_url: generatedImages[i], // Raw image contains marker zones for compositor
           line_items: design.line_items
         })
       );

@@ -1,12 +1,85 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
-import { Star, ArrowRight, Sparkles, Palette, Loader2 } from 'lucide-react';
+import { Star, ArrowRight, Sparkles, Palette, Loader2, Check } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import { compositeBrand } from '../utils/brandCompositor';
+
+// ═══════════════════════════════════════════════════════════════
+// COMPOSITED IMAGE COMPONENT
+// Handles per-image compositor lifecycle: raw → compositing → done
+// ═══════════════════════════════════════════════════════════════
+
+function CompositedBoothImage({ rawUrl, brandIdentity, designName, onComposited }) {
+  const [state, setState] = useState('loading'); // loading | compositing | done | fallback
+  const [displayUrl, setDisplayUrl] = useState(null);
+  const attempted = useRef(false);
+
+  useEffect(() => {
+    if (!rawUrl || attempted.current) return;
+    attempted.current = true;
+
+    // Show raw image first while compositing
+    setDisplayUrl(rawUrl);
+    setState('compositing');
+
+    // Run compositor in background
+    compositeBrand(rawUrl, brandIdentity, {
+      renderText: !brandIdentity.logo_url, // text fallback if no logo
+      textColor: '#FFFFFF',
+    })
+      .then((compositedDataUrl) => {
+        setDisplayUrl(compositedDataUrl);
+        setState('done');
+        if (onComposited) onComposited(compositedDataUrl);
+        console.log(`[Results] Composited: ${designName}`);
+      })
+      .catch((err) => {
+        console.warn(`[Results] Compositing failed for ${designName}, using raw:`, err);
+        setState('fallback');
+        // Keep rawUrl as display — still looks good, just has marker zones
+      });
+  }, [rawUrl, brandIdentity, designName, onComposited]);
+
+  return (
+    <div className="relative w-full h-full">
+      {displayUrl ? (
+        <img
+          src={displayUrl}
+          alt={designName}
+          className="w-full h-full object-cover"
+        />
+      ) : (
+        <div className="w-full h-full flex items-center justify-center">
+          <Loader2 className="w-12 h-12 text-slate-300 animate-spin" />
+        </div>
+      )}
+
+      {/* Compositing status badge */}
+      {state === 'compositing' && (
+        <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white text-xs px-2.5 py-1 rounded-full flex items-center gap-1.5">
+          <Loader2 className="w-3 h-3 animate-spin" />
+          Applying branding...
+        </div>
+      )}
+      {state === 'done' && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3 }}
+          className="absolute top-2 right-2 bg-emerald-500/80 backdrop-blur-sm text-white text-xs px-2.5 py-1 rounded-full flex items-center gap-1.5"
+        >
+          <Check className="w-3 h-3" />
+          Brand applied
+        </motion.div>
+      )}
+    </div>
+  );
+}
 
 export default function Results() {
   const navigate = useNavigate();
@@ -197,13 +270,13 @@ export default function Results() {
                   )}
 
                   <CardContent className={`p-6 ${design.tier === 'Hybrid' ? 'pt-14' : ''}`}>
-                    {/* Visual Header - Show Generated Image or Loading */}
+                    {/* Visual Header - Composited Booth Image */}
                     <div className={`aspect-[4/3] bg-gradient-to-br ${styles.gradient} rounded-xl mb-4 overflow-hidden flex items-center justify-center border border-slate-200`}>
-                      {design.design_image_url ? (
-                        <img 
-                          src={design.design_image_url} 
-                          alt={design.design_name}
-                          className="w-full h-full object-cover"
+                      {design.design_image_url && brandIdentity ? (
+                        <CompositedBoothImage
+                          rawUrl={design.raw_image_url || design.design_image_url}
+                          brandIdentity={brandIdentity}
+                          designName={design.design_name}
                         />
                       ) : generatingImages[design.id] ? (
                         <div className="text-center p-6">
