@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Check, Edit2, RefreshCw } from 'lucide-react';
-import { createPageUrl } from '../base44/pageService';
+import { createPageUrl } from '../utils';
 
 export default function BrandVerification() {
   const navigate = useNavigate();
