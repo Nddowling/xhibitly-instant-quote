@@ -663,7 +663,8 @@ export default function Loading() {
   // ── MAIN GENERATION FUNCTION ──
 
   const generateDesigns = async (quoteData) => {
-    const { websiteUrl, boothSize, dealerId, customerProfile } = quoteData;
+    const { websiteUrl, boothSize, dealerId } = quoteData;
+    const customerProfile = quoteData.customerProfile || null;
     const dims = getBoothDims(boothSize);
 
     try {
