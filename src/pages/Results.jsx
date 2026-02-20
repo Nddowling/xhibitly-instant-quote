@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
-import { Star, ArrowRight, Sparkles, Lightbulb, Palette, Loader2 } from 'lucide-react';
+import { Star, ArrowRight, Sparkles, Palette, Loader2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 export default function Results() {
