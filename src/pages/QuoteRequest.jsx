@@ -363,7 +363,6 @@ export default function QuoteRequest() {
         </motion.div>
         </div>
       </div>
-      </div>
     </div>
   );
 }
