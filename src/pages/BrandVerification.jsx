@@ -1,24 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Check, Edit2, RefreshCw } from 'lucide-react';
+import { Check, Edit2, RefreshCw, ArrowRight } from 'lucide-react';
 import { createPageUrl } from '../utils';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import DraggableColorSlot from '../components/brand/DraggableColorSlot';
+import LogoSelector from '../components/brand/LogoSelector';
 
 export default function BrandVerification() {
   const navigate = useNavigate();
   const [brandData, setBrandData] = useState(null);
   const [selectedLogo, setSelectedLogo] = useState(null);
-  const [selectedColors, setSelectedColors] = useState({
-    primary: null,
-    secondary: null,
-    accent1: null,
-    accent2: null
-  });
+  const [colors, setColors] = useState([null, null, null, null]);
   const [companyName, setCompanyName] = useState('');
   const [isEditingName, setIsEditingName] = useState(false);
 
+  const COLOR_LABELS = ['Primary', 'Secondary', 'Accent 1', 'Accent 2'];
+
   useEffect(() => {
-    // Load brand data from sessionStorage
     const storedBrandData = sessionStorage.getItem('brandVerification');
     if (!storedBrandData) {
       navigate(createPageUrl('QuoteRequest'));
@@ -27,39 +28,58 @@ export default function BrandVerification() {
 
     const data = JSON.parse(storedBrandData);
     setBrandData(data);
-
-    // Set initial selections
     setCompanyName(data.company_name || '');
     setSelectedLogo(data.logo_url || null);
-    setSelectedColors({
-      primary: data.primary_color || null,
-      secondary: data.secondary_color || null,
-      accent1: data.accent_color_1 || null,
-      accent2: data.accent_color_2 || null
-    });
+    setColors([
+      data.primary_color || null,
+      data.secondary_color || null,
+      data.accent_color_1 || null,
+      data.accent_color_2 || null
+    ]);
   }, [navigate]);
 
+  const handleSwapColors = useCallback((fromIdx, toIdx) => {
+    if (fromIdx === toIdx) return;
+    setColors(prev => {
+      const next = [...prev];
+      [next[fromIdx], next[toIdx]] = [next[toIdx], next[fromIdx]];
+      return next;
+    });
+  }, []);
+
+  const handleRemoveColor = useCallback((idx) => {
+    setColors(prev => {
+      const next = [...prev];
+      next[idx] = null;
+      return next;
+    });
+  }, []);
+
+  const handleChangeColor = useCallback((idx, value) => {
+    setColors(prev => {
+      const next = [...prev];
+      next[idx] = value;
+      return next;
+    });
+  }, []);
+
   const handleConfirm = () => {
-    // Save user's selections back to sessionStorage
     const confirmedBrand = {
       ...brandData,
       company_name: companyName,
       logo_url: selectedLogo,
-      primary_color: selectedColors.primary,
-      secondary_color: selectedColors.secondary,
-      accent_color_1: selectedColors.accent1,
-      accent_color_2: selectedColors.accent2,
+      primary_color: colors[0],
+      secondary_color: colors[1],
+      accent_color_1: colors[2],
+      accent_color_2: colors[3],
       user_verified: true
     };
 
     sessionStorage.setItem('confirmedBrand', JSON.stringify(confirmedBrand));
-
-    // Navigate back to Loading to continue with design generation
     navigate(createPageUrl('Loading'));
   };
 
   const handleRegenerateBranding = () => {
-    // Clear brand data and go back to force re-extraction
     sessionStorage.removeItem('brandVerification');
     sessionStorage.removeItem('confirmedBrand');
     navigate(createPageUrl('Loading'));
@@ -67,250 +87,122 @@ export default function BrandVerification() {
 
   if (!brandData) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
-        <p className="text-white">Loading brand data...</p>
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-[#e2231a] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 py-12 px-4">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-[calc(100vh-64px)] bg-slate-100 p-4 md:p-10 pb-24 md:pb-10">
+      <div className="max-w-3xl mx-auto">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
+          className="text-center mb-8"
         >
-          <h1 className="text-4xl font-bold text-white mb-2">
-            Verify Your Brand Identity
+          <h1 className="text-3xl md:text-4xl font-bold text-[#e2231a] mb-2">
+            Verify Your Brand
           </h1>
-          <p className="text-white/60">
-            Review and select your branding before we generate your booth designs
+          <p className="text-slate-500 text-lg">
+            Review and adjust your branding before we design your booth
           </p>
         </motion.div>
 
-        <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 space-y-8">
-          {/* Company Name */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.1 }}
-          >
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold text-white">Company Name</h2>
-              <button
-                onClick={() => setIsEditingName(!isEditingName)}
-                className="text-white/60 hover:text-white transition-colors"
-              >
-                <Edit2 size={18} />
-              </button>
-            </div>
-            {isEditingName ? (
-              <input
-                type="text"
-                value={companyName}
-                onChange={(e) => setCompanyName(e.target.value)}
-                onBlur={() => setIsEditingName(false)}
-                autoFocus
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-purple-500"
-              />
-            ) : (
-              <p className="text-2xl font-bold text-white">{companyName}</p>
-            )}
-          </motion.div>
-
-          {/* Logo Selection */}
-          {brandData.logo_options && brandData.logo_options.length > 0 ? (
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
-            >
-              <h2 className="text-xl font-semibold text-white mb-4">Select Logo</h2>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {brandData.logo_options.map((logoOption, idx) => (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+        >
+          <Card className="shadow-xl border-0">
+            <CardContent className="p-6 md:p-8 space-y-8">
+              {/* Company Name */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <h2 className="text-lg font-semibold text-slate-800">Company Name</h2>
                   <button
-                    key={idx}
-                    onClick={() => setSelectedLogo(logoOption.url)}
-                    className={`relative p-6 rounded-xl border-2 transition-all ${
-                      selectedLogo === logoOption.url
-                        ? 'border-purple-500 bg-purple-500/20'
-                        : 'border-white/20 bg-white/5 hover:border-white/40'
-                    }`}
+                    onClick={() => setIsEditingName(!isEditingName)}
+                    className="text-slate-400 hover:text-[#e2231a] transition-colors"
                   >
-                    <div className="bg-white rounded-lg p-4 mb-2 h-32 flex items-center justify-center">
-                      <img
-                        src={logoOption.url}
-                        alt={`Logo option ${idx + 1}`}
-                        className="max-w-full max-h-full object-contain"
-                      />
-                    </div>
-                    <p className="text-white/60 text-sm text-center">
-                      {logoOption.format?.toUpperCase()} - {logoOption.width}x{logoOption.height}
-                    </p>
-                    {selectedLogo === logoOption.url && (
-                      <div className="absolute top-2 right-2 bg-purple-500 rounded-full p-1">
-                        <Check size={16} className="text-white" />
-                      </div>
-                    )}
+                    <Edit2 size={16} />
                   </button>
-                ))}
-              </div>
-            </motion.div>
-          ) : (
-            brandData.logo_url && (
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.2 }}
-              >
-                <h2 className="text-xl font-semibold text-white mb-4">Logo</h2>
-                <div className="bg-white rounded-xl p-8 flex items-center justify-center h-48">
-                  <img
-                    src={brandData.logo_url}
-                    alt="Company logo"
-                    className="max-w-full max-h-full object-contain"
+                </div>
+                {isEditingName ? (
+                  <Input
+                    value={companyName}
+                    onChange={(e) => setCompanyName(e.target.value)}
+                    onBlur={() => setIsEditingName(false)}
+                    onKeyDown={(e) => e.key === 'Enter' && setIsEditingName(false)}
+                    autoFocus
+                    className="h-12 text-lg"
                   />
-                </div>
-              </motion.div>
-            )
-          )}
+                ) : (
+                  <p className="text-2xl font-bold text-slate-900">{companyName}</p>
+                )}
+              </div>
 
-          {/* Color Palette */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            <h2 className="text-xl font-semibold text-white mb-4">Brand Colors</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {/* Primary Color */}
+              {/* Logo Selection */}
+              <LogoSelector
+                logoOptions={brandData.logo_options}
+                selectedLogo={selectedLogo}
+                singleLogoUrl={brandData.logo_url}
+                onSelect={setSelectedLogo}
+              />
+
+              {/* Draggable Color Palette */}
               <div>
-                <label className="block text-white/60 text-sm mb-2">Primary</label>
-                <div
-                  className="w-full h-24 rounded-lg border-2 border-white/20 cursor-pointer relative"
-                  style={{ backgroundColor: selectedColors.primary }}
-                  onClick={() => {
-                    const input = document.createElement('input');
-                    input.type = 'color';
-                    input.value = selectedColors.primary || '#000000';
-                    input.onchange = (e) => setSelectedColors({ ...selectedColors, primary: e.target.value });
-                    input.click();
-                  }}
-                >
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-white text-xs font-mono bg-black/30 px-2 py-1 rounded">
-                      {selectedColors.primary}
-                    </span>
-                  </div>
+                <div className="flex items-center justify-between mb-3">
+                  <h2 className="text-lg font-semibold text-slate-800">Brand Colors</h2>
+                  <span className="text-xs text-slate-400">Drag to reorder</span>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {colors.map((color, idx) => (
+                    <DraggableColorSlot
+                      key={idx}
+                      label={COLOR_LABELS[idx]}
+                      color={color}
+                      slotIndex={idx}
+                      onRemove={() => handleRemoveColor(idx)}
+                      onColorChange={(val) => handleChangeColor(idx, val)}
+                      onDragStart={() => {}}
+                      onDragOver={() => {}}
+                      onDrop={handleSwapColors}
+                    />
+                  ))}
                 </div>
               </div>
 
-              {/* Secondary Color */}
-              <div>
-                <label className="block text-white/60 text-sm mb-2">Secondary</label>
-                <div
-                  className="w-full h-24 rounded-lg border-2 border-white/20 cursor-pointer relative"
-                  style={{ backgroundColor: selectedColors.secondary }}
-                  onClick={() => {
-                    const input = document.createElement('input');
-                    input.type = 'color';
-                    input.value = selectedColors.secondary || '#000000';
-                    input.onchange = (e) => setSelectedColors({ ...selectedColors, secondary: e.target.value });
-                    input.click();
-                  }}
-                >
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-white text-xs font-mono bg-black/30 px-2 py-1 rounded">
-                      {selectedColors.secondary}
-                    </span>
-                  </div>
+              {/* Industry */}
+              {brandData.industry && (
+                <div>
+                  <h2 className="text-lg font-semibold text-slate-800 mb-1">Industry</h2>
+                  <p className="text-slate-600">{brandData.industry}</p>
                 </div>
-              </div>
+              )}
 
-              {/* Accent 1 */}
-              <div>
-                <label className="block text-white/60 text-sm mb-2">Accent 1</label>
-                <div
-                  className="w-full h-24 rounded-lg border-2 border-white/20 cursor-pointer relative"
-                  style={{ backgroundColor: selectedColors.accent1 }}
-                  onClick={() => {
-                    const input = document.createElement('input');
-                    input.type = 'color';
-                    input.value = selectedColors.accent1 || '#000000';
-                    input.onchange = (e) => setSelectedColors({ ...selectedColors, accent1: e.target.value });
-                    input.click();
-                  }}
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-3 pt-4">
+                <Button
+                  variant="outline"
+                  onClick={handleRegenerateBranding}
+                  className="flex-1 h-14 text-base gap-2"
                 >
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-white text-xs font-mono bg-black/30 px-2 py-1 rounded">
-                      {selectedColors.accent1}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Accent 2 */}
-              <div>
-                <label className="block text-white/60 text-sm mb-2">Accent 2</label>
-                <div
-                  className="w-full h-24 rounded-lg border-2 border-white/20 cursor-pointer relative"
-                  style={{ backgroundColor: selectedColors.accent2 }}
-                  onClick={() => {
-                    const input = document.createElement('input');
-                    input.type = 'color';
-                    input.value = selectedColors.accent2 || '#000000';
-                    input.onchange = (e) => setSelectedColors({ ...selectedColors, accent2: e.target.value });
-                    input.click();
-                  }}
+                  <RefreshCw size={18} />
+                  Re-extract Branding
+                </Button>
+                <Button
+                  onClick={handleConfirm}
+                  className="flex-1 h-14 text-base bg-[#e2231a] hover:bg-[#b01b13] gap-2"
                 >
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-white text-xs font-mono bg-black/30 px-2 py-1 rounded">
-                      {selectedColors.accent2}
-                    </span>
-                  </div>
-                </div>
+                  <Check size={18} />
+                  Confirm & Generate Designs
+                  <ArrowRight size={18} />
+                </Button>
               </div>
-            </div>
-            <p className="text-white/40 text-sm mt-2">Click any color to edit</p>
-          </motion.div>
-
-          {/* Industry */}
-          {brandData.industry && (
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.4 }}
-            >
-              <h2 className="text-xl font-semibold text-white mb-2">Industry</h2>
-              <p className="text-white/80">{brandData.industry}</p>
-            </motion.div>
-          )}
-
-          {/* Action Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="flex gap-4 pt-6"
-          >
-            <button
-              onClick={handleRegenerateBranding}
-              className="flex-1 px-6 py-4 bg-white/10 hover:bg-white/20 text-white rounded-xl font-semibold transition-all flex items-center justify-center gap-2"
-            >
-              <RefreshCw size={20} />
-              Re-extract Branding
-            </button>
-            <button
-              onClick={handleConfirm}
-              className="flex-1 px-6 py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-xl font-semibold transition-all flex items-center justify-center gap-2"
-            >
-              <Check size={20} />
-              Confirm & Continue
-            </button>
-          </motion.div>
-        </div>
+            </CardContent>
+          </Card>
+        </motion.div>
       </div>
     </div>
   );
