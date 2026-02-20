@@ -7,32 +7,280 @@ import { Search, Sparkles, CheckCircle, Palette, Layers, Lightbulb, ShieldCheck 
 import { enforceAllDesigns } from '../components/utils/boothRulesEngine';
 
 // ═══════════════════════════════════════════════════════════════
-// STATIC PROMPT FRAGMENTS (never change per request)
+// BRAND EXTRACTION — VALIDATION UTILITIES
+// Fixes: legacy names, platform color bleed, weak logos,
+//        near-duplicate colors, broken logo URLs
 // ═══════════════════════════════════════════════════════════════
 
-const BRAND_EXTRACTION_PROMPT = `Analyze this company website. Extract brand identity and find their logo image URL from <img>, <link rel="icon">, <meta property="og:image">, or linked SVGs. Return a direct, absolute image URL.
+// Xhibitly platform reds — NEVER allow these into a client brand
+const PLATFORM_COLORS = [
+  "#e2231a", "#b01b13", "#0f1d2e", "#ff0000", "#cc0000",
+  "#ee2222", "#dd1111", "#bb1111", "#aa0000", "#990000",
+  "#ff1111", "#ee0000", "#dd0000", "#c0392b", "#e74c3c"
+];
 
-Extract 4 distinct brand colors. primary_color must match the dominant logo color. logo_url must be a real, working URL from the site.`;
+// Known government agency rebrandings
+const LEGACY_NAMES = {
+  "deo": "FloridaCommerce",
+  "florida department of economic opportunity": "FloridaCommerce",
+  "department of economic opportunity": "FloridaCommerce",
+  "enterprise florida": "FloridaCommerce",
+};
+
+const DOMAIN_NAME_MAP = {
+  "floridajobs.org": "FloridaCommerce",
+  "floridacommerce.com": "FloridaCommerce",
+};
+
+function normalizeHex(hex) {
+  if (!hex || typeof hex !== "string") return null;
+  let h = hex.replace(/^#/, "").toLowerCase().trim();
+  if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+  if (!/^[0-9a-f]{6}$/.test(h)) return null;
+  return "#" + h;
+}
+
+function hexToRgb(hex) {
+  const h = (normalizeHex(hex) || "#000000").replace("#", "");
+  return {
+    r: parseInt(h.substring(0, 2), 16),
+    g: parseInt(h.substring(2, 4), 16),
+    b: parseInt(h.substring(4, 6), 16)
+  };
+}
+
+function rgbToHex(r, g, b) {
+  const clamp = (v) => Math.max(0, Math.min(255, Math.round(v)));
+  return "#" + [r, g, b].map(c => clamp(c).toString(16).padStart(2, "0")).join("");
+}
+
+function colorDistance(hex1, hex2) {
+  const a = hexToRgb(hex1);
+  const b = hexToRgb(hex2);
+  return Math.sqrt((a.r - b.r) ** 2 + (a.g - b.g) ** 2 + (a.b - b.b) ** 2);
+}
+
+function isPlatformColorBleed(hex, threshold = 45) {
+  const n = normalizeHex(hex);
+  if (!n) return true;
+  return PLATFORM_COLORS.some(pc => colorDistance(n, pc) < threshold);
+}
+
+function areColorsTooSimilar(hex1, hex2, threshold = 30) {
+  if (!hex1 || !hex2) return false;
+  return colorDistance(hex1, hex2) < threshold;
+}
+
+function darkenColor(hex, amount = 40) {
+  const rgb = hexToRgb(hex);
+  return rgbToHex(rgb.r - amount, rgb.g - amount, rgb.b - amount);
+}
+
+function lightenColor(hex, amount = 40) {
+  const rgb = hexToRgb(hex);
+  return rgbToHex(rgb.r + amount, rgb.g + amount, rgb.b + amount);
+}
+
+function validateCompanyName(brand, websiteUrl) {
+  const result = { ...brand };
+  const nameLower = (result.company_name || "").toLowerCase().trim();
+
+  for (const [legacy, current] of Object.entries(LEGACY_NAMES)) {
+    if (nameLower === legacy || nameLower.includes(legacy)) {
+      console.log(`[Brand] Name correction: "${result.company_name}" → "${current}"`);
+      result.company_name_former = result.company_name;
+      result.company_name = current;
+      break;
+    }
+  }
+
+  for (const [domain, expectedName] of Object.entries(DOMAIN_NAME_MAP)) {
+    if (websiteUrl.includes(domain) && result.company_name !== expectedName) {
+      const currentLower = result.company_name.toLowerCase();
+      if (currentLower.includes("economic opportunity") || currentLower.includes("deo") || !currentLower) {
+        console.log(`[Brand] Domain-based correction: "${result.company_name}" → "${expectedName}"`);
+        if (result.company_name) result.company_name_former = result.company_name;
+        result.company_name = expectedName;
+      }
+    }
+  }
+
+  return result;
+}
+
+function validateColors(brand) {
+  const result = { ...brand };
+  const fields = ["primary_color", "secondary_color", "accent_color_1", "accent_color_2"];
+  const issues = [];
+
+  // Pass 1: Normalize and flag problems
+  fields.forEach(field => {
+    const normalized = normalizeHex(result[field]);
+    if (!normalized) {
+      issues.push({ field, issue: "invalid_format", original: result[field] });
+      result[field] = null;
+      return;
+    }
+    if (isPlatformColorBleed(normalized)) {
+      issues.push({ field, issue: "platform_bleed", original: normalized });
+      result[field] = null;
+      return;
+    }
+    result[field] = normalized;
+  });
+
+  // Pass 2: Deduplicate near-identical colors
+  const validFields = fields.filter(f => result[f] !== null);
+  for (let i = 0; i < validFields.length; i++) {
+    for (let j = i + 1; j < validFields.length; j++) {
+      if (areColorsTooSimilar(result[validFields[i]], result[validFields[j]])) {
+        issues.push({ field: validFields[j], issue: "too_similar", original: result[validFields[j]] });
+        result[validFields[j]] = null;
+      }
+    }
+  }
+
+  // Pass 3: Repair nulled colors from surviving palette
+  const surviving = fields.filter(f => result[f] !== null);
+  if (surviving.length === 0) {
+    console.log("[Brand] WARNING: All colors failed. Applying neutral defaults.");
+    result.primary_color = "#003b71";
+    result.secondary_color = "#0066b3";
+    result.accent_color_1 = "#f7941d";
+    result.accent_color_2 = "#ffffff";
+  } else {
+    const baseColor = result[surviving[0]];
+    const repairs = [lightenColor(baseColor, 50), darkenColor(baseColor, 50), lightenColor(baseColor, 100), "#ffffff"];
+    let repairIdx = 0;
+    fields.forEach(field => {
+      if (result[field] === null) {
+        let repairColor = null;
+        while (repairIdx < repairs.length) {
+          const candidate = repairs[repairIdx++];
+          const tooClose = fields.some(f => result[f] !== null && areColorsTooSimilar(result[f], candidate));
+          if (!tooClose && !isPlatformColorBleed(candidate)) { repairColor = candidate; break; }
+        }
+        result[field] = repairColor || "#ffffff";
+        console.log(`[Brand] Repaired ${field}: ${result[field]}`);
+      }
+    });
+  }
+
+  if (issues.length > 0) console.log("[Brand] Color issues fixed:", issues);
+  return result;
+}
+
+function validateLogo(brand) {
+  const result = { ...brand };
+  const url = result.logo_url || "";
+  const isValidImageUrl = url.startsWith("http") && /\.(png|jpg|jpeg|gif|webp|svg)(\?.*)?$/i.test(url);
+  const isPageUrl = url.includes("/about") || url.includes("/contact") || url.endsWith("/") || url.endsWith(".html");
+  if (!isValidImageUrl || isPageUrl) {
+    console.log(`[Brand] Invalid logo URL rejected: "${url}"`);
+    result.logo_url = null;
+  }
+  return result;
+}
+
+function validateLogoDescription(brand) {
+  const result = { ...brand };
+  const desc = result.logo_description || "";
+  const hasDetail = /text|word|letter|font|color|blue|red|green|black|white|gold|navy|shape|icon|outline|silhouette|seal|circle|map/i.test(desc);
+  if (desc.length < 30 || !hasDetail) {
+    result.logo_description = `Logo for "${result.company_name}". Text displays the company name in a professional sans-serif font. Primary brand color: ${result.primary_color}. ${desc}`;
+    console.log("[Brand] Logo description enriched");
+  }
+  if (result.company_name_former && result.logo_description.includes(result.company_name_former)) {
+    result.logo_description = result.logo_description.replace(new RegExp(result.company_name_former, "gi"), result.company_name);
+    console.log("[Brand] Logo description: replaced legacy name");
+  }
+  return result;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// BRAND EXTRACTION — MAIN FUNCTION
+// ═══════════════════════════════════════════════════════════════
 
 const BRAND_SCHEMA = {
   type: "object",
   properties: {
-    logo_url: { type: "string" },
-    logo_description: { type: "string" },
-    company_name: { type: "string" },
-    primary_color: { type: "string" },
-    secondary_color: { type: "string" },
-    accent_color_1: { type: "string" },
-    accent_color_2: { type: "string" },
-    typography_primary: { type: "string" },
+    logo_url:             { type: "string" },
+    logo_description:     { type: "string" },
+    company_name:         { type: "string" },
+    company_name_former:  { type: "string" },
+    primary_color:        { type: "string" },
+    secondary_color:      { type: "string" },
+    accent_color_1:       { type: "string" },
+    accent_color_2:       { type: "string" },
+    typography_primary:   { type: "string" },
     typography_secondary: { type: "string" },
-    brand_personality: { type: "string" },
-    industry: { type: "string" },
-    target_audience: { type: "string" },
-    design_style: { type: "array", items: { type: "string" } },
-    brand_essence: { type: "string" }
+    brand_personality:    { type: "string" },
+    industry:             { type: "string" },
+    target_audience:      { type: "string" },
+    design_style:         { type: "array", items: { type: "string" } },
+    brand_essence:        { type: "string" }
   }
 };
+
+function buildBrandPrompt(websiteUrl) {
+  return `Analyze this company website and extract their CURRENT brand identity.
+
+URL: ${websiteUrl}
+
+RULES — FOLLOW EXACTLY:
+
+COMPANY NAME:
+- Return the name EXACTLY as displayed on the CURRENT live website header/footer.
+- Government agencies rebrand. If the URL says "floridajobs.org" but the site now says "FloridaCommerce", return "FloridaCommerce" — NOT any predecessor name.
+- If you find a former/legacy name, put it in company_name_former. company_name must be the CURRENT name only.
+- Check the <title> tag, header logo text, footer, and about page. The most recently updated source wins.
+
+COLORS:
+- Extract exactly 4 DISTINCT hex colors from the website's own CSS, logo, headers, buttons, and branded elements.
+- "Distinct" means each color must be visibly different. Minimum RGB distance of 60 between any two colors.
+- primary_color = dominant color in their logo and/or site header.
+- secondary_color = second most prominent brand color.
+- accent_color_1 and accent_color_2 = supporting colors from buttons, links, highlights.
+- NEVER return pure red (#ff0000), bright red (#e2231a, #cc0000, #ee2222), or any red within RGB distance 45 of #e2231a UNLESS red is genuinely the client's primary brand color (e.g., Coca-Cola, Target). Red is our platform UI color and must not contaminate client brands.
+- If the brand is government/institutional and primarily blue, all 4 colors should come from their blue/gold/gray/white palette — not red.
+- Return hex format (#RRGGBB), lowercase.
+
+LOGO:
+- logo_url: direct absolute URL to the actual logo image file (.png, .jpg, .svg) from the website. Not a page URL — the image file itself.
+- logo_description: describe with enough detail to RECREATE it — exact text shown, font style, icon/symbol shape and color, arrangement. This will be rendered on a trade show booth.
+
+TYPOGRAPHY:
+- Extract from CSS font-family declarations or Google Fonts imports. Return the actual font name.
+
+Return only data from the CURRENT live website.`;
+}
+
+async function extractBrandIdentity(websiteUrl) {
+  const raw = await base44.integrations.Core.InvokeLLM({
+    prompt: buildBrandPrompt(websiteUrl),
+    add_context_from_internet: true,
+    response_json_schema: BRAND_SCHEMA
+  });
+
+  let result = validateCompanyName(raw, websiteUrl);
+  result = validateColors(result);
+  result = validateLogo(result);
+  result = validateLogoDescription(result);
+
+  console.log("[Brand] Extraction complete:", result.company_name);
+  console.log("[Brand] Colors:", {
+    primary: result.primary_color,
+    secondary: result.secondary_color,
+    accent1: result.accent_color_1,
+    accent2: result.accent_color_2
+  });
+
+  return result;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// DESIGN GENERATION — SCHEMAS & HELPERS
+// ═══════════════════════════════════════════════════════════════
 
 const PLACEMENT_GUIDE = `PLACEMENT: Backwall→flush rear. Counter→front-center or right, angled to aisle. Banners→flanking L/R entrance. Monitor/iPad→beside counter or backwall. Lighting→clamped on frame or truss. Flooring→full footprint. Towers→corners. Lit rack→beside counter.`;
 
@@ -118,6 +366,8 @@ function slimCatalog(products) {
       price: p.base_price,
       rental_price: p.rental_price || null,
       is_rental: p.is_rental || false,
+      is_kit: p.is_kit || false,
+      kit_components: p.kit_components || null,
       dims: d.width ? `${d.width}W×${d.height}H×${d.depth}D ft` : 'standard',
       w: d.width || null,
       h: d.height || null,
@@ -239,13 +489,25 @@ export default function Loading() {
       const minLoadTime = new Promise(r => setTimeout(r, 5000));
 
       // ── STEP 1: Brand analysis + product fetch (parallel) ──
-      const brandAnalysisPromise = base44.integrations.Core.InvokeLLM({
-        prompt: `${BRAND_EXTRACTION_PROMPT}\n\nWebsite: ${websiteUrl}`,
-        add_context_from_internet: true,
-        response_json_schema: BRAND_SCHEMA
-      });
+      // Uses extractBrandIdentity with full validation pipeline
+      let brandAnalysis;
+      try {
+        brandAnalysis = await extractBrandIdentity(websiteUrl);
+      } catch (err) {
+        console.error('[Brand] Extraction failed, using fallback:', err);
+        brandAnalysis = {
+          company_name: 'Your Company',
+          primary_color: '#003b71',
+          secondary_color: '#0066b3',
+          accent_color_1: '#f7941d',
+          accent_color_2: '#ffffff',
+          logo_description: 'Company logo',
+          brand_personality: 'Professional',
+          industry: 'Business Services'
+        };
+      }
 
-      const productsPromise = (async () => {
+      const compatibleProducts = await (async () => {
         const allVariants = await base44.entities.ProductVariant.filter({ is_active: true });
         let products = allVariants.filter(p => p.booth_sizes?.includes(boothSize));
         if (products.length === 0) {
@@ -254,8 +516,6 @@ export default function Loading() {
         }
         return products;
       })();
-
-      const [brandAnalysis, compatibleProducts] = await Promise.all([brandAnalysisPromise, productsPromise]);
       const catalog = slimCatalog(compatibleProducts);
       const profileStr = formatProfile(customerProfile);
 
@@ -311,13 +571,17 @@ CONSTRAINT: Use ONLY products from the catalog below. Every product_sku must exa
 FLOORING RULE: ALWAYS select branded carpet for flooring. NEVER select interlocking floor tiles.
 
 CATALOG:
-${JSON.stringify(catalog, null, 1)}
+${JSON.stringify(catalog)}
 
 REQUIREMENTS PER TIER:
 - Modular: 4-8 items, lower-priced. Hybrid: 6-12 items, mixed. Custom: 8-15+ items, premium.
 - Every tier minimum: backwall + counter/kiosk + lighting + branded carpet flooring. Hybrid/Custom add banners, towers, monitor stands, accents.
 - total_price = exact sum of selected products' base_price (or rental_price for rentals). Include line_items with sku, name, quantity, unit_price, line_total.
 - Booth must look FULLY FURNISHED, not sparse.
+
+KITS: Some products are marked is_kit=true with kit_components listing included items. When selecting a kit, you get all components. Kits offer better value than buying items separately.
+
+RENTALS: Products with is_rental=true and rental_price should use rental_price for pricing. Rentals are great for high-value items clients may not want to own.
 
 SPATIAL FIT: Before selecting, check product dims. Sum of widths along back wall must be ≤ ${dims.width}ft. Items must not overlap. Leave ≥3ft walkway at front.
 
@@ -404,7 +668,9 @@ FOR EACH DESIGN: include tier, design_name, experience_story, visitor_journey, k
 
 BOOTH: ${boothSize} (${dims.width}×${dims.depth}ft). Open front facing aisle. Grey carpet aisle, pipe-and-drape neighbors, convention center ceiling.
 
-COMPANY CONTEXT: This is a ${companyResearch.industry || brandAnalysis.industry || ''} company. Brand atmosphere: ${companyResearch.booth_atmosphere || brandAnalysis.brand_personality || 'professional'}. The booth should feel like visiting ${brandAnalysis.company_name}'s showroom.
+COMPANY CONTEXT: This is a ${companyResearch.industry || brandAnalysis.industry || ''} company. Brand atmosphere: ${companyResearch.booth_atmosphere || brandAnalysis.brand_personality || 'professional'}. The booth should feel like visiting ${brandAnalysis.company_name}'s showroom.${companyResearch.physical_products_to_display?.length > 0 ? `
+
+INDUSTRY ELEMENTS to suggest in the scene: ${companyResearch.physical_products_to_display.join(', ')}` : ''}
 
 BRAND: Logo="${brandAnalysis.logo_description || brandAnalysis.company_name}" | Primary=${brandAnalysis.primary_color} (backwall, banners) | Secondary=${brandAnalysis.secondary_color} (counter, accents). Logo large+centered on main backwall, smaller on counter.
 
