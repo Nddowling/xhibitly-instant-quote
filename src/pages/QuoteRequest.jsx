@@ -221,7 +221,8 @@ export default function QuoteRequest() {
           <div className="absolute -top-20 -right-20 w-[500px] h-[500px] bg-[#e2231a]/10 rounded-full blur-[120px]" />
           <div className="absolute bottom-0 -left-20 w-[400px] h-[400px] bg-[#e2231a]/5 rounded-full blur-[100px]" />
           {/* Grid pattern overlay */}
-          <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'linear-gradient(white 1px, transparent 1px), linear-gradient(90deg, white 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
+          <div className="absolute inset-0" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.07) 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
+          <div className="absolute inset-0" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.12) 1px, transparent 1px)', backgroundSize: '180px 180px' }} />
           {/* Diagonal accent lines */}
           <div className="absolute top-20 right-10 w-64 h-64 border border-white/[0.04] rounded-3xl rotate-12" />
           <div className="absolute top-32 right-24 w-48 h-48 border border-[#e2231a]/10 rounded-2xl rotate-[25deg]" />
