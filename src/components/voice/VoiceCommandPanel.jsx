@@ -133,20 +133,34 @@ export default function VoiceCommandPanel({
             <div className="px-4 py-3 bg-white border-t border-slate-100">
               <div className="flex items-center justify-between">
                 <p className="text-xs text-slate-400">
-                  {isListening ? '🔴 Listening... speak now' : 'Tap mic to speak'}
+                  {isListening ? '🔴 Listening... speak now' : isProcessing ? '⏳ Processing...' : 'Tap mic to speak'}
                 </p>
-                <Button
-                  size="sm"
-                  onClick={onToggleListening}
-                  className={`h-8 px-3 rounded-full text-xs font-medium ${
-                    isListening
-                      ? 'bg-[#e2231a] hover:bg-[#b01b13] text-white'
-                      : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
-                  }`}
-                >
-                  <Mic className="w-3.5 h-3.5 mr-1" />
-                  {isListening ? 'Stop' : 'Speak'}
-                </Button>
+                <div className="flex items-center gap-2">
+                  {conversationActive && messages.length > 0 && (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={onEndConversation}
+                      className="h-8 px-3 rounded-full text-xs font-medium text-red-500 border-red-200 hover:bg-red-50"
+                    >
+                      <PhoneOff className="w-3 h-3 mr-1" />
+                      End Chat
+                    </Button>
+                  )}
+                  <Button
+                    size="sm"
+                    onClick={onToggleListening}
+                    disabled={isProcessing}
+                    className={`h-8 px-3 rounded-full text-xs font-medium ${
+                      isListening
+                        ? 'bg-[#e2231a] hover:bg-[#b01b13] text-white'
+                        : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                    }`}
+                  >
+                    {isListening ? <MicOff className="w-3.5 h-3.5 mr-1" /> : <Mic className="w-3.5 h-3.5 mr-1" />}
+                    {isListening ? 'Pause' : 'Speak'}
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
