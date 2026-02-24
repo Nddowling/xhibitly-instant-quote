@@ -65,8 +65,10 @@ export default function VoiceActivationProvider({ children }) {
   const [messages, setMessages] = useState([]);
   const [interimTranscript, setInterimTranscript] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [conversationActive, setConversationActive] = useState(false);
   const recognitionRef = useRef(null);
   const synthRef = useRef(window.speechSynthesis);
+  const autoListenRef = useRef(false);
 
   // ── SPEECH RECOGNITION SETUP ──
   const getSpeechRecognition = useCallback(() => {
