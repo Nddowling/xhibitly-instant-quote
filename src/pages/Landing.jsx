@@ -54,7 +54,7 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-[#e2231a] rounded-lg flex items-center justify-center">
-              <span className="text-white font-black text-sm">X</span>
+              <span className="text-white font-black text-sm">EH</span>
             </div>
             <span className="text-lg font-bold tracking-tight">The Exhibitors' Handbook</span>
             <span className="hidden sm:inline text-xs text-white/30 ml-1 font-medium">by The Exhibitors' Handbook</span>
@@ -164,7 +164,7 @@ export default function Landing() {
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="text-center">
                   <div className="w-20 h-20 bg-[#e2231a] rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-2xl shadow-[#e2231a]/30">
-                    <span className="text-white font-black text-3xl">X</span>
+                    <span className="text-white font-black text-xl">EH</span>
                   </div>
                   <p className="text-sm font-semibold text-white/60">AI-Powered</p>
                   <p className="text-xs text-white/30">Booth Design</p>
@@ -341,7 +341,7 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-white/20 text-sm">
             <div className="w-5 h-5 bg-[#e2231a] rounded flex items-center justify-center">
-              <span className="text-white font-black text-[10px]">X</span>
+              <span className="text-white font-black text-[8px]">EH</span>
             </div>
             <span>The Exhibitors' Handbook © {new Date().getFullYear()}</span>
           </div>
