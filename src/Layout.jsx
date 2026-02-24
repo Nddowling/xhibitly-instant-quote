@@ -545,5 +545,6 @@ export default function Layout({ children, currentPageName }) {
         </nav>
       )}
     </div>
+    </VoiceActivationProvider>
   );
 }
