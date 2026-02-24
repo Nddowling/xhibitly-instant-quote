@@ -36,6 +36,28 @@ const PAGE_ALIASES = {
   'brand verification': 'BrandVerification',
 };
 
+// ── CATALOG SEARCH HELPER ──
+async function searchCatalog(query) {
+  const allProducts = await base44.entities.ProductVariant.filter({ is_active: true });
+  const q = query.toLowerCase();
+  const matches = allProducts.filter(p => {
+    const name = (p.display_name || p.name || '').toLowerCase();
+    const sku = (p.manufacturer_sku || '').toLowerCase();
+    const cat = (p.category_name || '').toLowerCase();
+    const desc = (p.description || '').toLowerCase();
+    return name.includes(q) || sku.includes(q) || cat.includes(q) || desc.includes(q);
+  });
+  return matches.slice(0, 5).map(p => ({
+    name: p.display_name || p.name,
+    sku: p.manufacturer_sku,
+    category: p.category_name,
+    price: p.base_price,
+    sizes: p.booth_sizes,
+    tier: p.price_tier,
+    description: (p.description || '').slice(0, 120)
+  }));
+}
+
 export default function VoiceActivationProvider({ children }) {
   const navigate = useNavigate();
   const [isListening, setIsListening] = useState(false);
