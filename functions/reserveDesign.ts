@@ -72,7 +72,7 @@ EXPERIENCE STORY:
 ${design.experience_story || 'N/A'}
 
 ━━━━━━━━━━━━━━━━━━━━━━
-This is an automated notification from Xhibitly Quote Pro.
+This is an automated notification from The Exhibitors' Handbook.
 The customer is expecting a call within 10 minutes.
       `
     });

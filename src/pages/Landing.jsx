@@ -214,7 +214,7 @@ export default function Landing() {
               {
                 icon: Package,
                 title: 'Pick Your Package',
-                desc: 'Review three curated booth options — each assembled from premium Orbus products, branded to match you.',
+                desc: 'Review three curated booth options — each assembled from premium products, branded to match you.',
                 detail: '~60 seconds'
               },
               {
@@ -331,7 +331,7 @@ export default function Landing() {
               Get Your Instant Quote
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
-            <p className="text-white/20 text-xs mt-5">No credit card required • Powered by Orbus Exhibit & Display Group</p>
+            <p className="text-white/20 text-xs mt-5">No credit card required • Powered by The Exhibitors' Handbook</p>
           </motion.div>
         </div>
       </section>
@@ -346,7 +346,7 @@ export default function Landing() {
             <span>Xhibitly © {new Date().getFullYear()}</span>
           </div>
           <div className="text-xs text-white/15">
-            A product of Orbus Exhibit & Display Group
+            A product of The Exhibitors' Handbook
           </div>
         </div>
       </footer>
