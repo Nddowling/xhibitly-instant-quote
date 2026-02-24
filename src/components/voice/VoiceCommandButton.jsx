@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mic, MicOff, X } from 'lucide-react';
+import { Mic, MicOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function VoiceCommandButton({ isListening, onToggle, hasTranscript, onOpenPanel }) {
