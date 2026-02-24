@@ -12,7 +12,7 @@ Deno.serve(async (req) => {
 
     // Find the assigned sales rep (or use default notification)
     let brokerEmail = 'orders@xhibitly.com';
-    let brokerName = 'Xhibitly Team';
+    let brokerName = "The Exhibitors' Handbook Team";
 
     // Check if there's an assigned sales rep
     if (quote_data.isSalesRepQuote) {

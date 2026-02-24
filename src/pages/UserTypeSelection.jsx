@@ -100,7 +100,7 @@ export default function UserTypeSelection() {
       >
         <div className="text-center mb-10">
           <h1 className="text-4xl font-bold text-[#e2231a] mb-3">
-            Welcome to Xhibitly Instant Quote
+            Welcome to The Exhibitors' Handbook
           </h1>
           <p className="text-slate-600 text-lg">
             Let's get started by identifying your role

@@ -56,7 +56,7 @@ export default function Landing() {
             <div className="w-8 h-8 bg-[#e2231a] rounded-lg flex items-center justify-center">
               <span className="text-white font-black text-sm">X</span>
             </div>
-            <span className="text-lg font-bold tracking-tight">Xhibitly</span>
+            <span className="text-lg font-bold tracking-tight">The Exhibitors' Handbook</span>
             <span className="hidden sm:inline text-xs text-white/30 ml-1 font-medium">by The Exhibitors' Handbook</span>
           </div>
           <div className="flex items-center gap-3">
@@ -343,7 +343,7 @@ export default function Landing() {
             <div className="w-5 h-5 bg-[#e2231a] rounded flex items-center justify-center">
               <span className="text-white font-black text-[10px]">X</span>
             </div>
-            <span>Xhibitly © {new Date().getFullYear()}</span>
+            <span>The Exhibitors' Handbook © {new Date().getFullYear()}</span>
           </div>
           <div className="text-xs text-white/15">
             A product of The Exhibitors' Handbook
