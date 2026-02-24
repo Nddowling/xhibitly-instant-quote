@@ -255,7 +255,7 @@ export default function Landing() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
             >
-              <p className="text-[#e2231a] text-sm font-semibold uppercase tracking-widest mb-3">Why Xhibitly</p>
+              <p className="text-[#e2231a] text-sm font-semibold uppercase tracking-widest mb-3">Why Us</p>
               <h2 className="text-3xl md:text-4xl font-bold mb-6 leading-tight">
                 Premium booth service,
                 <br />
