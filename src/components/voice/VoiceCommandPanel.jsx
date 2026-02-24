@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Mic, Loader2, Volume2 } from 'lucide-react';
+import { X, Mic, MicOff, Loader2, Volume2, PhoneOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ReactMarkdown from 'react-markdown';
 
