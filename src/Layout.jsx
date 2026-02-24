@@ -329,7 +329,7 @@ export default function Layout({ children, currentPageName }) {
             <div className="md:hidden bg-[#b01b13] border-t border-white/10">
               <div className="px-4 py-3 space-y-1">
                 <div className="px-3 py-2 text-white/70 text-sm">
-                  {user?.full_name?.split(' ')[0] || user?.contact_name?.split(' ')[0]} — {getUserTypeLabel()}
+                  {user?.full_name?.split(&apos; &apos;)[0] || user?.contact_name?.split(&apos; &apos;)[0]} &mdash; {getUserTypeLabel()}
                 </div>
                 <div className="h-px bg-white/10 my-1" />
 
