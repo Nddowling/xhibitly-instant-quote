@@ -5,6 +5,7 @@ import { base44 } from '@/api/base44Client';
 import { LogOut, FileText, Plus, Home as HomeIcon, Settings as SettingsIcon, ArrowLeft, LayoutDashboard, ChevronDown, User, Users, GraduationCap, Menu, X, Package, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
+import VoiceActivationProvider from './components/voice/VoiceActivationProvider';
 
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
