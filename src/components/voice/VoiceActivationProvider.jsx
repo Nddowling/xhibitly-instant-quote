@@ -373,6 +373,7 @@ RULES:
   // Cleanup on unmount
   useEffect(() => {
     return () => {
+      autoListenRef.current = false;
       if (recognitionRef.current) {
         recognitionRef.current.stop();
       }
@@ -385,7 +386,9 @@ RULES:
   const value = {
     isListening,
     messages,
+    conversationActive,
     toggleListening,
+    endConversation,
     speak,
     addMessage,
   };
