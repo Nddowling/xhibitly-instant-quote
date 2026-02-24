@@ -63,15 +63,31 @@ export default function VoiceCommandPanel({
             {/* Header */}
             <div className="flex items-center justify-between px-4 py-3 bg-white border-b border-slate-100">
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-[#e2231a] animate-pulse" />
+                <div className={`w-2 h-2 rounded-full ${conversationActive ? 'bg-[#e2231a] animate-pulse' : 'bg-slate-300'}`} />
                 <span className="text-sm font-semibold text-slate-800">Voice Assistant</span>
                 {isListening && (
                   <span className="text-xs text-[#e2231a] font-medium">Listening...</span>
                 )}
+                {isProcessing && (
+                  <span className="text-xs text-amber-500 font-medium">Thinking...</span>
+                )}
               </div>
-              <Button variant="ghost" size="icon" onClick={onClose} className="h-7 w-7 text-slate-400 hover:text-slate-600">
-                <X className="w-4 h-4" />
-              </Button>
+              <div className="flex items-center gap-1">
+                {conversationActive && (
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={onEndConversation} 
+                    className="h-7 px-2 text-xs text-red-500 hover:text-red-700 hover:bg-red-50 gap-1"
+                  >
+                    <PhoneOff className="w-3 h-3" />
+                    End
+                  </Button>
+                )}
+                <Button variant="ghost" size="icon" onClick={onClose} className="h-7 w-7 text-slate-400 hover:text-slate-600">
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
             </div>
 
             {/* Messages */}
