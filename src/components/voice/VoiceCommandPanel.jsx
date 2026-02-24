@@ -95,8 +95,13 @@ export default function VoiceCommandPanel({
               {messages.length === 0 && !interimTranscript && (
                 <div className="text-center py-8 text-slate-400">
                   <Mic className="w-8 h-8 mx-auto mb-2 opacity-40" />
-                  <p className="text-sm">Press the mic button and speak a command</p>
-                  <p className="text-xs mt-1 text-slate-300">Try "Go to dashboard" or "Create a booth for nike.com"</p>
+                  <p className="text-sm font-medium">Tap the mic and start talking</p>
+                  <div className="text-xs mt-2 text-slate-300 space-y-1">
+                    <p>"Go to my pipeline"</p>
+                    <p>"Find me a 10-foot backwall"</p>
+                    <p>"Create a booth for nike.com"</p>
+                    <p>"What Formulate products do you have?"</p>
+                  </div>
                 </div>
               )}
 
