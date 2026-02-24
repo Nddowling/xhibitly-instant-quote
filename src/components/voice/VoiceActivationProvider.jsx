@@ -309,15 +309,15 @@ RULES:
     switch (parsed.action) {
       case 'navigate': {
         if (parsed.page) {
-          // Try direct page name or alias lookup
           let targetPage = parsed.page;
           const lowerPage = parsed.page.toLowerCase();
           if (PAGE_ALIASES[lowerPage]) {
             targetPage = PAGE_ALIASES[lowerPage];
           }
+          // Navigate immediately for fluid experience
           setTimeout(() => {
             navigate(createPageUrl(targetPage));
-          }, 500);
+          }, 200);
         }
         break;
       }
@@ -337,35 +337,35 @@ RULES:
           sessionStorage.setItem('quoteRequest', JSON.stringify(quoteData));
           setTimeout(() => {
             navigate(createPageUrl('CustomerProfile'));
-          }, 800);
+          }, 400);
         }
+        // If missing info, LLM already asked via clarify — no action needed
         break;
       }
 
       case 'send_quote': {
         if (parsed.needs_confirmation) {
-          // Wait for user confirmation in next message
-          // The LLM will handle the confirmation flow
+          // Wait for user confirmation — LLM handles the flow
         }
         break;
       }
 
       case 'confirm_action': {
-        // Handle confirmed destructive action
         const selectedDesign = sessionStorage.getItem('selectedDesign');
         if (selectedDesign) {
-          // Trigger reserve flow — will be handled by DesignConfigurator
           const event = new CustomEvent('voice-reserve-design');
           window.dispatchEvent(event);
         }
         break;
       }
 
+      case 'search_catalog':
+      case 'clarify':
       case 'query':
       case 'modify_design':
       case 'chat':
       default:
-        // Response already added above
+        // Response already added and spoken — conversation continues
         break;
     }
   }, [navigate, addMessage, speak]);
