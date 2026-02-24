@@ -158,7 +158,7 @@ export default function Layout({ children, currentPageName }) {
                   </Button>
                 ) : null}
                 <Link to={createPageUrl(user?.is_sales_rep ? 'SalesDashboard' : 'QuoteRequest')} className="flex items-center gap-2 shrink-0">
-                  <span className="text-sm md:text-base font-bold tracking-tight whitespace-nowrap">The Exhibitors&apos; Handbook</span>
+                  <span className="text-sm md:text-base font-bold tracking-tight whitespace-nowrap">{"The Exhibitors' Handbook"}</span>
                   <span className="text-sm font-normal tracking-tight hidden lg:inline whitespace-nowrap ml-1 text-white/70">Instant Quote</span>
                 </Link>
               </div>
