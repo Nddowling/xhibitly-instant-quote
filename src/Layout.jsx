@@ -162,6 +162,7 @@ export default function Layout({ children, currentPageName }) {
                   <span className="text-sm font-normal tracking-tight hidden lg:inline whitespace-nowrap ml-1 text-white/70">Instant Quote</span>
                 </Link>
               </div>
+
               
               {/* Desktop Nav */}
               <nav className="hidden md:flex items-center gap-2">
