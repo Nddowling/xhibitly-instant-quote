@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
+import SalesPipelineBoard from '@/components/sales/SalesPipelineBoard';
 import { 
   TrendingUp, 
   Users, 
@@ -170,6 +171,10 @@ export default function SalesDashboard() {
   );
 
   const totalPipelineValue = activeOpportunities.reduce((sum, o) => sum + (o.quoted_price || 0), 0);
+
+  const handleOrderUpdate = () => {
+    loadDashboardData();
+  };
 
   if (isLoading) {
     return (
@@ -392,7 +397,7 @@ export default function SalesDashboard() {
           </motion.div>
         </div>
 
-        {/* Active Opportunities */}
+        {/* Kanban Pipeline Board */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -401,52 +406,29 @@ export default function SalesDashboard() {
         >
           <Card>
             <CardHeader>
-              <CardTitle className="text-xl">Active Opportunities</CardTitle>
-              <CardDescription>Deals in progress</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {activeOpportunities.length > 0 ? (
-                <div className="space-y-4">
-                  {activeOpportunities.slice(0, 10).map((order) => (
-                    <div
-                      key={order.id}
-                      className="p-4 border border-slate-200 rounded-lg hover:border-[#e2231a] transition-colors cursor-pointer"
-                      onClick={() => navigate(createPageUrl('OrderDetail') + '?id=' + order.id)}
-                    >
-                      <div className="flex items-start justify-between mb-2">
-                        <div className="flex-1">
-                          <h4 className="font-semibold text-slate-900">{order.dealer_company}</h4>
-                          <p className="text-sm text-slate-500">{order.dealer_name} • {order.dealer_email}</p>
-                        </div>
-                        <Badge className={getStatusBadgeStyle(order.status)}>
-                          {order.status}
-                        </Badge>
-                      </div>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 text-sm">
-                        <div>
-                          <p className="text-slate-500">Booth Size</p>
-                          <p className="font-medium">{order.booth_size}</p>
-                        </div>
-                        <div>
-                          <p className="text-slate-500">Quote Value</p>
-                          <p className="font-medium">{formatPrice(order.quoted_price)}</p>
-                        </div>
-                        <div>
-                          <p className="text-slate-500">Probability</p>
-                          <p className="font-medium">{order.probability}%</p>
-                        </div>
-                        <div>
-                          <p className="text-slate-500">Show Date</p>
-                          <p className="font-medium">{order.show_date ? new Date(order.show_date).toLocaleDateString() : 'TBD'}</p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-xl">Sales Pipeline</CardTitle>
+                  <CardDescription>Drag deals between stages to update status</CardDescription>
                 </div>
+                <Button 
+                  variant="outline"
+                  size="sm"
+                  onClick={() => navigate(createPageUrl('Pipeline'))}
+                  className="text-xs"
+                >
+                  Table View
+                  <ArrowRight className="w-3 h-3 ml-1" />
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="px-2 md:px-4">
+              {orders.length > 0 ? (
+                <SalesPipelineBoard orders={orders} onOrderUpdate={handleOrderUpdate} />
               ) : (
                 <div className="text-center py-8 text-slate-500">
                   <Target className="w-12 h-12 mx-auto mb-3 text-slate-300" />
-                  <p>No active opportunities</p>
+                  <p>No deals in pipeline</p>
                   <Button 
                     onClick={() => navigate(createPageUrl('SalesQuoteStart'))}
                     className="mt-4 bg-[#e2231a] hover:bg-[#b01b13] text-sm"
