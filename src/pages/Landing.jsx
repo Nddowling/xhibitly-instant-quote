@@ -57,7 +57,7 @@ export default function Landing() {
               <span className="text-white font-black text-sm">X</span>
             </div>
             <span className="text-lg font-bold tracking-tight">Xhibitly</span>
-            <span className="hidden sm:inline text-xs text-white/30 ml-1 font-medium">by Orbus</span>
+            <span className="hidden sm:inline text-xs text-white/30 ml-1 font-medium">by The Exhibitors' Handbook</span>
           </div>
           <div className="flex items-center gap-3">
             <Button
