@@ -13,7 +13,7 @@ import { getMarkerPromptInstructions } from '../utils/brandCompositor';
 //        near-duplicate colors, broken logo URLs
 // ═══════════════════════════════════════════════════════════════
 
-// Xhibitly platform reds — NEVER allow these into a client brand
+// Platform reds — NEVER allow these into a client brand
 const PLATFORM_COLORS = [
   "#e2231a", "#b01b13", "#0f1d2e", "#ff0000", "#cc0000",
   "#ee2222", "#dd1111", "#bb1111", "#aa0000", "#990000",
@@ -985,7 +985,7 @@ ${getMarkerPromptInstructions()}`;
           transition={{ duration: 2, repeat: Infinity, repeatType: "loop" }}
           className="w-24 h-24 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-10 border border-white/20"
         >
-          <span className="text-5xl font-bold text-white">X</span>
+          <span className="text-3xl font-bold text-white">EH</span>
         </motion.div>
 
         {/* Progress Tracker */}

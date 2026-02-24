@@ -11,7 +11,7 @@ Deno.serve(async (req) => {
     const { order_id, design, quote_data } = await req.json();
 
     // Find the assigned sales rep (or use default notification)
-    let brokerEmail = 'orders@xhibitly.com';
+    let brokerEmail = 'orders@exhibitorshandbook.com';
     let brokerName = "The Exhibitors' Handbook Team";
 
     // Check if there's an assigned sales rep

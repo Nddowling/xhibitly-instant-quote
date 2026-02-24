@@ -95,7 +95,7 @@ export default function DesignConfigurator() {
       // Send email notification (don't block navigation if it fails)
       try {
         await base44.integrations.Core.SendEmail({
-          to: quoteData.dealerEmail || 'orders@xhibitly.com',
+          to: quoteData.dealerEmail || 'orders@exhibitorshandbook.com',
           subject: `🔥 New Design Reserved - ${refNumber} - Call within 10 minutes!`,
           body: `
 URGENT: New booth design reserved! Contact the customer within 10 minutes.
