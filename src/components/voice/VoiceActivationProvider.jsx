@@ -183,6 +183,8 @@ export default function VoiceActivationProvider({ children }) {
   const handleUserCommand = useCallback(async (transcript) => {
     addMessage('user', transcript);
     setIsProcessing(true);
+    // Pause auto-listen while processing so TTS isn't picked up
+    autoListenRef.current = false;
 
     try {
       // Get current context for the LLM
@@ -200,15 +202,31 @@ export default function VoiceActivationProvider({ children }) {
       if (designsContext?.length) contextSummary.push(`${designsContext.length} booth designs available on Results page`);
 
       const currentUrl = window.location.pathname;
-      const conversationHistory = messages.slice(-6).map(m => `${m.role}: ${m.content}`).join('\n');
+      const conversationHistory = messages.slice(-10).map(m => `${m.role}: ${m.content}`).join('\n');
+
+      // Catalog search — if user mentions product name or "find", "search", "look up", "catalog"
+      let catalogContext = '';
+      const lowerTranscript = transcript.toLowerCase();
+      const wantsCatalog = /find|search|look up|lookup|catalog|product|show me|what.*have|banner|backwall|counter|kiosk|monitor|lighting|flooring|carpet|table|tent|billboard|formulate|hopup|vector|hybrid pro/.test(lowerTranscript);
+      if (wantsCatalog) {
+        // Extract likely search terms
+        const searchTerms = transcript.replace(/^(find|search|look up|lookup|show me|what do you have for|can you find)\s*/i, '').trim();
+        const results = await searchCatalog(searchTerms || transcript);
+        if (results.length > 0) {
+          catalogContext = `\n\nCATALOG SEARCH RESULTS for "${searchTerms || transcript}":\n${JSON.stringify(results, null, 2)}`;
+        } else {
+          catalogContext = `\n\nCATALOG SEARCH: No products found matching "${searchTerms || transcript}". Suggest the user try different keywords.`;
+        }
+      }
 
       const result = await base44.integrations.Core.InvokeLLM({
-        prompt: `You are a voice assistant for a trade show booth design app called "The Exhibitors' Handbook". Parse the user's voice command and respond with a JSON action.
+        prompt: `You are a helpful voice assistant for a trade show booth design app called "The Exhibitors' Handbook". You help users navigate, create quotes, search the Orbus product catalog, and answer questions. Be conversational and natural.
 
 CURRENT PAGE: ${currentUrl}
 CONTEXT: ${contextSummary.join(' | ') || 'No active session'}
 RECENT CONVERSATION:
 ${conversationHistory}
+${catalogContext}
 
 USER SAID: "${transcript}"
 
@@ -216,24 +234,25 @@ AVAILABLE PAGES: ${Object.entries(PAGE_ALIASES).map(([alias, page]) => `"${alias
 
 RESPOND WITH JSON:
 {
-  "action": "navigate" | "create_quote" | "query" | "modify_design" | "send_quote" | "confirm_action" | "chat",
+  "action": "navigate" | "create_quote" | "search_catalog" | "query" | "modify_design" | "send_quote" | "confirm_action" | "clarify" | "chat",
   "page": "PageName (only for navigate)",
   "website_url": "url (only for create_quote)", 
   "booth_size": "10x10 or 10x20 or 20x20 (for create_quote)",
-  "query_answer": "answer text (for query about price, products, etc)",
   "response": "What to say back to the user (required for all actions)",
-  "needs_confirmation": true/false (for destructive actions like send_quote)
+  "needs_confirmation": true/false (for destructive actions)
 }
 
 RULES:
-- For navigation: match the user's intent to the closest page. Be generous with fuzzy matching.
-- For create_quote: extract website URL and booth size. If missing info, ask in response.
+- For navigation: match the user's intent to the closest page. Be generous with fuzzy matching. After navigating, let the user know where you took them.
+- For create_quote: extract website URL and booth size. If missing info, ask for it via "clarify" action — don't guess. Ask one question at a time.
+- For search_catalog: when the user asks about products, present the catalog search results naturally. Mention names, prices, and what booth sizes they fit.
 - For query: answer questions about the current design/quote using the context provided.
-- For modify_design: acknowledge the request (full design modification coming in next phase).
-- For send_quote: set needs_confirmation=true and ask for confirmation.
-- For general chat: respond helpfully about booth design, trade shows, etc.
-- ALWAYS include a concise, friendly "response" field.
-- If the command is ambiguous, ask a clarifying question.`,
+- For modify_design: acknowledge the request and ask clarifying questions about what to change.
+- For clarify: when you need more info from the user. Ask ONE clear question.
+- For chat: respond helpfully about booth design, trade shows, or the Orbus catalog.
+- ALWAYS include a concise, friendly "response" field. Keep it under 3 sentences for voice readability.
+- If the command is ambiguous, use "clarify" action and ask a specific question.
+- NEVER make up product names or SKUs. Only reference products from the catalog search results.`,
         response_json_schema: {
           type: "object",
           properties: {
@@ -241,7 +260,6 @@ RULES:
             page: { type: "string" },
             website_url: { type: "string" },
             booth_size: { type: "string" },
-            query_answer: { type: "string" },
             response: { type: "string" },
             needs_confirmation: { type: "boolean" }
           }
@@ -258,8 +276,29 @@ RULES:
       speak(errMsg);
     } finally {
       setIsProcessing(false);
+      // Resume auto-listen after processing + TTS finishes
+      if (conversationActive) {
+        const waitForSpeech = () => {
+          if (!synthRef.current.speaking) {
+            autoListenRef.current = true;
+            // Trigger a new listen cycle
+            const recognition = recognitionRef.current;
+            if (recognition) {
+              setTimeout(() => {
+                try {
+                  recognition.start();
+                  setIsListening(true);
+                } catch (e) { /* already running */ }
+              }, 400);
+            }
+          } else {
+            setTimeout(waitForSpeech, 200);
+          }
+        };
+        setTimeout(waitForSpeech, 500);
+      }
     }
-  }, [messages, addMessage, speak]);
+  }, [messages, addMessage, speak, conversationActive]);
 
   // ── EXECUTE ACTION ──
   const executeAction = useCallback((parsed) => {
