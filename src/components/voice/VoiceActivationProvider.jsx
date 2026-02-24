@@ -110,6 +110,17 @@ export default function VoiceActivationProvider({ children }) {
 
     recognition.onend = () => {
       setIsListening(false);
+      // Auto-resume listening if conversation is active (for fluid back-and-forth)
+      if (autoListenRef.current) {
+        setTimeout(() => {
+          try {
+            recognition.start();
+            setIsListening(true);
+          } catch (e) {
+            // Already started or blocked
+          }
+        }, 300);
+      }
     };
 
     recognitionRef.current = recognition;
