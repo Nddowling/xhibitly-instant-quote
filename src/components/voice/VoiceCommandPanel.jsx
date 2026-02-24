@@ -37,7 +37,9 @@ export default function VoiceCommandPanel({
   isListening,
   isProcessing,
   interimTranscript,
-  onToggleListening
+  onToggleListening,
+  conversationActive,
+  onEndConversation
 }) {
   const scrollRef = useRef(null);
 
