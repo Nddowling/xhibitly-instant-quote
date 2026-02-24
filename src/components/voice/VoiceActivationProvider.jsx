@@ -410,6 +410,8 @@ RULES:
         isProcessing={isProcessing}
         interimTranscript={interimTranscript}
         onToggleListening={toggleListening}
+        conversationActive={conversationActive}
+        onEndConversation={endConversation}
       />
     </VoiceContext.Provider>
   );
