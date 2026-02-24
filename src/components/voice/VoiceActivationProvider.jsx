@@ -139,13 +139,31 @@ export default function VoiceActivationProvider({ children }) {
     if (isListening) {
       recognition.stop();
       setIsListening(false);
+      autoListenRef.current = false;
     } else {
       setInterimTranscript('');
       recognition.start();
       setIsListening(true);
       setIsPanelOpen(true);
+      setConversationActive(true);
+      autoListenRef.current = true;
     }
   }, [isListening, getSpeechRecognition]);
+
+  // ── END CONVERSATION ──
+  const endConversation = useCallback(() => {
+    const recognition = recognitionRef.current;
+    autoListenRef.current = false;
+    setConversationActive(false);
+    if (recognition && isListening) {
+      recognition.stop();
+      setIsListening(false);
+    }
+    if (synthRef.current.speaking) synthRef.current.cancel();
+    setIsPanelOpen(false);
+    setMessages([]);
+    setInterimTranscript('');
+  }, [isListening]);
 
   // ── ADD MESSAGE ──
   const addMessage = useCallback((role, content) => {
