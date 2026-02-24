@@ -66,35 +66,38 @@ export default function DesignConfigurator() {
 
   const handleReserve = async () => {
     setIsSubmitting(true);
-    const refNumber = generateRefNumber();
+    try {
+      const refNumber = generateRefNumber();
 
-    base44.analytics.track({
-      eventName: "design_reserved",
-      properties: { tier: design.tier, booth_size: quoteData.boothSize, total_price: design.total_price }
-    });
+      base44.analytics.track({
+        eventName: "design_reserved",
+        properties: { tier: design.tier, booth_size: quoteData.boothSize, total_price: design.total_price }
+      });
 
-    const order = await base44.entities.Order.create({
-      dealer_id: quoteData.dealerId,
-      dealer_email: quoteData.dealerEmail,
-      dealer_company: quoteData.dealerCompany,
-      dealer_name: quoteData.dealerName,
-      dealer_phone: quoteData.dealerPhone,
-      website_url: quoteData.websiteUrl,
-      booth_size: quoteData.boothSize,
-      show_date: quoteData.showDate,
-      show_name: quoteData.showName || '',
-      selected_booth_design_id: design.id,
-      selected_tier: design.tier,
-      quoted_price: design.total_price,
-      status: 'Pending',
-      reference_number: refNumber,
-      source: 'instant_quote'
-    });
+      const order = await base44.entities.Order.create({
+        dealer_id: quoteData.dealerId,
+        dealer_email: quoteData.dealerEmail,
+        dealer_company: quoteData.dealerCompany,
+        dealer_name: quoteData.dealerName,
+        dealer_phone: quoteData.dealerPhone,
+        website_url: quoteData.websiteUrl,
+        booth_size: quoteData.boothSize,
+        show_date: quoteData.showDate,
+        show_name: quoteData.showName || '',
+        selected_booth_design_id: design.id,
+        selected_tier: design.tier,
+        quoted_price: design.total_price,
+        status: 'Pending',
+        reference_number: refNumber,
+        source: 'instant_quote'
+      });
 
-    await base44.integrations.Core.SendEmail({
-      to: quoteData.dealerEmail || 'orders@xhibitly.com',
-      subject: `🔥 New Design Reserved - ${refNumber} - Call within 10 minutes!`,
-      body: `
+      // Send email notification (don't block navigation if it fails)
+      try {
+        await base44.integrations.Core.SendEmail({
+          to: quoteData.dealerEmail || 'orders@xhibitly.com',
+          subject: `🔥 New Design Reserved - ${refNumber} - Call within 10 minutes!`,
+          body: `
 URGENT: New booth design reserved! Contact the customer within 10 minutes.
 
 Reference: ${refNumber}
@@ -117,16 +120,23 @@ Products: ${products.map(p => p.display_name || p.name).join(', ')}
 
 ACTION REQUIRED: Call the customer immediately to finalize the order.
 `
-    });
+        });
+      } catch (emailErr) {
+        console.warn('Email notification failed:', emailErr);
+      }
 
-    sessionStorage.setItem('orderConfirmation', JSON.stringify({
-      refNumber,
-      orderId: order.id,
-      design,
-      quoteData
-    }));
+      sessionStorage.setItem('orderConfirmation', JSON.stringify({
+        refNumber,
+        orderId: order.id,
+        design,
+        quoteData
+      }));
 
-    navigate(createPageUrl('Confirmation'));
+      navigate(createPageUrl('Confirmation'));
+    } catch (err) {
+      console.error('Reserve failed:', err);
+      setIsSubmitting(false);
+    }
   };
 
   const formatPrice = (price) => {
