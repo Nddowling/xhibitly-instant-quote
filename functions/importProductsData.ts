@@ -56,21 +56,21 @@ Deno.serve(async (req) => {
                 
                 // Create ProductVariant
                 const variantData = {
-                    display_name: item.name || "Unnamed Product",
-                    manufacturer_sku: sku,
-                    category_name: item.category || "Uncategorized",
-                    description: item.description || "",
+                    display_name: String(item.name || "Unnamed Product"),
+                    manufacturer_sku: String(sku),
+                    category_name: String(item.category || "Uncategorized"),
+                    description: String(item.description || ""),
                     base_price: 0,
-                    image_url: imageUrl,
-                    thumbnail_url: imageUrl
+                    image_url: finalImageUrl,
+                    thumbnail_url: finalImageUrl
                 };
                 
                 await base44.asServiceRole.entities.ProductVariant.create(variantData);
                 
                 results.success++;
                 
-                // Add a small delay to avoid rate limiting
-                await new Promise(resolve => setTimeout(resolve, 200));
+                // Add a delay to avoid rate limiting
+                await new Promise(resolve => setTimeout(resolve, 1000));
             } catch (err) {
                 results.errors.push({ name: item.name, error: err.message });
             }
