@@ -47,6 +47,7 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
+import BoothDesigner from './pages/BoothDesigner';
 import BrandVerification from './pages/BrandVerification';
 import CatalogImport from './pages/CatalogImport';
 import Confirmation from './pages/Confirmation';
@@ -61,6 +62,7 @@ import OrderDetail from './pages/OrderDetail';
 import OrderHistory from './pages/OrderHistory';
 import Pipeline from './pages/Pipeline';
 import Product3DManager from './pages/Product3DManager';
+import ProductDetail from './pages/ProductDetail';
 import QuoteRequest from './pages/QuoteRequest';
 import Results from './pages/Results';
 import SalesDashboard from './pages/SalesDashboard';
@@ -69,12 +71,11 @@ import Settings from './pages/Settings';
 import StudentHome from './pages/StudentHome';
 import Test from './pages/Test';
 import UserTypeSelection from './pages/UserTypeSelection';
-import ProductDetail from './pages/ProductDetail';
-import BoothDesigner from './pages/BoothDesigner';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "BoothDesigner": BoothDesigner,
     "BrandVerification": BrandVerification,
     "CatalogImport": CatalogImport,
     "Confirmation": Confirmation,
@@ -89,6 +90,7 @@ export const PAGES = {
     "OrderHistory": OrderHistory,
     "Pipeline": Pipeline,
     "Product3DManager": Product3DManager,
+    "ProductDetail": ProductDetail,
     "QuoteRequest": QuoteRequest,
     "Results": Results,
     "SalesDashboard": SalesDashboard,
@@ -97,8 +99,6 @@ export const PAGES = {
     "StudentHome": StudentHome,
     "Test": Test,
     "UserTypeSelection": UserTypeSelection,
-    "ProductDetail": ProductDetail,
-    "BoothDesigner": BoothDesigner,
 }
 
 export const pagesConfig = {

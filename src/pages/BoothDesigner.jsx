@@ -182,17 +182,17 @@ export default function BoothDesigner() {
 
                 <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
                     {messages.length <= 3 && !isSending && (
-                        <div className="flex flex-wrap gap-2 mb-3">
-                            <Button variant="outline" size="sm" className="text-xs rounded-full h-7 border-slate-200 text-slate-600 dark:text-slate-300 hover:text-primary hover:border-primary/50" onClick={() => sendMessage("Show me some 10ft fabric backwalls.")}>
+                        <div className="grid grid-cols-2 gap-2 mb-3">
+                            <Button variant="outline" size="sm" className="text-xs rounded-full h-8 border-slate-200 text-slate-600 dark:text-slate-300 hover:text-primary hover:border-primary/50" onClick={() => sendMessage("Show me some 10ft fabric backwalls.")}>
                                 Show me backwalls
                             </Button>
-                            <Button variant="outline" size="sm" className="text-xs rounded-full h-7 border-slate-200 text-slate-600 dark:text-slate-300 hover:text-primary hover:border-primary/50" onClick={() => sendMessage("What flooring or carpet options do you have?")}>
+                            <Button variant="outline" size="sm" className="text-xs rounded-full h-8 border-slate-200 text-slate-600 dark:text-slate-300 hover:text-primary hover:border-primary/50" onClick={() => sendMessage("What flooring or carpet options do you have?")}>
                                 Flooring options
                             </Button>
-                            <Button variant="outline" size="sm" className="text-xs rounded-full h-7 border-slate-200 text-slate-600 dark:text-slate-300 hover:text-primary hover:border-primary/50" onClick={() => sendMessage("Suggest a reception counter with my logo.")}>
+                            <Button variant="outline" size="sm" className="text-xs rounded-full h-8 border-slate-200 text-slate-600 dark:text-slate-300 hover:text-primary hover:border-primary/50" onClick={() => sendMessage("Suggest a reception counter with my logo.")}>
                                 Reception counters
                             </Button>
-                            <Button variant="outline" size="sm" className="text-xs rounded-full h-7 border-slate-200 text-slate-600 dark:text-slate-300 hover:text-primary hover:border-primary/50" onClick={() => sendMessage("What lighting and accessory options are there?")}>
+                            <Button variant="outline" size="sm" className="text-xs rounded-full h-8 border-slate-200 text-slate-600 dark:text-slate-300 hover:text-primary hover:border-primary/50" onClick={() => sendMessage("What lighting and accessory options are there?")}>
                                 Lighting & Accessories
                             </Button>
                         </div>
