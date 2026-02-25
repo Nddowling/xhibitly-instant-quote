@@ -14,14 +14,13 @@ Deno.serve(async (req) => {
     const body = await req.json();
     const { action } = body;
 
-    // ── ACTION: Remove background from a product image using OpenAI ──
-    if (action === 'remove_background') {
+    // ── ACTION: Analyze a product image and enrich its metadata ──
+    if (action === 'analyze_product') {
       const { image_url, product_name } = body;
       if (!image_url) {
         return Response.json({ error: 'image_url required' }, { status: 400 });
       }
 
-      // Use OpenAI to generate a clean version of the product on transparent/clean background
       const response = await openai.chat.completions.create({
         model: "gpt-4o",
         messages: [{
@@ -29,14 +28,14 @@ Deno.serve(async (req) => {
           content: [
             {
               type: "text",
-              text: `Look at this trade show product image. Describe ONLY the product itself in extreme detail:
+              text: `Look at this trade show product image. Describe ONLY the product itself in extreme detail for use in AI rendering later:
 - Exact shape, proportions, materials, colors
 - How it looks when fully assembled and set up
 - Any graphics, text, branding areas visible
 - The overall dimensions relative to a person
 
 Return JSON: {
-  "clean_description": "extremely detailed visual description for AI image generation",
+  "visual_description": "extremely detailed visual description",
   "product_type": "backwall|counter|banner_stand|table|tent|monitor_stand|lighting|flooring|accessory|kiosk",
   "primary_colors": ["color1", "color2"],
   "has_branding_area": true/false,
@@ -58,21 +57,12 @@ Return JSON: {
         analysis = JSON.parse(response.choices[0].message.content);
       } catch (e) {
         console.error("Parse error:", e);
-        analysis = { clean_description: "Trade show display product" };
+        analysis = { visual_description: product_name || "Trade show display product" };
       }
-
-      // Now generate a clean product image with transparent/white studio background
-      const prompt = `Professional product photography of a trade show display product on a pure white studio background. The product is: ${analysis.clean_description || product_name}. Shot from a 3/4 angle, studio lighting, clean isolated product shot suitable for a catalog. No people, no booth, no trade show environment - just the product isolated on white.`;
-
-      const imageResponse = await base44.asServiceRole.integrations.Core.GenerateImage({
-        prompt: prompt,
-        existing_image_urls: [image_url]
-      });
 
       return Response.json({
         success: true,
-        clean_image_url: imageResponse.url,
-        visual_description: analysis.clean_description,
+        visual_description: analysis.visual_description,
         product_type: analysis.product_type,
         primary_colors: analysis.primary_colors,
         has_branding_area: analysis.has_branding_area,
@@ -80,8 +70,8 @@ Return JSON: {
       });
     }
 
-    // ── ACTION: Batch process all products on a catalog page ──
-    if (action === 'batch_clean_page') {
+    // ── ACTION: Batch enrich all products on a catalog page (descriptions only, no image replacement) ──
+    if (action === 'batch_enrich_page') {
       const { page_id } = body;
 
       const allPages = await base44.asServiceRole.entities.CatalogPage.list('-created_date', 500);
@@ -92,12 +82,11 @@ Return JSON: {
 
       const products = page.products || [];
       const updatedProducts = [];
-      let cleaned = 0;
+      let enriched = 0;
 
       for (const product of products) {
-        if (product.image_url && !product.clean_image_url) {
+        if (product.image_url && !product.is_enriched) {
           try {
-            // Analyze the product image
             const analysisResp = await openai.chat.completions.create({
               model: "gpt-4o",
               messages: [{
@@ -105,12 +94,12 @@ Return JSON: {
                 content: [
                   {
                     type: "text",
-                    text: `Describe this trade show product in extreme detail for AI image generation. Focus on: shape, materials, colors, proportions, branding areas. Return JSON: {"clean_description": "detailed description", "product_type": "type"}`
+                    text: `Describe this trade show product in extreme visual detail for AI image generation later. Focus on: exact shape, frame structure, materials, fabric/panel types, colors, proportions, how tall vs wide, branding areas, and what it looks like fully assembled at a trade show. Return JSON: {"visual_description": "detailed description", "product_type": "backwall|counter|banner_stand|table|tent|monitor_stand|lighting|flooring|accessory|kiosk", "primary_colors": ["color1"], "branding_surfaces": ["front"]}`
                   },
                   { type: "image_url", image_url: { url: product.image_url } }
                 ]
               }],
-              max_tokens: 500,
+              max_tokens: 600,
               response_format: { type: "json_object" }
             });
 
@@ -118,24 +107,20 @@ Return JSON: {
             try {
               analysis = JSON.parse(analysisResp.choices[0].message.content);
             } catch (e) {
-              analysis = { clean_description: product.name };
+              analysis = { visual_description: product.description || product.name };
             }
-
-            const prompt = `Professional product photography of a trade show display product on a pure white studio background. The product is: ${analysis.clean_description}. Shot from a 3/4 angle, studio lighting, clean isolated product shot. No people, no booth - just the product.`;
-
-            const imageResponse = await base44.asServiceRole.integrations.Core.GenerateImage({
-              prompt: prompt,
-              existing_image_urls: [product.image_url]
-            });
 
             updatedProducts.push({
               ...product,
-              clean_image_url: imageResponse.url,
-              visual_description: analysis.clean_description || product.visual_description
+              visual_description: analysis.visual_description || product.visual_description,
+              geometry_type: analysis.product_type || product.geometry_type,
+              branding_surfaces: analysis.branding_surfaces || product.branding_surfaces,
+              color_options: analysis.primary_colors || product.color_options,
+              is_enriched: true
             });
-            cleaned++;
+            enriched++;
           } catch (err) {
-            console.error("Clean failed for", product.name, err.message);
+            console.error("Enrich failed for", product.name, err.message);
             updatedProducts.push(product);
           }
         } else {
@@ -143,12 +128,11 @@ Return JSON: {
         }
       }
 
-      // Save updated products back to the page
       await base44.asServiceRole.entities.CatalogPage.update(page_id, {
         products: updatedProducts
       });
 
-      return Response.json({ success: true, cleaned_count: cleaned, products: updatedProducts });
+      return Response.json({ success: true, enriched_count: enriched, products: updatedProducts });
     }
 
     // ── ACTION: Look up catalog page by number ──
