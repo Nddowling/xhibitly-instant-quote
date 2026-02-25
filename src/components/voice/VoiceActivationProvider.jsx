@@ -45,7 +45,9 @@ export default function VoiceActivationProvider({ children }) {
   useEffect(() => {
     if (!conversation) return;
     const unsubscribe = base44.agents.subscribeToConversation(conversation.id, (data) => {
-      setMessages(data.messages || []);
+      if (data.messages && data.messages.length > 0) {
+        setMessages(data.messages);
+      }
       
       const lastMsg = data.messages?.[data.messages.length - 1];
       if (lastMsg && lastMsg.role === 'assistant') {
