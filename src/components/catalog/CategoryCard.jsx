@@ -50,8 +50,34 @@ const CATEGORY_INFO = {
   }
 };
 
+const getCategoryInfo = (category) => {
+  if (CATEGORY_INFO[category]) return CATEGORY_INFO[category];
+  
+  const lowerCat = category.toLowerCase();
+  let icon = '📦';
+  let color = 'from-slate-800 to-slate-900';
+  
+  if (lowerCat.includes('island')) {
+    icon = '🏝️';
+  } else if (lowerCat.includes('truss')) {
+    icon = '🏗️';
+  } else if (lowerCat.includes('kiosk')) {
+    icon = '📱';
+  } else if (lowerCat.includes('banner')) {
+    icon = '🚩';
+  } else if (lowerCat.includes('counter')) {
+    icon = '🗄️';
+  }
+
+  return {
+    desc: `Explore our collection of ${lowerCat}.`,
+    icon,
+    color
+  };
+};
+
 export default function CategoryCard({ category, productCount, onClick }) {
-  const info = CATEGORY_INFO[category] || { desc: '', icon: '📦', color: 'from-slate-800 to-slate-900' };
+  const info = getCategoryInfo(category);
 
   return (
     <Card
