@@ -128,7 +128,7 @@ export default function Layout({ children, currentPageName }) {
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
       <style>{`
         :root {
-          --primary: #e2231a;
+          --primary: 4 79% 50%;
           --primary-light: #f04238;
           --primary-dark: #b01b13;
         }
