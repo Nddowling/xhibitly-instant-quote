@@ -146,7 +146,9 @@ export default function VoiceActivationProvider({ children }) {
       if (interim) setInterimTranscript(interim);
       if (final) {
         setInterimTranscript('');
-        handleUserCommand(final.trim());
+        if (handleUserCommandRef.current) {
+          handleUserCommandRef.current(final.trim());
+        }
       }
     };
 
@@ -243,6 +245,10 @@ export default function VoiceActivationProvider({ children }) {
       speak(errMsg);
     }
   }, [conversation, speak]);
+
+  useEffect(() => {
+    handleUserCommandRef.current = handleUserCommand;
+  }, [handleUserCommand]);
 
   // Cleanup on unmount
   useEffect(() => {
