@@ -90,40 +90,39 @@ export default function Product3DManager() {
           className="mb-6"
         >
           <div className="flex items-center gap-3 mb-1 justify-between">
-          <div className="flex items-center gap-3">
-            {activeCategory && (
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setActiveCategory(null)}
-                className="text-slate-600 hover:text-slate-900"
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </Button>
-            )}
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">
-                {activeCategory || 'Product Catalog'}
-              </h1>
-              <p className="text-slate-500 text-sm">
-                {activeCategory
-                  ? `${categoryProducts.length} product${categoryProducts.length !== 1 ? 's' : ''}`
-                  : `${products.length} products across ${ALL_CATEGORIES.length} categories`
-                }
-              </p>
+            <div className="flex items-center gap-3">
+              {activeCategory && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setActiveCategory(null)}
+                  className="text-slate-600 hover:text-slate-900"
+                >
+                  <ArrowLeft className="w-5 h-5" />
+                </Button>
+              )}
+              <div>
+                <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">
+                  {activeCategory || 'Product Catalog'}
+                </h1>
+                <p className="text-slate-500 text-sm">
+                  {activeCategory
+                    ? `${categoryProducts.length} product${categoryProducts.length !== 1 ? 's' : ''}`
+                    : `${products.length} products across ${ALL_CATEGORIES.length} categories`
+                  }
+                </p>
               </div>
-              </div>
-              {!activeCategory && (
+            </div>
+            {!activeCategory && (
               <Link to={createPageUrl('CatalogImport')}>
                 <Button variant="outline" className="gap-2 shrink-0">
                   <BookOpen className="w-4 h-4" />
                   <span className="hidden sm:inline">Import Pages</span>
                 </Button>
               </Link>
-              )}
-              </div>
+            )}
           </div>
-        </motion.div>
+          </motion.div>
 
         {/* Search */}
         <div className="relative mb-6">
