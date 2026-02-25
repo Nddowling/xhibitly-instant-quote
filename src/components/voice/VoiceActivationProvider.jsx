@@ -39,25 +39,26 @@ export default function VoiceActivationProvider({ children }) {
   }, []);
 
   // ── INIT AGENT CONVERSATION ──
-  useEffect(() => {
-    async function initConversation() {
-      try {
-        const conv = await base44.agents.createConversation({
-          agent_name: "product_assistant",
-          metadata: { name: "Voice Assistant" }
-        });
-        console.log("Agent conversation created:", conv);
-        setConversation(conv);
-        
-        // Add greeting initially if conversation is new
-        setMessages([{ role: 'assistant', content: "Hi! I'm your virtual Exhibitors' Handbook assistant. What kind of trade show products or booth designs are you looking for today?" }]);
-      } catch (e) {
-        console.error("Agent init error", e);
-        setMessages([{ role: 'assistant', content: `Error initializing agent: ${e.message}` }]);
-      }
+  const initConversation = useCallback(async () => {
+    try {
+      const conv = await base44.agents.createConversation({
+        agent_name: "product_assistant",
+        metadata: { name: "Voice Assistant" }
+      });
+      console.log("Agent conversation created:", conv);
+      setConversation(conv);
+      
+      // Add greeting initially if conversation is new
+      setMessages([{ role: 'assistant', content: "Hi! I'm your virtual Exhibitors' Handbook assistant. What kind of trade show products or booth designs are you looking for today?" }]);
+    } catch (e) {
+      console.error("Agent init error", e);
+      setMessages([{ role: 'assistant', content: `Error initializing agent: ${e.message}` }]);
     }
-    initConversation();
   }, []);
+
+  useEffect(() => {
+    initConversation();
+  }, [initConversation]);
 
   // ── SUBSCRIBE TO AGENT ──
   useEffect(() => {
@@ -215,6 +216,18 @@ export default function VoiceActivationProvider({ children }) {
     setIsPanelOpen(false);
     setMessages([]);
     setInterimTranscript('');
+    setConversation(null);
+    initConversation();
+  }, [isListening, initConversation]);
+
+  // ── CLOSE PANEL ──
+  const closePanel = useCallback(() => {
+    setIsPanelOpen(false);
+    autoListenRef.current = false;
+    if (recognitionRef.current && isListening) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    }
   }, [isListening]);
 
   // ── PROCESS COMMAND via Agent ──
@@ -284,7 +297,7 @@ export default function VoiceActivationProvider({ children }) {
       />
       <VoiceCommandPanel
         isOpen={isPanelOpen}
-        onClose={() => setIsPanelOpen(false)}
+        onClose={closePanel}
         messages={messages}
         isListening={isListening}
         isProcessing={isProcessing}
