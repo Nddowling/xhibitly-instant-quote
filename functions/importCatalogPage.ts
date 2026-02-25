@@ -175,11 +175,16 @@ Return JSON: {"products": [...]}. If you can't identify distinct products, retur
     // ── ACTION: Push products from CatalogPage to ProductVariant ──
     if (action === 'push_to_variants') {
       const { page_id } = body;
-      const pages = await base44.asServiceRole.entities.CatalogPage.filter({ id: page_id });
-      if (pages.length === 0) {
+      let page;
+      try {
+        const allPages = await base44.asServiceRole.entities.CatalogPage.list('-created_date', 500);
+        page = allPages.find(p => p.id === page_id);
+      } catch (e) {
+        console.error("Error fetching pages:", e);
+      }
+      if (!page) {
         return Response.json({ error: 'Page not found' }, { status: 404 });
       }
-      const page = pages[0];
       
       // Get or create a default manufacturer for the handbook
       let manufacturers = await base44.asServiceRole.entities.Manufacturer.filter({ name: "Orbus Exhibit & Display Group" });
