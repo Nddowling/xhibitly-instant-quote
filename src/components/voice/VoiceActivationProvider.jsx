@@ -35,6 +35,7 @@ export default function VoiceActivationProvider({ children }) {
         setConversation(conv);
       } catch (e) {
         console.error("Agent init error", e);
+        setMessages([{ role: 'assistant', content: `Error initializing agent: ${e.message}` }]);
       }
     }
     initConversation();
@@ -202,7 +203,14 @@ export default function VoiceActivationProvider({ children }) {
 
   // ── PROCESS COMMAND via Agent ──
   const handleUserCommand = useCallback(async (transcript) => {
-    if (!conversation) return;
+    if (!conversation) {
+        setMessages(prev => [...prev, { role: "assistant", content: "Error: Voice agent not ready." }]);
+        speak("Error: Voice agent not ready.");
+        return;
+    }
+    
+    // Optimistic UI update
+    setMessages(prev => [...prev, { role: "user", content: transcript }]);
     
     setIsProcessing(true);
     // Pause auto-listen while processing so TTS isn't picked up
@@ -215,7 +223,8 @@ export default function VoiceActivationProvider({ children }) {
       });
     } catch (err) {
       console.error('[Voice] Command processing error:', err);
-      const errMsg = "Sorry, I had trouble processing that. Please try again.";
+      const errMsg = `Error: ${err.message || "Failed to process command."}`;
+      setMessages(prev => [...prev, { role: "assistant", content: errMsg }]);
       setIsProcessing(false);
       speak(errMsg);
     }
