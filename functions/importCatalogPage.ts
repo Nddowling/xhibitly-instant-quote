@@ -3,6 +3,50 @@ import OpenAI from 'npm:openai@4.52.0';
 
 const openai = new OpenAI({ apiKey: Deno.env.get("OPENAI_API_KEY") });
 
+/**
+ * Fetches the full page image, crops a region using canvas, and uploads the cropped image.
+ * crop_region: {top, left, width, height} as percentages (0-100)
+ */
+async function cropAndUploadProduct(base44, pageImageUrl, cropRegion, productName) {
+  // Fetch the original image as arraybuffer
+  const imgResponse = await fetch(pageImageUrl);
+  if (!imgResponse.ok) throw new Error("Failed to fetch page image");
+  const imgBuffer = await imgResponse.arrayBuffer();
+  const imgBytes = new Uint8Array(imgBuffer);
+
+  // Use OpenAI to generate a cropped version by asking it to identify the exact product
+  // Alternative: use a server-side canvas. Since Deno doesn't have native Canvas,
+  // we'll use the sharp-like approach via a dedicated image crop service.
+  // For now, we use the DALL-E approach: re-upload the full image and store coordinates as metadata.
+  // Better approach: use a lightweight image processing library.
+
+  // Attempt using Deno-compatible image cropping via ImageScript
+  const { Image } = await import("https://deno.land/x/imagescript@1.3.0/mod.ts");
+  
+  const img = await Image.decode(imgBytes);
+  const fullW = img.width;
+  const fullH = img.height;
+  
+  // Convert percentage crop to pixel values
+  const cropX = Math.round((cropRegion.left / 100) * fullW);
+  const cropY = Math.round((cropRegion.top / 100) * fullH);
+  const cropW = Math.min(Math.round((cropRegion.width / 100) * fullW), fullW - cropX);
+  const cropH = Math.min(Math.round((cropRegion.height / 100) * fullH), fullH - cropY);
+  
+  if (cropW < 10 || cropH < 10) throw new Error("Crop region too small");
+
+  const cropped = img.crop(cropX, cropY, cropW, cropH);
+  const pngBytes = await cropped.encode(1); // encode as PNG
+
+  // Create a File-like blob and upload
+  const blob = new Blob([pngBytes], { type: "image/png" });
+  const safeName = productName.replace(/[^a-zA-Z0-9]/g, '_').substring(0, 40);
+  const file = new File([blob], `product_${safeName}_${Date.now()}.png`, { type: "image/png" });
+  
+  const uploadResult = await base44.asServiceRole.integrations.Core.UploadFile({ file });
+  return uploadResult.file_url;
+}
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
