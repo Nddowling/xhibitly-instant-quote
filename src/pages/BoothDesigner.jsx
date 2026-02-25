@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
 import { Card, CardContent } from '@/components/ui/card';
 import { Loader2, Send, Box, LayoutTemplate } from 'lucide-react';
 import MessageBubble from '@/components/agents/MessageBubble';
@@ -108,7 +109,7 @@ export default function BoothDesigner() {
         return (
             <div className="max-w-md mx-auto mt-20 p-6 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800">
                 <div className="flex justify-center mb-6">
-                    <div className="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center">
+                    <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/5 text-primary rounded-2xl flex items-center justify-center shadow-inner border border-primary/20 rotate-3 transition-transform hover:rotate-6">
                         <LayoutTemplate className="w-8 h-8" />
                     </div>
                 </div>
@@ -128,7 +129,7 @@ export default function BoothDesigner() {
                                     key={size} 
                                     variant={boothSize === size ? 'default' : 'outline'}
                                     onClick={() => setBoothSize(size)}
-                                    className="w-full"
+                                    className={cn("w-full transition-all", boothSize === size ? "bg-primary hover:bg-primary/90 text-white shadow-md" : "hover:border-primary/50 hover:bg-primary/5 hover:text-primary")}
                                 >
                                     {size}
                                 </Button>
@@ -136,7 +137,7 @@ export default function BoothDesigner() {
                         </div>
                     </div>
                     <Button 
-                        className="w-full mt-4" 
+                        className="w-full mt-6 bg-gradient-to-r from-primary to-red-500 hover:from-primary/90 hover:to-red-500/90 text-white shadow-lg transition-all" 
                         onClick={handleStart}
                         disabled={!designName || step === 'loading'}
                     >
@@ -152,8 +153,8 @@ export default function BoothDesigner() {
         <div className="flex h-[calc(100vh-64px)] overflow-hidden bg-slate-50 dark:bg-slate-950">
             {/* Left Column: Chat Interface */}
             <div className="w-full md:w-1/3 flex flex-col border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-                <div className="p-4 border-b border-slate-200 dark:border-slate-800 z-10 flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                <div className="p-4 border-b border-slate-200 dark:border-slate-800 z-10 flex items-center gap-3 bg-slate-50/50 dark:bg-slate-800/50">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center text-primary shrink-0 shadow-inner border border-primary/20">
                         <Box className="w-5 h-5" />
                     </div>
                     <div className="min-w-0">
@@ -183,7 +184,7 @@ export default function BoothDesigner() {
                             disabled={isSending}
                             className="flex-1"
                         />
-                        <Button type="submit" disabled={isSending || !input.trim()}>
+                        <Button type="submit" disabled={isSending || !input.trim()} className="bg-primary hover:bg-primary/90 shadow-sm transition-all">
                             <Send className="w-4 h-4" />
                         </Button>
                     </form>
@@ -193,11 +194,14 @@ export default function BoothDesigner() {
             {/* Right Column: Booth Space Visualization */}
             <div className="hidden md:flex w-2/3 p-6 flex-col">
                 <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-bold flex items-center gap-2 text-slate-900 dark:text-white">
-                        <LayoutTemplate className="w-5 h-5 text-primary" />
+                    <h2 className="text-xl font-bold flex items-center gap-3 text-slate-900 dark:text-white">
+                        <div className="p-2 bg-primary/10 rounded-lg text-primary border border-primary/20 shadow-sm">
+                            <LayoutTemplate className="w-5 h-5" />
+                        </div>
                         Set Space: {boothSize}
                     </h2>
-                    <div className="text-sm font-medium text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm">
+                    <div className="text-sm font-medium text-primary bg-primary/10 px-4 py-1.5 rounded-full border border-primary/20 shadow-sm flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
                         {boothDesign?.product_skus?.length || 0} Products Added
                     </div>
                 </div>
