@@ -192,6 +192,9 @@ export default function BoothDesigner() {
                             <Button variant="outline" size="sm" className="text-xs rounded-full h-7 border-slate-200 text-slate-600 dark:text-slate-300 hover:text-primary hover:border-primary/50" onClick={() => sendMessage("Suggest a reception counter with my logo.")}>
                                 Reception counters
                             </Button>
+                            <Button variant="outline" size="sm" className="text-xs rounded-full h-7 border-slate-200 text-slate-600 dark:text-slate-300 hover:text-primary hover:border-primary/50" onClick={() => sendMessage("What lighting and accessory options are there?")}>
+                                Lighting & Accessories
+                            </Button>
                         </div>
                     )}
                     <form onSubmit={handleSend} className="flex gap-2">
