@@ -200,6 +200,7 @@ Return JSON: {"products": [...]}. If you can't identify distinct products, retur
           manufacturer_id: manufacturer.id,
           display_name: product.name,
           description: product.description || "",
+          visual_description: product.visual_description || "",
           manufacturer_sku: product.sku || "",
           base_price: product.estimated_price || 0,
           geometry_type: product.geometry_type || "accessory",
@@ -207,6 +208,7 @@ Return JSON: {"products": [...]}. If you can't identify distinct products, retur
           branding_surfaces: product.branding_surfaces || [],
           color_options: product.color_options || [],
           category_name: product.category || "",
+          thumbnail_url: product.image_url || "",
           is_active: true,
           customizable: true
         };
