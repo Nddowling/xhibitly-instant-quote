@@ -53,6 +53,9 @@ export default function Product3DManager() {
     ? products.filter(p => p.category === activeCategory)
     : [];
 
+  // Dynamically extract categories
+  const ALL_CATEGORIES = [...new Set(products.map(p => p.category).filter(Boolean))].sort();
+
   // Count per category
   const categoryCounts = {};
   ALL_CATEGORIES.forEach(cat => {
