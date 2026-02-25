@@ -3,7 +3,13 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.18';
 Deno.serve(async (req) => {
     try {
         const base44 = createClientFromRequest(req);
+        const user = await base44.auth.me();
         
+        if (!user) {
+            return Response.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+        
+        console.log("Generating branded image...");
         const { brand_name, product_name, visual_description, original_image_url } = await req.json();
 
         if (!brand_name) {
