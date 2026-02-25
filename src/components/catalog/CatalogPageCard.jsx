@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Sparkles, Loader2, CheckCircle2, Package, ChevronDown, ChevronUp, ArrowUpFromLine, Trash2, RefreshCw, X } from 'lucide-react';
+import { Sparkles, Loader2, CheckCircle2, Package, ChevronDown, ChevronUp, ArrowUpFromLine, Trash2, RefreshCw, X, Eraser } from 'lucide-react';
 
 export default function CatalogPageCard({ page, onUpdate, onDelete }) {
   const [isExtracting, setIsExtracting] = useState(false);
@@ -11,6 +11,7 @@ export default function CatalogPageCard({ page, onUpdate, onDelete }) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [lightboxUrl, setLightboxUrl] = useState(null);
+  const [isCleaning, setIsCleaning] = useState(false);
 
   const handleDelete = async () => {
     if (!confirm(`Delete page ${page.page_number}? This cannot be undone.`)) return;
@@ -49,7 +50,20 @@ export default function CatalogPageCard({ page, onUpdate, onDelete }) {
     setIsPushing(false);
   };
 
+  const handleCleanImages = async () => {
+    setIsCleaning(true);
+    const response = await base44.functions.invoke('processProductImage', {
+      action: 'batch_clean_page',
+      page_id: page.id
+    });
+    if (response.data.success && onUpdate) {
+      onUpdate({ ...page, products: response.data.products });
+    }
+    setIsCleaning(false);
+  };
+
   const products = page.products || [];
+  const hasUncleanedImages = products.some(p => p.image_url && !p.clean_image_url);
 
   return (
     <Card className="overflow-hidden hover:shadow-md transition-shadow">
@@ -143,6 +157,23 @@ export default function CatalogPageCard({ page, onUpdate, onDelete }) {
                 </Button>
               )}
 
+              {products.length > 0 && hasUncleanedImages && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={handleCleanImages}
+                  disabled={isCleaning}
+                  className="h-7 text-xs"
+                >
+                  {isCleaning ? (
+                    <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+                  ) : (
+                    <Eraser className="w-3 h-3 mr-1 text-purple-500" />
+                  )}
+                  {isCleaning ? 'Cleaning...' : 'Clean Images'}
+                </Button>
+              )}
+
               {products.length > 0 && (
                 <>
                   <Button
@@ -179,18 +210,28 @@ export default function CatalogPageCard({ page, onUpdate, onDelete }) {
           <div className="border-t border-slate-100 bg-slate-50 p-4 space-y-2">
             {products.map((p, i) => (
               <div key={i} className="flex items-center gap-3 bg-white rounded-lg p-3 border border-slate-100">
-                {p.image_url ? (
-                  <img
-                    src={p.image_url}
-                    alt={p.name}
-                    className="w-14 h-14 object-contain rounded border border-slate-200 shrink-0 bg-white cursor-pointer hover:opacity-80 transition-opacity"
-                    onClick={() => setLightboxUrl(p.image_url)}
-                  />
-                ) : (
-                  <div className="w-14 h-14 bg-slate-100 rounded border border-slate-200 flex items-center justify-center shrink-0">
-                    <Package className="w-5 h-5 text-slate-300" />
-                  </div>
-                )}
+                <div className="relative shrink-0">
+                  {(p.clean_image_url || p.image_url) ? (
+                    <img
+                      src={p.clean_image_url || p.image_url}
+                      alt={p.name}
+                      className="w-14 h-14 object-contain rounded border border-slate-200 bg-white cursor-pointer hover:opacity-80 transition-opacity"
+                      onClick={() => setLightboxUrl(p.clean_image_url || p.image_url)}
+                    />
+                  ) : (
+                    <div className="w-14 h-14 bg-slate-100 rounded border border-slate-200 flex items-center justify-center">
+                      <Package className="w-5 h-5 text-slate-300" />
+                    </div>
+                  )}
+                  {p.clean_image_url && (
+                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                      <CheckCircle2 className="w-3 h-3 text-white" />
+                    </div>
+                  )}
+                  {p.image_url && !p.clean_image_url && (
+                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-orange-400 rounded-full" title="Needs cleaning" />
+                  )}
+                </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-slate-800">{p.name}</p>
                   <p className="text-xs text-slate-500">{p.category} {p.sku ? `• ${p.sku}` : ''}</p>
