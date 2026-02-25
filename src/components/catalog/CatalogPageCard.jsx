@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Sparkles, Loader2, CheckCircle2, Package, ChevronDown, ChevronUp, ArrowUpFromLine } from 'lucide-react';
+import { Sparkles, Loader2, CheckCircle2, Package, ChevronDown, ChevronUp, ArrowUpFromLine, Trash2 } from 'lucide-react';
 
 export default function CatalogPageCard({ page, onUpdate }) {
   const [isExtracting, setIsExtracting] = useState(false);
