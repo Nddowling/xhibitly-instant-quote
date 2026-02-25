@@ -53,6 +53,6 @@ export default function ProductRow({ product }) {
         )}
         <div className="text-[10px] text-slate-400 mt-0.5">{product.price_tier}</div>
       </div>
-    </div>
+    </Link>
   );
 }
