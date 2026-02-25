@@ -3,13 +3,14 @@ import { base44 } from '@/api/base44Client';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Sparkles, Loader2, CheckCircle2, Package, ChevronDown, ChevronUp, ArrowUpFromLine, Trash2 } from 'lucide-react';
+import { Sparkles, Loader2, CheckCircle2, Package, ChevronDown, ChevronUp, ArrowUpFromLine, Trash2, RefreshCw, X } from 'lucide-react';
 
 export default function CatalogPageCard({ page, onUpdate, onDelete }) {
   const [isExtracting, setIsExtracting] = useState(false);
   const [isPushing, setIsPushing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  const [lightboxUrl, setLightboxUrl] = useState(null);
 
   const handleDelete = async () => {
     if (!confirm(`Delete page ${page.page_number}? This cannot be undone.`)) return;
@@ -59,7 +60,8 @@ export default function CatalogPageCard({ page, onUpdate, onDelete }) {
             <img
               src={page.page_image_url}
               alt={`Page ${page.page_number}`}
-              className="w-20 h-28 object-cover rounded-lg border border-slate-200 shrink-0"
+              className="w-20 h-28 object-cover rounded-lg border border-slate-200 shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
+              onClick={() => setLightboxUrl(page.page_image_url)}
             />
           ) : (
             <div className="w-20 h-28 bg-slate-100 rounded-lg flex items-center justify-center shrink-0">
@@ -124,6 +126,23 @@ export default function CatalogPageCard({ page, onUpdate, onDelete }) {
                 </Button>
               )}
 
+              {page.page_image_url && page.is_processed && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={handleExtractProducts}
+                  disabled={isExtracting}
+                  className="h-7 text-xs"
+                >
+                  {isExtracting ? (
+                    <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+                  ) : (
+                    <RefreshCw className="w-3 h-3 mr-1 text-orange-500" />
+                  )}
+                  Reprocess
+                </Button>
+              )}
+
               {products.length > 0 && (
                 <>
                   <Button
@@ -161,7 +180,12 @@ export default function CatalogPageCard({ page, onUpdate, onDelete }) {
             {products.map((p, i) => (
               <div key={i} className="flex items-center gap-3 bg-white rounded-lg p-3 border border-slate-100">
                 {p.image_url ? (
-                  <img src={p.image_url} alt={p.name} className="w-14 h-14 object-contain rounded border border-slate-200 shrink-0 bg-white" />
+                  <img
+                    src={p.image_url}
+                    alt={p.name}
+                    className="w-14 h-14 object-contain rounded border border-slate-200 shrink-0 bg-white cursor-pointer hover:opacity-80 transition-opacity"
+                    onClick={() => setLightboxUrl(p.image_url)}
+                  />
                 ) : (
                   <div className="w-14 h-14 bg-slate-100 rounded border border-slate-200 flex items-center justify-center shrink-0">
                     <Package className="w-5 h-5 text-slate-300" />
@@ -182,6 +206,27 @@ export default function CatalogPageCard({ page, onUpdate, onDelete }) {
           </div>
         )}
       </CardContent>
+
+      {/* Lightbox */}
+      {lightboxUrl && (
+        <div
+          className="fixed inset-0 bg-black/80 z-[100] flex items-center justify-center p-4"
+          onClick={() => setLightboxUrl(null)}
+        >
+          <button
+            onClick={() => setLightboxUrl(null)}
+            className="absolute top-4 right-4 text-white hover:text-slate-300"
+          >
+            <X className="w-8 h-8" />
+          </button>
+          <img
+            src={lightboxUrl}
+            alt="Enlarged"
+            className="max-w-full max-h-[90vh] object-contain rounded-lg"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
     </Card>
   );
 }
