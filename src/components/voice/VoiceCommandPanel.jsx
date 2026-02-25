@@ -161,6 +161,7 @@ export default function VoiceCommandPanel({
   onEndConversation
 }) {
   const scrollRef = useRef(null);
+  const [lightboxImage, setLightboxImage] = useState(null);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -170,6 +171,27 @@ export default function VoiceCommandPanel({
 
   return (
     <AnimatePresence>
+      {lightboxImage && (
+        <div 
+          className="fixed inset-0 z-[100] bg-black/80 flex flex-col items-center justify-center p-4 backdrop-blur-sm cursor-zoom-out"
+          onClick={() => setLightboxImage(null)}
+        >
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="absolute top-4 right-4 text-white hover:bg-white/20"
+            onClick={() => setLightboxImage(null)}
+          >
+            <X className="w-8 h-8" />
+          </Button>
+          <img 
+            src={lightboxImage} 
+            className="max-w-full max-h-full object-contain rounded-lg shadow-2xl cursor-default" 
+            alt="Enlarged view" 
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
       {isOpen && (
         <motion.div
           initial={{ opacity: 0, y: 100, scale: 0.95 }}
@@ -225,7 +247,7 @@ export default function VoiceCommandPanel({
               )}
 
               {messages.map((msg, i) => (
-                <MessageBubble key={i} message={msg} />
+                <MessageBubble key={i} message={msg} onImageClick={setLightboxImage} />
               ))}
 
               {/* Interim transcript */}
