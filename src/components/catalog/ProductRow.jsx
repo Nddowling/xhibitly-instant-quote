@@ -1,9 +1,11 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 
 export default function ProductRow({ product }) {
   return (
-    <div className="flex items-center gap-4 p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 hover:shadow-md transition-shadow">
+    <Link to={`${createPageUrl('ProductDetail')}?id=${product.id}`} className="flex items-center gap-4 p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 hover:shadow-md transition-shadow cursor-pointer">
       {/* Thumbnail */}
       <div className="w-16 h-16 md:w-20 md:h-20 rounded-lg bg-slate-100 dark:bg-slate-800 flex-shrink-0 overflow-hidden">
         {product.image_url ? (
