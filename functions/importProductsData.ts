@@ -31,12 +31,21 @@ Deno.serve(async (req) => {
                 
                 // Handle Image URL
                 let imageUrl = "";
+                let firstImage = null;
                 if (item.images && Array.isArray(item.images) && item.images.length > 0) {
-                    imageUrl = item.images[0];
+                    firstImage = item.images[0];
                 } else if (item.image) {
-                    imageUrl = item.image;
+                    firstImage = item.image;
                 } else if (item.image_url) {
-                    imageUrl = item.image_url;
+                    firstImage = item.image_url;
+                }
+                
+                if (firstImage) {
+                    if (typeof firstImage === 'string') {
+                        imageUrl = firstImage;
+                    } else if (typeof firstImage === 'object' && firstImage.url) {
+                        imageUrl = firstImage.url;
+                    }
                 }
                 
                 // Create Product
@@ -66,6 +75,9 @@ Deno.serve(async (req) => {
                 await base44.asServiceRole.entities.ProductVariant.create(variantData);
                 
                 results.success++;
+                
+                // Add a small delay to avoid rate limiting
+                await new Promise(resolve => setTimeout(resolve, 200));
             } catch (err) {
                 results.errors.push({ name: item.name, error: err.message });
             }
