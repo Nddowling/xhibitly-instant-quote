@@ -30,33 +30,26 @@ Deno.serve(async (req) => {
                 sku = sku.replace(/In stock/ig, '').replace(/SKU/ig, '').replace(/\^/g, '').trim();
                 
                 // Handle Image URL
-                let imageUrl = "";
-                let firstImage = null;
+                let finalImageUrl = "";
                 if (item.images && Array.isArray(item.images) && item.images.length > 0) {
-                    firstImage = item.images[0];
+                    let img = item.images[0];
+                    finalImageUrl = typeof img === 'string' ? img : (img?.url || "");
                 } else if (item.image) {
-                    firstImage = item.image;
+                    finalImageUrl = typeof item.image === 'string' ? item.image : (item.image?.url || "");
                 } else if (item.image_url) {
-                    firstImage = item.image_url;
+                    finalImageUrl = typeof item.image_url === 'string' ? item.image_url : (item.image_url?.url || "");
                 }
-                
-                if (firstImage) {
-                    if (typeof firstImage === 'string') {
-                        imageUrl = firstImage;
-                    } else if (typeof firstImage === 'object' && firstImage.url) {
-                        imageUrl = firstImage.url;
-                    }
-                }
+                if (typeof finalImageUrl !== 'string') finalImageUrl = "";
                 
                 // Create Product
                 const productData = {
-                    name: item.name || "Unnamed Product",
-                    sku: sku,
-                    category: item.category || "Uncategorized",
-                    subcategory: item.subcategory || "",
-                    description: item.description || "",
+                    name: String(item.name || "Unnamed Product"),
+                    sku: String(sku),
+                    category: String(item.category || "Uncategorized"),
+                    subcategory: String(item.subcategory || ""),
+                    description: String(item.description || ""),
                     base_price: 0,
-                    image_url: imageUrl
+                    image_url: finalImageUrl
                 };
                 
                 await base44.asServiceRole.entities.Product.create(productData);
