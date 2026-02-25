@@ -19,32 +19,56 @@ export default function CatalogImportUploader({ onImportComplete }) {
     setError(null);
     setResult(null);
 
-    // 1. Read JSON file
-    const jsonText = await jsonFile.text();
-    const pageData = JSON.parse(jsonText);
+    try {
+      // 1. Read JSON file
+      const jsonText = await jsonFile.text();
+      const pageData = JSON.parse(jsonText);
 
-    // 2. Upload image if provided
-    let imageUrl = '';
-    if (imageFile) {
-      const { file_url } = await base44.integrations.Core.UploadFile({ file: imageFile });
-      imageUrl = file_url;
+      // Normalize pageData in case it's an array or missing page_number
+      let pageNumber = pageData.page_number;
+      let products = pageData.products || [];
+
+      if (Array.isArray(pageData)) {
+        products = pageData;
+      }
+      
+      if (!pageNumber) {
+        const match = jsonFile.name.match(/\d+/);
+        pageNumber = match ? parseInt(match[0], 10) : 1;
+      }
+
+      const normalizedPageData = {
+        ...pageData,
+        page_number: pageNumber,
+        products: products
+      };
+
+      // 2. Upload image if provided
+      let imageUrl = '';
+      if (imageFile) {
+        const { file_url } = await base44.integrations.Core.UploadFile({ file: imageFile });
+        imageUrl = file_url;
+      }
+
+      // 3. Import via backend function
+      const response = await base44.functions.invoke('importCatalogPage', {
+        action: 'import_page',
+        page_data: normalizedPageData,
+        image_url: imageUrl
+      });
+
+      if (response.data.success) {
+        setResult(response.data.page);
+        if (onImportComplete) onImportComplete(response.data.page);
+      } else {
+        setError(response.data.error || 'Import failed');
+      }
+    } catch (err) {
+      console.error("Import error:", err);
+      setError(err.response?.data?.error || err.message || 'Import failed');
+    } finally {
+      setIsImporting(false);
     }
-
-    // 3. Import via backend function
-    const response = await base44.functions.invoke('importCatalogPage', {
-      action: 'import_page',
-      page_data: pageData,
-      image_url: imageUrl
-    });
-
-    if (response.data.success) {
-      setResult(response.data.page);
-      if (onImportComplete) onImportComplete(response.data.page);
-    } else {
-      setError(response.data.error || 'Import failed');
-    }
-
-    setIsImporting(false);
   };
 
   return (
