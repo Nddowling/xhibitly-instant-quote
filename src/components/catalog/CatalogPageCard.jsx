@@ -5,10 +5,19 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Sparkles, Loader2, CheckCircle2, Package, ChevronDown, ChevronUp, ArrowUpFromLine, Trash2 } from 'lucide-react';
 
-export default function CatalogPageCard({ page, onUpdate }) {
+export default function CatalogPageCard({ page, onUpdate, onDelete }) {
   const [isExtracting, setIsExtracting] = useState(false);
   const [isPushing, setIsPushing] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [expanded, setExpanded] = useState(false);
+
+  const handleDelete = async () => {
+    if (!confirm(`Delete page ${page.page_number}? This cannot be undone.`)) return;
+    setIsDeleting(true);
+    await base44.entities.CatalogPage.delete(page.id);
+    if (onDelete) onDelete(page.id);
+    setIsDeleting(false);
+  };
 
   const handleExtractProducts = async () => {
     if (!page.page_image_url) return;
