@@ -23,6 +23,20 @@ export default function VoiceActivationProvider({ children }) {
   const synthRef = useRef(window.speechSynthesis);
   const autoListenRef = useRef(false);
 
+  // ── ADD MESSAGE ──
+  const addMessage = useCallback((role, content) => {
+    setMessages(prev => [...prev, { role, content, timestamp: Date.now() }]);
+  }, []);
+
+  // ── SPEAK (TTS) ──
+  const speak = useCallback((text) => {
+    if (synthRef.current.speaking) synthRef.current.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 1.05;
+    utterance.pitch = 1;
+    synthRef.current.speak(utterance);
+  }, []);
+
   // ── INIT AGENT CONVERSATION ──
   useEffect(() => {
     async function initConversation() {
@@ -199,20 +213,6 @@ export default function VoiceActivationProvider({ children }) {
     setMessages([]);
     setInterimTranscript('');
   }, [isListening]);
-
-  // ── ADD MESSAGE ──
-  const addMessage = useCallback((role, content) => {
-    setMessages(prev => [...prev, { role, content, timestamp: Date.now() }]);
-  }, []);
-
-  // ── SPEAK (TTS) ──
-  const speak = useCallback((text) => {
-    if (synthRef.current.speaking) synthRef.current.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = 1.05;
-    utterance.pitch = 1;
-    synthRef.current.speak(utterance);
-  }, []);
 
   // ── PROCESS COMMAND via Agent ──
   const handleUserCommand = useCallback(async (transcript) => {
