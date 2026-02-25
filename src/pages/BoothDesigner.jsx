@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { Card, CardContent } from '@/components/ui/card';
-import { Loader2, Send, Box, LayoutTemplate } from 'lucide-react';
+import { Loader2, Send, Box, LayoutTemplate, Image as ImageIcon } from 'lucide-react';
 import MessageBubble from '@/components/agents/MessageBubble';
 
 export default function BoothDesigner() {
@@ -206,25 +206,76 @@ export default function BoothDesigner() {
                     </div>
                 </div>
 
-                <div className="flex-1 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 overflow-y-auto relative">
+                <div className="flex-1 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 overflow-y-auto relative flex flex-col">
                     <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:20px_20px] opacity-40 rounded-2xl" />
                     
-                    <div className="relative z-10 grid grid-cols-2 lg:grid-cols-3 gap-4">
-                        {boothDesign?.product_skus?.map((sku, idx) => (
-                            <BoothProductCard key={idx} sku={sku} />
-                        ))}
-                        
-                        {(!boothDesign?.product_skus || boothDesign.product_skus.length === 0) && (
-                            <div className="col-span-full flex flex-col items-center justify-center py-32 text-slate-400">
-                                <Box className="w-16 h-16 mb-4 opacity-30" />
-                                <p className="text-lg font-medium text-slate-500">No products added yet</p>
-                                <p className="text-sm mt-1">Ask the agent to add some products to your booth layout!</p>
-                            </div>
-                        )}
+                    <div className="relative z-10 flex-1 flex flex-col">
+                        {/* 3D Render Visualization Area */}
+                        <div className="w-full bg-slate-100 dark:bg-slate-800/50 rounded-xl mb-6 border border-slate-200 dark:border-slate-700 overflow-hidden relative group shrink-0">
+                            {boothDesign?.design_image_url ? (
+                                <div className="relative w-full aspect-[16/9]">
+                                    <img src={boothDesign.design_image_url} alt="Booth Render" className="w-full h-full object-cover" />
+                                    <div className="absolute top-4 right-4">
+                                        <GenerateRenderButton boothDesignId={boothDesign.id} skus={boothDesign?.product_skus} />
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="w-full aspect-[16/9] flex flex-col items-center justify-center text-slate-400 p-6 text-center">
+                                    <LayoutTemplate className="w-12 h-12 mb-3 opacity-20" />
+                                    <p className="text-sm font-medium text-slate-500 mb-4">No 3D render generated yet.</p>
+                                    <GenerateRenderButton boothDesignId={boothDesign?.id} skus={boothDesign?.product_skus} />
+                                </div>
+                            )}
+                        </div>
+
+                        <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-3">Included Products</h3>
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 pb-4">
+                            {boothDesign?.product_skus?.map((sku, idx) => (
+                                <BoothProductCard key={idx} sku={sku} />
+                            ))}
+                            
+                            {(!boothDesign?.product_skus || boothDesign.product_skus.length === 0) && (
+                                <div className="col-span-full flex flex-col items-center justify-center py-12 text-slate-400 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-xl">
+                                    <p className="text-sm font-medium">No products added yet</p>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+    );
+}
+
+function GenerateRenderButton({ boothDesignId, skus }) {
+    const [isGenerating, setIsGenerating] = useState(false);
+
+    const handleGenerate = async () => {
+        if (!boothDesignId || !skus || skus.length === 0) return;
+        setIsGenerating(true);
+        try {
+            await base44.functions.invoke('generateBoothRender', { booth_design_id: boothDesignId });
+        } catch (error) {
+            console.error("Failed to generate render:", error);
+            alert("Failed to generate render. Please try again.");
+        } finally {
+            setIsGenerating(false);
+        }
+    };
+
+    return (
+        <Button 
+            onClick={handleGenerate} 
+            disabled={isGenerating || !skus || skus.length === 0}
+            className="bg-primary hover:bg-primary/90 text-white shadow-md"
+            size="sm"
+        >
+            {isGenerating ? (
+                <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Rendering...</>
+            ) : (
+                <><ImageIcon className="w-4 h-4 mr-2" /> Generate 3D Render</>
+            )}
+        </Button>
     );
 }
 
