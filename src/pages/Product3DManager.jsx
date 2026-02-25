@@ -10,18 +10,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import CategoryCard from '../components/catalog/CategoryCard';
 import ProductRow from '../components/catalog/ProductRow';
 
-const ALL_CATEGORIES = [
-  'Portable Displays',
-  'Fabric Structures',
-  'Modular Exhibits',
-  'Outdoor Displays',
-  'Blaze SEG Light Boxes',
-  'Rental Displays',
-  'Vector Fast Frame',
-  'Wall Signs',
-  'Retail Displays'
-];
-
 export default function Product3DManager() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
