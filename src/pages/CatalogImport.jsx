@@ -54,6 +54,10 @@ export default function CatalogImport() {
     setPages(prev => prev.map(p => p.id === updatedPage.id ? updatedPage : p));
   };
 
+  const handlePageDelete = (deletedId) => {
+    setPages(prev => prev.filter(p => p.id !== deletedId));
+  };
+
   const filteredPages = searchTerm.length >= 2
     ? pages.filter(p => {
         const q = searchTerm.toLowerCase();
