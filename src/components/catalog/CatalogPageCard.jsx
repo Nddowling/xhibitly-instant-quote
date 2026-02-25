@@ -50,10 +50,10 @@ export default function CatalogPageCard({ page, onUpdate, onDelete }) {
     setIsPushing(false);
   };
 
-  const handleCleanImages = async () => {
+  const handleEnrichProducts = async () => {
     setIsCleaning(true);
     const response = await base44.functions.invoke('processProductImage', {
-      action: 'batch_clean_page',
+      action: 'batch_enrich_page',
       page_id: page.id
     });
     if (response.data.success && onUpdate) {
@@ -63,7 +63,7 @@ export default function CatalogPageCard({ page, onUpdate, onDelete }) {
   };
 
   const products = page.products || [];
-  const hasUncleanedImages = products.some(p => p.image_url && !p.clean_image_url);
+  const hasUnenrichedProducts = products.some(p => p.image_url && !p.is_enriched);
 
   return (
     <Card className="overflow-hidden hover:shadow-md transition-shadow">
@@ -157,20 +157,20 @@ export default function CatalogPageCard({ page, onUpdate, onDelete }) {
                 </Button>
               )}
 
-              {products.length > 0 && hasUncleanedImages && (
+              {products.length > 0 && hasUnenrichedProducts && (
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={handleCleanImages}
+                  onClick={handleEnrichProducts}
                   disabled={isCleaning}
                   className="h-7 text-xs"
                 >
                   {isCleaning ? (
                     <Loader2 className="w-3 h-3 mr-1 animate-spin" />
                   ) : (
-                    <Eraser className="w-3 h-3 mr-1 text-purple-500" />
+                    <Sparkles className="w-3 h-3 mr-1 text-purple-500" />
                   )}
-                  {isCleaning ? 'Cleaning...' : 'Clean Images'}
+                  {isCleaning ? 'Enriching...' : 'Enrich Descriptions'}
                 </Button>
               )}
 
@@ -211,25 +211,22 @@ export default function CatalogPageCard({ page, onUpdate, onDelete }) {
             {products.map((p, i) => (
               <div key={i} className="flex items-center gap-3 bg-white rounded-lg p-3 border border-slate-100">
                 <div className="relative shrink-0">
-                  {(p.clean_image_url || p.image_url) ? (
+                  {p.image_url ? (
                     <img
-                      src={p.clean_image_url || p.image_url}
+                      src={p.image_url}
                       alt={p.name}
                       className="w-14 h-14 object-contain rounded border border-slate-200 bg-white cursor-pointer hover:opacity-80 transition-opacity"
-                      onClick={() => setLightboxUrl(p.clean_image_url || p.image_url)}
+                      onClick={() => setLightboxUrl(p.image_url)}
                     />
                   ) : (
                     <div className="w-14 h-14 bg-slate-100 rounded border border-slate-200 flex items-center justify-center">
                       <Package className="w-5 h-5 text-slate-300" />
                     </div>
                   )}
-                  {p.clean_image_url && (
-                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
-                      <CheckCircle2 className="w-3 h-3 text-white" />
+                  {p.is_enriched && (
+                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-purple-500 rounded-full flex items-center justify-center" title="Enriched">
+                      <Sparkles className="w-2.5 h-2.5 text-white" />
                     </div>
-                  )}
-                  {p.image_url && !p.clean_image_url && (
-                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-orange-400 rounded-full" title="Needs cleaning" />
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
