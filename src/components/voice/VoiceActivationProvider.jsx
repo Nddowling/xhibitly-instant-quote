@@ -8,56 +8,6 @@ import VoiceCommandPanel from './VoiceCommandPanel';
 const VoiceContext = createContext(null);
 export const useVoice = () => useContext(VoiceContext);
 
-// ── PAGE NAME MAP for navigation ──
-const PAGE_ALIASES = {
-  'dashboard': 'SalesDashboard',
-  'sales dashboard': 'SalesDashboard',
-  'home': 'Home',
-  'landing': 'Landing',
-  'results': 'Results',
-  'quote': 'QuoteRequest',
-  'quote request': 'QuoteRequest',
-  'new quote': 'QuoteRequest',
-  'configurator': 'DesignConfigurator',
-  'design configurator': 'DesignConfigurator',
-  'design': 'DesignConfigurator',
-  'order history': 'OrderHistory',
-  'orders': 'OrderHistory',
-  'history': 'OrderHistory',
-  'contacts': 'Contacts',
-  'pipeline': 'Pipeline',
-  'settings': 'Settings',
-  'catalog': 'Product3DManager',
-  'product catalog': 'Product3DManager',
-  'products': 'Product3DManager',
-  'confirmation': 'Confirmation',
-  'student': 'StudentHome',
-  'student home': 'StudentHome',
-  'brand verification': 'BrandVerification',
-};
-
-// ── CATALOG SEARCH HELPER ──
-async function searchCatalog(query) {
-  const allProducts = await base44.entities.ProductVariant.filter({ is_active: true });
-  const q = query.toLowerCase();
-  const matches = allProducts.filter(p => {
-    const name = (p.display_name || p.name || '').toLowerCase();
-    const sku = (p.manufacturer_sku || '').toLowerCase();
-    const cat = (p.category_name || '').toLowerCase();
-    const desc = (p.description || '').toLowerCase();
-    return name.includes(q) || sku.includes(q) || cat.includes(q) || desc.includes(q);
-  });
-  return matches.slice(0, 5).map(p => ({
-    name: p.display_name || p.name,
-    sku: p.manufacturer_sku,
-    category: p.category_name,
-    price: p.base_price,
-    sizes: p.booth_sizes,
-    tier: p.price_tier,
-    description: (p.description || '').slice(0, 120)
-  }));
-}
-
 export default function VoiceActivationProvider({ children }) {
   const navigate = useNavigate();
   const [isListening, setIsListening] = useState(false);
@@ -66,9 +16,79 @@ export default function VoiceActivationProvider({ children }) {
   const [interimTranscript, setInterimTranscript] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [conversationActive, setConversationActive] = useState(false);
+  const [conversation, setConversation] = useState(null);
+  const [lastSpokenId, setLastSpokenId] = useState(null);
+
   const recognitionRef = useRef(null);
   const synthRef = useRef(window.speechSynthesis);
   const autoListenRef = useRef(false);
+
+  // ── INIT AGENT CONVERSATION ──
+  useEffect(() => {
+    async function initConversation() {
+      try {
+        const conv = await base44.agents.createConversation({
+          agent_name: "product_assistant",
+          metadata: { name: "Voice Assistant" }
+        });
+        setConversation(conv);
+      } catch (e) {
+        console.error("Agent init error", e);
+      }
+    }
+    initConversation();
+  }, []);
+
+  // ── SUBSCRIBE TO AGENT ──
+  useEffect(() => {
+    if (!conversation) return;
+    const unsubscribe = base44.agents.subscribeToConversation(conversation.id, (data) => {
+      setMessages(data.messages || []);
+      
+      const lastMsg = data.messages?.[data.messages.length - 1];
+      if (lastMsg && lastMsg.role === 'assistant') {
+        const hasActiveTools = lastMsg.tool_calls?.some(tc => ['pending', 'running', 'in_progress'].includes(tc.status));
+        if (!hasActiveTools && lastMsg.content) {
+          setIsProcessing(false);
+        }
+      }
+    });
+    return () => unsubscribe();
+  }, [conversation]);
+
+  // ── SPEAK WHEN ASSISTANT FINISHES ──
+  useEffect(() => {
+    if (!messages || messages.length === 0) return;
+    const lastMsg = messages[messages.length - 1];
+    
+    if (lastMsg.role === 'assistant' && lastMsg.content) {
+      const hasActiveTools = lastMsg.tool_calls?.some(tc => ['pending', 'running', 'in_progress'].includes(tc.status));
+      if (!hasActiveTools) {
+        const timeout = setTimeout(() => {
+          if (lastSpokenId !== lastMsg.id) {
+             speak(lastMsg.content);
+             setLastSpokenId(lastMsg.id);
+             
+             // Resume auto listen after speaking
+             if (conversationActive) {
+                const checkSpeech = setInterval(() => {
+                  if (!synthRef.current.speaking) {
+                    clearInterval(checkSpeech);
+                    if (recognitionRef.current && autoListenRef.current && !isListening) {
+                      try {
+                        recognitionRef.current.start();
+                        setIsListening(true);
+                      } catch(e) {}
+                    }
+                  }
+                }, 500);
+             }
+          }
+        }, 1500);
+        return () => clearTimeout(timeout);
+      }
+    }
+  }, [messages, lastSpokenId, conversationActive, isListening]);
 
   // ── SPEECH RECOGNITION SETUP ──
   const getSpeechRecognition = useCallback(() => {
@@ -179,196 +199,26 @@ export default function VoiceActivationProvider({ children }) {
     synthRef.current.speak(utterance);
   }, []);
 
-  // ── PROCESS COMMAND via LLM ──
+  // ── PROCESS COMMAND via Agent ──
   const handleUserCommand = useCallback(async (transcript) => {
-    addMessage('user', transcript);
+    if (!conversation) return;
+    
     setIsProcessing(true);
     // Pause auto-listen while processing so TTS isn't picked up
     autoListenRef.current = false;
 
     try {
-      // Get current context for the LLM
-      const selectedDesign = sessionStorage.getItem('selectedDesign');
-      const quoteRequest = sessionStorage.getItem('quoteRequest');
-      const boothDesigns = sessionStorage.getItem('boothDesigns');
-
-      const designContext = selectedDesign ? JSON.parse(selectedDesign) : null;
-      const quoteContext = quoteRequest ? JSON.parse(quoteRequest) : null;
-      const designsContext = boothDesigns ? JSON.parse(boothDesigns) : null;
-
-      const contextSummary = [];
-      if (quoteContext) contextSummary.push(`Active quote: ${quoteContext.boothSize} booth for ${quoteContext.dealerCompany || quoteContext.websiteUrl}`);
-      if (designContext) contextSummary.push(`Selected design: "${designContext.design_name}" (${designContext.tier}), price: $${designContext.total_price?.toLocaleString()}, products: ${designContext.product_skus?.length || 0}`);
-      if (designsContext?.length) contextSummary.push(`${designsContext.length} booth designs available on Results page`);
-
-      const currentUrl = window.location.pathname;
-      const conversationHistory = messages.slice(-10).map(m => `${m.role}: ${m.content}`).join('\n');
-
-      // Catalog search — if user mentions product name or "find", "search", "look up", "catalog"
-      let catalogContext = '';
-      const lowerTranscript = transcript.toLowerCase();
-      const wantsCatalog = /find|search|look up|lookup|catalog|product|show me|what.*have|banner|backwall|counter|kiosk|monitor|lighting|flooring|carpet|table|tent|billboard|formulate|hopup|vector|hybrid pro/.test(lowerTranscript);
-      if (wantsCatalog) {
-        // Extract likely search terms
-        const searchTerms = transcript.replace(/^(find|search|look up|lookup|show me|what do you have for|can you find)\s*/i, '').trim();
-        const results = await searchCatalog(searchTerms || transcript);
-        if (results.length > 0) {
-          catalogContext = `\n\nCATALOG SEARCH RESULTS for "${searchTerms || transcript}":\n${JSON.stringify(results, null, 2)}`;
-        } else {
-          catalogContext = `\n\nCATALOG SEARCH: No products found matching "${searchTerms || transcript}". Suggest the user try different keywords.`;
-        }
-      }
-
-      const result = await base44.integrations.Core.InvokeLLM({
-        prompt: `You are a helpful voice assistant for a trade show booth design app called "The Exhibitors' Handbook". You help users navigate, create quotes, search the Orbus product catalog, and answer questions. Be conversational and natural.
-
-CURRENT PAGE: ${currentUrl}
-CONTEXT: ${contextSummary.join(' | ') || 'No active session'}
-RECENT CONVERSATION:
-${conversationHistory}
-${catalogContext}
-
-USER SAID: "${transcript}"
-
-AVAILABLE PAGES: ${Object.entries(PAGE_ALIASES).map(([alias, page]) => `"${alias}" → ${page}`).join(', ')}
-
-RESPOND WITH JSON:
-{
-  "action": "navigate" | "create_quote" | "search_catalog" | "query" | "modify_design" | "send_quote" | "confirm_action" | "clarify" | "chat",
-  "page": "PageName (only for navigate)",
-  "website_url": "url (only for create_quote)", 
-  "booth_size": "10x10 or 10x20 or 20x20 (for create_quote)",
-  "response": "What to say back to the user (required for all actions)",
-  "needs_confirmation": true/false (for destructive actions)
-}
-
-RULES:
-- For navigation: match the user's intent to the closest page. Be generous with fuzzy matching. After navigating, let the user know where you took them.
-- For create_quote: extract website URL and booth size. If missing info, ask for it via "clarify" action — don't guess. Ask one question at a time.
-- For search_catalog: when the user asks about products, present the catalog search results naturally. Mention names, prices, and what booth sizes they fit.
-- For query: answer questions about the current design/quote using the context provided.
-- For modify_design: acknowledge the request and ask clarifying questions about what to change.
-- For clarify: when you need more info from the user. Ask ONE clear question.
-- For chat: respond helpfully about booth design, trade shows, or the Orbus catalog.
-- ALWAYS include a concise, friendly "response" field. Keep it under 3 sentences for voice readability.
-- If the command is ambiguous, use "clarify" action and ask a specific question.
-- NEVER make up product names or SKUs. Only reference products from the catalog search results.`,
-        response_json_schema: {
-          type: "object",
-          properties: {
-            action: { type: "string" },
-            page: { type: "string" },
-            website_url: { type: "string" },
-            booth_size: { type: "string" },
-            response: { type: "string" },
-            needs_confirmation: { type: "boolean" }
-          }
-        }
+      await base44.agents.addMessage(conversation, {
+        role: "user",
+        content: transcript
       });
-
-      // Execute the action
-      executeAction(result);
-
     } catch (err) {
       console.error('[Voice] Command processing error:', err);
       const errMsg = "Sorry, I had trouble processing that. Please try again.";
-      addMessage('assistant', errMsg);
-      speak(errMsg);
-    } finally {
       setIsProcessing(false);
-      // Resume auto-listen after processing + TTS finishes
-      if (conversationActive) {
-        const waitForSpeech = () => {
-          if (!synthRef.current.speaking) {
-            autoListenRef.current = true;
-            // Trigger a new listen cycle
-            const recognition = recognitionRef.current;
-            if (recognition) {
-              setTimeout(() => {
-                try {
-                  recognition.start();
-                  setIsListening(true);
-                } catch (e) { /* already running */ }
-              }, 400);
-            }
-          } else {
-            setTimeout(waitForSpeech, 200);
-          }
-        };
-        setTimeout(waitForSpeech, 500);
-      }
+      speak(errMsg);
     }
-  }, [messages, addMessage, speak, conversationActive]);
-
-  // ── EXECUTE ACTION ──
-  const executeAction = useCallback((parsed) => {
-    const response = parsed.response || "Done.";
-    addMessage('assistant', response);
-    speak(response);
-
-    switch (parsed.action) {
-      case 'navigate': {
-        if (parsed.page) {
-          let targetPage = parsed.page;
-          const lowerPage = parsed.page.toLowerCase();
-          if (PAGE_ALIASES[lowerPage]) {
-            targetPage = PAGE_ALIASES[lowerPage];
-          }
-          // Navigate immediately for fluid experience
-          setTimeout(() => {
-            navigate(createPageUrl(targetPage));
-          }, 200);
-        }
-        break;
-      }
-
-      case 'create_quote': {
-        if (parsed.website_url && parsed.booth_size) {
-          const quoteData = {
-            websiteUrl: parsed.website_url.startsWith('http') ? parsed.website_url : `https://${parsed.website_url}`,
-            boothSize: parsed.booth_size,
-            showDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-            showName: '',
-            dealerEmail: '',
-            dealerCompany: '',
-            dealerName: '',
-            dealerPhone: '',
-          };
-          sessionStorage.setItem('quoteRequest', JSON.stringify(quoteData));
-          setTimeout(() => {
-            navigate(createPageUrl('CustomerProfile'));
-          }, 400);
-        }
-        // If missing info, LLM already asked via clarify — no action needed
-        break;
-      }
-
-      case 'send_quote': {
-        if (parsed.needs_confirmation) {
-          // Wait for user confirmation — LLM handles the flow
-        }
-        break;
-      }
-
-      case 'confirm_action': {
-        const selectedDesign = sessionStorage.getItem('selectedDesign');
-        if (selectedDesign) {
-          const event = new CustomEvent('voice-reserve-design');
-          window.dispatchEvent(event);
-        }
-        break;
-      }
-
-      case 'search_catalog':
-      case 'clarify':
-      case 'query':
-      case 'modify_design':
-      case 'chat':
-      default:
-        // Response already added and spoken — conversation continues
-        break;
-    }
-  }, [navigate, addMessage, speak]);
+  }, [conversation, speak]);
 
   // Cleanup on unmount
   useEffect(() => {
