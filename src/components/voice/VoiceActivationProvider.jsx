@@ -67,11 +67,18 @@ export default function VoiceActivationProvider({ children }) {
     
     if (lastMsg.role === 'assistant' && lastMsg.content) {
       const hasActiveTools = lastMsg.tool_calls?.some(tc => ['pending', 'running', 'in_progress'].includes(tc.status));
+      
+      // If there are no active tools, assume the LLM is either done or streaming.
+      // We debounce the speech to wait for the stream to complete.
       if (!hasActiveTools) {
         const timeout = setTimeout(() => {
-          if (lastSpokenId !== lastMsg.id) {
+          // Speak only if we haven't spoken this exact content yet for this message
+          // (We use a combination of id and length to ensure we don't speak mid-stream)
+          const contentHash = lastMsg.id + '-' + lastMsg.content.length;
+          
+          if (lastSpokenId !== contentHash) {
              speak(lastMsg.content);
-             setLastSpokenId(lastMsg.id);
+             setLastSpokenId(contentHash);
              
              // Resume auto listen after speaking
              if (conversationActive) {
@@ -88,11 +95,11 @@ export default function VoiceActivationProvider({ children }) {
                 }, 500);
              }
           }
-        }, 1500);
+        }, 1500); // 1.5s debounce ensures streaming has finished before speaking
         return () => clearTimeout(timeout);
       }
     }
-  }, [messages, lastSpokenId, conversationActive, isListening]);
+  }, [messages, lastSpokenId, conversationActive, isListening, speak]);
 
   // ── SPEECH RECOGNITION SETUP ──
   const getSpeechRecognition = useCallback(() => {
