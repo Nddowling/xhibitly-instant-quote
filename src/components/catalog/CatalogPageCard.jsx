@@ -159,16 +159,23 @@ export default function CatalogPageCard({ page, onUpdate, onDelete }) {
         {expanded && products.length > 0 && (
           <div className="border-t border-slate-100 bg-slate-50 p-4 space-y-2">
             {products.map((p, i) => (
-              <div key={i} className="flex items-center justify-between bg-white rounded-lg p-3 border border-slate-100">
-                <div>
+              <div key={i} className="flex items-center gap-3 bg-white rounded-lg p-3 border border-slate-100">
+                {p.image_url ? (
+                  <img src={p.image_url} alt={p.name} className="w-14 h-14 object-contain rounded border border-slate-200 shrink-0 bg-white" />
+                ) : (
+                  <div className="w-14 h-14 bg-slate-100 rounded border border-slate-200 flex items-center justify-center shrink-0">
+                    <Package className="w-5 h-5 text-slate-300" />
+                  </div>
+                )}
+                <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-slate-800">{p.name}</p>
                   <p className="text-xs text-slate-500">{p.category} {p.sku ? `• ${p.sku}` : ''}</p>
                   {p.description && (
-                    <p className="text-xs text-slate-400 mt-0.5">{p.description}</p>
+                    <p className="text-xs text-slate-400 mt-0.5 line-clamp-1">{p.description}</p>
                   )}
                 </div>
                 {p.estimated_price && (
-                  <span className="text-sm font-semibold text-[#e2231a]">${p.estimated_price.toLocaleString()}</span>
+                  <span className="text-sm font-semibold text-[#e2231a] shrink-0">${p.estimated_price.toLocaleString()}</span>
                 )}
               </div>
             ))}
