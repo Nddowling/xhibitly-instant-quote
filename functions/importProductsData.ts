@@ -23,56 +23,60 @@ Deno.serve(async (req) => {
             errors: []
         };
         
+        const productsToInsert = [];
+        const variantsToInsert = [];
+        
         for (const item of productsList) {
+            // Clean SKU
+            let sku = item.sku || "";
+            sku = sku.replace(/In stock/ig, '').replace(/SKU/ig, '').replace(/\^/g, '').trim();
+            
+            // Handle Image URL
+            let finalImageUrl = "";
+            if (item.images && Array.isArray(item.images) && item.images.length > 0) {
+                let img = item.images[0];
+                finalImageUrl = typeof img === 'string' ? img : (img?.url || "");
+            } else if (item.image) {
+                finalImageUrl = typeof item.image === 'string' ? item.image : (item.image?.url || "");
+            } else if (item.image_url) {
+                finalImageUrl = typeof item.image_url === 'string' ? item.image_url : (item.image_url?.url || "");
+            }
+            if (typeof finalImageUrl !== 'string') finalImageUrl = "";
+            
+            productsToInsert.push({
+                name: String(item.name || "Unnamed Product"),
+                sku: String(sku),
+                category: String(item.category || "Uncategorized"),
+                subcategory: String(item.subcategory || ""),
+                description: String(item.description || ""),
+                base_price: 0,
+                image_url: finalImageUrl
+            });
+            
+            variantsToInsert.push({
+                display_name: String(item.name || "Unnamed Product"),
+                manufacturer_sku: String(sku),
+                category_name: String(item.category || "Uncategorized"),
+                description: String(item.description || ""),
+                base_price: 0,
+                image_url: finalImageUrl,
+                thumbnail_url: finalImageUrl
+            });
+        }
+
+        // Insert in batches of 50
+        const batchSize = 50;
+        for (let i = 0; i < productsToInsert.length; i += batchSize) {
             try {
-                // Clean SKU
-                let sku = item.sku || "";
-                sku = sku.replace(/In stock/ig, '').replace(/SKU/ig, '').replace(/\^/g, '').trim();
+                const pBatch = productsToInsert.slice(i, i + batchSize);
+                const vBatch = variantsToInsert.slice(i, i + batchSize);
                 
-                // Handle Image URL
-                let finalImageUrl = "";
-                if (item.images && Array.isArray(item.images) && item.images.length > 0) {
-                    let img = item.images[0];
-                    finalImageUrl = typeof img === 'string' ? img : (img?.url || "");
-                } else if (item.image) {
-                    finalImageUrl = typeof item.image === 'string' ? item.image : (item.image?.url || "");
-                } else if (item.image_url) {
-                    finalImageUrl = typeof item.image_url === 'string' ? item.image_url : (item.image_url?.url || "");
-                }
-                if (typeof finalImageUrl !== 'string') finalImageUrl = "";
+                await base44.asServiceRole.entities.Product.bulkCreate(pBatch);
+                await base44.asServiceRole.entities.ProductVariant.bulkCreate(vBatch);
                 
-                // Create Product
-                const productData = {
-                    name: String(item.name || "Unnamed Product"),
-                    sku: String(sku),
-                    category: String(item.category || "Uncategorized"),
-                    subcategory: String(item.subcategory || ""),
-                    description: String(item.description || ""),
-                    base_price: 0,
-                    image_url: finalImageUrl
-                };
-                
-                await base44.asServiceRole.entities.Product.create(productData);
-                
-                // Create ProductVariant
-                const variantData = {
-                    display_name: String(item.name || "Unnamed Product"),
-                    manufacturer_sku: String(sku),
-                    category_name: String(item.category || "Uncategorized"),
-                    description: String(item.description || ""),
-                    base_price: 0,
-                    image_url: finalImageUrl,
-                    thumbnail_url: finalImageUrl
-                };
-                
-                await base44.asServiceRole.entities.ProductVariant.create(variantData);
-                
-                results.success++;
-                
-                // Add a delay to avoid rate limiting
-                await new Promise(resolve => setTimeout(resolve, 1000));
+                results.success += pBatch.length;
             } catch (err) {
-                results.errors.push({ name: item.name, error: err.message });
+                results.errors.push({ batchIndex: i, error: err.message });
             }
         }
         
