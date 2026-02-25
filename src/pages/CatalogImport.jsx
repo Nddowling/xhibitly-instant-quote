@@ -163,6 +163,7 @@ export default function CatalogImport() {
                 key={page.id}
                 page={page}
                 onUpdate={handlePageUpdate}
+                onDelete={handlePageDelete}
               />
             ))
           ) : (
