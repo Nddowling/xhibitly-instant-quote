@@ -61,7 +61,6 @@ import OrderDetail from './pages/OrderDetail';
 import OrderHistory from './pages/OrderHistory';
 import Pipeline from './pages/Pipeline';
 import Product3DManager from './pages/Product3DManager';
-import ProductDetail from './pages/ProductDetail';
 import QuoteRequest from './pages/QuoteRequest';
 import Results from './pages/Results';
 import SalesDashboard from './pages/SalesDashboard';
@@ -87,7 +86,6 @@ export const PAGES = {
     "OrderHistory": OrderHistory,
     "Pipeline": Pipeline,
     "Product3DManager": Product3DManager,
-    "ProductDetail": ProductDetail,
     "QuoteRequest": QuoteRequest,
     "Results": Results,
     "SalesDashboard": SalesDashboard,
