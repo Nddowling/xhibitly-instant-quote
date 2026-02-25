@@ -85,10 +85,11 @@ export default function VoiceActivationProvider({ children }) {
              
              // Resume auto listen after speaking
              if (conversationActive) {
+                autoListenRef.current = true;
                 const checkSpeech = setInterval(() => {
                   if (!synthRef.current.speaking) {
                     clearInterval(checkSpeech);
-                    if (recognitionRef.current && autoListenRef.current && !isListening) {
+                    if (recognitionRef.current && !isListening) {
                       try {
                         recognitionRef.current.start();
                         setIsListening(true);
