@@ -33,6 +33,9 @@ export default function VoiceActivationProvider({ children }) {
         });
         console.log("Agent conversation created:", conv);
         setConversation(conv);
+        
+        // Add greeting initially if conversation is new
+        setMessages([{ role: 'assistant', content: "Hi! I'm your virtual Exhibitors' Handbook assistant. What kind of trade show products or booth designs are you looking for today?" }]);
       } catch (e) {
         console.error("Agent init error", e);
         setMessages([{ role: 'assistant', content: `Error initializing agent: ${e.message}` }]);
