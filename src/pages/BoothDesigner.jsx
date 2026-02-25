@@ -91,11 +91,16 @@ export default function BoothDesigner() {
         if (!input.trim() || isSending) return;
         const msg = input.trim();
         setInput('');
+        await sendMessage(msg);
+    };
+
+    const sendMessage = async (text) => {
+        if (isSending) return;
         setIsSending(true);
         try {
             await base44.agents.addMessage(conversation, {
                 role: 'user',
-                content: msg
+                content: text
             });
         } catch (error) {
             console.error(error);
@@ -175,7 +180,20 @@ export default function BoothDesigner() {
                     )}
                 </div>
 
-                <div className="p-4 border-t border-slate-200 dark:border-slate-800">
+                <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+                    {messages.length <= 3 && !isSending && (
+                        <div className="flex flex-wrap gap-2 mb-3">
+                            <Button variant="outline" size="sm" className="text-xs rounded-full h-7 border-slate-200 text-slate-600 dark:text-slate-300 hover:text-primary hover:border-primary/50" onClick={() => sendMessage("Show me some 10ft fabric backwalls.")}>
+                                Show me backwalls
+                            </Button>
+                            <Button variant="outline" size="sm" className="text-xs rounded-full h-7 border-slate-200 text-slate-600 dark:text-slate-300 hover:text-primary hover:border-primary/50" onClick={() => sendMessage("What flooring or carpet options do you have?")}>
+                                Flooring options
+                            </Button>
+                            <Button variant="outline" size="sm" className="text-xs rounded-full h-7 border-slate-200 text-slate-600 dark:text-slate-300 hover:text-primary hover:border-primary/50" onClick={() => sendMessage("Suggest a reception counter with my logo.")}>
+                                Reception counters
+                            </Button>
+                        </div>
+                    )}
                     <form onSubmit={handleSend} className="flex gap-2">
                         <Input 
                             value={input} 
