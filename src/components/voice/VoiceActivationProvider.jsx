@@ -31,6 +31,7 @@ export default function VoiceActivationProvider({ children }) {
           agent_name: "product_assistant",
           metadata: { name: "Voice Assistant" }
         });
+        console.log("Agent conversation created:", conv);
         setConversation(conv);
       } catch (e) {
         console.error("Agent init error", e);
