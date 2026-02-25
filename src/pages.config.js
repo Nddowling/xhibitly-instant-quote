@@ -70,6 +70,7 @@ import StudentHome from './pages/StudentHome';
 import Test from './pages/Test';
 import UserTypeSelection from './pages/UserTypeSelection';
 import ProductDetail from './pages/ProductDetail';
+import BoothDesigner from './pages/BoothDesigner';
 import __Layout from './Layout.jsx';
 
 
@@ -97,6 +98,7 @@ export const PAGES = {
     "Test": Test,
     "UserTypeSelection": UserTypeSelection,
     "ProductDetail": ProductDetail,
+    "BoothDesigner": BoothDesigner,
 }
 
 export const pagesConfig = {

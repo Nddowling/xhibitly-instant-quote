@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from './utils';
 import { base44 } from '@/api/base44Client';
-import { LogOut, FileText, Plus, Home as HomeIcon, Settings as SettingsIcon, ArrowLeft, LayoutDashboard, ChevronDown, User, Users, GraduationCap, Menu, X, Package, TrendingUp } from 'lucide-react';
+import { LogOut, FileText, Plus, Home as HomeIcon, Settings as SettingsIcon, ArrowLeft, LayoutDashboard, ChevronDown, User, Users, GraduationCap, Menu, X, Package, TrendingUp, Box } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import VoiceActivationProvider from './components/voice/VoiceActivationProvider';
@@ -200,6 +200,15 @@ export default function Layout({ children, currentPageName }) {
                         Catalog
                       </Button>
                     </Link>
+                    <Link to={createPageUrl('BoothDesigner')}>
+                      <Button 
+                        variant="ghost"
+                        className={`text-white hover:bg-white/20 ${currentPageName === 'BoothDesigner' ? 'border border-white/30' : ''}`}
+                      >
+                        <Box className="w-4 h-4 mr-2" />
+                        Designer
+                      </Button>
+                    </Link>
                     <Link to={createPageUrl('SalesQuoteStart')}>
                       <Button 
                         variant="ghost"
@@ -357,6 +366,12 @@ export default function Layout({ children, currentPageName }) {
                       <div className={`flex items-center gap-3 px-3 py-3 rounded-lg ${currentPageName === 'Product3DManager' ? 'bg-white/15' : 'hover:bg-white/10'}`}>
                         <Package className="w-5 h-5 text-white/80" />
                         <span className="text-white font-medium">Product Catalog</span>
+                      </div>
+                    </Link>
+                    <Link to={createPageUrl('BoothDesigner')} onClick={() => setMobileMenuOpen(false)}>
+                      <div className={`flex items-center gap-3 px-3 py-3 rounded-lg ${currentPageName === 'BoothDesigner' ? 'bg-white/15' : 'hover:bg-white/10'}`}>
+                        <Box className="w-5 h-5 text-white/80" />
+                        <span className="text-white font-medium">Booth Designer</span>
                       </div>
                     </Link>
                     <Link to={createPageUrl('SalesQuoteStart')} onClick={() => setMobileMenuOpen(false)}>
