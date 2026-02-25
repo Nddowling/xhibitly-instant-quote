@@ -102,7 +102,7 @@ export default function Layout({ children, currentPageName }) {
   };
 
   // Pages that don't need the header
-  const noHeaderPages = ['Loading', 'Home', 'Landing', 'UserTypeSelection', 'TestAgent'];
+  const noHeaderPages = ['Loading', 'Home', 'Landing', 'UserTypeSelection'];
   const showHeader = !noHeaderPages.includes(currentPageName) && user;
 
   // Pages where we hide the bottom nav (full-screen experiences)

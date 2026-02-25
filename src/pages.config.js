@@ -69,7 +69,6 @@ import Settings from './pages/Settings';
 import StudentHome from './pages/StudentHome';
 import UserTypeSelection from './pages/UserTypeSelection';
 import Test from './pages/Test';
-import TestAgent from './pages/TestAgent';
 import __Layout from './Layout.jsx';
 
 
@@ -96,7 +95,6 @@ export const PAGES = {
     "StudentHome": StudentHome,
     "UserTypeSelection": UserTypeSelection,
     "Test": Test,
-    "TestAgent": TestAgent,
 }
 
 export const pagesConfig = {
