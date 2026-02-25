@@ -4,7 +4,8 @@ import { createPageUrl } from '../utils';
 import { base44 } from '@/api/base44Client';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, ArrowLeft } from 'lucide-react';
+import { Search, ArrowLeft, BookOpen } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import CategoryCard from '../components/catalog/CategoryCard';
 import ProductRow from '../components/catalog/ProductRow';
@@ -88,7 +89,8 @@ export default function Product3DManager() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-6"
         >
-          <div className="flex items-center gap-3 mb-1">
+          <div className="flex items-center gap-3 mb-1 justify-between">
+          <div className="flex items-center gap-3">
             {activeCategory && (
               <Button
                 variant="ghost"
@@ -109,7 +111,17 @@ export default function Product3DManager() {
                   : `${products.length} products across ${ALL_CATEGORIES.length} categories`
                 }
               </p>
-            </div>
+              </div>
+              </div>
+              {!activeCategory && (
+              <Link to={createPageUrl('CatalogImport')}>
+                <Button variant="outline" className="gap-2 shrink-0">
+                  <BookOpen className="w-4 h-4" />
+                  <span className="hidden sm:inline">Import Pages</span>
+                </Button>
+              </Link>
+              )}
+              </div>
           </div>
         </motion.div>
 
