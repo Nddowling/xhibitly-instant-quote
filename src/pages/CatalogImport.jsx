@@ -73,6 +73,7 @@ export default function CatalogImport() {
 
   const processedCount = pages.filter(p => p.is_processed).length;
   const totalProducts = pages.reduce((sum, p) => sum + (p.products || []).length, 0);
+  const cleanedImages = pages.reduce((sum, p) => sum + (p.products || []).filter(prod => prod.clean_image_url).length, 0);
 
   if (isLoading) {
     return (
@@ -112,7 +113,7 @@ export default function CatalogImport() {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-3 gap-3 mb-6">
+          <div className="grid grid-cols-4 gap-3 mb-6">
             <Card>
               <CardContent className="p-4 text-center">
                 <p className="text-2xl font-bold text-slate-900">{pages.length}</p>
@@ -129,6 +130,12 @@ export default function CatalogImport() {
               <CardContent className="p-4 text-center">
                 <p className="text-2xl font-bold text-[#e2231a]">{totalProducts}</p>
                 <p className="text-xs text-slate-500">Products Found</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4 text-center">
+                <p className="text-2xl font-bold text-purple-600">{cleanedImages}</p>
+                <p className="text-xs text-slate-500">Clean Images</p>
               </CardContent>
             </Card>
           </div>
