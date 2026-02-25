@@ -95,7 +95,7 @@ const FunctionDisplay = ({ toolCall }) => {
     );
 };
 
-export function MessageBubble({ message }) {
+export function MessageBubble({ message, onImageClick }) {
     const isUser = message.role === 'user';
     
     return (
@@ -116,6 +116,20 @@ export function MessageBubble({ message }) {
                         ) : (
                             <ReactMarkdown 
                                 className="text-sm prose prose-sm prose-slate max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0"
+                                components={{
+                                    img: ({ node, ...props }) => (
+                                        <img 
+                                            {...props} 
+                                            className="rounded-lg cursor-zoom-in hover:opacity-90 transition-opacity my-2 max-w-full h-auto object-cover max-h-48 shadow-sm border border-slate-100"
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                if (onImageClick && props.src) {
+                                                    onImageClick(props.src);
+                                                }
+                                            }}
+                                        />
+                                    )
+                                }}
                             >
                                 {message.content}
                             </ReactMarkdown>
