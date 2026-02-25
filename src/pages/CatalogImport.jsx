@@ -73,7 +73,7 @@ export default function CatalogImport() {
 
   const processedCount = pages.filter(p => p.is_processed).length;
   const totalProducts = pages.reduce((sum, p) => sum + (p.products || []).length, 0);
-  const cleanedImages = pages.reduce((sum, p) => sum + (p.products || []).filter(prod => prod.clean_image_url).length, 0);
+  const enrichedCount = pages.reduce((sum, p) => sum + (p.products || []).filter(prod => prod.is_enriched).length, 0);
 
   if (isLoading) {
     return (
@@ -134,8 +134,8 @@ export default function CatalogImport() {
             </Card>
             <Card>
               <CardContent className="p-4 text-center">
-                <p className="text-2xl font-bold text-purple-600">{cleanedImages}</p>
-                <p className="text-xs text-slate-500">Clean Images</p>
+                <p className="text-2xl font-bold text-purple-600">{enrichedCount}</p>
+                <p className="text-xs text-slate-500">Enriched</p>
               </CardContent>
             </Card>
           </div>
