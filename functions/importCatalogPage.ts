@@ -64,7 +64,7 @@ Deno.serve(async (req) => {
 
 PAGE TEXT (OCR): ${page_text || 'No text available'}
 
-Extract ALL products visible on this page. For each product return:
+Extract ALL distinct products visible on this page. For each product return:
 - name: product name exactly as shown
 - sku: SKU/model number if visible (empty string if not)
 - description: brief description of the product
@@ -75,8 +75,10 @@ Extract ALL products visible on this page. For each product return:
 - booth_sizes: array of compatible sizes from ["10x10", "10x20", "20x20"]
 - branding_surfaces: array like ["front", "sides", "top"] where applicable
 - color_options: array of available colors if mentioned
+- visual_description: extremely detailed description of what the product looks like physically — shape, color, materials, size proportions, any graphics or text visible on it. This will be used to generate AI renderings later.
+- crop_region: the bounding box of this product's image on the page as percentage coordinates: {"top": 0-100, "left": 0-100, "width": 0-100, "height": 0-100}. Estimate where the product photo is located on the page. Be as precise as possible.
 
-Return a JSON array of products. If you can't identify distinct products, return an empty array.`
+Return JSON: {"products": [...]}. If you can't identify distinct products, return {"products": []}.`
             },
             {
               type: "image_url",
@@ -84,7 +86,7 @@ Return a JSON array of products. If you can't identify distinct products, return
             }
           ]
         }],
-        max_tokens: 2000,
+        max_tokens: 4000,
         response_format: { type: "json_object" }
       });
 
@@ -97,15 +99,33 @@ Return a JSON array of products. If you can't identify distinct products, return
         products = [];
       }
 
+      // Now crop individual product images from the page image
+      const productsWithImages = [];
+      for (const product of products) {
+        let productImageUrl = "";
+        if (product.crop_region && image_url) {
+          try {
+            productImageUrl = await cropAndUploadProduct(base44, image_url, product.crop_region, product.name);
+          } catch (cropErr) {
+            console.error("Crop failed for", product.name, cropErr.message);
+          }
+        }
+        productsWithImages.push({
+          ...product,
+          image_url: productImageUrl,
+          crop_region: undefined // don't store raw coords on the entity
+        });
+      }
+
       // Update the CatalogPage with extracted products
       if (page_id) {
         await base44.asServiceRole.entities.CatalogPage.update(page_id, {
-          products: products,
+          products: productsWithImages,
           is_processed: true
         });
       }
 
-      return Response.json({ success: true, products, count: products.length });
+      return Response.json({ success: true, products: productsWithImages, count: productsWithImages.length });
     }
 
     // ── ACTION: Push products from CatalogPage to ProductVariant ──
