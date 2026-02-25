@@ -83,6 +83,15 @@ export default function CatalogPageCard({ page, onUpdate, onDelete }) {
                 ) : (
                   <Badge variant="outline" className="text-xs">Unprocessed</Badge>
                 )}
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={handleDelete}
+                  disabled={isDeleting}
+                  className="h-7 w-7 p-0 text-slate-400 hover:text-red-600 hover:bg-red-50"
+                >
+                  {isDeleting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
+                </Button>
               </div>
             </div>
 
