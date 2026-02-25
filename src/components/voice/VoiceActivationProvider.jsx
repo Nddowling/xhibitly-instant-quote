@@ -22,6 +22,7 @@ export default function VoiceActivationProvider({ children }) {
   const recognitionRef = useRef(null);
   const synthRef = useRef(window.speechSynthesis);
   const autoListenRef = useRef(false);
+  const handleUserCommandRef = useRef(null);
 
   // ── ADD MESSAGE ──
   const addMessage = useCallback((role, content) => {
