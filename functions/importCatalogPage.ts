@@ -199,10 +199,30 @@ Return JSON: {"products": [...]}. If you can't identify distinct products, retur
         manufacturer = manufacturers[0];
       }
 
+      // Get or create category records for the products
+      const categoryCache = {};
+      const getCategoryId = async (categoryName, geoType) => {
+        if (!categoryName) categoryName = "Uncategorized";
+        if (categoryCache[categoryName]) return categoryCache[categoryName];
+        const existing = await base44.asServiceRole.entities.NormalizedProductCategory.filter({ name: categoryName });
+        if (existing.length > 0) {
+          categoryCache[categoryName] = existing[0].id;
+          return existing[0].id;
+        }
+        const created = await base44.asServiceRole.entities.NormalizedProductCategory.create({
+          name: categoryName,
+          geometry_type: geoType || "accessory"
+        });
+        categoryCache[categoryName] = created.id;
+        return created.id;
+      };
+
       const created = [];
       for (const product of (page.products || [])) {
+        const catId = await getCategoryId(product.category, product.geometry_type);
         const variant = {
           manufacturer_id: manufacturer.id,
+          category_id: catId,
           display_name: product.name,
           description: product.description || "",
           visual_description: product.visual_description || "",
