@@ -518,22 +518,45 @@ export default function BoothDesigner() {
                     <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:20px_20px] opacity-40 rounded-2xl" />
                     
                     <div className="relative z-10 flex-1 flex flex-col">
-                        {/* 3D Render Visualization Area */}
-                        <div className="w-full bg-slate-100 dark:bg-slate-800/50 rounded-xl mb-6 border border-slate-200 dark:border-slate-700 overflow-hidden relative group shrink-0">
-                            {boothDesign?.design_image_url ? (
-                                <div className="relative w-full aspect-[16/9]">
-                                    <img src={`${boothDesign.design_image_url}${boothDesign.design_image_url.includes('?') ? '&' : '?'}t=${new Date(boothDesign.render_generated_at || Date.now()).getTime()}`} alt="Booth Render" className="w-full h-full object-cover" />
-                                    <div className="absolute top-4 right-4 flex gap-2">
-                                        <GenerateRenderButton boothDesignId={boothDesign.id} skus={boothDesign?.product_skus} forceNew={true} label="Reset & Render" variant="secondary" />
-                                        <GenerateRenderButton boothDesignId={boothDesign.id} skus={boothDesign?.product_skus} />
-                                    </div>
-                                </div>
+                        {/* View Toggle */}
+                        <div className="flex justify-center mb-4">
+                            <ToggleGroup type="single" value={viewMode} onValueChange={(v) => v && setViewMode(v)} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-1 shadow-sm">
+                                <ToggleGroupItem value="2d" aria-label="2D Floorplan" className="px-4 py-1.5 h-auto text-xs font-medium data-[state=on]:bg-primary/10 data-[state=on]:text-primary">
+                                    <Grid2X2 className="w-4 h-4 mr-2" />
+                                    2D Layout
+                                </ToggleGroupItem>
+                                <ToggleGroupItem value="3d" aria-label="3D Render" className="px-4 py-1.5 h-auto text-xs font-medium data-[state=on]:bg-primary/10 data-[state=on]:text-primary">
+                                    <ImageIcon className="w-4 h-4 mr-2" />
+                                    3D Render
+                                </ToggleGroupItem>
+                            </ToggleGroup>
+                        </div>
+
+                        {/* Visualization Area */}
+                        <div className="w-full bg-slate-100 dark:bg-slate-800/50 rounded-xl mb-6 border border-slate-200 dark:border-slate-700 overflow-hidden relative group shrink-0 min-h-[400px]">
+                            {viewMode === '2d' ? (
+                                <BoothFloorplan 
+                                    scene={scene} 
+                                    onMoveItem={handleMoveItem}
+                                    onRotateItem={handleRotateItem}
+                                    onRemoveItem={handleRemoveItem}
+                                />
                             ) : (
-                                <div className="w-full aspect-[16/9] flex flex-col items-center justify-center text-slate-400 p-6 text-center">
-                                    <LayoutTemplate className="w-12 h-12 mb-3 opacity-20" />
-                                    <p className="text-sm font-medium text-slate-500 mb-4">No 3D render generated yet.</p>
-                                    <GenerateRenderButton boothDesignId={boothDesign?.id} skus={boothDesign?.product_skus} />
-                                </div>
+                                boothDesign?.design_image_url ? (
+                                    <div className="relative w-full aspect-[16/9]">
+                                        <img src={`${boothDesign.design_image_url}${boothDesign.design_image_url.includes('?') ? '&' : '?'}t=${new Date(boothDesign.render_generated_at || Date.now()).getTime()}`} alt="Booth Render" className="w-full h-full object-cover" />
+                                        <div className="absolute top-4 right-4 flex gap-2">
+                                            <GenerateRenderButton boothDesignId={boothDesign.id} skus={boothDesign?.product_skus} forceNew={true} label="Reset & Render" variant="secondary" />
+                                            <GenerateRenderButton boothDesignId={boothDesign.id} skus={boothDesign?.product_skus} />
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="w-full aspect-[16/9] flex flex-col items-center justify-center text-slate-400 p-6 text-center">
+                                        <LayoutTemplate className="w-12 h-12 mb-3 opacity-20" />
+                                        <p className="text-sm font-medium text-slate-500 mb-4">No 3D render generated yet.</p>
+                                        <GenerateRenderButton boothDesignId={boothDesign?.id} skus={boothDesign?.product_skus} />
+                                    </div>
+                                )
                             )}
                         </div>
 
