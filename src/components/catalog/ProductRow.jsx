@@ -19,15 +19,11 @@ export default function ProductRow({ product, projectId }) {
     try {
         const design = await base44.entities.BoothDesign.get(projectId);
         const skus = design.product_skus || [];
-        if (!skus.includes(product.sku)) {
-            skus.push(product.sku);
-            await base44.entities.BoothDesign.update(projectId, { product_skus: skus });
-            toast.success(`Added ${product.name} to project`);
-            setAdded(true);
-            setTimeout(() => setAdded(false), 3000);
-        } else {
-            toast.info(`Product is already in the project`);
-        }
+        skus.push(product.sku);
+        await base44.entities.BoothDesign.update(projectId, { product_skus: skus });
+        toast.success(`Added ${product.name} to project`);
+        setAdded(true);
+        setTimeout(() => setAdded(false), 3000);
     } catch (err) {
         toast.error('Failed to add product');
     } finally {
