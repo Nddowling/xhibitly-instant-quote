@@ -87,8 +87,18 @@ Deno.serve(async (req) => {
         }
         const existingSKUs = new Set(existingProducts.map(p => p.sku).filter(Boolean));
 
-        // Filter products to import
-        const toImport = products.filter(p => {
+        // Clean SKUs and Filter
+        const toImport = products.map(p => {
+            if (p.sku) {
+                p.sku = p.sku.replace(/Only%?[0-9]+left/ig, '')
+                             .replace(/Out of stock/ig, '')
+                             .replace(/In stock/ig, '')
+                             .replace(/SKU/ig, '')
+                             .replace(/\^/g, '')
+                             .trim();
+            }
+            return p;
+        }).filter(p => {
             if (!p.sku) return false; // Skip products without SKU
             if (skip_existing && existingSKUs.has(p.sku)) return false;
             return true;
