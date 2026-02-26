@@ -34,16 +34,53 @@ Deno.serve(async (req) => {
             }
         }
 
-        const productDescriptions = products.map(p => p.name).join(', ');
+        const productList = products.map(p => `- ${p.name} (${p.category || 'Display Item'})`).join('\n');
         
-        const prompt = `A highly detailed, photorealistic 3D architectural render of a ${design.booth_size || '10x20'} trade show booth. 
-CRITICAL INSTRUCTION: The booth MUST ONLY feature the following exhibition elements: ${productDescriptions}. 
-DO NOT include any other structures, backwalls, counters, tables, or furniture that are not explicitly listed. The space should be empty except for these specific items.
-The setting is a brightly lit, professional convention center hall with a clean, neutral floor. Modern design, clean lines, professional exhibition lighting. 
-The perspective is a wide-angle isometric or perspective view showing the entire booth setup. Highly detailed, 8k resolution, architectural visualization.`;
+        // Build the base prompt with strict constraints
+        let prompt = `STRICT REQUIREMENTS - You MUST follow these rules exactly:
+
+1. BOOTH SIZE: This is a ${design.booth_size} trade show booth. The dimensions are FIXED and EXACT.
+   ${design.booth_size === '10x10' ? '- 10 feet wide × 10 feet deep' : ''}
+   ${design.booth_size === '10x20' ? '- 10 feet wide × 20 feet deep' : ''}
+   ${design.booth_size === '20x20' ? '- 20 feet wide × 20 feet deep' : ''}
+
+2. PRODUCTS - The booth contains ONLY these items, nothing more:
+${productList}
+
+3. CRITICAL: Do NOT add ANY items that are not in the above list. No extra backwalls, counters, tables, chairs, displays, or decorations.
+
+4. SETTING: Professional convention center hall, neutral gray carpet flooring, bright even lighting from above.
+
+5. VIEW: Wide-angle perspective showing the complete booth layout from a 45-degree angle.
+
+Create a photorealistic 3D architectural visualization of this exact booth configuration.`;
+
+        // Check if there's a previous image to iterate from
+        const existingImageUrl = design.design_image_url;
+        const existing_image_urls = existingImageUrl ? [existingImageUrl] : [];
+
+        // If we have a previous render, add iterative instructions
+        if (existingImageUrl) {
+            prompt = `ITERATIVE UPDATE - Modify the existing booth render:
+
+KEEP UNCHANGED:
+- Booth size (${design.booth_size})
+- Camera angle and perspective
+- Lighting and environment
+- Branding colors and style
+- Floor and background
+
+UPDATE THE PRODUCTS to show ONLY these items:
+${productList}
+
+CRITICAL: Remove any products not in the above list. Add any new products from the list that weren't in the previous render. The booth must show EXACTLY the items listed above, no more, no less.
+
+Create the updated photorealistic render maintaining visual consistency with the previous version.`;
+        }
 
         const imageRes = await base44.integrations.Core.GenerateImage({
-            prompt: prompt
+            prompt: prompt,
+            existing_image_urls: existing_image_urls
         });
 
         if (imageRes && imageRes.url) {
