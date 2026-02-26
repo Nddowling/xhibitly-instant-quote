@@ -184,14 +184,6 @@ export default function Layout({ children, currentPageName }) {
                         Contacts
                       </Button>
                     </Link>
-                    <Link to={createPageUrl('Product3DManager')}>
-                      <Button 
-                        variant="ghost"
-                        className={`text-white hover:bg-white/20 ${currentPageName === 'Product3DManager' ? 'border border-white/30' : ''}`}
-                      >
-                        Catalog
-                      </Button>
-                    </Link>
                     <Link to={createPageUrl('BoothDesigner')}>
                       <Button 
                         variant="ghost"
@@ -346,12 +338,6 @@ export default function Layout({ children, currentPageName }) {
                       <div className={`flex items-center gap-3 px-3 py-3 rounded-lg ${currentPageName === 'Contacts' ? 'bg-white/15' : 'hover:bg-white/10'}`}>
                         <FileText className="w-5 h-5 text-white/80" />
                         <span className="text-white font-medium">Contacts</span>
-                      </div>
-                    </Link>
-                    <Link to={createPageUrl('Product3DManager')} onClick={() => setMobileMenuOpen(false)}>
-                      <div className={`flex items-center gap-3 px-3 py-3 rounded-lg ${currentPageName === 'Product3DManager' ? 'bg-white/15' : 'hover:bg-white/10'}`}>
-                        <Package className="w-5 h-5 text-white/80" />
-                        <span className="text-white font-medium">Product Catalog</span>
                       </div>
                     </Link>
                     <Link to={createPageUrl('BoothDesigner')} onClick={() => setMobileMenuOpen(false)}>

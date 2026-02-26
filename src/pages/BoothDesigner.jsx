@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { createPageUrl } from '../utils';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,6 +10,7 @@ import { Loader2, Send, Box, LayoutTemplate, Image as ImageIcon } from 'lucide-r
 import MessageBubble from '@/components/agents/MessageBubble';
 
 export default function BoothDesigner() {
+    const navigate = useNavigate();
     const [step, setStep] = useState('setup'); // setup, loading, designing
     const [boothSize, setBoothSize] = useState('10x10');
     const [designName, setDesignName] = useState('');
@@ -221,9 +224,19 @@ export default function BoothDesigner() {
                         </div>
                         Set Space: {boothSize}
                     </h2>
-                    <div className="text-sm font-medium text-primary bg-primary/10 px-4 py-1.5 rounded-full border border-primary/20 shadow-sm flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                        {boothDesign?.product_skus?.length || 0} Products Added
+                    <div className="flex items-center gap-3">
+                        <Button 
+                            variant="outline"
+                            size="sm"
+                            className="h-8 shadow-sm"
+                            onClick={() => navigate(createPageUrl('Product3DManager'))}
+                        >
+                            Open Catalog
+                        </Button>
+                        <div className="text-sm font-medium text-primary bg-primary/10 px-4 py-1.5 rounded-full border border-primary/20 shadow-sm flex items-center gap-2">
+                            <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                            {boothDesign?.product_skus?.length || 0} Products Added
+                        </div>
                     </div>
                 </div>
 
