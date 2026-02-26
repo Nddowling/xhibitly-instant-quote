@@ -226,6 +226,15 @@ export default function BoothDesigner() {
             {/* Left Column: Chat Interface */}
             <div className="w-full md:w-1/3 flex flex-col border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
                 <div className="p-4 border-b border-slate-200 dark:border-slate-800 z-10 flex items-center gap-3 bg-slate-50/50 dark:bg-slate-800/50">
+                    <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="h-8 w-8 text-slate-500 shrink-0 hover:text-primary" 
+                        onClick={() => setStep('selector')}
+                        title="Back to Projects"
+                    >
+                        <ArrowLeft className="w-4 h-4" />
+                    </Button>
                     <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center text-primary shrink-0 shadow-inner border border-primary/20">
                         <Box className="w-5 h-5" />
                     </div>
