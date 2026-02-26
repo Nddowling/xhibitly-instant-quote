@@ -309,6 +309,40 @@ export default function BoothDesigner() {
         }
     };
 
+    // Engine UI Handlers
+    const handleMoveItem = (id, newX, newY) => {
+        if (!scene) return;
+        const res = BoothEngine.moveItem(scene, id, newX, newY);
+        if (res.success) saveScene(res.scene);
+    };
+
+    const handleRotateItem = (id, degrees) => {
+        if (!scene) return;
+        const res = BoothEngine.rotateItem(scene, id, degrees);
+        if (res.success) saveScene(res.scene);
+    };
+
+    const handleRemoveItem = (id) => {
+        if (!scene) return;
+        // Find the sku before removing
+        const item = scene.items.find(i => i.id === id);
+        if (!item) return;
+
+        const res = BoothEngine.removeItem(scene, id);
+        if (res.success) {
+            saveScene(res.scene);
+            // Also remove from DB product_skus
+            if (boothDesign) {
+                const newSkus = [...(boothDesign.product_skus || [])];
+                const skuIndex = newSkus.indexOf(item.sku);
+                if (skuIndex > -1) {
+                    newSkus.splice(skuIndex, 1);
+                    base44.entities.BoothDesign.update(boothDesign.id, { product_skus: newSkus });
+                }
+            }
+        }
+    };
+
     // SELECTOR / SETUP SCREEN
     if (step === 'selector') {
         return (
