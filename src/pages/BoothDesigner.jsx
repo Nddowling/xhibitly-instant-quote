@@ -446,14 +446,14 @@ export default function BoothDesigner() {
     );
 }
 
-function GenerateRenderButton({ boothDesignId, skus }) {
+function GenerateRenderButton({ boothDesignId, skus, forceNew = false, label = "Generate 3D Render", variant = "default" }) {
     const [isGenerating, setIsGenerating] = useState(false);
 
     const handleGenerate = async () => {
         if (!boothDesignId || !skus || skus.length === 0) return;
         setIsGenerating(true);
         try {
-            await base44.functions.invoke('generateBoothRender', { booth_design_id: boothDesignId });
+            await base44.functions.invoke('generateBoothRender', { booth_design_id: boothDesignId, force_new: forceNew });
         } catch (error) {
             console.error("Failed to generate render:", error);
             alert("Failed to generate render. Please try again.");
@@ -466,13 +466,14 @@ function GenerateRenderButton({ boothDesignId, skus }) {
         <Button 
             onClick={handleGenerate} 
             disabled={isGenerating || !skus || skus.length === 0}
-            className="bg-primary hover:bg-primary/90 text-white shadow-md"
+            variant={variant}
+            className={variant === 'default' ? "bg-primary hover:bg-primary/90 text-white shadow-md" : "shadow-md"}
             size="sm"
         >
             {isGenerating ? (
                 <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Rendering...</>
             ) : (
-                <><ImageIcon className="w-4 h-4 mr-2" /> Generate 3D Render</>
+                <><ImageIcon className="w-4 h-4 mr-2" /> {label}</>
             )}
         </Button>
     );
