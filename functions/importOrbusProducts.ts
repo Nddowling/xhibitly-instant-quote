@@ -20,12 +20,26 @@ Deno.serve(async (req) => {
             return Response.json({ error: 'Unauthorized - Admin or Sales Rep required' }, { status: 401 });
         }
 
-        const { mode = 'preview', skip_existing = true, batch_size = 50 } = await req.json();
+        const { mode = 'preview', skip_existing = true, batch_size = 50, products_url, mapping_url } = await req.json();
 
         // Load catalog products
         console.log('📦 Loading Orbus catalog...');
-        const catalogPath = './orbus_catalog/products.json';
-        const catalogData = JSON.parse(await Deno.readTextFile(catalogPath));
+        let catalogData;
+        if (products_url) {
+            console.log(`Fetching products from ${products_url}...`);
+            const resp = await fetch(products_url);
+            if (!resp.ok) throw new Error(`Failed to fetch products from ${products_url}: ${resp.statusText}`);
+            catalogData = await resp.json();
+        } else {
+            try {
+                const catalogPath = './orbus_catalog/products.json';
+                catalogData = JSON.parse(await Deno.readTextFile(catalogPath));
+            } catch (e) {
+                return Response.json({ 
+                    error: `Could not load products. Please provide 'products_url' in the payload. Local file error: ${e.message}` 
+                }, { status: 400 });
+            }
+        }
         const products = catalogData.products || [];
 
         console.log(`Found ${products.length} products in catalog`);
@@ -33,16 +47,35 @@ Deno.serve(async (req) => {
         // Load catalog page mappings
         let pageMap = new Map();
         try {
-            const mappingPath = './orbus_catalog/product_catalog_page_mapping.json';
-            const mappingData = JSON.parse(await Deno.readTextFile(mappingPath));
-            for (const item of mappingData.product_page_mapping || []) {
-                if (item.product_sku) {
-                    pageMap.set(item.product_sku, item);
+            let mappingData;
+            if (mapping_url) {
+                console.log(`Fetching mappings from ${mapping_url}...`);
+                const resp = await fetch(mapping_url);
+                if (resp.ok) {
+                    mappingData = await resp.json();
+                } else {
+                    console.warn(`Failed to fetch mappings from ${mapping_url}: ${resp.statusText}`);
+                }
+            } else {
+                try {
+                    const mappingPath = './orbus_catalog/product_catalog_page_mapping.json';
+                    mappingData = JSON.parse(await Deno.readTextFile(mappingPath));
+                } catch (e) {
+                    // Ignore local file error if not found, as it might be optional or handled by URL
+                    if (!products_url) console.warn('Could not load local catalog page mappings:', e.message);
                 }
             }
-            console.log(`Loaded ${pageMap.size} catalog page mappings`);
+
+            if (mappingData) {
+                for (const item of mappingData.product_page_mapping || []) {
+                    if (item.product_sku) {
+                        pageMap.set(item.product_sku, item);
+                    }
+                }
+                console.log(`Loaded ${pageMap.size} catalog page mappings`);
+            }
         } catch (e) {
-            console.warn('Could not load catalog page mappings:', e.message);
+            console.warn('Error loading catalog page mappings:', e.message);
         }
 
         // Get existing products from Base44
