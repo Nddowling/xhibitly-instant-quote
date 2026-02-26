@@ -18,6 +18,9 @@ export default function Product3DManager() {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeCategory, setActiveCategory] = useState(null);
 
+  const urlParams = new URLSearchParams(window.location.search);
+  const projectId = urlParams.get('projectId');
+
   useEffect(() => {
     checkAuth();
   }, []);
