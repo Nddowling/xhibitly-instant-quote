@@ -85,7 +85,7 @@ export default function Product3DManager() {
         >
           <div className="flex items-center gap-3 mb-1 justify-between">
             <div className="flex items-center gap-3">
-              {activeCategory && (
+              {activeCategory ? (
                 <Button
                   variant="ghost"
                   size="icon"
@@ -94,7 +94,17 @@ export default function Product3DManager() {
                 >
                   <ArrowLeft className="w-5 h-5" />
                 </Button>
-              )}
+              ) : projectId ? (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => navigate(createPageUrl('BoothDesigner') + '?projectId=' + projectId)}
+                  className="text-slate-600 hover:text-slate-900"
+                  title="Back to Project"
+                >
+                  <ArrowLeft className="w-5 h-5" />
+                </Button>
+              ) : null}
               <div>
                 <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">
                   {activeCategory || 'Product Catalog'}
