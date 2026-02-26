@@ -6,9 +6,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { Card, CardContent } from '@/components/ui/card';
-import { Loader2, Send, Box, LayoutTemplate, Image as ImageIcon, ArrowLeft } from 'lucide-react';
+import { Loader2, Send, Box, LayoutTemplate, Image as ImageIcon, ArrowLeft, Grid2X2 } from 'lucide-react';
 import MessageBubble from '@/components/agents/MessageBubble';
 import ProjectSelector from '@/components/booth/ProjectSelector';
+import { BoothEngine } from '@/components/booth/BoothEngine';
+import BoothFloorplan from '@/components/booth/BoothFloorplan';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 
 export default function BoothDesigner() {
     const navigate = useNavigate();
@@ -21,6 +24,10 @@ export default function BoothDesigner() {
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
     const [isSending, setIsSending] = useState(false);
+    
+    // Scene Engine State
+    const [scene, setScene] = useState(null);
+    const [viewMode, setViewMode] = useState('2d');
     const scrollRef = useRef(null);
 
     useEffect(() => {
