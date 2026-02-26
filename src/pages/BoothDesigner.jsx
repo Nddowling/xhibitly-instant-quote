@@ -302,7 +302,7 @@ export default function BoothDesigner() {
                             variant="outline"
                             size="sm"
                             className="h-8 shadow-sm"
-                            onClick={() => navigate(createPageUrl('Product3DManager'))}
+                            onClick={() => navigate(createPageUrl('Product3DManager') + '?projectId=' + boothDesign.id)}
                         >
                             Open Catalog
                         </Button>
