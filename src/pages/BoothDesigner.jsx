@@ -245,12 +245,45 @@ export default function BoothDesigner() {
         if (boothDesign && step === 'designing') {
             const unsub = base44.entities.BoothDesign.subscribe((event) => {
                 if (event.type === 'update' && event.id === boothDesign.id) {
-                    setBoothDesign(event.data);
+                    const newData = event.data;
+                    setBoothDesign(newData);
+
+                    // Sync AI-added products into our scene
+                    if (scene && newData.product_skus) {
+                        const sceneSkus = scene.items.map(i => i.sku);
+                        // Find what was added by comparing arrays
+                        // A naive approach: if newData has more skus than scene, try to add them
+                        if (newData.product_skus.length > sceneSkus.length) {
+                            let updatedScene = { ...scene };
+                            let changed = false;
+                            
+                            // Just a naive diff for now: try to add any sku that appears more times in DB than in scene
+                            const dbCounts = newData.product_skus.reduce((acc, s) => { acc[s] = (acc[s]||0)+1; return acc; }, {});
+                            const sceneCounts = sceneSkus.reduce((acc, s) => { acc[s] = (acc[s]||0)+1; return acc; }, {});
+                            
+                            for (const [sku, count] of Object.entries(dbCounts)) {
+                                const currentCount = sceneCounts[sku] || 0;
+                                if (count > currentCount) {
+                                    for(let i=0; i < (count - currentCount); i++) {
+                                        const res = BoothEngine.addItem(updatedScene, sku, sku, null, 3, 1, 'center');
+                                        if (res.success) {
+                                            updatedScene = res.scene;
+                                            changed = true;
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            if (changed) {
+                                saveScene(updatedScene);
+                            }
+                        }
+                    }
                 }
             });
             return () => unsub();
         }
-    }, [boothDesign, step]);
+    }, [boothDesign, step, scene]);
 
     // Handle user sending a chat message
     const handleSend = async (e) => {
