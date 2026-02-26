@@ -173,10 +173,22 @@ export default function ProjectSelector({ onSelectProject, onNewProject }) {
                         >
                             {/* Projects Section */}
                             <section>
-                                <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-                                    <FolderOpen className="w-4 h-4" />
-                                    {searchTerm ? 'Matching Projects' : 'Recent Projects'}
-                                </h3>
+                                <div className="flex items-center justify-between mb-3">
+                                    <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                                        <FolderOpen className="w-4 h-4" />
+                                        {searchTerm ? 'Matching Projects' : 'Recent Projects'}
+                                    </h3>
+                                    {(projects.length > 0 || clients.length > 0) && (
+                                        <Button 
+                                            variant="ghost" 
+                                            size="sm" 
+                                            onClick={() => { setProjects([]); setClients([]); }}
+                                            className="h-8 text-xs text-slate-500 hover:text-slate-700"
+                                        >
+                                            Clear List
+                                        </Button>
+                                    )}
+                                </div>
                                 <div className="grid md:grid-cols-2 gap-3">
                                     {projects.length > 0 ? projects.map(project => (
                                         <div 
