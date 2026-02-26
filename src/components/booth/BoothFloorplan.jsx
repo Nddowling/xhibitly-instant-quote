@@ -130,6 +130,12 @@ export default function BoothFloorplan({ scene, onMoveItem, onRotateItem, onRemo
                                 {item.name || item.sku}
                             </span>
                             
+                            {brandName && (
+                                <span className="text-[8px] text-primary font-bold mt-1 uppercase tracking-wider z-10 bg-white/90 px-1 rounded pointer-events-none select-none shadow-sm truncate max-w-[90%] text-center">
+                                    {brandName}
+                                </span>
+                            )}
+                            
                             {/* Controls */}
                             {isHovered && !isDragging && (
                                 <div className="absolute -top-8 -right-8 flex gap-1 bg-white dark:bg-slate-800 shadow-lg rounded-md p-1 border border-slate-200 dark:border-slate-700 z-50">
