@@ -425,8 +425,11 @@ export default function BoothDesigner() {
 
                         <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-3">Included Products</h3>
                         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 pb-4">
-                            {boothDesign?.product_skus?.map((sku, idx) => (
-                                <BoothProductCard key={idx} sku={sku} />
+                            {Object.entries((boothDesign?.product_skus || []).reduce((acc, sku) => {
+                                acc[sku] = (acc[sku] || 0) + 1;
+                                return acc;
+                            }, {})).map(([sku, count], idx) => (
+                                <BoothProductCard key={idx} sku={sku} quantity={count} />
                             ))}
                             
                             {(!boothDesign?.product_skus || boothDesign.product_skus.length === 0) && (
