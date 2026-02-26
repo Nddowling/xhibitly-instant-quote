@@ -100,9 +100,28 @@ Deno.serve(async (req) => {
             ? `The exhibiting company is in the "${design.brand_identity.industry}" industry. Their branding should align with this industry.`
             : '';
 
-        const layoutNote = design.layout_instructions
-            ? `LAYOUT INSTRUCTIONS: The user has requested the following placement: "${design.layout_instructions}". You MUST follow these positioning rules strictly.`
-            : 'Arrange the products naturally within the booth boundary. Larger items (backwalls, fabric structures) at the rear; counters and stands toward the front.';
+        let layoutNote = '';
+        if (design.scene_json) {
+            try {
+                const scene = JSON.parse(design.scene_json);
+                if (scene && scene.items && scene.items.length > 0) {
+                    const itemDescriptions = scene.items.map(item => {
+                        return `- ${item.quantity > 1 ? item.quantity + 'x ' : ''}${item.name || item.sku} is placed at (X: ${Math.round(item.x)}ft, Y: ${Math.round(item.y)}ft) rotated ${item.rotation || 0} degrees.`;
+                    }).join('\n');
+                    layoutNote = `EXACT 2D LAYOUT COORDINATES:\nThe booth floor is ${scene.width}ft wide (X-axis) by ${scene.depth}ft deep (Y-axis).\nThe bottom-left front corner is (0,0).\n\n${itemDescriptions}\n\nYou MUST follow these placement coordinates and rotations strictly in the 3D space.`;
+                }
+            } catch (e) {
+                console.warn('Could not parse scene_json', e);
+            }
+        }
+
+        if (!layoutNote) {
+            layoutNote = design.layout_instructions
+                ? `LAYOUT INSTRUCTIONS: The user has requested the following placement: "${design.layout_instructions}". You MUST follow these positioning rules strictly.`
+                : 'Arrange the products naturally within the booth boundary. Larger items (backwalls, fabric structures) at the rear; counters and stands toward the front.';
+        } else if (design.layout_instructions) {
+            layoutNote += `\n\nADDITIONAL INSTRUCTIONS: "${design.layout_instructions}"`;
+        }
 
         // ── Compose the prompt ─────────────────────────────────────────────
         let prompt;
