@@ -26,11 +26,16 @@ Deno.serve(async (req) => {
         }
 
         // ── Fetch full product records ──────────────────────────────────────
+        const skuCounts = skus.reduce((acc, sku) => {
+            acc[sku] = (acc[sku] || 0) + 1;
+            return acc;
+        }, {});
+
         const products = [];
-        for (const sku of skus) {
+        for (const [sku, count] of Object.entries(skuCounts)) {
             const matches = await base44.entities.Product.filter({ sku });
             if (matches.length > 0) {
-                products.push(matches[0]);
+                products.push({ ...matches[0], quantity: count });
             }
         }
 
@@ -64,20 +69,20 @@ Deno.serve(async (req) => {
 
         // ── Build explicit product manifest ────────────────────────────────
         const productManifest = products.map((p, i) => {
-            const parts = [`${i + 1}. ${p.name}`];
+            const parts = [`${i + 1}. ${p.quantity}x ${p.name}`];
             if (p.category) parts.push(`(${p.category})`);
             if (p.description) parts.push(`— ${p.description.slice(0, 120)}`);
             return parts.join(' ');
         }).join('\n');
 
-        const productNameList = products.map(p => p.name).join(', ');
-        const productCount = products.length;
+        const productNameList = products.map(p => `${p.quantity}x ${p.name}`).join(', ');
+        const productCount = products.reduce((sum, p) => sum + p.quantity, 0);
 
         // ── Build branding context ─────────────────────────────────────────
         const brandColor = design.brand_identity?.primary_color;
         
         // Use custom brand_name from the design if it exists, otherwise fall back to industry context
-        const brandName = design.brand_name || (design.brand_identity?.name || '');
+        const brandName = design.brand_name || design.brand_identity?.company_name || design.brand_identity?.name || '';
         
         let brandingNote = 'Branding: Use neutral professional branding unless color is visible in reference images.';
         if (brandColor && brandName) {
