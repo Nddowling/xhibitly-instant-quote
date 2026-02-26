@@ -33,6 +33,24 @@ export default function ProjectSelector({ onSelectProject, onNewProject }) {
         try {
             // Fetch recent projects
             const recentProjects = await base44.entities.BoothDesign.list('-created_date', 10);
+            
+            // Fetch dealer (user) information for these projects
+            const dealerIds = [...new Set(recentProjects.map(p => p.dealer_id).filter(Boolean))];
+            if (dealerIds.length > 0) {
+                // Not ideal for huge sets, but for 10 recents it's fine
+                const allUsers = await base44.entities.User.list();
+                const userMap = allUsers.reduce((acc, user) => {
+                    acc[user.id] = user;
+                    return acc;
+                }, {});
+                
+                recentProjects.forEach(p => {
+                    if (p.dealer_id && userMap[p.dealer_id]) {
+                        p._dealer_company = userMap[p.dealer_id].company_name || userMap[p.dealer_id].full_name;
+                    }
+                });
+            }
+            
             setProjects(recentProjects);
             setClients([]); // Clear clients when not searching specifically? Or maybe show recent contacts?
         } catch (e) {
@@ -50,9 +68,24 @@ export default function ProjectSelector({ onSelectProject, onNewProject }) {
             // 1. Search Projects (BoothDesign)
             // Fetching a bit more to filter client-side if needed since regex might not be fully supported in all adapters
             const allProjects = await base44.entities.BoothDesign.list('-created_date', 100); 
+            
+            // Fetch users to map companies
+            const allUsers = await base44.entities.User.list(); 
+            const userMap = allUsers.reduce((acc, user) => {
+                acc[user.id] = user;
+                return acc;
+            }, {});
+            
+            allProjects.forEach(p => {
+                if (p.dealer_id && userMap[p.dealer_id]) {
+                    p._dealer_company = userMap[p.dealer_id].company_name || userMap[p.dealer_id].full_name;
+                }
+            });
+            
             const matchedProjects = allProjects.filter(p => 
                 (p.design_name && p.design_name.toLowerCase().includes(lowerTerm)) ||
-                (p.booth_size && p.booth_size.toLowerCase().includes(lowerTerm))
+                (p.booth_size && p.booth_size.toLowerCase().includes(lowerTerm)) ||
+                (p._dealer_company && p._dealer_company.toLowerCase().includes(lowerTerm))
             );
             setProjects(matchedProjects.slice(0, 10));
 
@@ -157,7 +190,13 @@ export default function ProjectSelector({ onSelectProject, onNewProject }) {
                                                     <h4 className="font-semibold text-slate-900 dark:text-white group-hover:text-[#e2231a] transition-colors">
                                                         {project.design_name}
                                                     </h4>
-                                                    <div className="flex items-center gap-2 text-xs text-slate-500 mt-1">
+                                                    {project._dealer_company && (
+                                                        <div className="flex items-center gap-1 text-xs text-slate-500 mt-0.5">
+                                                            <Building className="w-3 h-3" />
+                                                            <span className="truncate max-w-[150px]">{project._dealer_company}</span>
+                                                        </div>
+                                                    )}
+                                                    <div className="flex items-center gap-2 text-xs text-slate-500 mt-1.5">
                                                         <span className="bg-slate-200 dark:bg-slate-700 px-2 py-0.5 rounded text-slate-700 dark:text-slate-300">
                                                             {project.booth_size}
                                                         </span>
