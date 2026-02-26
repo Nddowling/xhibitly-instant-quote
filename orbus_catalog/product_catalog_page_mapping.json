@@ -1,0 +1,4479 @@
+{
+  "metadata": {
+    "catalog_file": "orbus_catalog/brochures/portable_displays/catalogs_exhibitors-handbook_catalog.pdf",
+    "total_products_mapped": 261,
+    "generated_at": "2026-02-25"
+  },
+  "product_page_mapping": [
+    {
+      "product_name": "Hopup Counter",
+      "product_sku": "HOP-CT-2",
+      "category": "Portable Displays",
+      "pages": [
+        58,
+        181
+      ],
+      "primary_page": 58,
+      "match_details": [
+        {
+          "page": 58,
+          "matched_by": "name",
+          "sku_found": null
+        },
+        {
+          "page": 181,
+          "matched_by": "name",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Imagine 800 Retractable Banner Stand",
+      "product_sku": "IMG-800-S",
+      "category": "Banner Stands",
+      "pages": [
+        12
+      ],
+      "primary_page": 12,
+      "match_details": [
+        {
+          "page": 12,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Blade Lite 920 Retractable Banner Stand",
+      "product_sku": "BLD-LT-920",
+      "category": "Retractable",
+      "pages": [
+        9
+      ],
+      "primary_page": 9,
+      "match_details": [
+        {
+          "page": 9,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Blade Lite 400 Retractable Banner Stand",
+      "product_sku": "BLD-LT-400",
+      "category": "Retractable",
+      "pages": [
+        9
+      ],
+      "primary_page": 9,
+      "match_details": [
+        {
+          "page": 9,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Blade Lite 850 Retractable Banner Stand",
+      "product_sku": "BLD-LT-850",
+      "category": "Retractable",
+      "pages": [
+        9
+      ],
+      "primary_page": 9,
+      "match_details": [
+        {
+          "page": 9,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Illumistand Double Sided Light Up Retractable Banner Stand",
+      "product_sku": "ILLUM-800-1",
+      "category": "Retractable",
+      "pages": [
+        12
+      ],
+      "primary_page": 12,
+      "match_details": [
+        {
+          "page": 12,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Synergy 800 Retractable Banner Stand",
+      "product_sku": "SYNERGY-800",
+      "category": "Retractable",
+      "pages": [
+        14
+      ],
+      "primary_page": 14,
+      "match_details": [
+        {
+          "page": 14,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Blade Lite 1000 Retractable Banner Stand",
+      "product_sku": "BLD-LT-1000",
+      "category": "Retractable",
+      "pages": [
+        9
+      ],
+      "primary_page": 9,
+      "match_details": [
+        {
+          "page": 9,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Barracuda 800 Retractable Banner Stand",
+      "product_sku": "BCD-800-S",
+      "category": "Retractable",
+      "pages": [
+        12
+      ],
+      "primary_page": 12,
+      "match_details": [
+        {
+          "page": 12,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Blade Lite 1200 Retractable Banner Stand",
+      "product_sku": "BLD-LT-1200",
+      "category": "Retractable",
+      "pages": [
+        9
+      ],
+      "primary_page": 9,
+      "match_details": [
+        {
+          "page": 9,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Blade Lite 800 Retractable Banner Stand",
+      "product_sku": "BLD-LT-800",
+      "category": "Retractable",
+      "pages": [
+        9
+      ],
+      "primary_page": 9,
+      "match_details": [
+        {
+          "page": 9,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Rollup Retractable Banner Stand",
+      "product_sku": "RU-S1-4",
+      "category": "Retractable",
+      "pages": [
+        11
+      ],
+      "primary_page": 11,
+      "match_details": [
+        {
+          "page": 11,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Breeze 2 Tabletop Retractable Banner Stand",
+      "product_sku": "BREZ-2",
+      "category": "Retractable",
+      "pages": [
+        15
+      ],
+      "primary_page": 15,
+      "match_details": [
+        {
+          "page": 15,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Blade Lite 600 Retractable Banner Stand",
+      "product_sku": "BLD-LT-600",
+      "category": "Retractable",
+      "pages": [
+        9
+      ],
+      "primary_page": 9,
+      "match_details": [
+        {
+          "page": 9,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Catchlight Tabletop Light Box",
+      "product_sku": "CL-TBLTP-LB-01",
+      "category": "Retractable",
+      "pages": [
+        15
+      ],
+      "primary_page": 15,
+      "match_details": [
+        {
+          "page": 15,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Pegasus Standard Telescopic Banner Stand Extension Kit",
+      "product_sku": "PGSUS2-EXT",
+      "category": "Telescopic",
+      "pages": [
+        16
+      ],
+      "primary_page": 16,
+      "match_details": [
+        {
+          "page": 16,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Pegasus Supreme Telescopic Banner Stand Extension Kit",
+      "product_sku": "PGSUS3-EXT",
+      "category": "Telescopic",
+      "pages": [
+        16
+      ],
+      "primary_page": 16,
+      "match_details": [
+        {
+          "page": 16,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Taurus Telescopic Banner Stand",
+      "product_sku": "TAURUS1-B",
+      "category": "Telescopic",
+      "pages": [
+        16
+      ],
+      "primary_page": 16,
+      "match_details": [
+        {
+          "page": 16,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Pegasus Supreme Telescopic Banner Stand",
+      "product_sku": "PGSUS3",
+      "category": "Telescopic",
+      "pages": [
+        16
+      ],
+      "primary_page": 16,
+      "match_details": [
+        {
+          "page": 16,
+          "matched_by": "sku",
+          "sku_found": "PGSUS3"
+        }
+      ]
+    },
+    {
+      "product_name": "Pegasus Standard Telescopic Banner Stand",
+      "product_sku": "PGSUS2",
+      "category": "Telescopic",
+      "pages": [
+        16
+      ],
+      "primary_page": 16,
+      "match_details": [
+        {
+          "page": 16,
+          "matched_by": "sku",
+          "sku_found": "PGSUS2"
+        }
+      ]
+    },
+    {
+      "product_name": "Barracuda 850 Retractable Banner Stand",
+      "product_sku": "BCD-850-S",
+      "category": "Spring Back",
+      "pages": [
+        12
+      ],
+      "primary_page": 12,
+      "match_details": [
+        {
+          "page": 12,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Lightning Spring Back Banner Stand",
+      "product_sku": "LTNG",
+      "category": "Spring Back",
+      "pages": [
+        17
+      ],
+      "primary_page": 17,
+      "match_details": [
+        {
+          "page": 17,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "X-TEND 5 Spring Back Banner Stand",
+      "product_sku": "X-TEND-5",
+      "category": "Spring Back",
+      "pages": [
+        17
+      ],
+      "primary_page": 17,
+      "match_details": [
+        {
+          "page": 17,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "X-TEND 3 Spring Back Banner Stand",
+      "product_sku": "X-TEND-3",
+      "category": "Spring Back",
+      "pages": [
+        17
+      ],
+      "primary_page": 17,
+      "match_details": [
+        {
+          "page": 17,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Orient 850 Retractable Banner Stand",
+      "product_sku": "ONT-850",
+      "category": "Spring Back",
+      "pages": [
+        10
+      ],
+      "primary_page": 10,
+      "match_details": [
+        {
+          "page": 10,
+          "matched_by": "sku",
+          "sku_found": "ONT-850"
+        }
+      ]
+    },
+    {
+      "product_name": "X-TEND 2 Spring Back Banner Stand",
+      "product_sku": "X-TEND-2",
+      "category": "Spring Back",
+      "pages": [
+        17
+      ],
+      "primary_page": 17,
+      "match_details": [
+        {
+          "page": 17,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "L-Mini Spring Back Banner Stand",
+      "product_sku": "L-MINI",
+      "category": "Spring Back",
+      "pages": [
+        17
+      ],
+      "primary_page": 17,
+      "match_details": [
+        {
+          "page": 17,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "X-TEND 4 Spring Back Banner Stand",
+      "product_sku": "X-TEND-4",
+      "category": "Spring Back",
+      "pages": [
+        17
+      ],
+      "primary_page": 17,
+      "match_details": [
+        {
+          "page": 17,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "X-TEND 1 Spring Back Banner Stand",
+      "product_sku": "X-TEND-1",
+      "category": "Spring Back",
+      "pages": [
+        17
+      ],
+      "primary_page": 17,
+      "match_details": [
+        {
+          "page": 17,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Vector Fast Frame Banner 0508",
+      "product_sku": "VFF-03-F",
+      "category": "Fabric Banners",
+      "pages": [
+        32
+      ],
+      "primary_page": 32,
+      "match_details": [
+        {
+          "page": 32,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Vector Fast Frame 10ft Backwall Kit",
+      "product_sku": "VFF-01-3",
+      "category": "Fabric Banners",
+      "pages": [
+        35
+      ],
+      "primary_page": 35,
+      "match_details": [
+        {
+          "page": 35,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Essential Banner 1500 - Straight",
+      "product_sku": "FMLT-E-S-1500-2",
+      "category": "Fabric Banners",
+      "pages": [
+        18,
+        97
+      ],
+      "primary_page": 18,
+      "match_details": [
+        {
+          "page": 18,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 97,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Essential Banner 1000 - Straight",
+      "product_sku": "FMLT-E-S-1000-2",
+      "category": "Fabric Banners",
+      "pages": [
+        18,
+        97
+      ],
+      "primary_page": 18,
+      "match_details": [
+        {
+          "page": 18,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 97,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Modulate Frame Banner 06",
+      "product_sku": "MOD-FRM-06",
+      "category": "Fabric Banners",
+      "pages": [
+        19,
+        92
+      ],
+      "primary_page": 19,
+      "match_details": [
+        {
+          "page": 19,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 92,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Essential Banner 1200 - Straight",
+      "product_sku": "FMLT-E-S-1200-2",
+      "category": "Fabric Banners",
+      "pages": [
+        18,
+        97
+      ],
+      "primary_page": 18,
+      "match_details": [
+        {
+          "page": 18,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 97,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Essential Banner 600 - Straight",
+      "product_sku": "FMLT-E-S-600-2",
+      "category": "Fabric Banners",
+      "pages": [
+        18,
+        97
+      ],
+      "primary_page": 18,
+      "match_details": [
+        {
+          "page": 18,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 97,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Vector Fast Frame Banner 0408",
+      "product_sku": "VFF-02-F",
+      "category": "Fabric Banners",
+      "pages": [
+        32
+      ],
+      "primary_page": 32,
+      "match_details": [
+        {
+          "page": 32,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Essential Banner 800 - Straight",
+      "product_sku": "FMLT-E-S-800-2",
+      "category": "Fabric Banners",
+      "pages": [
+        18,
+        97
+      ],
+      "primary_page": 18,
+      "match_details": [
+        {
+          "page": 18,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 97,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Essential Banner 920 - Straight",
+      "product_sku": "FMLT-E-S-920-2",
+      "category": "Fabric Banners",
+      "pages": [
+        18,
+        97
+      ],
+      "primary_page": 18,
+      "match_details": [
+        {
+          "page": 18,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 97,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Essential Banner 850 - Straight",
+      "product_sku": "FMLT-E-S-850-2",
+      "category": "Fabric Banners",
+      "pages": [
+        18,
+        97
+      ],
+      "primary_page": 18,
+      "match_details": [
+        {
+          "page": 18,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 97,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Modulate Frame Banner 05",
+      "product_sku": "MOD-FRM-05",
+      "category": "Fabric Banners",
+      "pages": [
+        19,
+        92
+      ],
+      "primary_page": 19,
+      "match_details": [
+        {
+          "page": 19,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 92,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Vector Fast Frame Light Box 0407",
+      "product_sku": "VFF-LB-02-F",
+      "category": "Fabric Light Boxes",
+      "pages": [
+        33
+      ],
+      "primary_page": 33,
+      "match_details": [
+        {
+          "page": 33,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Vector Fast  Frame Light Box 0307",
+      "product_sku": "VFF-LB-01-F",
+      "category": "Fabric Light Boxes",
+      "pages": [
+        33
+      ],
+      "primary_page": 33,
+      "match_details": [
+        {
+          "page": 33,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Vector Frame Essential Light Box 0406",
+      "product_sku": "VF-ESS-LB-R-03",
+      "category": "Fabric Light Boxes",
+      "pages": [
+        31,
+        158
+      ],
+      "primary_page": 31,
+      "match_details": [
+        {
+          "page": 31,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 158,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Vector Frame Essential Light Box 2008",
+      "product_sku": "VF-ESS-LB-R-06",
+      "category": "Fabric Light Boxes",
+      "pages": [
+        31,
+        158
+      ],
+      "primary_page": 31,
+      "match_details": [
+        {
+          "page": 31,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 158,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Vector Frame Essential Light Box 0308",
+      "product_sku": "VF-ESS-LB-R-02",
+      "category": "Fabric Light Boxes",
+      "pages": [
+        31,
+        158
+      ],
+      "primary_page": 31,
+      "match_details": [
+        {
+          "page": 31,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 158,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Vector Frame Essential Light Box 1008",
+      "product_sku": "VF-ESS-LB-R-05",
+      "category": "Fabric Light Boxes",
+      "pages": [
+        31,
+        158
+      ],
+      "primary_page": 31,
+      "match_details": [
+        {
+          "page": 31,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 158,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Vector Frame Essential Light Box 0808",
+      "product_sku": "VF-ESS-LB-S-01",
+      "category": "Fabric Light Boxes",
+      "pages": [
+        31,
+        158
+      ],
+      "primary_page": 31,
+      "match_details": [
+        {
+          "page": 31,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 158,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Vector Frame Essential Light Box 0306",
+      "product_sku": "VF-ESS-LB-R-01",
+      "category": "Fabric Light Boxes",
+      "pages": [
+        31,
+        158
+      ],
+      "primary_page": 31,
+      "match_details": [
+        {
+          "page": 31,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 158,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Blaze Light Box 0406 - Freestanding",
+      "product_sku": "BLZ-0406",
+      "category": "Fabric Light Boxes",
+      "pages": [
+        23
+      ],
+      "primary_page": 23,
+      "match_details": [
+        {
+          "page": 23,
+          "matched_by": "sku",
+          "sku_found": "BLZ-0406"
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Essential Backlit Banner",
+      "product_sku": "FMLT-E-BL-1100",
+      "category": "Fabric Light Boxes",
+      "pages": [
+        18
+      ],
+      "primary_page": 18,
+      "match_details": [
+        {
+          "page": 18,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Vector Frame Essential Light Box 0408",
+      "product_sku": "VF-ESS-LB-R-04",
+      "category": "Fabric Light Boxes",
+      "pages": [
+        31,
+        158
+      ],
+      "primary_page": 31,
+      "match_details": [
+        {
+          "page": 31,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 158,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Blaze Light Box 0608 - Freestanding",
+      "product_sku": "BLZ-0608",
+      "category": "Fabric Light Boxes",
+      "pages": [
+        23
+      ],
+      "primary_page": 23,
+      "match_details": [
+        {
+          "page": 23,
+          "matched_by": "sku",
+          "sku_found": "BLZ-0608"
+        }
+      ]
+    },
+    {
+      "product_name": "Fitted Dye Sub Table Throw",
+      "product_sku": "TBL-FITTED",
+      "category": "Table Covers",
+      "pages": [
+        53
+      ],
+      "primary_page": 53,
+      "match_details": [
+        {
+          "page": 53,
+          "matched_by": "sku",
+          "sku_found": "TBL-FITTED"
+        }
+      ]
+    },
+    {
+      "product_name": "Stretch Dye Sub Table Throw",
+      "product_sku": "TBL-SW",
+      "category": "Printed",
+      "pages": [
+        53
+      ],
+      "primary_page": 53,
+      "match_details": [
+        {
+          "page": 53,
+          "matched_by": "sku",
+          "sku_found": "TBL-SW"
+        }
+      ]
+    },
+    {
+      "product_name": "Premium Dye Sub Table Runner",
+      "product_sku": "TBL-R",
+      "category": "Printed",
+      "pages": [
+        52
+      ],
+      "primary_page": 52,
+      "match_details": [
+        {
+          "page": 52,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Premium Dye Sub Table Throw",
+      "product_sku": "TBL-T",
+      "category": "Printed",
+      "pages": [
+        15,
+        52,
+        53
+      ],
+      "primary_page": 15,
+      "match_details": [
+        {
+          "page": 15,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 52,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 53,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Outdoor Table Throw",
+      "product_sku": "TBL-ODC-FITTED",
+      "category": "Printed",
+      "pages": [
+        2,
+        53
+      ],
+      "primary_page": 2,
+      "match_details": [
+        {
+          "page": 2,
+          "matched_by": "name",
+          "sku_found": null
+        },
+        {
+          "page": 53,
+          "matched_by": "name",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Hybrid Pro 10ft Modular Backwall Kit 34",
+      "product_sku": "HP-K-34",
+      "category": "Embrace Tension Fabric",
+      "pages": [
+        143
+      ],
+      "primary_page": 143,
+      "match_details": [
+        {
+          "page": 143,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Embrace 10ft Backlit Full Height Push-Fit Tension Fabric Display",
+      "product_sku": "EMB-BL-4X3-S",
+      "category": "Embrace Tension Fabric",
+      "pages": [
+        66
+      ],
+      "primary_page": 66,
+      "match_details": [
+        {
+          "page": 66,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Xclaim 2.5ft Fabric Popup Display Kit 04",
+      "product_sku": "XCLM-1X3-K4",
+      "category": "Xclaim Fabric Popup",
+      "pages": [
+        71
+      ],
+      "primary_page": 71,
+      "match_details": [
+        {
+          "page": 71,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Xclaim 5ft Tabletop Fabric Popup Display Kit 01",
+      "product_sku": "XCLM-2X2-K1",
+      "category": "Xclaim Fabric Popup",
+      "pages": [
+        70
+      ],
+      "primary_page": 70,
+      "match_details": [
+        {
+          "page": 70,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Xclaim 10ft Fabric Popup Display Kit 06",
+      "product_sku": "XCLM-4X3-K6",
+      "category": "Xclaim Fabric Popup",
+      "pages": [
+        74
+      ],
+      "primary_page": 74,
+      "match_details": [
+        {
+          "page": 74,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Xclaim 5ft Full Height Fabric Popup Display Kit 01",
+      "product_sku": "XCLM-2X3-K1",
+      "category": "Xclaim Fabric Popup",
+      "pages": [
+        71
+      ],
+      "primary_page": 71,
+      "match_details": [
+        {
+          "page": 71,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Xclaim 5ft Tabletop Fabric Popup Display Kit 02",
+      "product_sku": "XCLM-2X2-K2",
+      "category": "Xclaim Fabric Popup",
+      "pages": [
+        70
+      ],
+      "primary_page": 70,
+      "match_details": [
+        {
+          "page": 70,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Xclaim 2.5ft Fabric Popup Display Kit 01",
+      "product_sku": "XCLM-1X3-K1",
+      "category": "Xclaim Fabric Popup",
+      "pages": [
+        71
+      ],
+      "primary_page": 71,
+      "match_details": [
+        {
+          "page": 71,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Xclaim 8ft Fabric Popup Display Kit 01",
+      "product_sku": "XCLM-3X3-K1",
+      "category": "Xclaim Fabric Popup",
+      "pages": [
+        72,
+        73
+      ],
+      "primary_page": 72,
+      "match_details": [
+        {
+          "page": 72,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 73,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Xclaim 8ft Fabric Popup Display Kit 02",
+      "product_sku": "XCLM-3X3-K2",
+      "category": "Xclaim Fabric Popup",
+      "pages": [
+        72,
+        73
+      ],
+      "primary_page": 72,
+      "match_details": [
+        {
+          "page": 72,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 73,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Xclaim 2.5ft Fabric Popup Display Kit 03",
+      "product_sku": "XCLM-1X3-K3",
+      "category": "Xclaim Fabric Popup",
+      "pages": [
+        71
+      ],
+      "primary_page": 71,
+      "match_details": [
+        {
+          "page": 71,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "MODify Riser 02",
+      "product_sku": "MFY-RSR-02",
+      "category": "Xclaim Fabric Popup",
+      "pages": [
+        214
+      ],
+      "primary_page": 214,
+      "match_details": [
+        {
+          "page": 214,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Xclaim 5ft Full Height Fabric Popup Display Kit 02",
+      "product_sku": "XCLM-2X3-K2",
+      "category": "Xclaim Fabric Popup",
+      "pages": [
+        71
+      ],
+      "primary_page": 71,
+      "match_details": [
+        {
+          "page": 71,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Xclaim 2.5ft Fabric Popup Display Kit 02",
+      "product_sku": "XCLM-1X3-K2",
+      "category": "Xclaim Fabric Popup",
+      "pages": [
+        71
+      ],
+      "primary_page": 71,
+      "match_details": [
+        {
+          "page": 71,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Xclaim 5ft Tabletop Fabric Popup Display Kit 03",
+      "product_sku": "XCLM-2X2-K3",
+      "category": "Xclaim Fabric Popup",
+      "pages": [
+        70
+      ],
+      "primary_page": 70,
+      "match_details": [
+        {
+          "page": 70,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Xclaim 5ft Tabletop Fabric Popup Display Kit 04",
+      "product_sku": "XCLM-2X2-K4",
+      "category": "Xclaim Fabric Popup",
+      "pages": [
+        70
+      ],
+      "primary_page": 70,
+      "match_details": [
+        {
+          "page": 70,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Vector Fast Frame Banner 01",
+      "product_sku": "VFF-01-F",
+      "category": "Vector Fast Frame",
+      "pages": [
+        32
+      ],
+      "primary_page": 32,
+      "match_details": [
+        {
+          "page": 32,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Vector Fast Frame Backlit Counter",
+      "product_sku": "VFF-CT-BL",
+      "category": "Vector Fast Frame",
+      "pages": [
+        33,
+        181
+      ],
+      "primary_page": 33,
+      "match_details": [
+        {
+          "page": 33,
+          "matched_by": "name",
+          "sku_found": null
+        },
+        {
+          "page": 181,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Apex Orbital Express Truss 20ft Modular Exhibit",
+      "product_sku": "OR-K-AX1",
+      "category": "Counters",
+      "pages": [
+        171
+      ],
+      "primary_page": 171,
+      "match_details": [
+        {
+          "page": 171,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate iPad Kiosk 05",
+      "product_sku": "TABLET-STD-05",
+      "category": "Info Centers",
+      "pages": [
+        183
+      ],
+      "primary_page": 183,
+      "match_details": [
+        {
+          "page": 183,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Designer Series 20ft Fabric Backwall Kit 12",
+      "product_sku": "FMLT-DS-20-12",
+      "category": "Info Centers",
+      "pages": [
+        113
+      ],
+      "primary_page": 113,
+      "match_details": [
+        {
+          "page": 113,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Slimline LED Spot Display Light",
+      "product_sku": "LUM-LED3-ORL-B",
+      "category": "Display Lighting",
+      "pages": [
+        9,
+        189
+      ],
+      "primary_page": 9,
+      "match_details": [
+        {
+          "page": 9,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 189,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Lumina 200 LED Display Light",
+      "product_sku": "LUM-LED2-ORL",
+      "category": "Display Lighting",
+      "pages": [
+        189
+      ],
+      "primary_page": 189,
+      "match_details": [
+        {
+          "page": 189,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "LED Color Blast Accent Light - Cool White",
+      "product_sku": "LED-COOL-WHT-BLAST",
+      "category": "Display Lighting",
+      "pages": [
+        190
+      ],
+      "primary_page": 190,
+      "match_details": [
+        {
+          "page": 190,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "LED Color Blast Accent Light - RGB",
+      "product_sku": "LED-RGB-BLAST",
+      "category": "Display Lighting",
+      "pages": [
+        190
+      ],
+      "primary_page": 190,
+      "match_details": [
+        {
+          "page": 190,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Slimline LED Flood Display Light",
+      "product_sku": "LUM-LED4-ORL",
+      "category": "Display Lighting",
+      "pages": [
+        189
+      ],
+      "primary_page": 189,
+      "match_details": [
+        {
+          "page": 189,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Wedge Outdoor Sign Holder",
+      "product_sku": "WED-1-B",
+      "category": "Display Lighting",
+      "pages": [
+        187
+      ],
+      "primary_page": 187,
+      "match_details": [
+        {
+          "page": 187,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Slimline LED Strip Display Light",
+      "product_sku": "LUM-LED5-ORL",
+      "category": "Display Lighting",
+      "pages": [
+        189
+      ],
+      "primary_page": 189,
+      "match_details": [
+        {
+          "page": 189,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "LED Color Blast Accent Light - Warm White",
+      "product_sku": "LED-WRM-WHT-BLAST",
+      "category": "Display Lighting",
+      "pages": [
+        190
+      ],
+      "primary_page": 190,
+      "match_details": [
+        {
+          "page": 190,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "LED Mini Flood Accent Light - White",
+      "product_sku": "LED-10W-FLOOD-W",
+      "category": "Display Lighting",
+      "pages": [
+        190
+      ],
+      "primary_page": 190,
+      "match_details": [
+        {
+          "page": 190,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Blaze Light Box 2010 - Wall",
+      "product_sku": "BLZ-W-2010",
+      "category": "Display Lighting",
+      "pages": [
+        25,
+        27
+      ],
+      "primary_page": 25,
+      "match_details": [
+        {
+          "page": 25,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 27,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "LED Flood Accent Light",
+      "product_sku": "LED-FLOOD",
+      "category": "Display Lighting",
+      "pages": [
+        189,
+        190
+      ],
+      "primary_page": 189,
+      "match_details": [
+        {
+          "page": 189,
+          "matched_by": "sku",
+          "sku_found": "LED FLOOD"
+        },
+        {
+          "page": 190,
+          "matched_by": "sku",
+          "sku_found": "LED FLOOD"
+        }
+      ]
+    },
+    {
+      "product_name": "LED Mini Flood Accent Light - RGB",
+      "product_sku": "LED-10W-FLOOD-RGB",
+      "category": "Display Lighting",
+      "pages": [
+        190
+      ],
+      "primary_page": 190,
+      "match_details": [
+        {
+          "page": 190,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Slimline LED Exhibition Display Light",
+      "product_sku": "LUM-LED6-ORL",
+      "category": "Display Lighting",
+      "pages": [
+        189
+      ],
+      "primary_page": 189,
+      "match_details": [
+        {
+          "page": 189,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "OCB Banner Stand Case",
+      "product_sku": "OCB-2",
+      "category": "Shipping Cases",
+      "pages": [
+        191
+      ],
+      "primary_page": 191,
+      "match_details": [
+        {
+          "page": 191,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "WOODCRATE-H",
+      "product_sku": "WOODCRATE-H",
+      "category": "Shipping Cases",
+      "pages": [
+        118
+      ],
+      "primary_page": 118,
+      "match_details": [
+        {
+          "page": 118,
+          "matched_by": "name",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Trolley Roller",
+      "product_sku": "TROLLEY",
+      "category": "Shipping Cases",
+      "pages": [
+        192,
+        193
+      ],
+      "primary_page": 192,
+      "match_details": [
+        {
+          "page": 192,
+          "matched_by": "name",
+          "sku_found": "TROLLEY"
+        },
+        {
+          "page": 193,
+          "matched_by": "name",
+          "sku_found": "TROLLEY"
+        }
+      ]
+    },
+    {
+      "product_name": "Campaign Counter",
+      "product_sku": "CP-B3",
+      "category": "Outdoor Displays",
+      "pages": [
+        42,
+        182
+      ],
+      "primary_page": 42,
+      "match_details": [
+        {
+          "page": 42,
+          "matched_by": "sku",
+          "sku_found": "CP-B3"
+        },
+        {
+          "page": 182,
+          "matched_by": "sku",
+          "sku_found": "CP-B3"
+        }
+      ]
+    },
+    {
+      "product_name": "Zoom Economy and Standard 10' Popup Tent Full Wall Only",
+      "product_sku": "TNT-3X3-FWL",
+      "category": "Tents",
+      "pages": [
+        40
+      ],
+      "primary_page": 40,
+      "match_details": [
+        {
+          "page": 40,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Zoom Standard 10' Popup Tent",
+      "product_sku": "TNT-S-3X3",
+      "category": "Tents",
+      "pages": [
+        40
+      ],
+      "primary_page": 40,
+      "match_details": [
+        {
+          "page": 40,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Zoom Tent Light Kit",
+      "product_sku": "TNT-HWL-LED-01",
+      "category": "Tents",
+      "pages": [
+        190
+      ],
+      "primary_page": 190,
+      "match_details": [
+        {
+          "page": 190,
+          "matched_by": "name",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Zoom Standard 20' Popup Tent Full Wall Only",
+      "product_sku": "TNT-S-3X6-FWL",
+      "category": "Tents",
+      "pages": [
+        41
+      ],
+      "primary_page": 41,
+      "match_details": [
+        {
+          "page": 41,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Zoom Standard 20' Popup Tent",
+      "product_sku": "TNT-S-3X6",
+      "category": "Tents",
+      "pages": [
+        41
+      ],
+      "primary_page": 41,
+      "match_details": [
+        {
+          "page": 41,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Zoom Economy 5' Popup Tent Full Wall",
+      "product_sku": "TNT-1.5-FWL",
+      "category": "Tents",
+      "pages": [
+        41
+      ],
+      "primary_page": 41,
+      "match_details": [
+        {
+          "page": 41,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Zoom Economy 10' Popup Tent",
+      "product_sku": "TNT-E-3X3-SQ-2",
+      "category": "Tents",
+      "pages": [
+        40
+      ],
+      "primary_page": 40,
+      "match_details": [
+        {
+          "page": 40,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Zoom Standard 20' Popup Tent Half Wall Kit Only",
+      "product_sku": "TNT-S-3X6-HWL",
+      "category": "Tents",
+      "pages": [
+        41
+      ],
+      "primary_page": 41,
+      "match_details": [
+        {
+          "page": 41,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Zoom Flex Tent",
+      "product_sku": "ZOOM-FLX-TNT",
+      "category": "Tents",
+      "pages": [
+        42
+      ],
+      "primary_page": 42,
+      "match_details": [
+        {
+          "page": 42,
+          "matched_by": "name",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Zoom Flex D-Shaped Flag Large",
+      "product_sku": "ZOOM-FLX-D-LG",
+      "category": "Banners Flags",
+      "pages": [
+        46
+      ],
+      "primary_page": 46,
+      "match_details": [
+        {
+          "page": 46,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Zoom Flex D-Shaped Flag Small",
+      "product_sku": "ZOOM-FLX-D-SM",
+      "category": "Banners Flags",
+      "pages": [
+        46
+      ],
+      "primary_page": 46,
+      "match_details": [
+        {
+          "page": 46,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Zoom Flex - Medium Flag",
+      "product_sku": "ZOOM-FLX-M",
+      "category": "Banners Flags",
+      "pages": [
+        44
+      ],
+      "primary_page": 44,
+      "match_details": [
+        {
+          "page": 44,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Zoom Flex - Small Flag",
+      "product_sku": "ZOOM-FLX-SM",
+      "category": "Banners Flags",
+      "pages": [
+        44
+      ],
+      "primary_page": 44,
+      "match_details": [
+        {
+          "page": 44,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Zoom Flex D-Shaped Flag Medium",
+      "product_sku": "ZOOM-FLX-D-M",
+      "category": "Banners Flags",
+      "pages": [
+        46
+      ],
+      "primary_page": 46,
+      "match_details": [
+        {
+          "page": 46,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Zoom Flex Large Flagpole Stand",
+      "product_sku": "ZM-FLX-FOLDABLE",
+      "category": "Banners Flags",
+      "pages": [
+        45
+      ],
+      "primary_page": 45,
+      "match_details": [
+        {
+          "page": 45,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Zoom Flex Lantern",
+      "product_sku": "ZOOM-FLX-LNTRN",
+      "category": "Banners Flags",
+      "pages": [
+        47
+      ],
+      "primary_page": 47,
+      "match_details": [
+        {
+          "page": 47,
+          "matched_by": "name",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Zoom Flex - Large Flag",
+      "product_sku": "ZOOM-FLX-LG",
+      "category": "Banners Flags",
+      "pages": [
+        44
+      ],
+      "primary_page": 44,
+      "match_details": [
+        {
+          "page": 44,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Ace Eco Outdoor Sign",
+      "product_sku": "ACE-ECO",
+      "category": "Signs",
+      "pages": [
+        49
+      ],
+      "primary_page": 49,
+      "match_details": [
+        {
+          "page": 49,
+          "matched_by": "sku",
+          "sku_found": "ACE-ECO"
+        }
+      ]
+    },
+    {
+      "product_name": "Whirlwind Outdoor Sign Stand",
+      "product_sku": "WHRL-WND-2",
+      "category": "Signs",
+      "pages": [
+        48
+      ],
+      "primary_page": 48,
+      "match_details": [
+        {
+          "page": 48,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Pyramid A-Frame Outdoor Sign",
+      "product_sku": "PYR-A-FRM-G",
+      "category": "Signs",
+      "pages": [
+        48
+      ],
+      "primary_page": 48,
+      "match_details": [
+        {
+          "page": 48,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Barricade Cover",
+      "product_sku": "BARRICADE-COVER",
+      "category": "Signs",
+      "pages": [
+        47
+      ],
+      "primary_page": 47,
+      "match_details": [
+        {
+          "page": 47,
+          "matched_by": "name",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Monsoon Outdoor Sign Stand",
+      "product_sku": "MONSN-2",
+      "category": "Signs",
+      "pages": [
+        50
+      ],
+      "primary_page": 50,
+      "match_details": [
+        {
+          "page": 50,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Twirl Outdoor Sign",
+      "product_sku": "TWIRL",
+      "category": "Signs",
+      "pages": [
+        51
+      ],
+      "primary_page": 51,
+      "match_details": [
+        {
+          "page": 51,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate iPad Kiosk 04",
+      "product_sku": "TABLET-STD-04",
+      "category": "Signs",
+      "pages": [
+        183
+      ],
+      "primary_page": 183,
+      "match_details": [
+        {
+          "page": 183,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Zoom A-Frame Banner",
+      "product_sku": "ZOOM-AFRAME-01",
+      "category": "Signs",
+      "pages": [
+        50
+      ],
+      "primary_page": 50,
+      "match_details": [
+        {
+          "page": 50,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Portable Popup Bar Mini - Grey",
+      "product_sku": "PBFM902",
+      "category": "Bar Counter",
+      "pages": [
+        43
+      ],
+      "primary_page": 43,
+      "match_details": [
+        {
+          "page": 43,
+          "matched_by": "sku",
+          "sku_found": "PBFM902"
+        }
+      ]
+    },
+    {
+      "product_name": "Popup Bar Large Header",
+      "product_sku": "PBFL301-B-HDR",
+      "category": "Bar Counter",
+      "pages": [
+        43
+      ],
+      "primary_page": 43,
+      "match_details": [
+        {
+          "page": 43,
+          "matched_by": "name",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Fast Frame Foldaway Counter",
+      "product_sku": "FF-CT-CL-BL",
+      "category": "Bar Counter",
+      "pages": [
+        181
+      ],
+      "primary_page": 181,
+      "match_details": [
+        {
+          "page": 181,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Popup Bar Mini Header",
+      "product_sku": "PBFM902-B-HDR",
+      "category": "Bar Counter",
+      "pages": [
+        43
+      ],
+      "primary_page": 43,
+      "match_details": [
+        {
+          "page": 43,
+          "matched_by": "name",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Fusion 20x20 Island Kit 10",
+      "product_sku": "CFAB-K-10",
+      "category": "Formulate Fabric Structures",
+      "pages": [
+        119
+      ],
+      "primary_page": 119,
+      "match_details": [
+        {
+          "page": 119,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Orient 920 Double Sided Retractable Banner Stand",
+      "product_sku": "ONT-920-DBL",
+      "category": "Formulate Fabric Structures",
+      "pages": [
+        10
+      ],
+      "primary_page": 10,
+      "match_details": [
+        {
+          "page": 10,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "8Ft x 4Ft Backlit Square Hanging Structure",
+      "product_sku": "SQU-BL-0804",
+      "category": "Fabric Backwalls",
+      "pages": [
+        129
+      ],
+      "primary_page": 129,
+      "match_details": [
+        {
+          "page": 129,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Lite 8ft Fabric Backwall",
+      "product_sku": "FMLT-LT-01",
+      "category": "Essential Lite",
+      "pages": [
+        107
+      ],
+      "primary_page": 107,
+      "match_details": [
+        {
+          "page": 107,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Accent 04",
+      "product_sku": "FMLT-WL04",
+      "category": "Essential Lite",
+      "pages": [
+        102
+      ],
+      "primary_page": 102,
+      "match_details": [
+        {
+          "page": 102,
+          "matched_by": "sku",
+          "sku_found": "FMLT-WL04"
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Master Tabletop TT3 Fabric Backwall",
+      "product_sku": "FMLT-WTT-V03",
+      "category": "Master",
+      "pages": [
+        107
+      ],
+      "primary_page": 107,
+      "match_details": [
+        {
+          "page": 107,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Master 5ft Straight Backlit Display",
+      "product_sku": "FMLT-BL-WS5-01",
+      "category": "Master",
+      "pages": [
+        19,
+        106
+      ],
+      "primary_page": 19,
+      "match_details": [
+        {
+          "page": 19,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 106,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Master 8ft Straight Backlit Display",
+      "product_sku": "FMLT-BL-WS8-01",
+      "category": "Master",
+      "pages": [
+        19,
+        106
+      ],
+      "primary_page": 19,
+      "match_details": [
+        {
+          "page": 19,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 106,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Master Backwall Accent 05",
+      "product_sku": "FMLT-WBWA-05",
+      "category": "Master",
+      "pages": [
+        104
+      ],
+      "primary_page": 104,
+      "match_details": [
+        {
+          "page": 104,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Master 8ft Straight 10ft Tall Fabric Backwall",
+      "product_sku": "FMLT-WS0810",
+      "category": "Master",
+      "pages": [
+        105
+      ],
+      "primary_page": 105,
+      "match_details": [
+        {
+          "page": 105,
+          "matched_by": "sku",
+          "sku_found": "FMLT-WS0810"
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Master 8ft Horizontal Curve 10ft Tall Fabric Backwall",
+      "product_sku": "FMLT-WH0810",
+      "category": "Master",
+      "pages": [
+        105
+      ],
+      "primary_page": 105,
+      "match_details": [
+        {
+          "page": 105,
+          "matched_by": "sku",
+          "sku_found": "FMLT-WH0810"
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Master 3ft Straight Backlit Display",
+      "product_sku": "FMLT-BL-WS3-01",
+      "category": "Master",
+      "pages": [
+        19,
+        106
+      ],
+      "primary_page": 19,
+      "match_details": [
+        {
+          "page": 19,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 106,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Master Tabletop TT1 Fabric Backwall",
+      "product_sku": "FMLT-WTT-V01",
+      "category": "Master",
+      "pages": [
+        107
+      ],
+      "primary_page": 107,
+      "match_details": [
+        {
+          "page": 107,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Table",
+      "product_sku": "FMLT-WC",
+      "category": "Master",
+      "pages": [
+        107
+      ],
+      "primary_page": 107,
+      "match_details": [
+        {
+          "page": 107,
+          "matched_by": "name",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Designer Series 10ft Fabric Backwall Kit 04",
+      "product_sku": "FMLT-DS-10-04",
+      "category": "Designer",
+      "pages": [
+        110
+      ],
+      "primary_page": 110,
+      "match_details": [
+        {
+          "page": 110,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Designer Series 10ft Fabric Backwall Kit 13",
+      "product_sku": "FMLT-DS-10-13",
+      "category": "Designer",
+      "pages": [
+        111
+      ],
+      "primary_page": 111,
+      "match_details": [
+        {
+          "page": 111,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Designer Series 10ft Fabric Backwall Kit 06",
+      "product_sku": "FMLT-DS-10-06",
+      "category": "Designer",
+      "pages": [
+        110
+      ],
+      "primary_page": 110,
+      "match_details": [
+        {
+          "page": 110,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Designer Series 20ft Fabric Backwall Kit 07",
+      "product_sku": "FMLT-DS-20-07",
+      "category": "Designer",
+      "pages": [
+        113
+      ],
+      "primary_page": 113,
+      "match_details": [
+        {
+          "page": 113,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Designer Series 10ft Fabric Backwall Kit 05",
+      "product_sku": "FMLT-DS-10-05",
+      "category": "Designer",
+      "pages": [
+        110
+      ],
+      "primary_page": 110,
+      "match_details": [
+        {
+          "page": 110,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Designer Series 10ft Fabric Backwall Kit 07",
+      "product_sku": "FMLT-DS-10-07",
+      "category": "Designer",
+      "pages": [
+        111
+      ],
+      "primary_page": 111,
+      "match_details": [
+        {
+          "page": 111,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Designer Series 10ft Fabric Backwall Kit 03",
+      "product_sku": "FMLT-DS-10-03",
+      "category": "Designer",
+      "pages": [
+        110
+      ],
+      "primary_page": 110,
+      "match_details": [
+        {
+          "page": 110,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Designer Series 10ft Fabric Backwall Kit 01",
+      "product_sku": "FMLT-DS-10-01",
+      "category": "Designer",
+      "pages": [
+        110
+      ],
+      "primary_page": 110,
+      "match_details": [
+        {
+          "page": 110,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Designer Series 10ft Fabric Backwall Kit 11",
+      "product_sku": "FMLT-DS-10-11",
+      "category": "Designer",
+      "pages": [
+        111
+      ],
+      "primary_page": 111,
+      "match_details": [
+        {
+          "page": 111,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Designer Series 10ft Fabric Backwall Kit 08",
+      "product_sku": "FMLT-DS-10-08",
+      "category": "Designer",
+      "pages": [
+        111
+      ],
+      "primary_page": 111,
+      "match_details": [
+        {
+          "page": 111,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Designer Series 10ft Fabric Backwall Kit 02",
+      "product_sku": "FMLT-DS-10-02",
+      "category": "Designer",
+      "pages": [
+        110
+      ],
+      "primary_page": 110,
+      "match_details": [
+        {
+          "page": 110,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Designer Series 10ft Fabric Backwall Kit 09",
+      "product_sku": "FMLT-DS-10-09",
+      "category": "Designer",
+      "pages": [
+        111
+      ],
+      "primary_page": 111,
+      "match_details": [
+        {
+          "page": 111,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Designer Series 30ft Fabric Backwall Kit 01",
+      "product_sku": "FMLT-DS-30-01",
+      "category": "Designer",
+      "pages": [
+        115
+      ],
+      "primary_page": 115,
+      "match_details": [
+        {
+          "page": 115,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Designer Series 10ft Fabric Backwall Kit 10",
+      "product_sku": "FMLT-DS-10-10",
+      "category": "Designer",
+      "pages": [
+        111
+      ],
+      "primary_page": 111,
+      "match_details": [
+        {
+          "page": 111,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Modulate Frame Banner 09",
+      "product_sku": "MOD-FRM-09",
+      "category": "Modulate",
+      "pages": [
+        19,
+        92
+      ],
+      "primary_page": 19,
+      "match_details": [
+        {
+          "page": 19,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 92,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Modulate Frame Banner 03",
+      "product_sku": "MOD-FRM-03",
+      "category": "Modulate",
+      "pages": [
+        19,
+        92
+      ],
+      "primary_page": 19,
+      "match_details": [
+        {
+          "page": 19,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 92,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Modulate Frame Banner 04",
+      "product_sku": "MOD-FRM-04",
+      "category": "Modulate",
+      "pages": [
+        19,
+        92
+      ],
+      "primary_page": 19,
+      "match_details": [
+        {
+          "page": 19,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 92,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Modulate Frame Banner 02",
+      "product_sku": "MOD-FRM-02",
+      "category": "Modulate",
+      "pages": [
+        19,
+        92
+      ],
+      "primary_page": 19,
+      "match_details": [
+        {
+          "page": 19,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 92,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Modulate Series 1 30ft Fabric Backwall Kit 01",
+      "product_sku": "MOD-30-01",
+      "category": "Modulate",
+      "pages": [
+        95
+      ],
+      "primary_page": 95,
+      "match_details": [
+        {
+          "page": 95,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Modulate Frame Banner 01",
+      "product_sku": "MOD-FRM-01",
+      "category": "Modulate",
+      "pages": [
+        19,
+        92
+      ],
+      "primary_page": 19,
+      "match_details": [
+        {
+          "page": 19,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 92,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Modulate Frame Banner 12",
+      "product_sku": "MOD-FRM-12",
+      "category": "Modulate",
+      "pages": [
+        19,
+        92
+      ],
+      "primary_page": 19,
+      "match_details": [
+        {
+          "page": 19,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 92,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Modulate Frame Banner 07",
+      "product_sku": "MOD-FRM-07",
+      "category": "Modulate",
+      "pages": [
+        19,
+        92
+      ],
+      "primary_page": 19,
+      "match_details": [
+        {
+          "page": 19,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 92,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Modulate Frame Banner 11",
+      "product_sku": "MOD-FRM-11",
+      "category": "Modulate",
+      "pages": [
+        19,
+        92
+      ],
+      "primary_page": 19,
+      "match_details": [
+        {
+          "page": 19,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 92,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Modulate Series 3 30ft Fabric Backwall Kit 03",
+      "product_sku": "MOD-30-03",
+      "category": "Modulate",
+      "pages": [
+        95
+      ],
+      "primary_page": 95,
+      "match_details": [
+        {
+          "page": 95,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Modulate Frame Banner 08",
+      "product_sku": "MOD-FRM-08",
+      "category": "Modulate",
+      "pages": [
+        19,
+        92
+      ],
+      "primary_page": 19,
+      "match_details": [
+        {
+          "page": 19,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 92,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Modulate Frame Banner 10",
+      "product_sku": "MOD-FRM-10",
+      "category": "Modulate",
+      "pages": [
+        19,
+        92
+      ],
+      "primary_page": 19,
+      "match_details": [
+        {
+          "page": 19,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 92,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Fusion 20x20 Island Kit 05",
+      "product_sku": "CFAB-K-05",
+      "category": "Island Exhibits",
+      "pages": [
+        117
+      ],
+      "primary_page": 117,
+      "match_details": [
+        {
+          "page": 117,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Fusion 20x20 Island Kit 07",
+      "product_sku": "CFAB-K-07",
+      "category": "Island Exhibits",
+      "pages": [
+        118
+      ],
+      "primary_page": 118,
+      "match_details": [
+        {
+          "page": 118,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Fusion 20x20 Island Kit 09",
+      "product_sku": "CFAB-K-09",
+      "category": "Island Exhibits",
+      "pages": [
+        119
+      ],
+      "primary_page": 119,
+      "match_details": [
+        {
+          "page": 119,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Fusion 20x20 Island Kit 08",
+      "product_sku": "CFAB-K-08",
+      "category": "Island Exhibits",
+      "pages": [
+        118
+      ],
+      "primary_page": 118,
+      "match_details": [
+        {
+          "page": 118,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Modulate Door",
+      "product_sku": "MOD-DOOR-M",
+      "category": "Architectural Structures",
+      "pages": [
+        93
+      ],
+      "primary_page": 93,
+      "match_details": [
+        {
+          "page": 93,
+          "matched_by": "name",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate C-Shaped Wall Tension Fabric Structure",
+      "product_sku": "C-WALL",
+      "category": "Architectural Structures",
+      "pages": [
+        119,
+        137,
+        148
+      ],
+      "primary_page": 119,
+      "match_details": [
+        {
+          "page": 119,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 137,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 148,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Four Sided Tower 01 Tension Fabric Structure",
+      "product_sku": "COL-01",
+      "category": "Towers",
+      "pages": [
+        131
+      ],
+      "primary_page": 131,
+      "match_details": [
+        {
+          "page": 131,
+          "matched_by": "sku",
+          "sku_found": "COL-01"
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Four Sided Tower 03 Tension Fabric Structure",
+      "product_sku": "COL-03",
+      "category": "Towers",
+      "pages": [
+        131
+      ],
+      "primary_page": 131,
+      "match_details": [
+        {
+          "page": 131,
+          "matched_by": "sku",
+          "sku_found": "COL-03"
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Backlit Four Sided Tower 02 Tension Fabric Structure",
+      "product_sku": "COL-02-BL",
+      "category": "Towers",
+      "pages": [
+        131
+      ],
+      "primary_page": 131,
+      "match_details": [
+        {
+          "page": 131,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Backlit Four Sided Tower 03 Tension Fabric Structure",
+      "product_sku": "COL-03-BL",
+      "category": "Towers",
+      "pages": [
+        131
+      ],
+      "primary_page": 131,
+      "match_details": [
+        {
+          "page": 131,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate 10ft Tower 02 Tension Fabric Structure",
+      "product_sku": "TOWER-02",
+      "category": "Towers",
+      "pages": [
+        131,
+        132,
+        165
+      ],
+      "primary_page": 131,
+      "match_details": [
+        {
+          "page": 131,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 132,
+          "matched_by": "sku",
+          "sku_found": "TOWER-02"
+        },
+        {
+          "page": 165,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Backlit Four Sided Tower 01 Tension Fabric Structure",
+      "product_sku": "COL-01-BL",
+      "category": "Towers",
+      "pages": [
+        131
+      ],
+      "primary_page": 131,
+      "match_details": [
+        {
+          "page": 131,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Four Sided Tower 02 Tension Fabric Structure",
+      "product_sku": "COL-02",
+      "category": "Towers",
+      "pages": [
+        131
+      ],
+      "primary_page": 131,
+      "match_details": [
+        {
+          "page": 131,
+          "matched_by": "sku",
+          "sku_found": "COL-02"
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Cylinder Tower 01 Tension Fabric Structure",
+      "product_sku": "CYL-01",
+      "category": "Towers",
+      "pages": [
+        132
+      ],
+      "primary_page": 132,
+      "match_details": [
+        {
+          "page": 132,
+          "matched_by": "sku",
+          "sku_found": "CYL-01"
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Shield Tower 01 Tension Fabric Structure",
+      "product_sku": "SHD-TOWER-01",
+      "category": "Towers",
+      "pages": [
+        132
+      ],
+      "primary_page": 132,
+      "match_details": [
+        {
+          "page": 132,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Vector Frame Modular Tower 01 (3' x 8')",
+      "product_sku": "VF-TWR-01",
+      "category": "Towers",
+      "pages": [
+        165
+      ],
+      "primary_page": 165,
+      "match_details": [
+        {
+          "page": 165,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate 10ft Tower 03 Tension Fabric Structure",
+      "product_sku": "TOWER-03",
+      "category": "Towers",
+      "pages": [
+        131,
+        132,
+        165
+      ],
+      "primary_page": 131,
+      "match_details": [
+        {
+          "page": 131,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 132,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 165,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Shield Tower 02 Tension Fabric Structure",
+      "product_sku": "SHD-TOWER-02",
+      "category": "Towers",
+      "pages": [
+        132
+      ],
+      "primary_page": 132,
+      "match_details": [
+        {
+          "page": 132,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Shield Tower 03 Tension Fabric Structure",
+      "product_sku": "SHD-TOWER-03",
+      "category": "Towers",
+      "pages": [
+        132
+      ],
+      "primary_page": 132,
+      "match_details": [
+        {
+          "page": 132,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate 10ft Arch 07 Tension Fabric Structure",
+      "product_sku": "ARCH-07",
+      "category": "Arches",
+      "pages": [
+        136
+      ],
+      "primary_page": 136,
+      "match_details": [
+        {
+          "page": 136,
+          "matched_by": "sku",
+          "sku_found": "ARCH 07"
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate 10ft Arch 02 Tension Fabric Structure",
+      "product_sku": "ARCH-02",
+      "category": "Arches",
+      "pages": [
+        136
+      ],
+      "primary_page": 136,
+      "match_details": [
+        {
+          "page": 136,
+          "matched_by": "sku",
+          "sku_found": "ARCH 02"
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate 20ft Arch 03 Tension Fabric Structure",
+      "product_sku": "ARCH-03",
+      "category": "Arches",
+      "pages": [
+        136
+      ],
+      "primary_page": 136,
+      "match_details": [
+        {
+          "page": 136,
+          "matched_by": "sku",
+          "sku_found": "ARCH-03"
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate 12ft Arch 01 Tension Fabric Structure",
+      "product_sku": "ARCH-01",
+      "category": "Arches",
+      "pages": [
+        136
+      ],
+      "primary_page": 136,
+      "match_details": [
+        {
+          "page": 136,
+          "matched_by": "sku",
+          "sku_found": "ARCH 01"
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate 12.5ft Arch 06 Tension Fabric Structure",
+      "product_sku": "ARCH-06",
+      "category": "Arches",
+      "pages": [
+        136
+      ],
+      "primary_page": 136,
+      "match_details": [
+        {
+          "page": 136,
+          "matched_by": "sku",
+          "sku_found": "ARCH 06"
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Bar Counter 02",
+      "product_sku": "W-06-C-02",
+      "category": "Fabric Counters",
+      "pages": [
+        120
+      ],
+      "primary_page": 120,
+      "match_details": [
+        {
+          "page": 120,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Bar Counter 03",
+      "product_sku": "W-06-C-03",
+      "category": "Fabric Counters",
+      "pages": [
+        120
+      ],
+      "primary_page": 120,
+      "match_details": [
+        {
+          "page": 120,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Bar Counter 06",
+      "product_sku": "W-06-C-06",
+      "category": "Fabric Counters",
+      "pages": [
+        120
+      ],
+      "primary_page": 120,
+      "match_details": [
+        {
+          "page": 120,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Oval Counter",
+      "product_sku": "W-05-C",
+      "category": "Fabric Counters",
+      "pages": [
+        120
+      ],
+      "primary_page": 120,
+      "match_details": [
+        {
+          "page": 120,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Bar Counter 05",
+      "product_sku": "W-06-C-05",
+      "category": "Fabric Counters",
+      "pages": [
+        120
+      ],
+      "primary_page": 120,
+      "match_details": [
+        {
+          "page": 120,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Bullet Counter",
+      "product_sku": "W-04-C",
+      "category": "Fabric Counters",
+      "pages": [
+        120
+      ],
+      "primary_page": 120,
+      "match_details": [
+        {
+          "page": 120,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Pillar Counter",
+      "product_sku": "W-01-C",
+      "category": "Fabric Counters",
+      "pages": [
+        120
+      ],
+      "primary_page": 120,
+      "match_details": [
+        {
+          "page": 120,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Ellipse Counter",
+      "product_sku": "W-03-C",
+      "category": "Fabric Counters",
+      "pages": [
+        120
+      ],
+      "primary_page": 120,
+      "match_details": [
+        {
+          "page": 120,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Half Moon Counter",
+      "product_sku": "W-02-C",
+      "category": "Fabric Counters",
+      "pages": [
+        120
+      ],
+      "primary_page": 120,
+      "match_details": [
+        {
+          "page": 120,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Bar Counter 04",
+      "product_sku": "W-06-C-04",
+      "category": "Fabric Counters",
+      "pages": [
+        120
+      ],
+      "primary_page": 120,
+      "match_details": [
+        {
+          "page": 120,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Charging Tower",
+      "product_sku": "FMLT-CHRG-01",
+      "category": "Fabric Counters",
+      "pages": [
+        182
+      ],
+      "primary_page": 182,
+      "match_details": [
+        {
+          "page": 182,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Tension Fabric Kiosk 03",
+      "product_sku": "FMLT-KIOSK-03",
+      "category": "Fabric Kiosks",
+      "pages": [
+        184
+      ],
+      "primary_page": 184,
+      "match_details": [
+        {
+          "page": 184,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Tension Fabric Kiosk 04",
+      "product_sku": "FMLT-KIOSK-04",
+      "category": "Fabric Kiosks",
+      "pages": [
+        184
+      ],
+      "primary_page": 184,
+      "match_details": [
+        {
+          "page": 184,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Tension Fabric Kiosk 01",
+      "product_sku": "FMLT-KIOSK-01",
+      "category": "Fabric Kiosks",
+      "pages": [
+        184
+      ],
+      "primary_page": 184,
+      "match_details": [
+        {
+          "page": 184,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Formulate Tension Fabric Kiosk 02",
+      "product_sku": "FMLT-KIOSK-02",
+      "category": "Fabric Kiosks",
+      "pages": [
+        184
+      ],
+      "primary_page": 184,
+      "match_details": [
+        {
+          "page": 184,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Blaze Light Box 3008 - Wall",
+      "product_sku": "BLZ-W-3008",
+      "category": "Blaze Wall Mounted",
+      "pages": [
+        25,
+        27
+      ],
+      "primary_page": 25,
+      "match_details": [
+        {
+          "page": 25,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 27,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Blaze Light Box 0804 - Wall",
+      "product_sku": "BLZ-W-0804",
+      "category": "Blaze Wall Mounted",
+      "pages": [
+        25
+      ],
+      "primary_page": 25,
+      "match_details": [
+        {
+          "page": 25,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Blaze Light Box 0604 - Wall",
+      "product_sku": "BLZ-W-0604",
+      "category": "Blaze Wall Mounted",
+      "pages": [
+        25
+      ],
+      "primary_page": 25,
+      "match_details": [
+        {
+          "page": 25,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Blaze Light Box 0603 - Wall",
+      "product_sku": "BLZ-W-0603",
+      "category": "Blaze Wall Mounted",
+      "pages": [
+        25
+      ],
+      "primary_page": 25,
+      "match_details": [
+        {
+          "page": 25,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Blaze Light Box 0808 - Wall",
+      "product_sku": "BLZ-W-0808",
+      "category": "Blaze Wall Mounted",
+      "pages": [
+        25
+      ],
+      "primary_page": 25,
+      "match_details": [
+        {
+          "page": 25,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Blaze Light Box 0806 - Wall",
+      "product_sku": "BLZ-W-0806",
+      "category": "Blaze Wall Mounted",
+      "pages": [
+        25
+      ],
+      "primary_page": 25,
+      "match_details": [
+        {
+          "page": 25,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Blaze Light Box 2008 - Wall",
+      "product_sku": "BLZ-W-2008",
+      "category": "Blaze Wall Mounted",
+      "pages": [
+        25
+      ],
+      "primary_page": 25,
+      "match_details": [
+        {
+          "page": 25,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Blaze Light Box 0606 - Wall",
+      "product_sku": "BLZ-W-0606",
+      "category": "Blaze Wall Mounted",
+      "pages": [
+        25
+      ],
+      "primary_page": 25,
+      "match_details": [
+        {
+          "page": 25,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Blaze Light Box 1010 - Wall",
+      "product_sku": "BLZ-W-1010",
+      "category": "Blaze Wall Mounted",
+      "pages": [
+        25
+      ],
+      "primary_page": 25,
+      "match_details": [
+        {
+          "page": 25,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Blaze Light Box 0803 - Wall",
+      "product_sku": "BLZ-W-0803",
+      "category": "Blaze Wall Mounted",
+      "pages": [
+        25
+      ],
+      "primary_page": 25,
+      "match_details": [
+        {
+          "page": 25,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Blaze Light Box 1008 - Wall",
+      "product_sku": "BLZ-W-1008",
+      "category": "Blaze Wall Mounted",
+      "pages": [
+        25
+      ],
+      "primary_page": 25,
+      "match_details": [
+        {
+          "page": 25,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Blaze Light Box 0808 - Freestanding",
+      "product_sku": "BLZ-0808",
+      "category": "Freestanding",
+      "pages": [
+        23
+      ],
+      "primary_page": 23,
+      "match_details": [
+        {
+          "page": 23,
+          "matched_by": "sku",
+          "sku_found": "BLZ-0808"
+        }
+      ]
+    },
+    {
+      "product_name": "Blaze Light Box 0306 - Freestanding",
+      "product_sku": "BLZ-0306",
+      "category": "Freestanding",
+      "pages": [
+        23
+      ],
+      "primary_page": 23,
+      "match_details": [
+        {
+          "page": 23,
+          "matched_by": "sku",
+          "sku_found": "BLZ-0306"
+        }
+      ]
+    },
+    {
+      "product_name": "Blaze Light Box 0308 - Freestanding",
+      "product_sku": "BLZ-0308",
+      "category": "Freestanding",
+      "pages": [
+        23
+      ],
+      "primary_page": 23,
+      "match_details": [
+        {
+          "page": 23,
+          "matched_by": "sku",
+          "sku_found": "BLZ-0308"
+        }
+      ]
+    },
+    {
+      "product_name": "Blaze Light Box 0408 - Freestanding",
+      "product_sku": "BLZ-0408",
+      "category": "Freestanding",
+      "pages": [
+        23
+      ],
+      "primary_page": 23,
+      "match_details": [
+        {
+          "page": 23,
+          "matched_by": "sku",
+          "sku_found": "BLZ-0408"
+        }
+      ]
+    },
+    {
+      "product_name": "Blaze Light Box 1010 - Freestanding",
+      "product_sku": "BLZ-1010",
+      "category": "Freestanding",
+      "pages": [
+        23
+      ],
+      "primary_page": 23,
+      "match_details": [
+        {
+          "page": 23,
+          "matched_by": "sku",
+          "sku_found": "BLZ-1010"
+        }
+      ]
+    },
+    {
+      "product_name": "Blaze Light Box 1008 - Freestanding",
+      "product_sku": "BLZ-1008",
+      "category": "Freestanding",
+      "pages": [
+        23
+      ],
+      "primary_page": 23,
+      "match_details": [
+        {
+          "page": 23,
+          "matched_by": "sku",
+          "sku_found": "BLZ-1008"
+        }
+      ]
+    },
+    {
+      "product_name": "Hybrid Pro Modular Closet 02",
+      "product_sku": "HPT-02",
+      "category": "Hybrid Pro Modular Displays",
+      "pages": [
+        154
+      ],
+      "primary_page": 154,
+      "match_details": [
+        {
+          "page": 154,
+          "matched_by": "sku",
+          "sku_found": "HPT-02"
+        }
+      ]
+    },
+    {
+      "product_name": "Hybrid Pro 10ft Modular Backwall Kit 03",
+      "product_sku": "HP-K-03",
+      "category": "10 Inline",
+      "pages": [
+        142
+      ],
+      "primary_page": 142,
+      "match_details": [
+        {
+          "page": 142,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Hybrid Pro 10ft Modular Backwall Kit 05",
+      "product_sku": "HP-K-05",
+      "category": "10 Inline",
+      "pages": [
+        142
+      ],
+      "primary_page": 142,
+      "match_details": [
+        {
+          "page": 142,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Modulate Series 2 10ft Fabric Backwall Kit 03",
+      "product_sku": "MOD-10-03",
+      "category": "10 Inline",
+      "pages": [
+        94
+      ],
+      "primary_page": 94,
+      "match_details": [
+        {
+          "page": 94,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Hybrid Pro 10ft Modular Backwall Kit 07",
+      "product_sku": "HP-K-07",
+      "category": "10 Inline",
+      "pages": [
+        143
+      ],
+      "primary_page": 143,
+      "match_details": [
+        {
+          "page": 143,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Hybrid Pro 10ft Modular Backwall Kit 30",
+      "product_sku": "HP-K-30",
+      "category": "10 Inline",
+      "pages": [
+        143
+      ],
+      "primary_page": 143,
+      "match_details": [
+        {
+          "page": 143,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Hybrid Pro 10ft Modular Backwall Kit 35",
+      "product_sku": "HP-K-35",
+      "category": "10 Inline",
+      "pages": [
+        143
+      ],
+      "primary_page": 143,
+      "match_details": [
+        {
+          "page": 143,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Hybrid Pro 10ft Modular Backwall Kit 06",
+      "product_sku": "HP-K-06",
+      "category": "10 Inline",
+      "pages": [
+        142
+      ],
+      "primary_page": 142,
+      "match_details": [
+        {
+          "page": 142,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Hybrid Pro 10ft Modular Backwall Kit 01",
+      "product_sku": "HP-K-01",
+      "category": "10 Inline",
+      "pages": [
+        142
+      ],
+      "primary_page": 142,
+      "match_details": [
+        {
+          "page": 142,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Hybrid Pro 10ft Modular Backwall Kit 27",
+      "product_sku": "HP-K-27",
+      "category": "10 Inline",
+      "pages": [
+        143
+      ],
+      "primary_page": 143,
+      "match_details": [
+        {
+          "page": 143,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Hybrid Pro 10ft Modular Backwall Kit 02",
+      "product_sku": "HP-K-02",
+      "category": "10 Inline",
+      "pages": [
+        142
+      ],
+      "primary_page": 142,
+      "match_details": [
+        {
+          "page": 142,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Hybrid Pro 10ft Modular Backwall Kit 24",
+      "product_sku": "HP-K-24",
+      "category": "10 Inline",
+      "pages": [
+        143
+      ],
+      "primary_page": 143,
+      "match_details": [
+        {
+          "page": 143,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Hybrid Pro Modular Counter 10",
+      "product_sku": "REC-53",
+      "category": "10 Inline",
+      "pages": [
+        153
+      ],
+      "primary_page": 153,
+      "match_details": [
+        {
+          "page": 153,
+          "matched_by": "sku",
+          "sku_found": "REC-53"
+        }
+      ]
+    },
+    {
+      "product_name": "Hybrid Pro 10ft Modular Backwall Kit 04",
+      "product_sku": "HP-K-04",
+      "category": "10 Inline",
+      "pages": [
+        142
+      ],
+      "primary_page": 142,
+      "match_details": [
+        {
+          "page": 142,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Hybrid Pro 20ft Modular Backwall Kit 13",
+      "product_sku": "HP-K-13",
+      "category": "20 Inline",
+      "pages": [
+        145
+      ],
+      "primary_page": 145,
+      "match_details": [
+        {
+          "page": 145,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Hybrid Pro 20ft Modular Backwall Kit 15",
+      "product_sku": "HP-K-15",
+      "category": "20 Inline",
+      "pages": [
+        145
+      ],
+      "primary_page": 145,
+      "match_details": [
+        {
+          "page": 145,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Hybrid Pro 20ft Modular Backwall Kit 25",
+      "product_sku": "HP-K-25",
+      "category": "20 Inline",
+      "pages": [
+        145
+      ],
+      "primary_page": 145,
+      "match_details": [
+        {
+          "page": 145,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Hybrid Pro 20ft Modular Backwall Kit 22",
+      "product_sku": "HP-K-22",
+      "category": "20 Inline",
+      "pages": [
+        145
+      ],
+      "primary_page": 145,
+      "match_details": [
+        {
+          "page": 145,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Hybrid Pro 20ft Modular Backwall Kit 09",
+      "product_sku": "HP-K-09",
+      "category": "20 Inline",
+      "pages": [
+        145
+      ],
+      "primary_page": 145,
+      "match_details": [
+        {
+          "page": 145,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Hybrid Pro 20ft Modular Backwall Kit 14",
+      "product_sku": "HP-K-14",
+      "category": "20 Inline",
+      "pages": [
+        145
+      ],
+      "primary_page": 145,
+      "match_details": [
+        {
+          "page": 145,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Hybrid Pro 20ft Modular Backwall Kit 37",
+      "product_sku": "HP-K-37",
+      "category": "20 Inline",
+      "pages": [
+        145
+      ],
+      "primary_page": 145,
+      "match_details": [
+        {
+          "page": 145,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Hybrid Pro 20ft Modular Backwall Kit 31",
+      "product_sku": "HP-K-31",
+      "category": "20 Inline",
+      "pages": [
+        145
+      ],
+      "primary_page": 145,
+      "match_details": [
+        {
+          "page": 145,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Hybrid Pro 20ft Modular Backwall Kit 10",
+      "product_sku": "HP-K-10",
+      "category": "20 Inline",
+      "pages": [
+        145
+      ],
+      "primary_page": 145,
+      "match_details": [
+        {
+          "page": 145,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Hybrid Pro 20ft Modular Backwall Kit 11",
+      "product_sku": "HP-K-11",
+      "category": "20 Inline",
+      "pages": [
+        145
+      ],
+      "primary_page": 145,
+      "match_details": [
+        {
+          "page": 145,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Hybrid Pro 20ft Modular Backwall Kit 36",
+      "product_sku": "HP-K-36",
+      "category": "20 Inline",
+      "pages": [
+        145
+      ],
+      "primary_page": 145,
+      "match_details": [
+        {
+          "page": 145,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Hercules 13 Orbital Express Truss 20ft Modular Backwall",
+      "product_sku": "OR-K-HC13",
+      "category": "Orbital Express Truss Exhibits",
+      "pages": [
+        175
+      ],
+      "primary_page": 175,
+      "match_details": [
+        {
+          "page": 175,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Luna 2 Orbital Express Truss 20ft Modular Exhibit",
+      "product_sku": "OR-K-LU2",
+      "category": "Orbital Express Truss Exhibits",
+      "pages": [
+        171
+      ],
+      "primary_page": 171,
+      "match_details": [
+        {
+          "page": 171,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Helios Orbital Express Truss 10ft Modular Exhibit",
+      "product_sku": "OR-K-HE1",
+      "category": "Orbital Express Truss Exhibits",
+      "pages": [
+        170
+      ],
+      "primary_page": 170,
+      "match_details": [
+        {
+          "page": 170,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Sirius Orbital Express Truss 10ft Modular Exhibit",
+      "product_sku": "OR-K-SR1",
+      "category": "Orbital Express Truss Exhibits",
+      "pages": [
+        170
+      ],
+      "primary_page": 170,
+      "match_details": [
+        {
+          "page": 170,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Orbea Orbital Express Truss 20ft Modular Exhibit",
+      "product_sku": "OR-K-OB1",
+      "category": "Orbital Express Truss Exhibits",
+      "pages": [
+        171
+      ],
+      "primary_page": 171,
+      "match_details": [
+        {
+          "page": 171,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Hercules 09 Orbital Express Truss 10ft Modular Backwall",
+      "product_sku": "OR-K-HC09",
+      "category": "Orbital Express Truss Exhibits",
+      "pages": [
+        174
+      ],
+      "primary_page": 174,
+      "match_details": [
+        {
+          "page": 174,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Clio Orbital Express Truss 10ft Modular Exhibit",
+      "product_sku": "OR-K-CO1",
+      "category": "Orbital Express Truss Exhibits",
+      "pages": [
+        170
+      ],
+      "primary_page": 170,
+      "match_details": [
+        {
+          "page": 170,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Luna 1 Orbital Express Truss 10ft Modular Exhibit",
+      "product_sku": "OR-K-LU1",
+      "category": "Orbital Express Truss Exhibits",
+      "pages": [
+        170
+      ],
+      "primary_page": 170,
+      "match_details": [
+        {
+          "page": 170,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Lynx Orbital Express Truss 10ft Modular Exhibit",
+      "product_sku": "OR-K-LX1",
+      "category": "Orbital Express Truss Exhibits",
+      "pages": [
+        170
+      ],
+      "primary_page": 170,
+      "match_details": [
+        {
+          "page": 170,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Hercules 08 Orbital Express Truss 10ft Modular Backwall",
+      "product_sku": "OR-K-HC08",
+      "category": "Orbital Express Truss Exhibits",
+      "pages": [
+        174
+      ],
+      "primary_page": 174,
+      "match_details": [
+        {
+          "page": 174,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Hercules 10 Orbital Express Truss 10ft Modular Backwall",
+      "product_sku": "OR-K-HC10",
+      "category": "Orbital Express Truss Exhibits",
+      "pages": [
+        174
+      ],
+      "primary_page": 174,
+      "match_details": [
+        {
+          "page": 174,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Freestanding Monitor Kiosk",
+      "product_sku": "PM4S3-MK",
+      "category": "Modular Kiosks",
+      "pages": [
+        184
+      ],
+      "primary_page": 184,
+      "match_details": [
+        {
+          "page": 184,
+          "matched_by": "name",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Hybrid Pro 20x20 Modular Island Kit 19",
+      "product_sku": "HP-K-19",
+      "category": "Island Exhibits",
+      "pages": [
+        147,
+        148
+      ],
+      "primary_page": 147,
+      "match_details": [
+        {
+          "page": 147,
+          "matched_by": "sku",
+          "sku_found": null
+        },
+        {
+          "page": 148,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Canis Orbital Express Truss 20x20 Modular Island Exhibit",
+      "product_sku": "OR-K-CA1",
+      "category": "Island Exhibits",
+      "pages": [
+        173
+      ],
+      "primary_page": 173,
+      "match_details": [
+        {
+          "page": 173,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    },
+    {
+      "product_name": "Gemini Orbital Express Truss 20x20 Modular Island Exhibit",
+      "product_sku": "OR-K-GE1",
+      "category": "Island Exhibits",
+      "pages": [
+        173
+      ],
+      "primary_page": 173,
+      "match_details": [
+        {
+          "page": 173,
+          "matched_by": "sku",
+          "sku_found": null
+        }
+      ]
+    }
+  ]
+}
