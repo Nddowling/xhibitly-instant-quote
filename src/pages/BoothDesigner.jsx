@@ -36,6 +36,59 @@ export default function BoothDesigner() {
     }, []);
 
     // Start the design process
+    const handleCreateQuote = async () => {
+        try {
+            const user = await base44.auth.me();
+            const order = await base44.entities.Order.create({
+                reference_number: 'XQ-' + Date.now(),
+                dealer_email: user?.email || '',
+                dealer_id: user?.id,
+                dealer_company: user?.company_name || 'Unknown',
+                dealer_name: user?.contact_name || user?.full_name || 'Unknown',
+                dealer_phone: user?.phone || '000-000-0000',
+                booth_size: boothDesign.booth_size || '10x10',
+                show_date: new Date(Date.now() + 30*24*60*60*1000).toISOString().split('T')[0],
+                selected_booth_design_id: boothDesign.id,
+                selected_tier: boothDesign.tier || 'Modular',
+                status: 'Quoted'
+            });
+            
+            let total = 0;
+            const lineItems = [];
+            for(const sku of (boothDesign.product_skus || [])) {
+                const res = await base44.entities.Product.filter({sku});
+                if(res.length > 0) {
+                   const p = res[0];
+                   const price = p.base_price || 0;
+                   lineItems.push({
+                       order_id: order.id,
+                       product_name: p.name,
+                       category: p.category || 'Structures',
+                       quantity: 1,
+                       unit_price: price,
+                       total_price: price,
+                       sku: p.sku
+                   });
+                   total += price;
+                }
+            }
+
+            if (lineItems.length > 0) {
+                await base44.entities.LineItem.bulkCreate(lineItems);
+            }
+
+            await base44.entities.Order.update(order.id, {
+                quoted_price: total,
+                final_price: total
+            });
+            
+            navigate(createPageUrl('OrderDetail') + '?id=' + order.id);
+        } catch (e) {
+            console.error(e);
+            alert("Failed to create quote.");
+        }
+    };
+
     const handleStart = async () => {
         if (!designName) return;
         setStep('loading');
