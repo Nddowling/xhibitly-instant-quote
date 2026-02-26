@@ -176,14 +176,6 @@ export default function Layout({ children, currentPageName }) {
                         Dashboard
                       </Button>
                     </Link>
-                    <Link to={createPageUrl('Pipeline')}>
-                      <Button 
-                        variant="ghost"
-                        className={`text-white hover:bg-white/20 ${currentPageName === 'Pipeline' ? 'border border-white/30' : ''}`}
-                      >
-                        Pipeline
-                      </Button>
-                    </Link>
                     <Link to={createPageUrl('Contacts')}>
                       <Button 
                         variant="ghost"
@@ -350,12 +342,6 @@ export default function Layout({ children, currentPageName }) {
                         <span className="text-white font-medium">Dashboard</span>
                       </div>
                     </Link>
-                    <Link to={createPageUrl('Pipeline')} onClick={() => setMobileMenuOpen(false)}>
-                      <div className={`flex items-center gap-3 px-3 py-3 rounded-lg ${currentPageName === 'Pipeline' ? 'bg-white/15' : 'hover:bg-white/10'}`}>
-                        <TrendingUp className="w-5 h-5 text-white/80" />
-                        <span className="text-white font-medium">Pipeline</span>
-                      </div>
-                    </Link>
                     <Link to={createPageUrl('Contacts')} onClick={() => setMobileMenuOpen(false)}>
                       <div className={`flex items-center gap-3 px-3 py-3 rounded-lg ${currentPageName === 'Contacts' ? 'bg-white/15' : 'hover:bg-white/10'}`}>
                         <FileText className="w-5 h-5 text-white/80" />
@@ -453,16 +439,6 @@ export default function Layout({ children, currentPageName }) {
                   >
                     <LayoutDashboard className="w-5 h-5" />
                     <span className="text-[10px] font-medium">Home</span>
-                  </button>
-                </Link>
-                <Link to={createPageUrl('Pipeline')} className="flex-1">
-                  <button
-                    className={`w-full h-full flex flex-col items-center justify-center gap-0.5 ${
-                      currentPageName === 'Pipeline' ? 'text-[#e2231a]' : 'text-slate-500'
-                    }`}
-                  >
-                    <TrendingUp className="w-5 h-5" />
-                    <span className="text-[10px] font-medium">Pipeline</span>
                   </button>
                 </Link>
                 <Link to={createPageUrl('SalesQuoteStart')} className="flex-1">
