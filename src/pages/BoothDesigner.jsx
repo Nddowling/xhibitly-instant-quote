@@ -477,7 +477,7 @@ function GenerateRenderButton({ boothDesignId, skus }) {
     );
 }
 
-function BoothProductCard({ sku }) {
+function BoothProductCard({ sku, quantity = 1 }) {
     const [product, setProduct] = useState(null);
 
     useEffect(() => {
@@ -499,7 +499,12 @@ function BoothProductCard({ sku }) {
     );
 
     return (
-        <Card className="overflow-hidden hover:shadow-md transition-shadow bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm border-slate-200 dark:border-slate-700">
+        <Card className="overflow-hidden hover:shadow-md transition-shadow bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm border-slate-200 dark:border-slate-700 relative">
+            {quantity > 1 && (
+                <div className="absolute top-2 right-2 z-10 bg-[#e2231a] text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-sm">
+                    x{quantity}
+                </div>
+            )}
             <div className="aspect-square bg-white dark:bg-slate-950 flex items-center justify-center p-4 relative group">
                 {product.image_url ? (
                     <img src={product.image_url} alt={product.name} className="w-full h-full object-contain drop-shadow-sm transition-transform duration-300 group-hover:scale-105" />
