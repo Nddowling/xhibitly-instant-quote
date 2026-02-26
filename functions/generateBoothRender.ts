@@ -37,23 +37,16 @@ Deno.serve(async (req) => {
         const productList = products.map(p => `- ${p.name} (${p.category || 'Display Item'})`).join('\n');
         
         // Build the base prompt with strict constraints
-        let prompt = `STRICT REQUIREMENTS - You MUST follow these rules exactly:
+        let prompt = `Create a photorealistic 3D architectural visualization of a sparse, minimalist exhibition space.
+The space is a completely EMPTY ${design.booth_size} floor area with plain gray carpet and NO default walls, EXCEPT for the exact items listed below.
 
-1. BOOTH SIZE: This is a ${design.booth_size} trade show booth. The dimensions are FIXED and EXACT.
-   ${design.booth_size === '10x10' ? '- 10 feet wide × 10 feet deep' : ''}
-   ${design.booth_size === '10x20' ? '- 10 feet wide × 20 feet deep' : ''}
-   ${design.booth_size === '20x20' ? '- 20 feet wide × 20 feet deep' : ''}
+CRITICAL INSTRUCTION: You must ONLY draw the items in this list. DO NOT draw any counters, TV screens, extra walls, desks, pedestals, or generic trade show booth elements. If an item is not in this list, DO NOT draw it. The space should look empty except for these specific items.
 
-2. PRODUCTS - The booth contains ONLY these items, nothing more:
+ITEMS TO INCLUDE:
 ${productList}
 
-3. CRITICAL: Do NOT add ANY items that are not in the above list. No extra backwalls, counters, tables, chairs, displays, or decorations.
-
-4. SETTING: Professional convention center hall, neutral gray carpet flooring, bright even lighting from above.
-
-5. VIEW: Wide-angle perspective showing the complete booth layout from a 45-degree angle.
-
-Create a photorealistic 3D architectural visualization of this exact booth configuration.`;
+Setting: Bright convention center hall lighting.
+Camera: Wide-angle perspective from a 45-degree angle showing the floor space.`;
 
         // Check if there's a previous image to iterate from
         const existingImageUrl = design.design_image_url;
@@ -61,21 +54,16 @@ Create a photorealistic 3D architectural visualization of this exact booth confi
 
         // If we have a previous render, add iterative instructions
         if (existingImageUrl) {
-            prompt = `ITERATIVE UPDATE - Modify the existing booth render:
+            prompt = `This is an image-to-image edit. Update the existing image to perfectly match this exact list of items.
 
-KEEP UNCHANGED:
-- Booth size (${design.booth_size})
-- Camera angle and perspective
-- Lighting and environment
-- Branding colors and style
-- Floor and background
-
-UPDATE THE PRODUCTS to show ONLY these items:
+CURRENT ITEMS TO SHOW:
 ${productList}
 
-CRITICAL: Remove any products not in the above list. Add any new products from the list that weren't in the previous render. The booth must show EXACTLY the items listed above, no more, no less.
-
-Create the updated photorealistic render maintaining visual consistency with the previous version.`;
+CRITICAL INSTRUCTIONS: 
+1. If any item (like a counter, TV, extra wall, or pedestal) in the existing image is NOT in the list above, you MUST REMOVE IT.
+2. If an item in the list is missing from the image, ADD IT.
+3. Keep the exact same camera angle, lighting, and room background.
+4. DO NOT add any extra furniture, structures, or decorations that aren't in the list. The space must only contain the listed items.`;
         }
 
         const imageRes = await base44.integrations.Core.GenerateImage({
