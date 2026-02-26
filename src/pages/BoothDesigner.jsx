@@ -102,11 +102,51 @@ export default function BoothDesigner() {
         }
     };
 
+    const parseBoothSize = (sizeStr) => {
+        const parts = sizeStr.toLowerCase().split('x');
+        if (parts.length === 2) return { w: parseInt(parts[0]) || 10, d: parseInt(parts[1]) || 10 };
+        return { w: 10, d: 10 };
+    };
+
+    const initializeScene = (project) => {
+        if (project.scene_json) {
+            try {
+                return JSON.parse(project.scene_json);
+            } catch (e) {
+                console.warn('Failed to parse scene_json', e);
+            }
+        }
+        const { w, d } = parseBoothSize(project.booth_size || '10x10');
+        return BoothEngine.createScene(w, d);
+    };
+
+    const saveScene = async (newScene) => {
+        setScene(newScene);
+        if (!boothDesign) return;
+        
+        const skus = newScene.items.map(i => i.sku);
+        const updateData = {
+            scene_json: JSON.stringify(newScene),
+            product_skus: skus
+        };
+        
+        try {
+            await base44.entities.BoothDesign.update(boothDesign.id, updateData);
+            // setBoothDesign will update via subscription, but we can do optimistic update:
+            setBoothDesign(prev => ({ ...prev, ...updateData }));
+        } catch (e) {
+            console.error("Failed to save scene", e);
+        }
+    };
+
     const handleStart = async () => {
         if (!designName) return;
         setStep('loading');
         try {
             const user = await base44.auth.me();
+            const { w, d } = parseBoothSize(boothSize);
+            const initScene = BoothEngine.createScene(w, d);
+            
             const design = await base44.entities.BoothDesign.create({
                 design_name: designName,
                 booth_size: boothSize,
@@ -114,9 +154,11 @@ export default function BoothDesigner() {
                 tier: 'Modular',
                 dealer_id: user?.id,
                 product_skus: [],
-                spatial_layout: []
+                spatial_layout: [],
+                scene_json: JSON.stringify(initScene)
             });
             setBoothDesign(design);
+            setScene(initScene);
 
             const conv = await base44.agents.createConversation({
                 agent_name: 'booth_designer',
@@ -149,12 +191,11 @@ export default function BoothDesigner() {
             setDesignName(project.design_name);
             setBoothSize(project.booth_size);
             setBrandName(project.brand_name || '');
+            setScene(initializeScene(project));
             
             // Find existing conversation for this design
             const conversations = await base44.agents.listConversations({ agent_name: 'booth_designer' });
             
-            // Look for a conversation that has this booth_design_id in metadata
-            // Note: In a real app we'd have a better way to filter, but listConversations might not filter by metadata
             let existingConv = null;
             if (conversations && conversations.length > 0) {
                 existingConv = conversations.find(c => c.metadata?.booth_design_id === project.id);
@@ -163,9 +204,7 @@ export default function BoothDesigner() {
             if (existingConv) {
                 const fullConv = await base44.agents.getConversation(existingConv.id);
                 setConversation(fullConv);
-                // Also need to set messages? The subscription in useEffect will handle it once conversation is set
             } else {
-                // Create new conversation if none exists for this project
                 const conv = await base44.agents.createConversation({
                     agent_name: 'booth_designer',
                     metadata: {
