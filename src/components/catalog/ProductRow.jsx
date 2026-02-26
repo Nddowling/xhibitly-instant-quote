@@ -86,7 +86,7 @@ export default function ProductRow({ product, projectId }) {
                 size="sm" 
                 variant={added ? "secondary" : "default"}
                 onClick={handleAddToProject} 
-                disabled={isAdding || added}
+                disabled={isAdding}
                 className={added ? "bg-green-100 text-green-700 hover:bg-green-200 h-8 text-xs" : "bg-[#e2231a] hover:bg-[#b01b13] h-8 text-xs"}
             >
                 {isAdding ? <Loader2 className="w-3 h-3 animate-spin" /> : added ? <Check className="w-3 h-3 mr-1" /> : <Plus className="w-3 h-3 mr-1" />}
