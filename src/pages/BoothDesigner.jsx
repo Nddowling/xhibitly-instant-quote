@@ -379,6 +379,15 @@ export default function BoothDesigner() {
                         >
                             Open Catalog
                         </Button>
+                        <Button 
+                            variant="default"
+                            size="sm"
+                            className="h-8 shadow-sm bg-[#e2231a] hover:bg-[#b01b13] text-white"
+                            disabled={!boothDesign?.product_skus?.length}
+                            onClick={handleCreateQuote}
+                        >
+                            Create Quote
+                        </Button>
                         <div className="text-sm font-medium text-primary bg-primary/10 px-4 py-1.5 rounded-full border border-primary/20 shadow-sm flex items-center gap-2">
                             <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
                             {boothDesign?.product_skus?.length || 0} Products Added
