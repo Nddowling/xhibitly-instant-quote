@@ -36,6 +36,9 @@ export default function BoothFloorplan({ scene, onMoveItem, onRotateItem, onRemo
     const pxD = scene.booth.d_ft * pixelsPerFoot;
 
     const handlePointerDown = (e, item) => {
+        // Prevent drag if clicking a control button
+        if (e.target.closest('button')) return;
+
         e.preventDefault();
         setDragging({
             id: item.id,
