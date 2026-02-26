@@ -92,7 +92,6 @@ export default function ProjectSelector({ onSelectProject, onNewProject }) {
             // 2. Search Clients (User)
             // Searching users by name or company
             // Note: In a real large DB this should be a backend search.
-            const allUsers = await base44.entities.User.list(); // Warning: Listing all users might be heavy in prod, but ok for now.
             const matchedClients = allUsers.filter(u => 
                 (u.full_name && u.full_name.toLowerCase().includes(lowerTerm)) ||
                 (u.email && u.email.toLowerCase().includes(lowerTerm)) ||
