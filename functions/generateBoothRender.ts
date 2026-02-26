@@ -54,7 +54,10 @@ Deno.serve(async (req) => {
         
         const referenceImageUrls = Array.from(uniqueImageUrls);
 
-        const existingRender = design.design_image_url || null;
+        let existingRender = design.design_image_url || null;
+        if (force_new) {
+            existingRender = null;
+        }
         if (existingRender) {
             referenceImageUrls.push(existingRender);
         }
