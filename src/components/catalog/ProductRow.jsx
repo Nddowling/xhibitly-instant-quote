@@ -75,14 +75,28 @@ export default function ProductRow({ product, projectId }) {
       </div>
 
       {/* Price */}
-      <div className="text-right flex-shrink-0">
-        <div className="text-sm md:text-base font-bold text-slate-900 dark:text-white">
-          ${product.base_price?.toLocaleString()}
+      <div className="text-right flex-shrink-0 flex flex-col items-end gap-2">
+        <div>
+          <div className="text-sm md:text-base font-bold text-slate-900 dark:text-white">
+            ${product.base_price?.toLocaleString()}
+          </div>
+          {product.is_rental && product.rental_price && (
+            <div className="text-[10px] text-[#e2231a]">${product.rental_price?.toLocaleString()}/event</div>
+          )}
+          <div className="text-[10px] text-slate-400 mt-0.5">{product.price_tier}</div>
         </div>
-        {product.is_rental && product.rental_price && (
-          <div className="text-[10px] text-[#e2231a]">${product.rental_price?.toLocaleString()}/event</div>
+        {projectId && (
+            <Button 
+                size="sm" 
+                variant={added ? "secondary" : "default"}
+                onClick={handleAddToProject} 
+                disabled={isAdding || added}
+                className={added ? "bg-green-100 text-green-700 hover:bg-green-200 h-8 text-xs" : "bg-[#e2231a] hover:bg-[#b01b13] h-8 text-xs"}
+            >
+                {isAdding ? <Loader2 className="w-3 h-3 animate-spin" /> : added ? <Check className="w-3 h-3 mr-1" /> : <Plus className="w-3 h-3 mr-1" />}
+                {added ? "Added" : "Add to Project"}
+            </Button>
         )}
-        <div className="text-[10px] text-slate-400 mt-0.5">{product.price_tier}</div>
       </div>
     </Link>
   );
