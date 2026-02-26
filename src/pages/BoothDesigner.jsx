@@ -409,7 +409,7 @@ export default function BoothDesigner() {
                         <div className="w-full bg-slate-100 dark:bg-slate-800/50 rounded-xl mb-6 border border-slate-200 dark:border-slate-700 overflow-hidden relative group shrink-0">
                             {boothDesign?.design_image_url ? (
                                 <div className="relative w-full aspect-[16/9]">
-                                    <img src={boothDesign.design_image_url} alt="Booth Render" className="w-full h-full object-cover" />
+                                    <img src={`${boothDesign.design_image_url}${boothDesign.design_image_url.includes('?') ? '&' : '?'}t=${new Date(boothDesign.render_generated_at || Date.now()).getTime()}`} alt="Booth Render" className="w-full h-full object-cover" />
                                     <div className="absolute top-4 right-4">
                                         <GenerateRenderButton boothDesignId={boothDesign.id} skus={boothDesign?.product_skus} />
                                     </div>
