@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Box, RotateCcw, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-export default function BoothFloorplan({ scene, onMoveItem, onRotateItem, onRemoveItem }) {
+export default function BoothFloorplan({ scene, onMoveItem, onRotateItem, onRemoveItem, brandName }) {
     const containerRef = useRef(null);
     const [dragging, setDragging] = useState(null); // { id, startX, startY, startMouseX, startMouseY }
     const [hoveredItem, setHoveredItem] = useState(null);
