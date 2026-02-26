@@ -16,6 +16,7 @@ export default function BoothDesigner() {
     const [boothSize, setBoothSize] = useState('10x10');
     const [designName, setDesignName] = useState('');
     const [boothDesign, setBoothDesign] = useState(null);
+    const [brandName, setBrandName] = useState('');
     const [conversation, setConversation] = useState(null);
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
