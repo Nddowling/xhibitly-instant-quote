@@ -283,17 +283,9 @@ export default function Layout({ children, currentPageName }) {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-44">
-                    <DropdownMenuItem onClick={() => handleSwitchUserType('customer')}>
-                      <User className="w-4 h-4 mr-2" />
-                      Customer
-                    </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => handleSwitchUserType('sales_rep')}>
                       <Users className="w-4 h-4 mr-2" />
                       Sales Rep
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => handleSwitchUserType('student')}>
-                      <GraduationCap className="w-4 h-4 mr-2" />
-                      Student
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
