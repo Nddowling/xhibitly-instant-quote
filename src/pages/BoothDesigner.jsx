@@ -6,12 +6,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { Card, CardContent } from '@/components/ui/card';
-import { Loader2, Send, Box, LayoutTemplate, Image as ImageIcon } from 'lucide-react';
+import { Loader2, Send, Box, LayoutTemplate, Image as ImageIcon, ArrowLeft } from 'lucide-react';
 import MessageBubble from '@/components/agents/MessageBubble';
+import ProjectSelector from '@/components/booth/ProjectSelector';
 
 export default function BoothDesigner() {
     const navigate = useNavigate();
-    const [step, setStep] = useState('setup'); // setup, loading, designing
+    const [step, setStep] = useState('selector'); // selector, setup, loading, designing
     const [boothSize, setBoothSize] = useState('10x10');
     const [designName, setDesignName] = useState('');
     const [boothDesign, setBoothDesign] = useState(null);
@@ -57,6 +58,49 @@ export default function BoothDesigner() {
             console.error(error);
             alert('Failed to start session');
             setStep('setup');
+        }
+    };
+
+    // Load existing project
+    const handleSelectProject = async (project) => {
+        setStep('loading');
+        try {
+            setBoothDesign(project);
+            setDesignName(project.design_name);
+            setBoothSize(project.booth_size);
+            
+            // Find existing conversation for this design
+            const conversations = await base44.agents.listConversations({ agent_name: 'booth_designer' });
+            
+            // Look for a conversation that has this booth_design_id in metadata
+            // Note: In a real app we'd have a better way to filter, but listConversations might not filter by metadata
+            let existingConv = null;
+            if (conversations && conversations.length > 0) {
+                existingConv = conversations.find(c => c.metadata?.booth_design_id === project.id);
+            }
+            
+            if (existingConv) {
+                const fullConv = await base44.agents.getConversation(existingConv.id);
+                setConversation(fullConv);
+                // Also need to set messages? The subscription in useEffect will handle it once conversation is set
+            } else {
+                // Create new conversation if none exists for this project
+                const conv = await base44.agents.createConversation({
+                    agent_name: 'booth_designer',
+                    metadata: {
+                        name: `Design Session: ${project.design_name}`,
+                        booth_design_id: project.id,
+                        booth_size: project.booth_size
+                    }
+                });
+                setConversation(conv);
+            }
+            
+            setStep('designing');
+        } catch (error) {
+            console.error("Error loading project:", error);
+            alert("Failed to load project");
+            setStep('selector');
         }
     };
 
@@ -112,17 +156,37 @@ export default function BoothDesigner() {
         }
     };
 
-    // SETUP SCREEN
+    // SELECTOR / SETUP SCREEN
+    if (step === 'selector') {
+        return (
+            <div className="pt-10 px-4 pb-20">
+                <ProjectSelector 
+                    onSelectProject={handleSelectProject} 
+                    onNewProject={() => setStep('setup')} 
+                />
+            </div>
+        );
+    }
+
     if (step === 'setup' || step === 'loading') {
         return (
             <div className="max-w-md mx-auto mt-20 p-6 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800">
+                <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="mb-4 text-slate-500 hover:text-primary"
+                    onClick={() => setStep('selector')}
+                >
+                    <ArrowLeft className="w-4 h-4 mr-1" />
+                    Back to Projects
+                </Button>
                 <div className="flex justify-center mb-6">
                     <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/5 text-primary rounded-2xl flex items-center justify-center shadow-inner border border-primary/20 rotate-3 transition-transform hover:rotate-6">
                         <LayoutTemplate className="w-8 h-8" />
                     </div>
                 </div>
-                <h1 className="text-2xl font-bold text-center mb-2 text-slate-900 dark:text-white">AI Booth Designer</h1>
-                <p className="text-slate-500 text-center mb-8">Set up your space and let our AI agent help you furnish it with catalog products.</p>
+                <h1 className="text-2xl font-bold text-center mb-2 text-slate-900 dark:text-white">New Booth Project</h1>
+                <p className="text-slate-500 text-center mb-8">Set up your space and let our AI agent help you furnish it.</p>
                 
                 <div className="space-y-4 text-slate-900 dark:text-white">
                     <div>
