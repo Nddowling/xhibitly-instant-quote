@@ -208,6 +208,11 @@ export default function BoothDesigner() {
                         <Input value={designName} onChange={e => setDesignName(e.target.value)} placeholder="e.g. CES 2026 Booth" />
                     </div>
                     <div>
+                        <label className="block text-sm font-medium mb-1">Brand Name (Optional)</label>
+                        <Input value={brandName} onChange={e => setBrandName(e.target.value)} placeholder="e.g. Nike, Apple, Nexus" />
+                        <p className="text-xs text-slate-500 mt-1">This will be applied to the booth render graphics.</p>
+                    </div>
+                    <div>
                         <label className="block text-sm font-medium mb-2">Booth Size</label>
                         <div className="grid grid-cols-3 gap-2">
                             {['10x10', '10x20', '20x20'].map(size => (
