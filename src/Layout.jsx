@@ -371,10 +371,8 @@ export default function Layout({ children, currentPageName }) {
 
                 <div className="h-px bg-white/10 my-1" />
                 <div className="px-3 py-2 text-white/60 text-xs font-medium uppercase tracking-wide">Switch Role</div>
-                <div className="grid grid-cols-3 gap-2 px-3 pb-1">
-                  <button onClick={() => handleSwitchUserType('customer')} className={`py-2.5 rounded-lg text-white text-xs font-medium text-center ${!user?.is_sales_rep && user?.user_type !== 'student' ? 'bg-white/25 ring-1 ring-white/30' : 'bg-white/10'}`}>Customer</button>
+                <div className="grid grid-cols-1 gap-2 px-3 pb-1">
                   <button onClick={() => handleSwitchUserType('sales_rep')} className={`py-2.5 rounded-lg text-white text-xs font-medium text-center ${user?.is_sales_rep ? 'bg-white/25 ring-1 ring-white/30' : 'bg-white/10'}`}>Sales Rep</button>
-                  <button onClick={() => handleSwitchUserType('student')} className={`py-2.5 rounded-lg text-white text-xs font-medium text-center ${user?.user_type === 'student' ? 'bg-white/25 ring-1 ring-white/30' : 'bg-white/10'}`}>Student</button>
                 </div>
 
                 <div className="h-px bg-white/10 my-1" />
