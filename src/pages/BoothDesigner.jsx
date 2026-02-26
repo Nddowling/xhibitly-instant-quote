@@ -183,6 +183,53 @@ export default function BoothDesigner() {
         }
     };
 
+    const reconcileSceneWithSkus = async (initialScene, design) => {
+        if (!design.product_skus || design.product_skus.length === 0) return initialScene;
+        
+        let updatedScene = { ...initialScene, items: [...initialScene.items] };
+        let changed = false;
+        
+        const dbCounts = design.product_skus.reduce((acc, s) => { acc[s] = (acc[s]||0)+1; return acc; }, {});
+        const sceneCounts = updatedScene.items.map(i => i.sku).reduce((acc, s) => { acc[s] = (acc[s]||0)+1; return acc; }, {});
+        
+        for (const [sku, count] of Object.entries(dbCounts)) {
+            const currentCount = sceneCounts[sku] || 0;
+            if (count > currentCount) {
+                // Fetch product for details
+                let product = null;
+                try {
+                    const res = await base44.entities.Product.filter({sku});
+                    if (res.length > 0) product = res[0];
+                } catch(e) {}
+                
+                const { w, d } = getProductDimensions(product);
+                
+                for(let i=0; i < (count - currentCount); i++) {
+                    const res = BoothEngine.addItem(
+                        updatedScene, 
+                        sku, 
+                        product?.name || sku, 
+                        product?.image_url || null, 
+                        w, 
+                        d, 
+                        'center'
+                    );
+                    if (res.success) {
+                        updatedScene = res.scene;
+                        changed = true;
+                    }
+                }
+            }
+        }
+        
+        if (changed) {
+            // Update the DB in the background
+            base44.entities.BoothDesign.update(design.id, { scene_json: JSON.stringify(updatedScene) });
+        }
+        
+        return updatedScene;
+    };
+
     // Load existing project
     const handleSelectProject = async (project) => {
         setStep('loading');
@@ -191,7 +238,10 @@ export default function BoothDesigner() {
             setDesignName(project.design_name);
             setBoothSize(project.booth_size);
             setBrandName(project.brand_name || '');
-            setScene(initializeScene(project));
+            
+            const initialScene = initializeScene(project);
+            const reconciledScene = await reconcileSceneWithSkus(initialScene, project);
+            setScene(reconciledScene);
             
             // Find existing conversation for this design
             const conversations = await base44.agents.listConversations({ agent_name: 'booth_designer' });
