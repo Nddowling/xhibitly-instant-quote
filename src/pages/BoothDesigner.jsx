@@ -22,6 +22,18 @@ export default function BoothDesigner() {
     const [isSending, setIsSending] = useState(false);
     const scrollRef = useRef(null);
 
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const projectId = urlParams.get('projectId');
+        if (projectId && step === 'selector') {
+            base44.entities.BoothDesign.get(projectId).then(project => {
+                if (project) {
+                    handleSelectProject(project);
+                }
+            }).catch(console.error);
+        }
+    }, []);
+
     // Start the design process
     const handleStart = async () => {
         if (!designName) return;
