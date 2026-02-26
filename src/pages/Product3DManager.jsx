@@ -145,7 +145,7 @@ export default function Product3DManager() {
             {searchResults.length > 0 ? (
               <div className="space-y-2">
                 {searchResults.map(p => (
-                  <ProductRow key={p.id} product={p} />
+                  <ProductRow key={p.id} product={p} projectId={projectId} />
                 ))}
               </div>
             ) : (
@@ -192,7 +192,7 @@ export default function Product3DManager() {
             {categoryProducts.length > 0 ? (
               <div className="space-y-2">
                 {categoryProducts.map(p => (
-                  <ProductRow key={p.id} product={p} />
+                  <ProductRow key={p.id} product={p} projectId={projectId} />
                 ))}
               </div>
             ) : (
