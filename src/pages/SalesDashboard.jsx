@@ -412,13 +412,11 @@ export default function SalesDashboard() {
                   <CardDescription>Drag deals between stages to update status</CardDescription>
                 </div>
                 <Button 
-                  variant="outline"
-                  size="sm"
                   onClick={() => navigate(createPageUrl('Pipeline'))}
-                  className="text-xs"
+                  className="bg-[#e2231a] hover:bg-[#b01b13]"
                 >
-                  Table View
-                  <ArrowRight className="w-3 h-3 ml-1" />
+                  View Full Pipeline
+                  <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </div>
             </CardHeader>
