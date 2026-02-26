@@ -90,6 +90,10 @@ Deno.serve(async (req) => {
             ? `The exhibiting company is in the "${design.brand_identity.industry}" industry. Their branding should align with this industry.`
             : '';
 
+        const layoutNote = design.layout_instructions
+            ? `LAYOUT INSTRUCTIONS: The user has requested the following placement: "${design.layout_instructions}". You MUST follow these positioning rules strictly.`
+            : 'Arrange the products naturally within the booth boundary. Larger items (backwalls, fabric structures) at the rear; counters and stands toward the front.';
+
         // ── Compose the prompt ─────────────────────────────────────────────
         let prompt;
 
@@ -107,6 +111,7 @@ REFERENCE IMAGES: The earlier images show the individual products. The last imag
 RULES:
 - Remove any products from the previous render that are NOT in the list above.
 - Add any new products from the list that were not in the previous render.
+- ${layoutNote}
 - Do NOT invent, add, or imply any unlisted furniture, displays, counters, chairs, stands, or decor.
 - Keep the same backdrop, floor, lighting, camera angle, and brand graphics as the previous render.
 - ${brandingNote}
@@ -123,7 +128,7 @@ ${productManifest}
 VISUAL REQUIREMENTS:
 - Render from a 3/4 perspective (approx 45-degree angle) showing the full booth footprint.
 - Convention center setting: polished concrete or neutral gray carpet floor, high ceiling, bright even overhead lighting.
-- Arrange the products naturally within the booth boundary. Larger items (backwalls, fabric structures) at the rear; counters and stands toward the front.
+- ${layoutNote}
 - ${brandingNote}
 - ${companyNote}
 
