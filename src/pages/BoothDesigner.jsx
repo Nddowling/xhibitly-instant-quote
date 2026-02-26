@@ -620,6 +620,7 @@ export default function BoothDesigner() {
                                     onMoveItem={handleMoveItem}
                                     onRotateItem={handleRotateItem}
                                     onRemoveItem={handleRemoveItem}
+                                    brandName={brandName || boothDesign?.brand_name}
                                 />
                             ) : (
                                 boothDesign?.design_image_url ? (
