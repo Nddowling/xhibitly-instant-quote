@@ -37,8 +37,9 @@ Deno.serve(async (req) => {
         const productDescriptions = products.map(p => p.name).join(', ');
         
         const prompt = `A highly detailed, photorealistic 3D architectural render of a ${design.booth_size || '10x20'} trade show booth. 
-The booth features the following exhibition elements: ${productDescriptions}. 
-The setting is a brightly lit, professional convention center hall. Modern design, clean lines, professional exhibition lighting. 
+CRITICAL INSTRUCTION: The booth MUST ONLY feature the following exhibition elements: ${productDescriptions}. 
+DO NOT include any other structures, backwalls, counters, tables, or furniture that are not explicitly listed. The space should be empty except for these specific items.
+The setting is a brightly lit, professional convention center hall with a clean, neutral floor. Modern design, clean lines, professional exhibition lighting. 
 The perspective is a wide-angle isometric or perspective view showing the entire booth setup. Highly detailed, 8k resolution, architectural visualization.`;
 
         const imageRes = await base44.integrations.Core.GenerateImage({
