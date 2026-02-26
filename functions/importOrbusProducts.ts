@@ -133,71 +133,75 @@ Deno.serve(async (req) => {
             skipped: []
         };
 
-        // Process in batches
+        // Process in batches using bulkCreate
         for (let i = 0; i < toImport.length; i += batch_size) {
             const batch = toImport.slice(i, i + batch_size);
             console.log(`Processing batch ${Math.floor(i / batch_size) + 1}/${Math.ceil(toImport.length / batch_size)}...`);
 
+            const batchEntities = [];
             for (const product of batch) {
-                try {
-                    // Get catalog page mapping
-                    const pageMapping = pageMap.get(product.sku);
+                // Get catalog page mapping
+                const pageMapping = pageMap.get(product.sku);
 
-                    // Prepare image URL (use first image)
-                    const imageUrl = (product.images && product.images.length > 0)
-                        ? product.images[0].url
-                        : null;
+                // Prepare image URL (use first image)
+                const imageUrl = (product.images && product.images.length > 0)
+                    ? product.images[0].url
+                    : null;
 
-                    // Prepare download URLs
-                    const templates = (product.downloads || [])
-                        .filter(d => d.asset_type === 'template')
-                        .map(d => d.url);
+                // Prepare download URLs
+                const templates = (product.downloads || [])
+                    .filter(d => d.asset_type === 'template')
+                    .map(d => d.url);
 
-                    const instructions = (product.downloads || [])
-                        .filter(d => d.asset_type === 'setup_guide')
-                        .map(d => d.url);
+                const instructions = (product.downloads || [])
+                    .filter(d => d.asset_type === 'setup_guide')
+                    .map(d => d.url);
 
-                    // Create product in Base44
-                    const created = await base44.asServiceRole.entities.Product.create({
-                        sku: product.sku,
-                        name: product.name,
-                        category: product.category || 'Uncategorized',
-                        subcategory: product.subcategory || null,
-                        description: product.description || '',
-                        image_url: imageUrl,
+                batchEntities.push({
+                    sku: product.sku,
+                    name: product.name,
+                    category: product.category || 'Uncategorized',
+                    subcategory: product.subcategory || null,
+                    description: product.description || '',
+                    image_url: imageUrl,
 
-                        // Pricing (you may need to set these separately)
-                        base_price: product.price ? parseFloat(product.price.replace(/[^0-9.]/g, '')) : null,
-                        market_value: null, // To be enriched later
+                    // Pricing
+                    base_price: product.price ? parseFloat(product.price.replace(/[^0-9.]/g, '')) : null,
+                    market_value: null,
 
-                        // Catalog references
-                        handbook_page: pageMapping?.primary_page?.toString() || null,
-                        catalog_pages: pageMapping?.pages || [],
-                        product_url: product.url || null,
+                    // Catalog references
+                    handbook_page: pageMapping?.primary_page?.toString() || null,
+                    catalog_pages: pageMapping?.pages || [],
+                    product_url: product.url || null,
 
-                        // Downloads
-                        template_urls: templates,
-                        instruction_urls: instructions,
+                    // Downloads
+                    template_urls: templates,
+                    instruction_urls: instructions,
 
-                        // Metadata
-                        sizes: product.sizes || [],
-                        colors: product.colors || [],
-                        features: product.features || [],
-                        raw_attributes: product.raw_attributes || {},
+                    // Metadata
+                    sizes: product.sizes || [],
+                    colors: product.colors || [],
+                    features: product.features || [],
+                    raw_attributes: product.raw_attributes || {},
 
-                        // Source tracking
-                        source: 'orbus_catalog_scrape',
-                        imported_at: new Date().toISOString()
-                    });
+                    // Source tracking
+                    source: 'orbus_catalog_scrape',
+                    imported_at: new Date().toISOString()
+                });
+            }
 
+            try {
+                const createdBatch = await base44.asServiceRole.entities.Product.bulkCreate(batchEntities);
+                for (let j = 0; j < createdBatch.length; j++) {
                     results.imported.push({
-                        sku: product.sku,
-                        name: product.name,
-                        id: created.id
+                        sku: batchEntities[j].sku,
+                        name: batchEntities[j].name,
+                        id: createdBatch[j].id
                     });
-
-                } catch (error) {
-                    console.error(`Failed to import ${product.sku}:`, error.message);
+                }
+            } catch (error) {
+                console.error(`Failed to import batch ${Math.floor(i / batch_size) + 1}:`, error.message);
+                for (const product of batchEntities) {
                     results.failed.push({
                         sku: product.sku,
                         name: product.name,
