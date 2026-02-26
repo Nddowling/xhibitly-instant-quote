@@ -240,10 +240,26 @@ export default function BoothDesigner() {
         }
     }, [conversation, step]);
 
+    // Helper to extract numeric dimensions or defaults
+    const getProductDimensions = (product) => {
+        // Simple heuristic: default backwalls are wider (10x1), counters smaller (3x2), etc.
+        const cat = (product?.category || '').toLowerCase();
+        let w = 3;
+        let d = 2;
+        if (cat.includes('backwall') || cat.includes('display')) {
+            w = 10; d = 1;
+        } else if (cat.includes('counter') || cat.includes('podium')) {
+            w = 3; d = 2;
+        } else if (cat.includes('banner')) {
+            w = 3; d = 1;
+        }
+        return { w, d };
+    };
+
     // Subscribe to the booth design entity to see added products live
     useEffect(() => {
         if (boothDesign && step === 'designing') {
-            const unsub = base44.entities.BoothDesign.subscribe((event) => {
+            const unsub = base44.entities.BoothDesign.subscribe(async (event) => {
                 if (event.type === 'update' && event.id === boothDesign.id) {
                     const newData = event.data;
                     setBoothDesign(newData);
@@ -251,21 +267,35 @@ export default function BoothDesigner() {
                     // Sync AI-added products into our scene
                     if (scene && newData.product_skus) {
                         const sceneSkus = scene.items.map(i => i.sku);
-                        // Find what was added by comparing arrays
-                        // A naive approach: if newData has more skus than scene, try to add them
                         if (newData.product_skus.length > sceneSkus.length) {
                             let updatedScene = { ...scene };
                             let changed = false;
                             
-                            // Just a naive diff for now: try to add any sku that appears more times in DB than in scene
                             const dbCounts = newData.product_skus.reduce((acc, s) => { acc[s] = (acc[s]||0)+1; return acc; }, {});
                             const sceneCounts = sceneSkus.reduce((acc, s) => { acc[s] = (acc[s]||0)+1; return acc; }, {});
                             
                             for (const [sku, count] of Object.entries(dbCounts)) {
                                 const currentCount = sceneCounts[sku] || 0;
                                 if (count > currentCount) {
+                                    // Fetch product to get name/image/dimensions
+                                    let product = null;
+                                    try {
+                                        const res = await base44.entities.Product.filter({sku});
+                                        if (res.length > 0) product = res[0];
+                                    } catch(e) {}
+                                    
+                                    const { w, d } = getProductDimensions(product);
+                                    
                                     for(let i=0; i < (count - currentCount); i++) {
-                                        const res = BoothEngine.addItem(updatedScene, sku, sku, null, 3, 1, 'center');
+                                        const res = BoothEngine.addItem(
+                                            updatedScene, 
+                                            sku, 
+                                            product?.name || sku, 
+                                            product?.image_url || null, 
+                                            w, 
+                                            d, 
+                                            'center'
+                                        );
                                         if (res.success) {
                                             updatedScene = res.scene;
                                             changed = true;
