@@ -1,10 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
 // updated product row
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import { Plus, Loader2, Check } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
+import { toast } from "sonner";
 
-export default function ProductRow({ product }) {
+export default function ProductRow({ product, projectId }) {
+  const [isAdding, setIsAdding] = useState(false);
+  const [added, setAdded] = useState(false);
+
+  const handleAddToProject = async (e) => {
+    e.preventDefault(); // prevent navigation
+    if (!projectId) return;
+    setIsAdding(true);
+    try {
+        const design = await base44.entities.BoothDesign.get(projectId);
+        const skus = design.product_skus || [];
+        if (!skus.includes(product.sku)) {
+            skus.push(product.sku);
+            await base44.entities.BoothDesign.update(projectId, { product_skus: skus });
+            toast.success(`Added ${product.name} to project`);
+            setAdded(true);
+            setTimeout(() => setAdded(false), 3000);
+        } else {
+            toast.info(`Product is already in the project`);
+        }
+    } catch (err) {
+        toast.error('Failed to add product');
+    } finally {
+        setIsAdding(false);
+    }
+  };
+
   return (
     <Link to={`${createPageUrl('ProductDetail')}?id=${product.id}`} className="flex items-center gap-4 p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 hover:shadow-md transition-shadow cursor-pointer">
       {/* Thumbnail */}
