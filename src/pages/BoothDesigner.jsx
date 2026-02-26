@@ -82,6 +82,7 @@ export default function BoothDesigner() {
             setBoothDesign(project);
             setDesignName(project.design_name);
             setBoothSize(project.booth_size);
+            setBrandName(project.brand_name || '');
             
             // Find existing conversation for this design
             const conversations = await base44.agents.listConversations({ agent_name: 'booth_designer' });
