@@ -39,13 +39,15 @@ Deno.serve(async (req) => {
         }
 
         // ── Collect reference images ────────────────────────────────────────
-        const referenceImageUrls = [];
+        const uniqueImageUrls = new Set();
 
         for (const p of products) {
             if (p.image_url) {
-                referenceImageUrls.push(p.image_url);
+                uniqueImageUrls.add(p.image_url);
             }
         }
+        
+        const referenceImageUrls = Array.from(uniqueImageUrls);
 
         const existingRender = design.design_image_url || null;
         if (existingRender) {
