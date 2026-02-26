@@ -73,11 +73,20 @@ Deno.serve(async (req) => {
 
         // ── Build branding context ─────────────────────────────────────────
         const brandColor = design.brand_identity?.primary_color;
-        const brandingNote = brandColor
-            ? `Branding: Use the client's brand colors (Primary: ${brandColor}) on all graphics and fabric panels.`
-            : 'Branding: Use neutral professional branding unless color is visible in reference images.';
+        
+        // Use custom brand_name from the design if it exists, otherwise fall back to industry context
+        const brandName = design.brand_name || (design.brand_identity?.name || '');
+        
+        let brandingNote = 'Branding: Use neutral professional branding unless color is visible in reference images.';
+        if (brandColor && brandName) {
+            brandingNote = `Branding: All displays, banners, and backwalls MUST prominently feature the brand name "${brandName}" and use the brand color ${brandColor}.`;
+        } else if (brandName) {
+            brandingNote = `Branding: All displays, banners, and backwalls MUST prominently feature the brand name "${brandName}".`;
+        } else if (brandColor) {
+            brandingNote = `Branding: Use the client's brand colors (Primary: ${brandColor}) on all graphics and fabric panels.`;
+        }
 
-        const companyNote = design.brand_identity?.industry
+        const companyNote = design.brand_identity?.industry && !brandName
             ? `The exhibiting company is in the "${design.brand_identity.industry}" industry. Their branding should align with this industry.`
             : '';
 
