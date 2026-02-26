@@ -53,23 +53,29 @@ export default function BoothDesigner() {
                 status: 'Quoted'
             });
             
+            const skuCounts = (boothDesign.product_skus || []).reduce((acc, sku) => {
+                acc[sku] = (acc[sku] || 0) + 1;
+                return acc;
+            }, {});
+
             let total = 0;
             const lineItems = [];
-            for(const sku of (boothDesign.product_skus || [])) {
+            for(const [sku, quantity] of Object.entries(skuCounts)) {
                 const res = await base44.entities.Product.filter({sku});
                 if(res.length > 0) {
                    const p = res[0];
                    const price = p.base_price || 0;
+                   const lineTotal = price * quantity;
                    lineItems.push({
                        order_id: order.id,
                        product_name: p.name,
                        category: p.category || 'Structures',
-                       quantity: 1,
+                       quantity: quantity,
                        unit_price: price,
-                       total_price: price,
+                       total_price: lineTotal,
                        sku: p.sku
                    });
-                   total += price;
+                   total += lineTotal;
                 }
             }
 
