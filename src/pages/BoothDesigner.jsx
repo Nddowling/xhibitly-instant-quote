@@ -203,7 +203,7 @@ export default function BoothDesigner() {
                 } catch(e) {}
 
                 const { w: bW, d: bD } = parseBoothSize(design.booth_size || boothSize);
-                const { w, d, isFlooring } = getProductDimensions(product, bW, bD);
+                const { w, d, isFlooring } = getProductDimensions(product, sku, bW, bD);
 
                 for(let i=0; i < (count - currentCount); i++) {
                     const res = BoothEngine.addItem(
@@ -293,9 +293,9 @@ export default function BoothDesigner() {
     }, [conversation, step]);
 
     // Helper to extract numeric dimensions or defaults
-    const getProductDimensions = (product, boothW = 10, boothD = 10) => {
+    const getProductDimensions = (product, sku, boothW = 10, boothD = 10) => {
         const cat = (product?.category || '').toLowerCase();
-        const name = (product?.name || '').toLowerCase();
+        const name = (product?.name || sku || '').toLowerCase();
         let w = 3;
         let d = 2;
         let isFlooring = false;
@@ -305,9 +305,9 @@ export default function BoothDesigner() {
             return { w: boothW, d: boothD, isFlooring: true };
         }
 
-        // Try to find sizes like "20ft", "10ft", "20'", "10'"
+        // Try to find sizes like "20ft", "10ft", "20'", "10'", "20-ft"
         let extractedW = null;
-        const ftMatch = name.match(/(\d+)\s*(ft|')/);
+        const ftMatch = name.match(/(\d+)[-\s]*(ft|')/);
         if (ftMatch) {
             extractedW = parseInt(ftMatch[1]);
         }
@@ -320,11 +320,11 @@ export default function BoothDesigner() {
         // Apply width and sensible depth based on type
         if (cat.includes('backwall') || cat.includes('display') || name.includes('wall')) {
             w = extractedW || 10; 
-            d = 1;
-        } else if (cat.includes('counter') || cat.includes('podium')) {
+            d = 2; // Make backwalls 2ft deep instead of 1ft so they are easier to grab
+        } else if (cat.includes('counter') || cat.includes('podium') || name.includes('counter')) {
             w = extractedW || 3; 
             d = 2;
-        } else if (cat.includes('banner')) {
+        } else if (cat.includes('banner') || name.includes('banner')) {
             w = extractedW || 3; 
             d = 1;
         } else if (extractedW) {
@@ -363,7 +363,7 @@ export default function BoothDesigner() {
                                     } catch(e) {}
                                     
                                     const { w: bW, d: bD } = parseBoothSize(newData.booth_size || '10x10');
-                                    const { w, d, isFlooring } = getProductDimensions(product, bW, bD);
+                                    const { w, d, isFlooring } = getProductDimensions(product, sku, bW, bD);
                                     
                                     for(let i=0; i < (count - currentCount); i++) {
                                         const res = BoothEngine.addItem(
