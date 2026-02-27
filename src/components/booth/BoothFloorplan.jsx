@@ -91,7 +91,7 @@ export default function BoothFloorplan({ scene, onMoveItem, onRotateItem, onRemo
                 </div>
 
                 {/* Items */}
-                {scene.items.map(item => {
+                {scene.items.slice().sort((a, b) => (a.isFlooring === b.isFlooring ? 0 : a.isFlooring ? -1 : 1)).map(item => {
                     const isRotated = item.rot === 90 || item.rot === 270;
                     const wFt = isRotated ? item.d : item.w;
                     const dFt = isRotated ? item.w : item.d;
@@ -110,6 +110,7 @@ export default function BoothFloorplan({ scene, onMoveItem, onRotateItem, onRemo
                             className={`absolute border-2 transition-colors duration-150 flex flex-col items-center justify-center ${
                                 isDragging ? 'border-primary bg-primary/20 cursor-grabbing z-50' : 
                                 isHovered ? 'border-primary/70 bg-primary/10 cursor-grab z-40' : 
+                                item.isFlooring ? 'border-slate-300 dark:border-slate-800 bg-slate-200/50 dark:bg-slate-800/30 cursor-grab z-0' :
                                 'border-slate-800 bg-slate-800/10 cursor-grab z-10'
                             }`}
                             style={{
