@@ -60,6 +60,17 @@ export default function Product3DManager() {
   // Get current category info
   const activeCategory = megaCategories.find(c => c.slug === activeCategorySlug);
   const activeCategoryName = activeCategory?.name || null;
+  
+  let activeSubcategoryName = null;
+  if (activeCategory && activeSubcategorySlug) {
+    for (const sub of activeCategory.subcategories) {
+      const found = sub.children?.find(c => c.slug === activeSubcategorySlug);
+      if (found) {
+        activeSubcategoryName = found.name;
+        break;
+      }
+    }
+  }
 
   // Filter products based on URL category/subcategory
   const getFilteredProducts = () => {
