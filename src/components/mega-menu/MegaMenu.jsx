@@ -1,0 +1,76 @@
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { ChevronDown } from 'lucide-react';
+import { createPageUrl } from '@/utils';
+
+export default function MegaMenu({ categories = [] }) {
+  const [activeItem, setActiveItem] = useState(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  return (
+    <nav className="mega-menu-container">
+      <button 
+        className="mobile-menu-toggle" 
+        onClick={() => setMobileOpen(!mobileOpen)}
+      >
+        <span />
+        <span />
+        <span />
+      </button>
+
+      <ul className={`mega-menu ${mobileOpen ? 'mobile-open' : ''}`}>
+        {categories.map((category, idx) => (
+          <li 
+            key={idx} 
+            className={`menu-item ${category.subcategories?.length ? 'has-dropdown' : ''} ${activeItem === idx ? 'active' : ''}`}
+            onMouseEnter={() => setActiveItem(idx)}
+            onMouseLeave={() => setActiveItem(null)}
+            onClick={() => {
+              if (window.innerWidth <= 768) {
+                setActiveItem(activeItem === idx ? null : idx);
+              }
+            }}
+          >
+            <div className="menu-link">
+              <span>{category.name}</span>
+              {category.subcategories?.length > 0 && (
+                <ChevronDown className="dropdown-arrow w-4 h-4" />
+              )}
+            </div>
+
+            {category.subcategories?.length > 0 && (
+              <div className="mega-dropdown">
+                <div className="mega-dropdown-content">
+                  {category.subcategories.map((col, colIdx) => (
+                    <div key={colIdx} className="mega-column">
+                      <h4 className="column-title">{col.name}</h4>
+                      {col.children && col.children.length > 0 && (
+                        <ul className="subcategory-list">
+                          {col.children.map((sub, subIdx) => (
+                            <li key={subIdx}>
+                              <Link 
+                                to={`${createPageUrl('Product3DManager')}?category=${category.slug}&subcategory=${sub.slug}`}
+                                className="subcategory-link"
+                                onClick={() => setMobileOpen(false)}
+                              >
+                                <span className="subcategory-name">{sub.name}</span>
+                                {sub.count && <span className="product-count">{sub.count}</span>}
+                              </Link>
+                              {sub.description && (
+                                <p className="subcategory-description">{sub.description}</p>
+                              )}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+}
