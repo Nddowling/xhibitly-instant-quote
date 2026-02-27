@@ -751,18 +751,38 @@ function GenerateRenderButton({ boothDesignId, skus }) {
 
 function BoothProductCard({ sku, quantity = 1 }) {
     const [product, setProduct] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         async function fetchProduct() {
+            setLoading(true);
             try {
                 const res = await base44.entities.Product.filter({ sku });
-                if (res.length > 0) setProduct(res[0]);
-            } catch (e) {}
+                if (res.length > 0) {
+                    setProduct(res[0]);
+                } else {
+                    const pvRes = await base44.entities.ProductVariant.filter({ manufacturer_sku: sku });
+                    if (pvRes.length > 0) {
+                        setProduct({
+                            name: pvRes[0].display_name,
+                            sku: pvRes[0].manufacturer_sku,
+                            category: pvRes[0].category_name,
+                            image_url: pvRes[0].thumbnail_url || pvRes[0].image_url
+                        });
+                    } else {
+                        setProduct({ name: sku, sku: sku, category: 'Product' });
+                    }
+                }
+            } catch (e) {
+                setProduct({ name: sku, sku: sku, category: 'Product' });
+            } finally {
+                setLoading(false);
+            }
         }
         fetchProduct();
     }, [sku]);
 
-    if (!product) return (
+    if (loading) return (
         <Card className="animate-pulse bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700">
             <CardContent className="p-4 aspect-square flex items-center justify-center text-slate-400 text-sm">
                 Loading...
