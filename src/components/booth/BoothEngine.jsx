@@ -75,7 +75,7 @@ export const BoothEngine = {
                 for (let dy = -radius; dy <= radius; dy += step) {
                     const testX = startX + dx;
                     const testY = startY + dy;
-                    if (BoothEngine.isValidPlacement(scene, testX, testY, item.rot, item.w, item.d).valid) {
+                    if (BoothEngine.isValidPlacement(scene, testX, testY, item.rot, item.w, item.d, null, item.isFlooring).valid) {
                         item.x = testX;
                         item.y = testY;
                         placed = true;
@@ -90,7 +90,10 @@ export const BoothEngine = {
         if (placed) {
             return { success: true, scene: { ...scene, items: [...scene.items, item] }, item };
         }
-        return { success: false, reason: 'No valid placement found. Booth might be full.' };
+        // If not placed, just put it in the center anyway to allow manual adjustment
+        item.x = scene.booth.w_ft / 2;
+        item.y = scene.booth.d_ft / 2;
+        return { success: true, scene: { ...scene, items: [...scene.items, item] }, item };
     },
 
     moveItem: (scene, itemId, newX, newY) => {
@@ -103,7 +106,7 @@ export const BoothEngine = {
         newX = Math.round(newX * 2) / 2;
         newY = Math.round(newY * 2) / 2;
 
-        const check = BoothEngine.isValidPlacement(scene, newX, newY, item.rot, item.w, item.d, itemId);
+        const check = BoothEngine.isValidPlacement(scene, newX, newY, item.rot, item.w, item.d, itemId, item.isFlooring);
         if (check.valid) {
             const newItems = [...scene.items];
             newItems[itemIndex] = { ...item, x: newX, y: newY };
@@ -119,7 +122,7 @@ export const BoothEngine = {
         const item = scene.items[itemIndex];
         const newRot = (item.rot + degrees) % 360;
 
-        const check = BoothEngine.isValidPlacement(scene, item.x, item.y, newRot, item.w, item.d, itemId);
+        const check = BoothEngine.isValidPlacement(scene, item.x, item.y, newRot, item.w, item.d, itemId, item.isFlooring);
         if (check.valid) {
             const newItems = [...scene.items];
             newItems[itemIndex] = { ...item, rot: newRot };
