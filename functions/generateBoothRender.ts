@@ -84,16 +84,23 @@ Deno.serve(async (req) => {
         // ── Build branding context ─────────────────────────────────────────
         const brandColor = design.brand_identity?.primary_color;
         
-        // Use custom brand_name from the design if it exists, otherwise fall back to industry context
+        // Use custom brand_name from the design if it exists, otherwise fall back to identity
         const brandName = design.brand_name || design.brand_identity?.company_name || design.brand_identity?.name || '';
+        const brandLogo = design.brand_identity?.logo_url;
         
-        let brandingNote = 'Branding: Use neutral professional branding unless color is visible in reference images.';
-        if (brandColor && brandName) {
-            brandingNote = `Branding: All displays, banners, and backwalls MUST prominently feature the brand name "${brandName}" and use the brand color ${brandColor}.`;
+        let brandingNote = '';
+        if (brandName && brandColor && brandLogo) {
+            brandingNote = `CRITICAL BRANDING: Every fabric surface, backwall, banner, and display panel MUST show the brand name "${brandName}" in large, bold text using brand color ${brandColor}. Apply the logo (see reference images) prominently on the main backwall. All graphics must be cohesive and clearly branded with "${brandName}".`;
+        } else if (brandName && brandColor) {
+            brandingNote = `CRITICAL BRANDING: Every fabric surface, backwall, banner, and display panel MUST show the brand name "${brandName}" in large, bold text using brand color ${brandColor}.`;
         } else if (brandName) {
-            brandingNote = `Branding: All displays, banners, and backwalls MUST prominently feature the brand name "${brandName}".`;
-        } else if (brandColor) {
-            brandingNote = `Branding: Use the client's brand colors (Primary: ${brandColor}) on all graphics and fabric panels.`;
+            brandingNote = `CRITICAL BRANDING: Every fabric surface, backwall, banner, and display panel MUST prominently feature the brand name "${brandName}" in large, bold text.`;
+        } else {
+            brandingNote = 'Use neutral professional branding on displays.';
+        }
+        
+        if (brandLogo) {
+            referenceImageUrls.unshift(brandLogo);
         }
 
         const companyNote = design.brand_identity?.industry && !brandName
