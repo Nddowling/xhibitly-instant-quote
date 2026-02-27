@@ -158,7 +158,7 @@ Deno.serve(async (req) => {
                         return `- ${item.name || item.sku} at X=${Math.round(item.x * 10) / 10}ft, Y=${Math.round(item.y * 10) / 10}ft, rotated ${item.rot || 0}°`;
                     }).join('\n');
                     layoutNote = `CRITICAL SPATIAL LAYOUT (STRICT ADHERENCE REQUIRED):
-The booth is ${scene.booth.w_ft}ft wide (X axis) by ${scene.booth.d_ft}ft deep (Y axis).
+The floor space is ${scene.booth.w_ft}ft wide (X axis) by ${scene.booth.d_ft}ft deep (Y axis).
 Coordinate System: (0,0) is the front-left corner. X increases to the right. Y increases to the back.
 You MUST place the items EXACTLY at these coordinates:
 ${itemDescriptions}
