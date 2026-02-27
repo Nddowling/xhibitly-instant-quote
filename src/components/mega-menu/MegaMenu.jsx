@@ -25,13 +25,20 @@ export default function MegaMenu({ categories = [] }) {
             className={`menu-item ${category.subcategories?.length ? 'has-dropdown' : ''} ${activeItem === idx ? 'active' : ''}`}
             onMouseEnter={() => setActiveItem(idx)}
             onMouseLeave={() => setActiveItem(null)}
-            onClick={() => {
-              if (window.innerWidth <= 768) {
-                setActiveItem(activeItem === idx ? null : idx);
-              }
-            }}
           >
-            <div className="menu-link">
+            <div 
+              className="menu-link"
+              onClick={(e) => {
+                if (category.subcategories?.length) {
+                  // Toggle on click for both mobile and desktop (if they click it)
+                  if (activeItem === idx) {
+                    setActiveItem(null);
+                  } else {
+                    setActiveItem(idx);
+                  }
+                }
+              }}
+            >
               <span>{category.name}</span>
               {category.subcategories?.length > 0 && (
                 <ChevronDown className="dropdown-arrow w-4 h-4" />
