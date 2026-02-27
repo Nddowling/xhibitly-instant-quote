@@ -78,11 +78,11 @@ Deno.serve(async (req) => {
 
         // ── Build booth size description ────────────────────────────────────
         const sizeDescriptions = {
-            '10x10': 'a 10-foot wide by 10-foot deep square trade show booth (100 square feet)',
-            '10x20': 'a 10-foot wide by 20-foot deep rectangular trade show booth (200 square feet)',
-            '20x20': 'a 20-foot wide by 20-foot deep square island trade show booth (400 square feet)',
+            '10x10': 'an empty 10x10 foot concrete space',
+            '10x20': 'an empty 10x20 foot concrete space',
+            '20x20': 'an empty 20x20 foot concrete space',
         };
-        const sizeDesc = sizeDescriptions[design.booth_size] || `a ${design.booth_size} trade show booth`;
+        const sizeDesc = sizeDescriptions[design.booth_size] || `an empty ${design.booth_size} concrete space`;
 
         // ── Build explicit product manifest ────────────────────────────────
         const productManifest = products.map((p, i) => {
