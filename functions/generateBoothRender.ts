@@ -85,7 +85,11 @@ Deno.serve(async (req) => {
         if (!design.brand_identity && design.brand_name) {
             try {
                 // Try to treat brand_name as domain, append .com if needed for better success chance
-                const domainCandidate = design.brand_name.includes('.') ? design.brand_name : `${design.brand_name.replace(/\s+/g, '')}.com`;
+                // Clean the brand name first (trim whitespace)
+                const cleanBrandName = design.brand_name.trim();
+                
+                // Try to treat brand_name as domain, append .com if needed for better success chance
+                const domainCandidate = cleanBrandName.includes('.') ? cleanBrandName : `${cleanBrandName.replace(/\s+/g, '')}.com`;
                 
                 const brandRes = await base44.functions.invoke('fetchBrandData', { 
                     website_url: domainCandidate 
@@ -139,7 +143,17 @@ Deno.serve(async (req) => {
                     const itemDescriptions = scene.items.map(item => {
                         return `- ${item.name || item.sku} at X=${Math.round(item.x * 10) / 10}ft, Y=${Math.round(item.y * 10) / 10}ft, rotated ${item.rot || 0}°`;
                     }).join('\n');
-                    layoutNote = `EXACT 2D LAYOUT:\nBooth: ${scene.booth.w_ft}ft wide × ${scene.booth.d_ft}ft deep. Front/Aisle is at Y=0.\n${itemDescriptions}\nYou MUST follow these exact X/Y coordinates and rotation angles in the 3D render.`;
+                    layoutNote = `CRITICAL SPATIAL LAYOUT (STRICT ADHERENCE REQUIRED):
+The booth is ${scene.booth.w_ft}ft wide (X axis) by ${scene.booth.d_ft}ft deep (Y axis).
+Coordinate System: (0,0) is the front-left corner. X increases to the right. Y increases to the back.
+You MUST place the items EXACTLY at these coordinates:
+${itemDescriptions}
+
+RULES FOR PLACEMENT:
+1. Objects must be placed PRECISELY at the specified X,Y coordinates.
+2. Orientation must match the specified rotation angle.
+3. Do NOT rearrange items for aesthetics. The layout is fixed.
+4. Empty space in the layout MUST remain empty in the render.`;
                 }
             } catch (e) {
                 console.warn('Could not parse scene_json', e);
@@ -180,25 +194,28 @@ RULES:
 
         } else {
             // FIRST RENDER — build from scratch using product reference images
-            prompt = `Create a photorealistic 3D architectural visualization of ${sizeDesc} for a professional trade show.
+            prompt = `Create a strict, photorealistic 3D architectural visualization of a trade show booth based EXACTLY on the provided 2D layout and product list.
 
-The booth contains EXACTLY these ${productCount} item(s). Reference images of each product are provided:
+BOOTH DIMENSIONS: ${sizeDesc}.
+
+PRODUCT MANIFEST (Exact Inventory):
 ${productManifest}
 
-VISUAL REQUIREMENTS:
-- Render from a 3/4 perspective (approx 45-degree angle) showing the full booth footprint.
-- Convention center setting: polished concrete or neutral gray carpet floor, high ceiling, bright even overhead lighting.
-- ${layoutNote}
+LAYOUT & POSITIONING (Non-Negotiable):
+${layoutNote}
+
+BRANDING & ATMOSPHERE:
 - ${brandingNote}
 - ${companyNote}
+- Environment: Convention center, high ceilings, concrete floor (unless flooring is listed), bright even lighting.
 
-STRICT CONSTRAINTS:
-- The booth contains ONLY the ${productCount} listed items: ${productNameList}.
-- Do NOT add chairs, tables, potted plants, carpet (unless listed), hanging signs, monitors, or any other unlisted element.
-- Do NOT extrapolate additional display units "to fill space." Show only what is listed.
-- The booth boundary must be exactly ${design.booth_size} — do not make it larger or smaller.
+CRITICAL CONSTRAINTS - READ CAREFULLY:
+1. **NO HALLUCINATIONS**: Do NOT add ANY furniture, people, plants, lights, carpet, or decorations that are not explicitly listed in the Product Manifest.
+2. **STRICT POSITIONING**: Items must be located exactly as described in the Layout section. Do not move them "to make it look better".
+3. **EXACT COUNT**: If the manifest says "1x Counter", draw exactly one. If it says "2x", draw two.
+4. **BRANDING**: The brand "${brandName}" must be visible on the products as specified.
 
-Produce a clean, high-resolution photorealistic render suitable for a sales proposal.`;
+The goal is an accurate visualization of the user's specific design, not a creative interpretation.`;
         }
 
         // ── Call image generation ──────────────────────────────────────────

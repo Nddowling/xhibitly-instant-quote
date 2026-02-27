@@ -76,7 +76,13 @@ Deno.serve(async (req) => {
             return Response.json({ error: 'website_url is required' }, { status: 400 });
         }
 
-        const domain = extractDomain(website_url);
+        // Clean input: remove whitespace, handle "Name" vs "Name.com"
+        let cleanUrl = website_url.trim();
+        if (!cleanUrl.includes('.') && !cleanUrl.includes('://')) {
+            cleanUrl = `${cleanUrl.replace(/\s+/g, '')}.com`;
+        }
+
+        const domain = extractDomain(cleanUrl);
 
         // Check if we already have it in CompanyBrand
         const existing = await base44.asServiceRole.entities.CompanyBrand.filter({ domain });
