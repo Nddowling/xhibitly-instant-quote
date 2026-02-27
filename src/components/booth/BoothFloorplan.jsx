@@ -128,7 +128,7 @@ export default function BoothFloorplan({ scene, onMoveItem, onRotateItem, onRemo
                                 <img 
                                     src={item.imageUrl} 
                                     alt={item.name} 
-                                    className="absolute inset-0 w-full h-full object-cover opacity-30 pointer-events-none" 
+                                    className={`absolute inset-0 w-full h-full object-cover pointer-events-none ${item.isFlooring ? 'opacity-80' : 'opacity-30'}`} 
                                     style={{ transform: `rotate(${item.rot || 0}deg)` }}
                                 />
                             )}
