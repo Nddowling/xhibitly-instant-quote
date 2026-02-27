@@ -106,9 +106,9 @@ Deno.serve(async (req) => {
                 const scene = JSON.parse(design.scene_json);
                 if (scene && scene.items && scene.items.length > 0) {
                     const itemDescriptions = scene.items.map(item => {
-                        return `- ${item.quantity > 1 ? item.quantity + 'x ' : ''}${item.name || item.sku} is placed at (X: ${Math.round(item.x)}ft, Y: ${Math.round(item.y)}ft) rotated ${item.rotation || 0} degrees.`;
+                        return `- ${item.name || item.sku} at X=${Math.round(item.x * 10) / 10}ft, Y=${Math.round(item.y * 10) / 10}ft, rotated ${item.rot || 0}°`;
                     }).join('\n');
-                    layoutNote = `EXACT 2D LAYOUT COORDINATES:\nThe booth floor is ${scene.width}ft wide (X-axis) by ${scene.depth}ft deep (Y-axis).\nThe bottom-left front corner is (0,0).\n\n${itemDescriptions}\n\nYou MUST follow these placement coordinates and rotations strictly in the 3D space.`;
+                    layoutNote = `EXACT 2D LAYOUT:\nBooth: ${scene.booth.w_ft}ft wide × ${scene.booth.d_ft}ft deep. Front/Aisle is at Y=0.\n${itemDescriptions}\nYou MUST follow these exact X/Y coordinates and rotation angles in the 3D render.`;
                 }
             } catch (e) {
                 console.warn('Could not parse scene_json', e);
