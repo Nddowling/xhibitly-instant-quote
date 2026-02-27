@@ -11,6 +11,7 @@ Deno.serve(async (req) => {
 
         const products = await base44.asServiceRole.entities.Product.list(undefined, 1000);
         let updatedCount = 0;
+        const updates = [];
 
         for (const product of products) {
             const name = (product.name || '').toLowerCase();
