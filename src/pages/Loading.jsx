@@ -257,130 +257,19 @@ Return only data from the CURRENT live website.`;
 }
 
 // ═══════════════════════════════════════════════════════════════
-// BRANDFETCH API INTEGRATION
+// BRAND EXTRACTION API INTEGRATION
 // ═══════════════════════════════════════════════════════════════
 
-const BRANDFETCH_API_KEY = 'QgFqwUYE61C7nVi0BM2zSifQWKrTA3-Uto7zpoJ4BGf5M_9DjWUyDCc8a6LbkT-OdUjt9b5Sxskug3pZ2MhpJg';
-
-function extractDomain(url) {
-  try {
-    const cleanUrl = url.replace(/^https?:\/\/(www\.)?/, '');
-    const domain = cleanUrl.split('/')[0].split('?')[0];
-    return domain;
-  } catch {
-    return url;
-  }
-}
-
-async function fetchBrandfetchData(websiteUrl) {
-  const domain = extractDomain(websiteUrl);
-  console.log(`[Brandfetch] Fetching brand data for: ${domain}`);
-
-  try {
-    const url = `https://api.brandfetch.io/v2/brands/${domain}`;
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${BRANDFETCH_API_KEY}`
-      }
-    });
-
-    if (!response.ok) {
-      console.log(`[Brandfetch] API returned ${response.status}, falling back to LLM`);
-      return null;
-    }
-
-    const data = await response.json();
-    console.log('[Brandfetch] Successfully fetched brand data');
-    return data;
-  } catch (err) {
-    console.error('[Brandfetch] API error:', err.message);
-    return null;
-  }
-}
-
-function parseBrandfetchResponse(brandfetchData) {
-  if (!brandfetchData) return null;
-
-  try {
-    const result = {
-      company_name: brandfetchData.name || null,
-      primary_color: null,
-      secondary_color: null,
-      accent_color_1: null,
-      accent_color_2: null,
-      logo_url: null,
-      logo_options: [], // NEW: Store all logo options for user selection
-      logo_description: null,
-      brand_personality: null,
-      industry: null
-    };
-
-    // Extract colors from Brandfetch
-    if (brandfetchData.colors && brandfetchData.colors.length > 0) {
-      const colors = brandfetchData.colors
-        .filter(c => c.hex && c.hex.startsWith('#'))
-        .map(c => c.hex.toLowerCase())
-        .slice(0, 4);
-
-      if (colors[0]) result.primary_color = colors[0];
-      if (colors[1]) result.secondary_color = colors[1];
-      if (colors[2]) result.accent_color_1 = colors[2];
-      if (colors[3]) result.accent_color_2 = colors[3];
-    }
-
-    // Extract ALL logo options from Brandfetch for user selection
-    if (brandfetchData.logos && brandfetchData.logos.length > 0) {
-      brandfetchData.logos.forEach(logo => {
-        if (logo.formats && logo.formats.length > 0) {
-          logo.formats.forEach(format => {
-            if (format.src && (format.format === 'svg' || format.format === 'png')) {
-              result.logo_options.push({
-                url: format.src,
-                format: format.format,
-                width: format.width,
-                height: format.height,
-                type: logo.type || 'logo'
-              });
-            }
-          });
-        }
-      });
-
-      // Set default logo_url to first option
-      if (result.logo_options.length > 0) {
-        result.logo_url = result.logo_options[0].url;
-      }
-    }
-
-    // Generate logo description from company name
-    if (result.company_name) {
-      result.logo_description = `Logo for ${result.company_name}. Professional corporate branding.`;
-    }
-
-    // Extract industry if available
-    if (brandfetchData.industries && brandfetchData.industries.length > 0) {
-      result.industry = brandfetchData.industries[0];
-    }
-
-    console.log('[Brandfetch] Parsed brand data:', {
-      name: result.company_name,
-      colors: [result.primary_color, result.secondary_color, result.accent_color_1, result.accent_color_2].filter(Boolean).length,
-      hasLogo: !!result.logo_url,
-      logoOptions: result.logo_options.length
-    });
-
-    return result;
-  } catch (err) {
-    console.error('[Brandfetch] Parse error:', err.message);
-    return null;
-  }
-}
-
 async function extractBrandIdentity(websiteUrl) {
-  // Try Brandfetch API first
-  const brandfetchData = await fetchBrandfetchData(websiteUrl);
-  let raw = parseBrandfetchResponse(brandfetchData);
+  let raw = null;
+  try {
+    const res = await base44.functions.invoke('fetchBrandData', { website_url: websiteUrl });
+    if (res.data && res.data.brand) {
+      raw = res.data.brand;
+    }
+  } catch(e) {
+    console.error("fetchBrandData error:", e);
+  }
 
   // If Brandfetch didn't provide complete data, use LLM to fill gaps
   if (!raw || !raw.company_name || !raw.primary_color || !raw.logo_url) {
@@ -717,22 +606,26 @@ export default function Loading() {
       // ── STEP 2: Product catalog ──
       updateProgress(2, 'Loading product catalog...');
       const compatibleProducts = await (async () => {
-        const allVariants = await base44.entities.ProductVariant.filter({ is_active: true });
-        let products = (allVariants || []).filter(p => p.booth_sizes?.includes(boothSize));
-        if (products.length === 0) {
-          const allProducts = await base44.entities.Product.filter({ is_active: true });
-          products = (allProducts || []).filter(p => p.booth_sizes?.includes(boothSize));
+        try {
+          // Try server-side filtering first for speed
+          const products = await base44.entities.Product.filter({ 
+            is_active: true, 
+            booth_sizes: { $contains: boothSize } 
+          });
+          if (products && products.length > 0) return products;
+        } catch (e) {
+          console.warn("Optimized filter failed, falling back to basic filter");
         }
+        
+        // Fallback: fetch active and filter locally
+        const allProducts = await base44.entities.Product.filter({ is_active: true });
+        let products = (allProducts || []).filter(p => p.booth_sizes?.includes(boothSize));
+        
         if (products.length === 0) {
-          // If still no products, use all variants/products unfiltered
-          const allVariants2 = await base44.entities.ProductVariant.list();
-          products = allVariants2 || [];
-          if (products.length === 0) {
-            const allProducts2 = await base44.entities.Product.list();
-            products = allProducts2 || [];
-          }
+          const allVariants2 = await base44.entities.ProductVariant.filter({ is_active: true });
+          products = (allVariants2 || []).filter(p => p.booth_sizes?.includes(boothSize));
         }
-        return products;
+        return products.length > 0 ? products : (allProducts || []);
       })();
       const catalog = slimCatalog(compatibleProducts);
       const profileStr = formatProfile(customerProfile);
@@ -742,9 +635,10 @@ export default function Loading() {
         properties: { booth_size: boothSize, website_url: websiteUrl }
       });
 
-      // ── STEP 3: Deep company research (brand voice, industry context) ──
-      updateProgress(3, 'Researching your company & industry...');
-      const companyResearch = await base44.integrations.Core.InvokeLLM({
+      // ── STEP 3 & 4: Deep company research & AI booth design curation (PARALLEL) ──
+      updateProgress(3, 'Researching your company & creating booth designs in parallel...');
+      
+      const companyResearchPromise = base44.integrations.Core.InvokeLLM({
         prompt: `Research this company thoroughly: ${websiteUrl}
 Company name: ${brandAnalysis.company_name || 'Unknown'}
 Industry detected: ${brandAnalysis.industry || 'Unknown'}
@@ -757,32 +651,18 @@ Provide a deep analysis focused on how this company should present itself at a t
 - What are their core brand values?
 - Who are their target customers visiting a trade show?
 - What should the booth atmosphere feel like based on their brand?
-- What industry-specific elements belong in their booth? (e.g., automotive → vehicle display area, product demo zones; electronics → interactive screens, charging stations; healthcare → clean/clinical feel, consultation area; food → sampling station, refrigerated display)
+- What industry-specific elements belong in their booth?
 
 Be specific and actionable. This research will directly guide product selection for their trade show booth.`,
         add_context_from_internet: true,
         response_json_schema: COMPANY_RESEARCH_SCHEMA
       });
 
-      // ── STEP 4: AI booth design curation ──
-      updateProgress(4, 'Creating booth designs...');
       const designPrompt = `You are an expert trade show booth designer. Create 3 booth designs (Modular, Hybrid, Custom tiers) for a ${boothSize} booth (${dims.width}ft × ${dims.depth}ft).
 
 BRAND: ${JSON.stringify({ name: brandAnalysis.company_name, primary: brandAnalysis.primary_color, secondary: brandAnalysis.secondary_color, accent1: brandAnalysis.accent_color_1, accent2: brandAnalysis.accent_color_2, personality: brandAnalysis.brand_personality, logo: brandAnalysis.logo_description })}
 
-COMPANY CONTEXT (use this to guide product selection and booth storytelling):
-- Industry: ${companyResearch.industry} / ${companyResearch.industry_vertical}
-- Products/Services: ${(companyResearch.core_products_or_services || []).join(', ')}
-- Brand Voice: ${companyResearch.brand_voice} | Tone: ${companyResearch.brand_tone}
-- Brand Values: ${(companyResearch.brand_values || []).join(', ')}
-- Target Customers: ${companyResearch.target_customers}
-- Competitive Position: ${companyResearch.competitive_positioning}
-- Key Messaging: ${(companyResearch.key_messaging || []).join('; ')}
-- Ideal Booth Atmosphere: ${companyResearch.booth_atmosphere}
-- Physical Items to Display: ${(companyResearch.physical_products_to_display || []).join(', ')}
-- Industry-Specific Booth Elements: ${(companyResearch.industry_specific_booth_elements || []).join(', ')}
-
-IMPORTANT: Design the booth to reflect this company's actual business. If they sell cars, the booth should have space for vehicle display. If they sell software, emphasize demo stations and screens. If they sell food, include tasting/sampling areas. The experience_story, visitor_journey, and key_moments MUST align with what this company actually does.
+COMPANY CONTEXT: Research this company at ${websiteUrl} and design the booth to reflect their actual business, products, and industry. The booth should have space for their specific type of product display (e.g. vehicles, software demos, food sampling). The experience_story, visitor_journey, and key_moments MUST align with what this company actually does.
 
 CUSTOMER REQUIREMENTS: ${profileStr}
 
@@ -811,10 +691,14 @@ BRANDING: primary_color on 2-3 structural pieces. secondary_color on 1-2 accents
 
 FOR EACH DESIGN: include tier, design_name, experience_story, visitor_journey, key_moments[], product_skus[], line_items[], design_rationale, total_price, spatial_layout[].`;
 
-      const designsRaw = await base44.integrations.Core.InvokeLLM({
+      const designsRawPromise = base44.integrations.Core.InvokeLLM({
         prompt: designPrompt,
+        add_context_from_internet: true,
         response_json_schema: DESIGN_SCHEMA
       });
+
+      const [companyResearch, designsRaw] = await Promise.all([companyResearchPromise, designsRawPromise]);
+      updateProgress(4, 'Designs generated successfully...');
 
       // Ensure designs array exists
       const designs = { designs: Array.isArray(designsRaw?.designs) ? designsRaw.designs : (Array.isArray(designsRaw) ? designsRaw : []) };
@@ -888,6 +772,24 @@ FOR EACH DESIGN: include tier, design_name, experience_story, visitor_journey, k
         const designProducts = compatibleProducts.filter(p =>
           design.product_skus.includes(p.manufacturer_sku || p.sku)
         );
+        
+        // Image Caching Check
+        try {
+            const skusKey = design.product_skus.slice().sort().join(',');
+            const existingDesigns = await base44.entities.BoothDesign.filter({
+               booth_size: boothSize,
+               tier: design.tier,
+            });
+            if (existingDesigns && existingDesigns.length > 0) {
+                const cached = existingDesigns.find(d => (d.product_skus || []).slice().sort().join(',') === skusKey && d.design_image_url);
+                if (cached && cached.design_image_url) {
+                    console.log(`[Cache Hit] Using existing render for ${design.tier}`);
+                    return cached.design_image_url;
+                }
+            }
+        } catch(e) {
+            console.error("Cache check failed:", e);
+        }
 
         const manifest = designProducts.map((p, i) => {
           const d = p.dimensions || {};
@@ -914,21 +816,24 @@ ${CAMERA_STYLE}
 ${getMarkerPromptInstructions()}`;
 
         const refImages = collectReferenceImages(brandAnalysis, designProducts);
-        const params = { prompt: imagePrompt };
-        if (refImages.length > 0) params.existing_image_urls = refImages;
 
-        try {
-          const result = await base44.integrations.Core.GenerateImage(params);
-          return result.url;
-        } catch (err) {
-          console.error('Image gen failed:', err);
-          try {
-            return (await base44.integrations.Core.GenerateImage({ prompt: imagePrompt })).url;
-          } catch (retryErr) {
-            console.error('Image retry failed:', retryErr);
-            return null;
-          }
-        }
+        const generateImageWithRetry = async (prompt, retries = 3) => {
+            for (let i = 0; i < retries; i++) {
+                try {
+                    const params = { prompt };
+                    if (refImages.length > 0) params.existing_image_urls = refImages;
+                    const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 45000));
+                    const result = await Promise.race([base44.integrations.Core.GenerateImage(params), timeout]);
+                    return result.url;
+                } catch (err) {
+                    console.error(`Image retry ${i+1} failed:`, err);
+                    if (i === retries - 1) return null;
+                    await new Promise(r => setTimeout(r, Math.pow(2, i) * 1000));
+                }
+            }
+        };
+
+        return await generateImageWithRetry(imagePrompt);
       });
 
       const generatedImages = await Promise.all(imagePromises);

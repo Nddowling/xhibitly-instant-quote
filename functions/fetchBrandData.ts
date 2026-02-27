@@ -1,6 +1,16 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.18';
 
-const BRANDFETCH_API_KEY = 'QgFqwUYE61C7nVi0BM2zSifQWKrTA3-Uto7zpoJ4BGf5M_9DjWUyDCc8a6LbkT-OdUjt9b5Sxskug3pZ2MhpJg';
+const BRANDFETCH_API_KEY = Deno.env.get("BRANDFETCH_API_KEY");
+
+const rateLimiter = new Map();
+function checkRateLimit(userId, max = 15, windowMs = 3600000) {
+  const now = Date.now();
+  const limit = rateLimiter.get(userId) || { count: 0, reset: now + windowMs };
+  if (now > limit.reset) { limit.count = 0; limit.reset = now + windowMs; }
+  if (limit.count >= max) throw new Error('Rate limit exceeded');
+  limit.count++;
+  rateLimiter.set(userId, limit);
+}
 
 function extractDomain(url) {
   try {
@@ -23,6 +33,7 @@ function parseBrandfetchResponse(brandfetchData) {
       accent_color_1: null,
       accent_color_2: null,
       logo_url: null,
+      logo_options: [],
       industry: null
     };
 
@@ -39,15 +50,24 @@ function parseBrandfetchResponse(brandfetchData) {
     }
 
     if (brandfetchData.logos && brandfetchData.logos.length > 0) {
-      // Find the first logo with an svg or png format
-      for (const logo of brandfetchData.logos) {
+      brandfetchData.logos.forEach(logo => {
         if (logo.formats && logo.formats.length > 0) {
-          const format = logo.formats.find(f => f.format === 'svg' || f.format === 'png');
-          if (format) {
-            result.logo_url = format.src;
-            break;
-          }
+          logo.formats.forEach(format => {
+            if (format.src && (format.format === 'svg' || format.format === 'png')) {
+              result.logo_options.push({
+                url: format.src,
+                format: format.format,
+                width: format.width,
+                height: format.height,
+                type: logo.type || 'logo'
+              });
+            }
+          });
         }
+      });
+
+      if (result.logo_options.length > 0) {
+        result.logo_url = result.logo_options[0].url;
       }
     }
 
@@ -69,6 +89,7 @@ Deno.serve(async (req) => {
         if (!user) {
             return Response.json({ error: 'Unauthorized' }, { status: 401 });
         }
+        checkRateLimit(user.id);
 
         const { website_url } = await req.json();
 
