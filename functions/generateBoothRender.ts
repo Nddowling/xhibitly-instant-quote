@@ -81,6 +81,30 @@ Deno.serve(async (req) => {
         const productNameList = products.map(p => `${p.quantity}x ${p.name}`).join(', ');
         const productCount = products.reduce((sum, p) => sum + p.quantity, 0);
 
+        // ── Ensure Brand Data ──────────────────────────────────────────────
+        if (!design.brand_identity && design.brand_name) {
+            try {
+                // Try to treat brand_name as domain, append .com if needed for better success chance
+                const domainCandidate = design.brand_name.includes('.') ? design.brand_name : `${design.brand_name.replace(/\s+/g, '')}.com`;
+                
+                const brandRes = await base44.functions.invoke('fetchBrandData', { 
+                    website_url: domainCandidate 
+                });
+                
+                if (brandRes.data && brandRes.data.brand) {
+                    design.brand_identity = brandRes.data.brand;
+                    
+                    // Save back to design so we don't fetch again
+                    await base44.entities.BoothDesign.update(design.id, {
+                        brand_identity: design.brand_identity
+                    });
+                }
+            } catch (e) {
+                console.warn('Failed to auto-fetch brand data:', e);
+                // Continue without brand identity
+            }
+        }
+
         // ── Build branding context ─────────────────────────────────────────
         const brandColor = design.brand_identity?.primary_color;
         
