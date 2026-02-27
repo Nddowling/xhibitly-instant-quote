@@ -105,18 +105,22 @@ export default function Product3DManager() {
       });
     }
 
-    if (activeSubcategorySlug && filtered.length > 0) {
-      // Further filter by subcategory slug
-      // For simplicity, we match the subcategory slug keywords to the product
-      const subcategoryKeywords = activeSubcategorySlug.split('-');
-      filtered = filtered.filter(p => {
-        return subcategoryKeywords.some(keyword => 
-          p.name?.toLowerCase().includes(keyword.toLowerCase()) ||
-          p.description?.toLowerCase().includes(keyword.toLowerCase()) ||
-          p.sku?.toLowerCase().includes(keyword.toLowerCase()) ||
-          p.category?.toLowerCase().includes(keyword.toLowerCase())
-        );
-      });
+    if (activeSubcategoryName && filtered.length > 0) {
+      // Filter by the actual subcategory name words
+      const ignoreWords = ['and', '&', 'or', 'the', 'with', 'displays', 'structures', 'stands', 'systems', 'all', 'other'];
+      const keywords = activeSubcategoryName.toLowerCase().split(/[\s,-]+/).filter(w => w.length > 2 && !ignoreWords.includes(w));
+      
+      if (keywords.length > 0) {
+        // Just need ONE significant keyword to match, to be forgiving
+        filtered = filtered.filter(p => {
+          const searchString = `${p.name || ''} ${p.description || ''} ${p.sku || ''} ${p.category || ''} ${p.subcategory || ''}`.toLowerCase();
+          
+          // Special cases to ensure better matching
+          if (activeSubcategorySlug === 'seg-lightbox' && searchString.includes('light box')) return true;
+          
+          return keywords.some(keyword => searchString.includes(keyword));
+        });
+      }
     }
 
     return activeCategorySlug ? filtered : [];
