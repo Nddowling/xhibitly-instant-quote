@@ -44,19 +44,6 @@ export default function Product3DManager() {
     setIsLoading(false);
   };
 
-  // Map mega category to actual product pricing categories and names
-  const getCategoryMapping = (categorySlug) => {
-    const categoryMap = {
-      'hanging-structures': { pricing: ['hanging_structure'], names: ['hanging', 'ring', 'square', 'structure'] },
-      'backwalls-displays': { pricing: ['backwall', 'display'], names: ['backwall', 'formulate', 'vector', 'waveline', 'hopup', 'hybrid', 'modify', 'frame'] },
-      'counters-pedestals': { pricing: ['counter', 'pedestal', 'kiosk'], names: ['counter', 'pedestal', 'kiosk', 'literature'] },
-      'banner-stands': { pricing: ['banner_stand'], names: ['banner', 'stand', 'retractable'] },
-      'flags-outdoor': { pricing: ['flag', 'tent'], names: ['flag', 'feather', 'teardrop', 'tent', 'canopy'] },
-      'accessories': { pricing: ['accessory', 'lighting', 'case'], names: ['light', 'led', 'case', 'table', 'cover', 'mount'] }
-    };
-    return categoryMap[categorySlug] || { pricing: [], names: [] };
-  };
-
   // Get current category info
   const activeCategory = megaCategories.find(c => c.slug === activeCategorySlug);
   const activeCategoryName = activeCategory?.name || null;
@@ -85,41 +72,11 @@ export default function Product3DManager() {
     
     let filtered = [];
     
-    if (activeCategorySlug) {
-      const mapping = getCategoryMapping(activeCategorySlug);
-      filtered = products.filter(p => {
-        // Check pricing_category field
-        const pricingMatch = mapping.pricing.some(pc => 
-          p.pricing_category?.toLowerCase() === pc.toLowerCase() ||
-          p.category?.toLowerCase().includes(pc.toLowerCase())
-        );
-        
-        // Check if product name contains any of the category keywords
-        const nameMatch = mapping.names.some(keyword => 
-          p.name?.toLowerCase().includes(keyword.toLowerCase()) ||
-          p.description?.toLowerCase().includes(keyword.toLowerCase()) ||
-          p.sku?.toLowerCase().includes(keyword.toLowerCase())
-        );
-        
-        return pricingMatch || nameMatch;
-      });
-    }
-
-    if (activeSubcategoryName && filtered.length > 0) {
-      // Filter by the actual subcategory name words
-      const ignoreWords = ['and', '&', 'or', 'the', 'with', 'displays', 'structures', 'stands', 'systems', 'all', 'other'];
-      const keywords = activeSubcategoryName.toLowerCase().split(/[\s,-]+/).filter(w => w.length > 2 && !ignoreWords.includes(w));
+    if (activeCategoryName) {
+      filtered = products.filter(p => p.category === activeCategoryName);
       
-      if (keywords.length > 0) {
-        // Just need ONE significant keyword to match, to be forgiving
-        filtered = filtered.filter(p => {
-          const searchString = `${p.name || ''} ${p.description || ''} ${p.sku || ''} ${p.category || ''} ${p.subcategory || ''}`.toLowerCase();
-          
-          // Special cases to ensure better matching
-          if (activeSubcategorySlug === 'seg-lightbox' && searchString.includes('light box')) return true;
-          
-          return keywords.some(keyword => searchString.includes(keyword));
-        });
+      if (activeSubcategoryName) {
+        filtered = filtered.filter(p => p.subcategory === activeSubcategoryName);
       }
     }
 

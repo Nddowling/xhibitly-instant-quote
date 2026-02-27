@@ -1,141 +1,88 @@
 export const categories = [
   {
+    name: "Portable Displays",
+    slug: "portable-displays",
+    icon: "🚶",
+    subcategories: [
+      {
+        name: "Banner Stands",
+        children: [
+          { name: "Retractable", slug: "retractable" },
+          { name: "Telescopic", slug: "telescopic" },
+          { name: "Spring Back", slug: "spring-back" }
+        ]
+      }
+    ]
+  },
+  {
+    name: "Fabric Displays",
+    slug: "fabric-displays",
+    icon: "🖼️",
+    subcategories: [
+      {
+        name: "Displays",
+        children: [
+          { name: "Fabric Banners", slug: "fabric-banners" },
+          { name: "Light Boxes", slug: "light-boxes" }
+        ]
+      }
+    ]
+  },
+  {
     name: "Hanging Structures",
     slug: "hanging-structures",
     icon: "🎪",
     subcategories: [
       {
-        name: "Ring Structures",
+        name: "Hanging Structures",
         children: [
-          { name: "Essential Rings", slug: "essential-ring" },
-          { name: "Backlit Rings", slug: "backlit-ring" },
-          { name: "Large Rings", slug: "large-ring" }
-        ]
-      },
-      {
-        name: "Square & Rectangular",
-        children: [
-          { name: "Square Structures", slug: "square-structure" },
-          { name: "Backlit Squares", slug: "backlit-square" },
-          { name: "Custom Shapes", slug: "custom-shape" }
-        ]
-      },
-      {
-        name: "Specialty Hanging",
-        children: [
-          { name: "Tapered Structures", slug: "tapered" },
-          { name: "Wave Structures", slug: "wave" }
+          { name: "Ring Structures", slug: "ring-structures" },
+          { name: "Square Structures", slug: "square-structures" },
+          { name: "Other Hanging", slug: "other-hanging" }
         ]
       }
     ]
   },
   {
-    name: "Backwalls & Displays",
-    slug: "backwalls-displays",
-    icon: "🖼️",
-    subcategories: [
-      {
-        name: "Fabric Backwalls",
-        children: [
-          { name: "Formulate Backwalls", slug: "formulate-backwall" },
-          { name: "Vector Frame", slug: "vector-frame" },
-          { name: "Waveline", slug: "waveline" },
-          { name: "Hopup", slug: "hopup" }
-        ]
-      },
-      {
-        name: "Backlit Displays",
-        children: [
-          { name: "Backlit Frames", slug: "backlit-frame" },
-          { name: "SEG Light Boxes", slug: "seg-lightbox" }
-        ]
-      },
-      {
-        name: "Modular Systems",
-        children: [
-          { name: "Hybrid Pro", slug: "hybrid-pro" },
-          { name: "MODify", slug: "modify" }
-        ]
-      }
-    ]
-  },
-  {
-    name: "Counters & Pedestals",
-    slug: "counters-pedestals",
+    name: "Display Components",
+    slug: "display-components",
     icon: "🗄️",
     subcategories: [
       {
-        name: "Display Counters",
+        name: "Components",
         children: [
-          { name: "Fabric Counters", slug: "fabric-counter" },
-          { name: "Hard Top Counters", slug: "hardtop-counter" },
-          { name: "Charging Stations", slug: "charging-counter" }
-        ]
-      },
-      {
-        name: "Pedestals & Kiosks",
-        children: [
-          { name: "Display Pedestals", slug: "pedestal" },
-          { name: "Literature Racks", slug: "literature-rack" },
-          { name: "Kiosks", slug: "kiosk" }
+          { name: "Counters", slug: "counters" },
+          { name: "Info Centers", slug: "info-centers" },
+          { name: "Sign Stands", slug: "sign-stands" }
         ]
       }
     ]
   },
   {
-    name: "Banner Stands",
-    slug: "banner-stands",
-    icon: "📋",
+    name: "Modular Displays",
+    slug: "modular-displays",
+    icon: "🏗️",
     subcategories: [
       {
-        name: "Retractable Banners",
+        name: "Kits & Displays",
         children: [
-          { name: "Standard Retractable", slug: "retractable-standard" },
-          { name: "Premium Retractable", slug: "retractable-premium" },
-          { name: "Wide Format", slug: "retractable-wide" }
-        ]
-      },
-      {
-        name: "Backlit Banners",
-        children: [
-          { name: "Backlit Retractable", slug: "backlit-retractable" },
-          { name: "SEG Banners", slug: "seg-banner" }
-        ]
-      },
-      {
-        name: "Specialty Stands",
-        children: [
-          { name: "Telescopic", slug: "telescopic" },
-          { name: "Spring Back", slug: "spring-back" },
-          { name: "X-Banner", slug: "x-banner" }
+          { name: "10x10 Kits", slug: "10x10-kits" },
+          { name: "20x20 Kits", slug: "20x20-kits" },
+          { name: "Retail Displays", slug: "retail-displays" }
         ]
       }
     ]
   },
   {
-    name: "Flags & Outdoor",
-    slug: "flags-outdoor",
+    name: "Outdoor",
+    slug: "outdoor",
     icon: "🏁",
     subcategories: [
       {
-        name: "Feather Flags",
+        name: "Outdoor Displays",
         children: [
-          { name: "Standard Feather", slug: "feather-flag" },
-          { name: "Large Feather", slug: "large-feather" }
-        ]
-      },
-      {
-        name: "Teardrop Flags",
-        children: [
-          { name: "Standard Teardrop", slug: "teardrop-flag" },
-          { name: "Large Teardrop", slug: "large-teardrop" }
-        ]
-      },
-      {
-        name: "Tents & Canopies",
-        children: [
-          { name: "Pop-Up Tents", slug: "popup-tent" },
-          { name: "Frame Tents", slug: "frame-tent" }
+          { name: "Flags", slug: "flags" },
+          { name: "Tents", slug: "tents" }
         ]
       }
     ]
@@ -146,25 +93,12 @@ export const categories = [
     icon: "💡",
     subcategories: [
       {
-        name: "Lighting",
+        name: "Accessories",
         children: [
-          { name: "LED Lights", slug: "led-light" },
-          { name: "Spotlights", slug: "spotlight" }
-        ]
-      },
-      {
-        name: "Furniture & Cases",
-        children: [
-          { name: "Table Covers", slug: "table-cover" },
-          { name: "Shipping Cases", slug: "shipping-case" },
-          { name: "Monitor Mounts", slug: "monitor-mount" }
-        ]
-      },
-      {
-        name: "Graphics & Prints",
-        children: [
-          { name: "Graphic Replacements", slug: "graphic-replacement" },
-          { name: "Custom Prints", slug: "custom-print" }
+          { name: "Display Lighting", slug: "display-lighting" },
+          { name: "Shipping Cases", slug: "shipping-cases" },
+          { name: "Table Covers", slug: "table-covers" },
+          { name: "Hardware Kits", slug: "hardware-kits" }
         ]
       }
     ]
