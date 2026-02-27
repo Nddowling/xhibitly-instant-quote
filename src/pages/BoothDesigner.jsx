@@ -626,8 +626,7 @@ export default function BoothDesigner() {
                                 boothDesign?.design_image_url ? (
                                     <div className="relative w-full aspect-[16/9]">
                                         <img src={`${boothDesign.design_image_url}${boothDesign.design_image_url.includes('?') ? '&' : '?'}t=${new Date(boothDesign.render_generated_at || Date.now()).getTime()}`} alt="Booth Render" className="w-full h-full object-cover" />
-                                        <div className="absolute top-4 right-4 flex gap-2">
-                                            <GenerateRenderButton boothDesignId={boothDesign.id} skus={boothDesign?.product_skus} forceNew={true} label="Reset & Render" variant="secondary" />
+                                                        <div className="absolute top-4 right-4">
                                             <GenerateRenderButton boothDesignId={boothDesign.id} skus={boothDesign?.product_skus} />
                                         </div>
                                     </div>
