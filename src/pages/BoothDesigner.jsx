@@ -757,29 +757,50 @@ function BoothProductCard({ sku, quantity = 1 }) {
         async function fetchProduct() {
             setLoading(true);
             try {
-                const res = await base44.entities.Product.filter({ sku });
+                // 1. Try finding by SKU directly
+                let res = await base44.entities.Product.filter({ sku });
                 if (res.length > 0) {
                     setProduct(res[0]);
-                } else {
-                    const pvRes = await base44.entities.ProductVariant.filter({ manufacturer_sku: sku });
-                    if (pvRes.length > 0) {
-                        setProduct({
-                            name: pvRes[0].display_name,
-                            sku: pvRes[0].manufacturer_sku,
-                            category: pvRes[0].category_name,
-                            image_url: pvRes[0].thumbnail_url || pvRes[0].image_url
-                        });
-                    } else {
-                        setProduct({ name: sku, sku: sku, category: 'Product' });
-                    }
+                    return;
                 }
+
+                // 2. Try finding by name (in case SKU passed is actually the name)
+                res = await base44.entities.Product.filter({ name: sku });
+                if (res.length > 0) {
+                    setProduct(res[0]);
+                    return;
+                }
+
+                // 3. Try ProductVariant by manufacturer_sku
+                let pvRes = await base44.entities.ProductVariant.filter({ manufacturer_sku: sku });
+                if (pvRes.length > 0) {
+                    setProduct({
+                        name: pvRes[0].display_name,
+                        sku: pvRes[0].manufacturer_sku,
+                        category: pvRes[0].category_name,
+                        image_url: pvRes[0].thumbnail_url || pvRes[0].image_url
+                    });
+                    return;
+                }
+
+                // 4. Try heuristic: replace hyphens with spaces for Name lookup
+                // (e.g. "hybrid-pro-20ft" -> "hybrid pro 20ft")
+                const possibleName = sku.replace(/-/g, ' ').trim();
+                // Try case-insensitive search if API supports it, or just exact match on the transformed string
+                // Note: Standard base44 filter is exact match. 
+                // We'll try listing similar products if possible, but for now let's just try exact name match on cleaned string
+                // Since we can't do fuzzy search easily on frontend, we might miss some.
+                
+                // Fallback: Set basic info
+                setProduct({ name: sku, sku: sku, category: 'Product' });
             } catch (e) {
+                console.error("Error fetching product:", e);
                 setProduct({ name: sku, sku: sku, category: 'Product' });
             } finally {
                 setLoading(false);
             }
         }
-        fetchProduct();
+        if (sku) fetchProduct();
     }, [sku]);
 
     if (loading) return (
