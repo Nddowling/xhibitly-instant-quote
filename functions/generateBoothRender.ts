@@ -146,7 +146,7 @@ Deno.serve(async (req) => {
         }
 
         const companyNote = design.brand_identity?.industry && !brandName
-            ? `The exhibiting company is in the "${design.brand_identity.industry}" industry. Their branding should align with this industry.`
+            ? `The brand is in the "${design.brand_identity.industry}" industry. Their branding should align with this industry.`
             : '';
 
         let layoutNote = '';
@@ -177,7 +177,7 @@ RULES FOR PLACEMENT:
         if (!layoutNote) {
             layoutNote = design.layout_instructions
                 ? `LAYOUT INSTRUCTIONS: The user has requested the following placement: "${design.layout_instructions}". You MUST follow these positioning rules strictly.`
-                : 'Arrange the products naturally within the booth boundary. Larger items (backwalls, fabric structures) at the rear; counters and stands toward the front.';
+                : 'Arrange the products naturally within the floor boundary. Larger items (backwalls, fabric structures) at the rear; counters and stands toward the front.';
         } else if (design.layout_instructions) {
             layoutNote += `\n\nADDITIONAL INSTRUCTIONS: "${design.layout_instructions}"`;
         }
