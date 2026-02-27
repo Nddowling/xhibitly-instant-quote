@@ -8,7 +8,7 @@ import { Search, ArrowLeft, BookOpen } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import ProductRow from '../components/catalog/ProductRow';
-import MegaMenu from '../components/mega-menu/MegaMenu';
+import MegaMenu from '@/components/mega-menu/MegaMenu';
 import { categories as megaCategories } from '../components/mega-menu/categories';
 
 export default function Product3DManager() {
