@@ -117,12 +117,12 @@ Deno.serve(async (req) => {
             }
         }
 
-        // Process up to 40 items per run to avoid rate limits and timeouts
-        const itemsToProcess = updates.slice(0, 40);
+        // Process up to 80 items per run to avoid rate limits and timeouts
+        const itemsToProcess = updates.slice(0, 80);
         for (const u of itemsToProcess) {
             await base44.asServiceRole.entities.Product.update(u.id, { category: u.category, subcategory: u.subcategory });
             // Small delay to prevent rate limiting
-            await new Promise(r => setTimeout(r, 50));
+            await new Promise(r => setTimeout(r, 10));
             updatedCount++;
         }
 
