@@ -28,7 +28,7 @@ Deno.serve(async (req) => {
                 category = 'Outdoor';
                 subcategory = 'Flags';
             } else if (name.includes('table cover') || name.includes('table throw') || name.includes('table runner') || sku.startsWith('TBL-')) {
-                category = 'Accessories';
+                category = 'Fabric Displays';
                 subcategory = 'Table Covers';
             } else if (name.includes('case') || name.includes('crate') || name.includes('bag') || name.includes('trolley') || sku.includes('CRATE') || sku.includes('-BG') || sku.startsWith('OC')) {
                 category = 'Accessories';

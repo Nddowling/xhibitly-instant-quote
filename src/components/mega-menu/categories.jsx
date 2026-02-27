@@ -23,7 +23,8 @@ export const categories = [
         name: "Displays",
         children: [
           { name: "Fabric Banners", slug: "fabric-banners" },
-          { name: "Light Boxes", slug: "light-boxes" }
+          { name: "Light Boxes", slug: "light-boxes" },
+          { name: "Table Covers", slug: "table-covers" }
         ]
       }
     ]
@@ -97,7 +98,6 @@ export const categories = [
         children: [
           { name: "Display Lighting", slug: "display-lighting" },
           { name: "Shipping Cases", slug: "shipping-cases" },
-          { name: "Table Covers", slug: "table-covers" },
           { name: "Hardware Kits", slug: "hardware-kits" }
         ]
       }
