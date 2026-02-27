@@ -61,7 +61,7 @@ export default function MegaMenu({ categories = [] }) {
                                 onClick={() => setMobileOpen(false)}
                               >
                                 <span className="subcategory-name">{sub.name}</span>
-                                {sub.count && <span className="product-count">{sub.count}</span>}
+                                {/* Product counts removed to prevent confusion, as they were hardcoded. We now just show the subcategory name. */}
                               </Link>
                               {sub.description && (
                                 <p className="subcategory-description">{sub.description}</p>
