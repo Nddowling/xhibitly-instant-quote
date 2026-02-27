@@ -124,7 +124,12 @@ export default function BoothFloorplan({ scene, onMoveItem, onRotateItem, onRemo
                             onPointerLeave={() => setHoveredItem(null)}
                         >
                             {item.imageUrl && (
-                                <img src={item.imageUrl} alt={item.name} className="absolute inset-0 w-full h-full object-cover opacity-30 pointer-events-none" />
+                                <img 
+                                    src={item.imageUrl} 
+                                    alt={item.name} 
+                                    className="absolute inset-0 w-full h-full object-cover opacity-30 pointer-events-none" 
+                                    style={{ transform: `rotate(${item.rot || 0}deg)` }}
+                                />
                             )}
                             <span className="text-[10px] font-bold text-slate-800 dark:text-slate-200 truncate px-1 text-center leading-tight select-none pointer-events-none drop-shadow-sm bg-white/80 dark:bg-black/80 rounded backdrop-blur-sm z-10">
                                 {item.name || item.sku}
