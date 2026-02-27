@@ -291,19 +291,45 @@ export default function BoothDesigner() {
     }, [conversation, step]);
 
     // Helper to extract numeric dimensions or defaults
-    const getProductDimensions = (product) => {
-        // Simple heuristic: default backwalls are wider (10x1), counters smaller (3x2), etc.
+    const getProductDimensions = (product, boothW = 10, boothD = 10) => {
         const cat = (product?.category || '').toLowerCase();
+        const name = (product?.name || '').toLowerCase();
         let w = 3;
         let d = 2;
-        if (cat.includes('backwall') || cat.includes('display')) {
-            w = 10; d = 1;
-        } else if (cat.includes('counter') || cat.includes('podium')) {
-            w = 3; d = 2;
-        } else if (cat.includes('banner')) {
-            w = 3; d = 1;
+        let isFlooring = false;
+
+        // Is it flooring?
+        if (cat.includes('flooring') || cat.includes('carpet') || name.includes('flooring') || name.includes('carpet')) {
+            return { w: boothW, d: boothD, isFlooring: true };
         }
-        return { w, d };
+
+        // Try to find sizes like "20ft", "10ft", "20'", "10'"
+        let extractedW = null;
+        const ftMatch = name.match(/(\d+)\s*(ft|')/);
+        if (ftMatch) {
+            extractedW = parseInt(ftMatch[1]);
+        }
+        // Also look for "10x20" etc
+        const dimMatch = name.match(/(\d+)\s*x\s*(\d+)/);
+        if (dimMatch) {
+            extractedW = parseInt(dimMatch[1]); // Usually width is first
+        }
+
+        // Apply width and sensible depth based on type
+        if (cat.includes('backwall') || cat.includes('display') || name.includes('wall')) {
+            w = extractedW || 10; 
+            d = 1;
+        } else if (cat.includes('counter') || cat.includes('podium')) {
+            w = extractedW || 3; 
+            d = 2;
+        } else if (cat.includes('banner')) {
+            w = extractedW || 3; 
+            d = 1;
+        } else if (extractedW) {
+            w = extractedW;
+        }
+
+        return { w, d, isFlooring };
     };
 
     // Subscribe to the booth design entity to see added products live
