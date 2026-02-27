@@ -6,6 +6,7 @@ import { LogOut, FileText, Plus, Home as HomeIcon, Settings as SettingsIcon, Arr
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import VoiceActivationProvider from './components/voice/VoiceActivationProvider';
+import ErrorBoundary from './components/ErrorBoundary';
 
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
@@ -799,7 +800,9 @@ export default function Layout({ children, currentPageName }) {
       )}
       
       <main className={showHeader ? 'pt-14 md:pt-16' : ''}>
-        {children}
+        <ErrorBoundary>
+          {children}
+        </ErrorBoundary>
       </main>
 
       {/* Mobile Bottom Navigation */}
