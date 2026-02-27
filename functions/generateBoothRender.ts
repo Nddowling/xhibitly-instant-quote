@@ -32,8 +32,22 @@ Deno.serve(async (req) => {
         }, {});
 
         const products = [];
-        for (const [sku, count] of Object.entries(skuCounts)) {
-            const matches = await base44.entities.Product.filter({ sku });
+        for (const [skuOrName, count] of Object.entries(skuCounts)) {
+            // First try resolving by exact SKU
+            let matches = await base44.entities.Product.filter({ sku: skuOrName });
+            
+            // If not found, try resolving by exact Name (since the UI might pass names)
+            if (matches.length === 0) {
+                matches = await base44.entities.Product.filter({ name: skuOrName });
+            }
+
+            // Fallback to case-insensitive name match if still not found
+            if (matches.length === 0) {
+                const allProds = await base44.entities.Product.list();
+                const found = allProds.find(p => p.name?.toLowerCase() === skuOrName.toLowerCase() || p.sku?.toLowerCase() === skuOrName.toLowerCase());
+                if (found) matches = [found];
+            }
+
             if (matches.length > 0) {
                 products.push({ ...matches[0], quantity: count });
             }

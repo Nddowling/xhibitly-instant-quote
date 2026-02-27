@@ -105,14 +105,28 @@ export default function MessageBubble({ message, onAddProduct }) {
         // 1. Try explicit SKU in alt text (e.g. "sku:FMLT-DS-20-12")
         const explicitMatch = alt?.match(/sku:\s*([A-Z0-9-_]+)/i);
         if (explicitMatch) {
-            onAddProduct(explicitMatch[1]);
+            onAddProduct(explicitMatch[1].toUpperCase());
             return;
         }
 
-        // 2. Try hyphenated SKU pattern in alt or src
-        const skuMatch = alt?.match(/\b[A-Z0-9]+-[A-Z0-9-]+\b/i) || src?.match(/\b[A-Z0-9]+-[A-Z0-9-]+\b/i);
-        if (skuMatch) {
-            onAddProduct(skuMatch[0]);
+        // 2. Try hyphenated SKU pattern in alt
+        const altSkuMatch = alt?.match(/\b[A-Z0-9]+-[A-Z0-9-]+\b/i);
+        if (altSkuMatch) {
+            onAddProduct(altSkuMatch[0].toUpperCase());
+            return;
+        }
+
+        // 3. Fallback to the exact alt text (it might be the product name)
+        // This is much safer than guessing from an image URL which might be shared or named incorrectly
+        if (alt && alt.trim().length > 3 && alt.toLowerCase() !== 'image' && alt.toLowerCase() !== 'product') {
+            onAddProduct(alt.trim());
+            return;
+        }
+
+        // 4. Last resort: try URL
+        const srcSkuMatch = src?.match(/\b[A-Z0-9]+-[A-Z0-9-]+\b/i);
+        if (srcSkuMatch) {
+            onAddProduct(srcSkuMatch[0].toUpperCase());
         }
     };
     
