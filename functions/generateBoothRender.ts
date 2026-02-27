@@ -261,17 +261,20 @@ CRITICAL CONSTRAINTS (100% ACCURACY REQUIRED):
   - NO tablets, screens, or monitors (unless listed)
   - NO decorative elements or props
   - NO extra display stands or pedestals
-  - NO background exhibitors or neighboring booths with content
+  - NO background exhibitors, NO exhibition halls, NO trade show environment
   - NO extra backwalls or fabric walls (unless listed)
+  - NO architecture like hanging signs, giant rings, or pavilions unless explicitly listed
+  - NO structural framing or truss systems unless listed
 
-✗ DO NOT "fill empty space" - sparse booths are acceptable and expected
+✗ DO NOT "fill empty space" - sparse spaces are acceptable and expected
 ✗ DO NOT "improve the layout" - use exact coordinates provided
 ✗ DO NOT add items "to make it look better" or "balance the composition"
 ✗ DO NOT create additional branded surfaces not in inventory
+✗ DO NOT generate a complex trade show environment
 
-FRAMING: Straight-on architectural photo from the front of the booth, showing the full ${design.booth_size} space. Clean, professional documentation style.
+FRAMING: Straight-on architectural photo from the front, showing the full ${design.booth_size} space against a blank studio or plain concrete background. Clean, professional documentation style.
 
-This is a precise inventory verification photograph showing: ${productNameList} - NOTHING ELSE.`;
+CRITICAL: This is a precise inventory verification photograph showing ONLY: ${productNameList}. It MUST NOT look like a busy trade show.`;
         }
 
         // ── Call image generation ──────────────────────────────────────────
