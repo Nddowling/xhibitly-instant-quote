@@ -102,7 +102,14 @@ export default function MessageBubble({ message, onAddProduct }) {
     const handleImageClick = (src, alt) => {
         if (!onAddProduct) return;
         
-        // Extract SKU from alt text or URL
+        // 1. Try explicit SKU in alt text (e.g. "sku:FMLT-DS-20-12")
+        const explicitMatch = alt?.match(/sku:\s*([A-Z0-9-_]+)/i);
+        if (explicitMatch) {
+            onAddProduct(explicitMatch[1]);
+            return;
+        }
+
+        // 2. Try hyphenated SKU pattern in alt or src
         const skuMatch = alt?.match(/\b[A-Z0-9]+-[A-Z0-9-]+\b/i) || src?.match(/\b[A-Z0-9]+-[A-Z0-9-]+\b/i);
         if (skuMatch) {
             onAddProduct(skuMatch[0]);
