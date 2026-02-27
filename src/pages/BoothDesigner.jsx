@@ -548,7 +548,11 @@ export default function BoothDesigner() {
                 
                 <div className="flex-1 overflow-y-auto p-4 space-y-4" ref={scrollRef}>
                     {messages.map(msg => (
-                        <MessageBubble key={msg.id || Math.random()} message={msg} />
+                        <MessageBubble 
+                            key={msg.id || Math.random()} 
+                            message={msg} 
+                            onAddProduct={handleAddProductFromChat}
+                        />
                     ))}
                     {isSending && (
                         <div className="flex gap-2 items-center text-slate-400 text-sm pl-4">
