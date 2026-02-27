@@ -360,7 +360,8 @@ export default function BoothDesigner() {
                                         if (res.length > 0) product = res[0];
                                     } catch(e) {}
                                     
-                                    const { w, d } = getProductDimensions(product);
+                                    const { w: bW, d: bD } = parseBoothSize(design.booth_size || '10x10');
+                                    const { w, d, isFlooring } = getProductDimensions(product, bW, bD);
                                     
                                     for(let i=0; i < (count - currentCount); i++) {
                                         const res = BoothEngine.addItem(
@@ -370,7 +371,8 @@ export default function BoothDesigner() {
                                             product?.image_url || null, 
                                             w, 
                                             d, 
-                                            'center'
+                                            'center',
+                                            isFlooring
                                         );
                                         if (res.success) {
                                             updatedScene = res.scene;
