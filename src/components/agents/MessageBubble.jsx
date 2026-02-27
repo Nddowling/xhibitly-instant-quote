@@ -157,7 +157,15 @@ export default function MessageBubble({ message, onAddProduct }) {
                                         <a {...props} target="_blank" rel="noopener noreferrer">{children}</a>
                                     ),
                                     img: ({ node, ...props }) => (
-                                        <img className="rounded-lg my-2 max-w-full border border-slate-200 dark:border-slate-800 shadow-sm" alt={props.alt || ''} {...props} />
+                                        <img 
+                                            className={cn(
+                                                "rounded-lg my-2 max-w-full border border-slate-200 dark:border-slate-800 shadow-sm",
+                                                onAddProduct && "cursor-pointer hover:border-primary hover:shadow-md transition-all duration-200"
+                                            )}
+                                            alt={props.alt || ''} 
+                                            onClick={() => handleImageClick(props.src, props.alt)}
+                                            {...props} 
+                                        />
                                     ),
                                     p: ({ children }) => <p className="my-1 leading-relaxed">{children}</p>,
                                     ul: ({ children }) => <ul className="my-1 ml-4 list-disc">{children}</ul>,
