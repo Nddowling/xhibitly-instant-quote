@@ -1,5 +1,15 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.18';
 
+const rateLimiter = new Map();
+function checkRateLimit(userId, max = 15, windowMs = 3600000) {
+  const now = Date.now();
+  const limit = rateLimiter.get(userId) || { count: 0, reset: now + windowMs };
+  if (now > limit.reset) { limit.count = 0; limit.reset = now + windowMs; }
+  if (limit.count >= max) throw new Error('Rate limit exceeded');
+  limit.count++;
+  rateLimiter.set(userId, limit);
+}
+
 Deno.serve(async (req) => {
     try {
         const base44 = createClientFromRequest(req);
@@ -8,6 +18,8 @@ Deno.serve(async (req) => {
         if (!user || (!user.is_sales_rep && user.role !== 'admin')) {
             return Response.json({ error: 'Unauthorized' }, { status: 401 });
         }
+        
+        checkRateLimit(user.id);
 
         // Fetch up to 10 products that don't have handbook_page or market_value
         // This is meant to be run multiple times (e.g., via automation or repeated clicks)
