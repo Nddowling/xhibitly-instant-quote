@@ -201,9 +201,10 @@ export default function BoothDesigner() {
                     const res = await base44.entities.Product.filter({sku});
                     if (res.length > 0) product = res[0];
                 } catch(e) {}
-                
-                const { w, d } = getProductDimensions(product);
-                
+
+                const { w: bW, d: bD } = parseBoothSize(newData.booth_size || boothSize);
+                const { w, d, isFlooring } = getProductDimensions(product, bW, bD);
+
                 for(let i=0; i < (count - currentCount); i++) {
                     const res = BoothEngine.addItem(
                         updatedScene, 
@@ -212,7 +213,8 @@ export default function BoothDesigner() {
                         product?.image_url || null, 
                         w, 
                         d, 
-                        'center'
+                        'center',
+                        isFlooring
                     );
                     if (res.success) {
                         updatedScene = res.scene;
