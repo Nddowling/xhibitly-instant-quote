@@ -202,7 +202,7 @@ export default function BoothDesigner() {
                     if (res.length > 0) product = res[0];
                 } catch(e) {}
 
-                const { w: bW, d: bD } = parseBoothSize(newData.booth_size || boothSize);
+                const { w: bW, d: bD } = parseBoothSize(design.booth_size || boothSize);
                 const { w, d, isFlooring } = getProductDimensions(product, bW, bD);
 
                 for(let i=0; i < (count - currentCount); i++) {
