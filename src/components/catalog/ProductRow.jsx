@@ -7,15 +7,21 @@ import { createPageUrl } from '@/utils';
 import { Plus, Loader2, Check } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { toast } from "sonner";
+import { useNavigate } from 'react-router-dom';
 
 export default function ProductRow({ product, projectId }) {
+  const navigate = useNavigate();
   const [isAdding, setIsAdding] = useState(false);
   const [added, setAdded] = useState(false);
   const [quantity, setQuantity] = useState(1);
 
   const handleAddToProject = async (e) => {
     e.preventDefault(); // prevent navigation
-    if (!projectId) return;
+    if (!projectId) {
+        toast.info("Please start a project first");
+        navigate(createPageUrl('BoothDesigner'));
+        return;
+    }
     setIsAdding(true);
     try {
         const design = await base44.entities.BoothDesign.get(projectId);
@@ -84,25 +90,23 @@ export default function ProductRow({ product, projectId }) {
           )}
           <div className="text-[10px] text-slate-400 mt-0.5">{product.price_tier}</div>
         </div>
-        {projectId && (
-            <div className="flex items-center gap-2 mt-1">
-                <div className="flex items-center border border-slate-200 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800">
-                    <button onClick={(e) => { e.preventDefault(); setQuantity(Math.max(1, quantity - 1)); }} className="px-2 h-8 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-500">-</button>
-                    <span className="px-2 text-xs font-medium w-6 text-center">{quantity}</span>
-                    <button onClick={(e) => { e.preventDefault(); setQuantity(quantity + 1); }} className="px-2 h-8 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-500">+</button>
-                </div>
-                <Button 
-                    size="sm" 
-                    variant={added ? "secondary" : "default"}
-                    onClick={handleAddToProject} 
-                    disabled={isAdding}
-                    className={added ? "bg-green-100 text-green-700 hover:bg-green-200 h-8 text-xs" : "bg-[#e2231a] hover:bg-[#b01b13] h-8 text-xs"}
-                >
-                    {isAdding ? <Loader2 className="w-3 h-3 animate-spin" /> : added ? <Check className="w-3 h-3 mr-1" /> : <Plus className="w-3 h-3 mr-1" />}
-                    {added ? "Added" : "Add"}
-                </Button>
+        <div className="flex items-center gap-2 mt-1">
+            <div className="flex items-center border border-slate-200 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800">
+                <button onClick={(e) => { e.preventDefault(); setQuantity(Math.max(1, quantity - 1)); }} className="px-2 h-8 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-500">-</button>
+                <span className="px-2 text-xs font-medium w-6 text-center">{quantity}</span>
+                <button onClick={(e) => { e.preventDefault(); setQuantity(quantity + 1); }} className="px-2 h-8 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-500">+</button>
             </div>
-        )}
+            <Button 
+                size="sm" 
+                variant={added ? "secondary" : "default"}
+                onClick={handleAddToProject} 
+                disabled={isAdding}
+                className={added ? "bg-green-100 text-green-700 hover:bg-green-200 h-8 text-xs" : "bg-[#e2231a] hover:bg-[#b01b13] h-8 text-xs"}
+            >
+                {isAdding ? <Loader2 className="w-3 h-3 animate-spin" /> : added ? <Check className="w-3 h-3 mr-1" /> : <Plus className="w-3 h-3 mr-1" />}
+                {added ? "Added" : "Add to Project"}
+            </Button>
+        </div>
       </div>
     </Link>
   );

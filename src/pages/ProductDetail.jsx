@@ -52,7 +52,12 @@ export default function ProductDetail() {
   }
 
   const handleAddToProject = async () => {
-    if (!projectId || !product) return;
+    if (!projectId) {
+        toast.info("Please start a project first");
+        navigate(createPageUrl('BoothDesigner'));
+        return;
+    }
+    if (!product) return;
     setIsAdding(true);
     try {
         const design = await base44.entities.BoothDesign.get(projectId);
@@ -145,25 +150,23 @@ export default function ProductDetail() {
                     </div>
                   </div>
                   
-                  {projectId && (
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center border border-slate-200 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800">
-                        <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="px-3 h-10 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-500">-</button>
-                        <span className="px-3 font-medium w-8 text-center">{quantity}</span>
-                        <button onClick={() => setQuantity(quantity + 1)} className="px-3 h-10 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-500">+</button>
-                      </div>
-                      <Button 
-                        size="lg" 
-                        variant={added ? "secondary" : "default"}
-                        onClick={handleAddToProject} 
-                        disabled={isAdding}
-                        className={added ? "bg-green-100 text-green-700 hover:bg-green-200" : "bg-[#e2231a] hover:bg-[#b01b13]"}
-                      >
-                        {isAdding ? <Loader2 className="w-5 h-5 mr-2 animate-spin" /> : added ? <Check className="w-5 h-5 mr-2" /> : <Plus className="w-5 h-5 mr-2" />}
-                        {added ? "Added to Project" : "Add to Project"}
-                      </Button>
+                  <div className="flex items-center gap-3 mt-4">
+                    <div className="flex items-center border border-slate-200 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800">
+                      <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="px-3 h-10 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-500">-</button>
+                      <span className="px-3 font-medium w-8 text-center">{quantity}</span>
+                      <button onClick={() => setQuantity(quantity + 1)} className="px-3 h-10 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-500">+</button>
                     </div>
-                  )}
+                    <Button 
+                      size="lg" 
+                      variant={added ? "secondary" : "default"}
+                      onClick={handleAddToProject} 
+                      disabled={isAdding}
+                      className={added ? "bg-green-100 text-green-700 hover:bg-green-200" : "bg-[#e2231a] hover:bg-[#b01b13]"}
+                    >
+                      {isAdding ? <Loader2 className="w-5 h-5 mr-2 animate-spin" /> : added ? <Check className="w-5 h-5 mr-2" /> : <Plus className="w-5 h-5 mr-2" />}
+                      {added ? "Added to Project" : "Add to Project"}
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>
