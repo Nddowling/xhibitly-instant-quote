@@ -2,20 +2,27 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
-import { ArrowLeft, Package, DollarSign, Tag, Check, Info } from 'lucide-react';
+import { ArrowLeft, Package, DollarSign, Tag, Check, Info, Plus, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
+import { toast } from 'sonner';
 
 export default function ProductDetail() {
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [projectId, setProjectId] = useState(null);
+  const [isAdding, setIsAdding] = useState(false);
+  const [added, setAdded] = useState(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
       const urlParams = new URLSearchParams(window.location.search);
       const id = urlParams.get('id');
+      const pid = urlParams.get('projectId');
+      if (pid) setProjectId(pid);
+
       if (!id) {
         navigate(createPageUrl('Product3DManager'));
         return;
