@@ -159,7 +159,7 @@ export default function Product3DManager() {
               )}
               <div>
                 <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">
-                  {activeCategoryName || 'Product Catalog'}
+                  {activeSubcategoryName || activeCategoryName || 'Product Catalog'}
                 </h1>
                 <p className="text-slate-500 dark:text-slate-400 text-sm">
                   {searchTerm.length >= 2 
