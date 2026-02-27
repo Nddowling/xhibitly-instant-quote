@@ -215,11 +215,12 @@ This is inventory documentation: ${productNameList} only.`;
 
         } else {
             // FIRST RENDER — build from scratch using product reference images
-            prompt = `PHOTOGRAPHIC DOCUMENTATION TASK: Create a photorealistic architectural photo documenting the exact contents of a trade show booth. This is inventory verification - accuracy is critical.
+            prompt = `PHOTOGRAPHIC DOCUMENTATION TASK: Create a photorealistic architectural photo of an isolated display set in a completely empty room. This is inventory verification - accuracy and minimalism are critical. DO NOT generate a bustling trade show.
 
-BOOTH SPACE: ${sizeDesc}.
-FLOOR: Plain concrete convention center floor (unless flooring listed in inventory).
-LIGHTING: Bright, even convention center overhead lighting.
+ENVIRONMENT: ${sizeDesc}.
+FLOOR: Plain concrete floor (unless flooring listed in inventory).
+LIGHTING: Bright, even studio lighting.
+BACKGROUND: Pure white or plain light grey concrete wall. NO other booths, NO people, NO scenery.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 COMPLETE BOOTH INVENTORY (${productCount} items):
