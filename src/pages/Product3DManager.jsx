@@ -44,29 +44,43 @@ export default function Product3DManager() {
     setIsLoading(false);
   };
 
-  // Search across all products
-  const searchResults = searchTerm.length >= 2
-    ? products.filter(p =>
+  // Map mega category to actual product categories
+  const getCategoryMapping = (categorySlug) => {
+    const categoryMap = {
+      'portable-displays': ['Portable Display', 'Portable Displays', 'Banner Stands', 'Accessories', 'Display Elements', 'Counters', 'Info Centers'],
+      'hanging-structures': ['Hanging Structure', 'Hanging Structures'],
+      'outdoor': ['Flags', 'Outdoor Signs', 'Tents & Canopies'],
+      'custom-booths': ['Custom Booth', 'Custom Booths']
+    };
+    return categoryMap[categorySlug] || [];
+  };
+
+  // Get current category info
+  const activeCategory = megaCategories.find(c => c.slug === activeCategorySlug);
+  const activeCategoryName = activeCategory?.name || null;
+
+  // Filter products based on URL category/subcategory
+  const getFilteredProducts = () => {
+    if (searchTerm.length >= 2) {
+      return products.filter(p =>
         p.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         p.sku?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         p.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         p.product_line?.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    : [];
+      );
+    }
+    
+    if (activeCategorySlug) {
+      const mappedCategories = getCategoryMapping(activeCategorySlug);
+      return products.filter(p => 
+        mappedCategories.some(cat => p.category?.toLowerCase().includes(cat.toLowerCase()))
+      );
+    }
+    
+    return [];
+  };
 
-  // Products in active category
-  const categoryProducts = activeCategory
-    ? products.filter(p => p.category === activeCategory)
-    : [];
-
-  // Dynamically extract categories
-  const ALL_CATEGORIES = [...new Set(products.map(p => p.category).filter(Boolean))].sort();
-
-  // Count per category
-  const categoryCounts = {};
-  ALL_CATEGORIES.forEach(cat => {
-    categoryCounts[cat] = products.filter(p => p.category === cat).length;
-  });
+  const filteredProducts = getFilteredProducts();
 
   if (isLoading) {
     return (
@@ -78,8 +92,10 @@ export default function Product3DManager() {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pb-24">
-      <div className="max-w-7xl mx-auto p-4 md:p-6">
+      {/* Mega Menu Navigation */}
+      <MegaMenu categories={megaCategories} />
 
+      <div className="max-w-7xl mx-auto p-4 md:p-6">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -88,133 +104,76 @@ export default function Product3DManager() {
         >
           <div className="flex items-center gap-3 mb-1 justify-between">
             <div className="flex items-center gap-3">
-              {activeCategory ? (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setActiveCategory(null)}
-                  className="text-slate-600 hover:text-slate-900"
-                >
-                  <ArrowLeft className="w-5 h-5" />
-                </Button>
-              ) : projectId ? (
+              {projectId && (
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={() => navigate(createPageUrl('BoothDesigner') + '?projectId=' + projectId)}
-                  className="text-slate-600 hover:text-slate-900"
+                  className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white"
                   title="Back to Project"
                 >
                   <ArrowLeft className="w-5 h-5" />
                 </Button>
-              ) : null}
+              )}
               <div>
                 <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">
-                  {activeCategory || 'Product Catalog'}
+                  {activeCategoryName || 'Product Catalog'}
                 </h1>
-                <p className="text-slate-500 text-sm">
-                  {activeCategory
-                    ? `${categoryProducts.length} product${categoryProducts.length !== 1 ? 's' : ''}`
-                    : `${products.length} products across ${ALL_CATEGORIES.length} categories`
+                <p className="text-slate-500 dark:text-slate-400 text-sm">
+                  {searchTerm.length >= 2 
+                    ? `${filteredProducts.length} result${filteredProducts.length !== 1 ? 's' : ''} for "${searchTerm}"`
+                    : activeCategorySlug 
+                    ? `${filteredProducts.length} product${filteredProducts.length !== 1 ? 's' : ''}`
+                    : 'Browse by category above or search below'
                   }
                 </p>
               </div>
             </div>
-            {!activeCategory && (
-              <Link to={createPageUrl('CatalogImport')}>
-                <Button variant="outline" className="gap-2 shrink-0">
-                  <BookOpen className="w-4 h-4" />
-                  <span className="hidden sm:inline">Import Pages</span>
-                </Button>
-              </Link>
-            )}
+            <Link to={createPageUrl('CatalogImport')}>
+              <Button variant="outline" className="gap-2 shrink-0">
+                <BookOpen className="w-4 h-4" />
+                <span className="hidden sm:inline">Import Pages</span>
+              </Button>
+            </Link>
           </div>
-          </motion.div>
+        </motion.div>
 
         {/* Search */}
         <div className="relative mb-6">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
           <Input
             value={searchTerm}
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
-              if (e.target.value.length >= 2) setActiveCategory(null);
-            }}
+            onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search products by name, SKU, or product line..."
             className="pl-10 h-12 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800"
           />
         </div>
 
-        {/* Search Results */}
-        {searchTerm.length >= 2 && (
+        {/* Products List */}
+        {filteredProducts.length > 0 ? (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="mb-6"
+            className="space-y-2"
           >
-            <p className="text-sm text-slate-500 mb-3">
-              {searchResults.length} result{searchResults.length !== 1 ? 's' : ''} for "{searchTerm}"
-            </p>
-            {searchResults.length > 0 ? (
-              <div className="space-y-2">
-                {searchResults.map(p => (
-                  <ProductRow key={p.id} product={p} projectId={projectId} />
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-12 text-slate-400">
-                No products match your search.
-              </div>
-            )}
-          </motion.div>
-        )}
-
-        {/* Category Grid */}
-        {!activeCategory && searchTerm.length < 2 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
-          >
-            {ALL_CATEGORIES.map((cat, i) => (
-              <motion.div
-                key={cat}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.04 }}
-              >
-                <CategoryCard
-                  category={cat}
-                  productCount={categoryCounts[cat]}
-                  onClick={() => {
-                    setActiveCategory(cat);
-                    setSearchTerm('');
-                  }}
-                />
-              </motion.div>
+            {filteredProducts.map(p => (
+              <ProductRow key={p.id} product={p} projectId={projectId} />
             ))}
           </motion.div>
-        )}
-
-        {/* Category Detail View */}
-        {activeCategory && searchTerm.length < 2 && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            {categoryProducts.length > 0 ? (
-              <div className="space-y-2">
-                {categoryProducts.map(p => (
-                  <ProductRow key={p.id} product={p} projectId={projectId} />
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-16">
-                <p className="text-slate-400 text-lg mb-1">No products in this category yet</p>
-                <p className="text-slate-300 text-sm">Products will appear here once added to the catalog.</p>
-              </div>
-            )}
-          </motion.div>
+        ) : (searchTerm.length >= 2 || activeCategorySlug) ? (
+          <div className="text-center py-16">
+            <p className="text-slate-400 text-lg mb-1">No products found</p>
+            <p className="text-slate-500 dark:text-slate-400 text-sm">
+              {searchTerm.length >= 2 
+                ? 'Try a different search term' 
+                : 'This category is currently empty'}
+            </p>
+          </div>
+        ) : (
+          <div className="text-center py-16">
+            <p className="text-slate-400 text-lg mb-1">Welcome to the Product Catalog</p>
+            <p className="text-slate-500 dark:text-slate-400 text-sm">Use the menu above to browse by category or search for products</p>
+          </div>
         )}
       </div>
     </div>
