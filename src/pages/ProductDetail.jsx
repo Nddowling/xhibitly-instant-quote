@@ -124,19 +124,36 @@ export default function ProductDetail() {
 
             <Card className="border border-slate-200 dark:border-slate-800 shadow-sm">
               <CardContent className="p-6">
-                <div className="flex items-end gap-2 mb-1">
-                  <span className="text-4xl font-bold text-slate-900 dark:text-white">
-                    ${product.base_price?.toLocaleString() || '0'}
-                  </span>
-                  <span className="text-slate-500 mb-1">Base Price</span>
-                </div>
-                {product.is_rental && product.rental_price && (
-                  <div className="text-sm text-[#e2231a] font-medium mt-1">
-                    Rental from ${product.rental_price.toLocaleString()} / event
+                <div className="flex items-center justify-between flex-wrap gap-4">
+                  <div>
+                    <div className="flex items-end gap-2 mb-1">
+                      <span className="text-4xl font-bold text-slate-900 dark:text-white">
+                        ${product.base_price?.toLocaleString() || '0'}
+                      </span>
+                      <span className="text-slate-500 mb-1">Base Price</span>
+                    </div>
+                    {product.is_rental && product.rental_price && (
+                      <div className="text-sm text-[#e2231a] font-medium mt-1">
+                        Rental from ${product.rental_price.toLocaleString()} / event
+                      </div>
+                    )}
+                    <div className="text-xs text-slate-400 mt-2">
+                      Tier: {product.price_tier || 'Standard'}
+                    </div>
                   </div>
-                )}
-                <div className="text-xs text-slate-400 mt-2">
-                  Tier: {product.price_tier || 'Standard'}
+                  
+                  {projectId && (
+                    <Button 
+                      size="lg" 
+                      variant={added ? "secondary" : "default"}
+                      onClick={handleAddToProject} 
+                      disabled={isAdding}
+                      className={added ? "bg-green-100 text-green-700 hover:bg-green-200" : "bg-[#e2231a] hover:bg-[#b01b13]"}
+                    >
+                      {isAdding ? <Loader2 className="w-5 h-5 mr-2 animate-spin" /> : added ? <Check className="w-5 h-5 mr-2" /> : <Plus className="w-5 h-5 mr-2" />}
+                      {added ? "Added to Project" : "Add to Project"}
+                    </Button>
+                  )}
                 </div>
               </CardContent>
             </Card>
