@@ -50,6 +50,24 @@ export default function ProductDetail() {
     );
   }
 
+  const handleAddToProject = async () => {
+    if (!projectId || !product) return;
+    setIsAdding(true);
+    try {
+        const design = await base44.entities.BoothDesign.get(projectId);
+        const skus = design.product_skus || [];
+        skus.push(product.sku);
+        await base44.entities.BoothDesign.update(projectId, { product_skus: skus });
+        toast.success(`Added ${product.name} to project`);
+        setAdded(true);
+        setTimeout(() => setAdded(false), 3000);
+    } catch (err) {
+        toast.error('Failed to add product');
+    } finally {
+        setIsAdding(false);
+    }
+  };
+
   if (!product) return null;
 
   return (
@@ -61,7 +79,7 @@ export default function ProductDetail() {
           className="mb-6 -ml-4 text-slate-600 hover:text-slate-900"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Catalog
+          Back
         </Button>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
