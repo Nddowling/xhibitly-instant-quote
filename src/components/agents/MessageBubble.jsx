@@ -96,8 +96,18 @@ const FunctionDisplay = ({ toolCall }) => {
     );
 };
 
-export default function MessageBubble({ message }) {
+export default function MessageBubble({ message, onAddProduct }) {
     const isUser = message.role === 'user';
+    
+    const handleImageClick = (src, alt) => {
+        if (!onAddProduct) return;
+        
+        // Extract SKU from alt text or URL
+        const skuMatch = alt?.match(/\b[A-Z0-9]+-[A-Z0-9-]+\b/i) || src?.match(/\b[A-Z0-9]+-[A-Z0-9-]+\b/i);
+        if (skuMatch) {
+            onAddProduct(skuMatch[0]);
+        }
+    };
     
     return (
         <div className={cn("flex gap-3", isUser ? "justify-end" : "justify-start")}>
