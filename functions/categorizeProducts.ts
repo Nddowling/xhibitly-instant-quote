@@ -112,9 +112,17 @@ Deno.serve(async (req) => {
             }
 
             if (product.category !== category || product.subcategory !== subcategory) {
-                await base44.asServiceRole.entities.Product.update(product.id, { category, subcategory });
-                updatedCount++;
+                updates.push({ id: product.id, category, subcategory });
             }
+        }
+
+        const batchSize = 10;
+        for (let i = 0; i < updates.length; i += batchSize) {
+            const batch = updates.slice(i, i + batchSize);
+            await Promise.all(batch.map(u => 
+                base44.asServiceRole.entities.Product.update(u.id, { category: u.category, subcategory: u.subcategory })
+            ));
+            updatedCount += batch.length;
         }
 
         return Response.json({ success: true, updatedCount });
