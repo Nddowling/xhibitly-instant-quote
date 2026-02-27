@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { base44 } from '@/api/base44Client';
 import { Input } from '@/components/ui/input';
@@ -7,19 +7,22 @@ import { Button } from '@/components/ui/button';
 import { Search, ArrowLeft, BookOpen } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import CategoryCard from '../components/catalog/CategoryCard';
 import ProductRow from '../components/catalog/ProductRow';
+import MegaMenu from '../components/mega-menu/MegaMenu';
+import { categories as megaCategories } from '../components/mega-menu/categories';
 
 export default function Product3DManager() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [user, setUser] = useState(null);
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [activeCategory, setActiveCategory] = useState(null);
 
-  const urlParams = new URLSearchParams(window.location.search);
+  const urlParams = new URLSearchParams(location.search);
   const projectId = urlParams.get('projectId');
+  const activeCategorySlug = urlParams.get('category');
+  const activeSubcategorySlug = urlParams.get('subcategory');
 
   useEffect(() => {
     checkAuth();
