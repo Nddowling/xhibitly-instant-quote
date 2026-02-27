@@ -187,49 +187,90 @@ RULES FOR PLACEMENT:
 
         if (existingRender) {
             // ITERATIVE MODE — anchor to previous image and only change product set
-            prompt = `You are updating an existing trade show booth render. Use the LAST reference image as the spatial anchor (existing booth layout). Maintain its exact camera angle, perspective, booth size, floor, lighting, and branding.
+            prompt = `PHOTOGRAPHIC DOCUMENTATION UPDATE: Update the existing booth photo (last reference image) to show ONLY the inventory listed below. This is product inventory verification - accuracy is critical.
 
-BOOTH: ${sizeDesc}.
+BOOTH SPACE: ${sizeDesc} - empty except for listed items.
 
-PRODUCT UPDATE — The booth must now contain EXACTLY these ${productCount} item(s) and nothing else:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+COMPLETE INVENTORY (${productCount} items total):
 ${productManifest}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-REFERENCE IMAGES: The earlier images show the individual products. The last image is the previous booth render to update.
+REFERENCE IMAGES: Product photos shown first, existing booth photo shown last.
 
-RULES:
-- Remove any products from the previous render that are NOT in the list above.
-- Add any new products from the list that were not in the previous render.
-- ${layoutNote}
-- Do NOT invent, add, or imply any unlisted furniture, displays, counters, chairs, stands, or decor.
-- Keep the same backdrop, floor, lighting, camera angle, and brand graphics as the previous render.
-- ${brandingNote}
-- ${companyNote}
-- Result must be a photorealistic architectural visualization showing only: ${productNameList}.`;
+MANDATORY RULES - NO EXCEPTIONS:
+✓ Show ONLY the ${productCount} items listed above - nothing else
+✓ ${layoutNote}
+✓ Keep exact camera angle, perspective, floor, and lighting from existing render
+✓ Apply branding ONLY to products that exist in the inventory above
+${brandingNote ? `✓ Branding: ${brandingNote.replace('Every fabric surface, backwall, banner, and display panel', 'Only the fabric surfaces and display panels in the inventory')}` : ''}
+
+✗ REMOVE any items from previous render NOT in current inventory
+✗ NO chairs, tables, plants, people, extra signage, or unlisted decor
+✗ NO additional counters, stands, or display elements beyond what's listed
+✗ NO carpet/flooring unless explicitly listed in inventory
+✗ Empty space must remain empty - do not fill gaps
+
+This is inventory documentation: ${productNameList} only.`;
 
         } else {
             // FIRST RENDER — build from scratch using product reference images
-            prompt = `Create a strict, photorealistic 3D architectural visualization of a trade show booth based EXACTLY on the provided 2D layout and product list.
+            prompt = `PHOTOGRAPHIC DOCUMENTATION TASK: Create a photorealistic architectural photo documenting the exact contents of a trade show booth. This is inventory verification - accuracy is critical.
 
-BOOTH DIMENSIONS: ${sizeDesc}.
+BOOTH SPACE: ${sizeDesc}.
+FLOOR: Plain concrete convention center floor (unless flooring listed in inventory).
+LIGHTING: Bright, even convention center overhead lighting.
 
-PRODUCT MANIFEST (Exact Inventory):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+COMPLETE BOOTH INVENTORY (${productCount} items):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ${productManifest}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+END OF INVENTORY - NOTHING ELSE EXISTS IN THIS BOOTH
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-LAYOUT & POSITIONING (Non-Negotiable):
+SPATIAL PLACEMENT (EXACT COORDINATES REQUIRED):
 ${layoutNote}
 
-BRANDING & ATMOSPHERE:
-- ${brandingNote}
-- ${companyNote}
-- Environment: Convention center, high ceilings, concrete floor (unless flooring is listed), bright even lighting.
+BRANDING APPLICATION:
+${brandingNote ? `${brandingNote.replace('Every fabric surface, backwall, banner, and display panel MUST', 'Apply the brand to fabric surfaces and display panels that exist in the inventory. They must')}` : 'No branding required.'}
+${companyNote ? `${companyNote}` : ''}
+IMPORTANT: Apply branding ONLY to products that exist in the inventory above. Do NOT create extra branded surfaces, backwalls, or display panels that are not listed.
 
-CRITICAL CONSTRAINTS - READ CAREFULLY:
-1. **NO HALLUCINATIONS**: Do NOT add ANY furniture, people, plants, lights, carpet, or decorations that are not explicitly listed in the Product Manifest.
-2. **STRICT POSITIONING**: Items must be located exactly as described in the Layout section. Do not move them "to make it look better".
-3. **EXACT COUNT**: If the manifest says "1x Counter", draw exactly one. If it says "2x", draw two.
-4. **BRANDING**: The brand "${brandName}" must be visible on the products as specified.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CRITICAL CONSTRAINTS (100% ACCURACY REQUIRED):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-The goal is an accurate visualization of the user's specific design, not a creative interpretation.`;
+✓ SHOW EXACTLY: ${productNameList}
+✓ TOTAL COUNT: ${productCount} items (count them)
+✓ EXACT POSITIONS: Follow coordinate system precisely
+✓ EMPTY SPACE: Areas without products must be visibly empty
+✓ REFERENCE IMAGES: Use provided photos to match product appearance exactly
+
+✗ FORBIDDEN - DO NOT ADD:
+  - NO people, staff, or visitors
+  - NO chairs or seating (unless listed above)
+  - NO plants, flowers, or greenery
+  - NO extra tables or counters beyond inventory
+  - NO additional banners or signage beyond inventory
+  - NO carpet, rugs, or floor graphics (unless listed)
+  - NO extra lighting equipment or spotlights
+  - NO promotional materials, brochures, or giveaways
+  - NO drinks, food, or refreshments
+  - NO tablets, screens, or monitors (unless listed)
+  - NO decorative elements or props
+  - NO extra display stands or pedestals
+  - NO background exhibitors or neighboring booths with content
+  - NO extra backwalls or fabric walls (unless listed)
+
+✗ DO NOT "fill empty space" - sparse booths are acceptable and expected
+✗ DO NOT "improve the layout" - use exact coordinates provided
+✗ DO NOT add items "to make it look better" or "balance the composition"
+✗ DO NOT create additional branded surfaces not in inventory
+
+FRAMING: Straight-on architectural photo from the front of the booth, showing the full ${design.booth_size} space. Clean, professional documentation style.
+
+This is a precise inventory verification photograph showing: ${productNameList} - NOTHING ELSE.`;
         }
 
         // ── Call image generation ──────────────────────────────────────────
