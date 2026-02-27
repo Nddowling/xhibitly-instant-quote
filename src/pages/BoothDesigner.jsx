@@ -150,7 +150,7 @@ export default function BoothDesigner() {
             const design = await base44.entities.BoothDesign.create({
                 design_name: designName,
                 booth_size: boothSize,
-                brand_name: brandName,
+                brand_name: brandName ? brandName.trim() : '',
                 tier: 'Modular',
                 dealer_id: user?.id,
                 product_skus: [],
