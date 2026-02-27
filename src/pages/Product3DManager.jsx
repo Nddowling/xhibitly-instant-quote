@@ -72,9 +72,11 @@ export default function Product3DManager() {
       );
     }
     
+    let filtered = [];
+    
     if (activeCategorySlug) {
       const mapping = getCategoryMapping(activeCategorySlug);
-      return products.filter(p => {
+      filtered = products.filter(p => {
         // Check pricing_category field
         const pricingMatch = mapping.pricing.some(pc => 
           p.pricing_category?.toLowerCase() === pc.toLowerCase() ||
@@ -91,8 +93,22 @@ export default function Product3DManager() {
         return pricingMatch || nameMatch;
       });
     }
-    
-    return [];
+
+    if (activeSubcategorySlug && filtered.length > 0) {
+      // Further filter by subcategory slug
+      // For simplicity, we match the subcategory slug keywords to the product
+      const subcategoryKeywords = activeSubcategorySlug.split('-');
+      filtered = filtered.filter(p => {
+        return subcategoryKeywords.some(keyword => 
+          p.name?.toLowerCase().includes(keyword.toLowerCase()) ||
+          p.description?.toLowerCase().includes(keyword.toLowerCase()) ||
+          p.sku?.toLowerCase().includes(keyword.toLowerCase()) ||
+          p.category?.toLowerCase().includes(keyword.toLowerCase())
+        );
+      });
+    }
+
+    return activeCategorySlug ? filtered : [];
   };
 
   const filteredProducts = getFilteredProducts();
