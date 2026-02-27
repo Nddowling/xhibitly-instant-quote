@@ -187,9 +187,9 @@ RULES FOR PLACEMENT:
 
         if (existingRender) {
             // ITERATIVE MODE — anchor to previous image and only change product set
-            prompt = `PHOTOGRAPHIC DOCUMENTATION UPDATE: Update the existing booth photo (last reference image) to show ONLY the inventory listed below. This is product inventory verification - accuracy is critical.
+            prompt = `PHOTOGRAPHIC DOCUMENTATION UPDATE: Update the existing photo (last reference image) to show ONLY the inventory listed below in a completely empty space. This is product inventory verification - accuracy and extreme minimalism are critical. DO NOT generate a bustling trade show.
 
-BOOTH SPACE: ${sizeDesc} - empty except for listed items.
+ENVIRONMENT: ${sizeDesc} - completely empty except for listed items. No background scenery.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 COMPLETE INVENTORY (${productCount} items total):
