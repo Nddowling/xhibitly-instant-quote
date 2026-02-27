@@ -1,103 +1,190 @@
 export const categories = [
   {
-    name: "Portable Displays",
-    slug: "portable-displays",
-    icon: "📱",
-    subcategories: [
-      {
-        name: "Banner Stands",
-        slug: "banner-stands",
-        children: [
-          { name: "Retractable", slug: "retractable", productCount: 10, description: "Classic roll-up banners" },
-          { name: "Telescopic", slug: "telescopic", productCount: 5, description: "Adjustable height stands" },
-          { name: "Spring Back", slug: "spring-back", productCount: 7, description: "Tension-based displays" },
-          { name: "Fabric Banners", slug: "fabric-banners", productCount: 84, description: "Fabric display systems" },
-          { name: "Light Boxes", slug: "light-boxes", productCount: 17, description: "Backlit fabric displays" }
-        ]
-      },
-      {
-        name: "Accessories",
-        slug: "accessories",
-        children: [
-          { name: "Display Lighting", slug: "lighting", productCount: 6, description: "LED lights & spotlights" },
-          { name: "Shipping Cases", slug: "cases", productCount: 1, description: "Hard & soft cases" },
-          { name: "Sign Stands", slug: "signs", productCount: 25, description: "Directional signs & frames" },
-          { name: "Table Covers", slug: "table-covers", productCount: 1, description: "Branded table throws" }
-        ]
-      },
-      {
-        name: "Display Elements",
-        slug: "display-elements",
-        children: [
-          { name: "Counters", slug: "counters", productCount: 13, description: "Portable display counters" },
-          { name: "Info Centers", slug: "info-centers", productCount: 9, description: "Kiosks & literature racks" }
-        ]
-      }
-    ]
-  },
-  {
     name: "Hanging Structures",
     slug: "hanging-structures",
     icon: "🎪",
     subcategories: [
       {
-        name: "All Hanging Structures",
-        slug: "all",
-        productCount: 51,
-        description: "Overhead fabric displays"
-      },
-      {
         name: "Ring Structures",
-        slug: "ring",
-        productCount: 20,
-        description: "Circular hanging displays"
+        children: [
+          { name: "Essential Rings", slug: "essential-ring", count: 12 },
+          { name: "Backlit Rings", slug: "backlit-ring", count: 8 },
+          { name: "Large Rings", slug: "large-ring", count: 5 }
+        ]
       },
       {
-        name: "Square Structures",
-        slug: "square",
-        productCount: 15,
-        description: "Rectangular hanging displays"
+        name: "Square & Rectangular",
+        children: [
+          { name: "Square Structures", slug: "square-structure", count: 10 },
+          { name: "Backlit Squares", slug: "backlit-square", count: 6 },
+          { name: "Custom Shapes", slug: "custom-shape", count: 8 }
+        ]
       },
       {
-        name: "Backlit Structures",
-        slug: "backlit",
-        productCount: 16,
-        description: "Illuminated hanging displays"
+        name: "Specialty Hanging",
+        children: [
+          { name: "Tapered Structures", slug: "tapered", count: 4 },
+          { name: "Wave Structures", slug: "wave", count: 3 }
+        ]
+      }
+    ]
+  },
+  {
+    name: "Backwalls & Displays",
+    slug: "backwalls-displays",
+    icon: "🖼️",
+    subcategories: [
+      {
+        name: "Fabric Backwalls",
+        children: [
+          { name: "Formulate Backwalls", slug: "formulate-backwall", count: 45 },
+          { name: "Vector Frame", slug: "vector-frame", count: 18 },
+          { name: "Waveline", slug: "waveline", count: 22 },
+          { name: "Hopup", slug: "hopup", count: 15 }
+        ]
+      },
+      {
+        name: "Backlit Displays",
+        children: [
+          { name: "Backlit Frames", slug: "backlit-frame", count: 20 },
+          { name: "SEG Light Boxes", slug: "seg-lightbox", count: 12 }
+        ]
+      },
+      {
+        name: "Modular Systems",
+        children: [
+          { name: "Hybrid Pro", slug: "hybrid-pro", count: 16 },
+          { name: "MODify", slug: "modify", count: 8 }
+        ]
+      }
+    ]
+  },
+  {
+    name: "Counters & Pedestals",
+    slug: "counters-pedestals",
+    icon: "🗄️",
+    subcategories: [
+      {
+        name: "Display Counters",
+        children: [
+          { name: "Fabric Counters", slug: "fabric-counter", count: 14 },
+          { name: "Hard Top Counters", slug: "hardtop-counter", count: 8 },
+          { name: "Charging Stations", slug: "charging-counter", count: 4 }
+        ]
+      },
+      {
+        name: "Pedestals & Kiosks",
+        children: [
+          { name: "Display Pedestals", slug: "pedestal", count: 10 },
+          { name: "Literature Racks", slug: "literature-rack", count: 6 },
+          { name: "Kiosks", slug: "kiosk", count: 5 }
+        ]
+      }
+    ]
+  },
+  {
+    name: "Banner Stands",
+    slug: "banner-stands",
+    icon: "📋",
+    subcategories: [
+      {
+        name: "Retractable Banners",
+        children: [
+          { name: "Standard Retractable", slug: "retractable-standard", count: 15 },
+          { name: "Premium Retractable", slug: "retractable-premium", count: 8 },
+          { name: "Wide Format", slug: "retractable-wide", count: 6 }
+        ]
+      },
+      {
+        name: "Backlit Banners",
+        children: [
+          { name: "Backlit Retractable", slug: "backlit-retractable", count: 10 },
+          { name: "SEG Banners", slug: "seg-banner", count: 5 }
+        ]
+      },
+      {
+        name: "Specialty Stands",
+        children: [
+          { name: "Telescopic", slug: "telescopic", count: 7 },
+          { name: "Spring Back", slug: "spring-back", count: 4 },
+          { name: "X-Banner", slug: "x-banner", count: 3 }
+        ]
       }
     ]
   },
   {
     name: "Flags & Outdoor",
-    slug: "outdoor",
+    slug: "flags-outdoor",
     icon: "🏁",
     subcategories: [
-      { name: "Flags", slug: "flags", productCount: 10, description: "Feather & teardrop flags" },
-      { name: "Outdoor Signs", slug: "outdoor-signs", description: "Weather-resistant signage" },
-      { name: "Tents & Canopies", slug: "tents", description: "Event tents & shelters" }
+      {
+        name: "Feather Flags",
+        children: [
+          { name: "Standard Feather", slug: "feather-flag", count: 8 },
+          { name: "Large Feather", slug: "large-feather", count: 5 }
+        ]
+      },
+      {
+        name: "Teardrop Flags",
+        children: [
+          { name: "Standard Teardrop", slug: "teardrop-flag", count: 6 },
+          { name: "Large Teardrop", slug: "large-teardrop", count: 4 }
+        ]
+      },
+      {
+        name: "Tents & Canopies",
+        children: [
+          { name: "Pop-Up Tents", slug: "popup-tent", count: 8 },
+          { name: "Frame Tents", slug: "frame-tent", count: 5 }
+        ]
+      }
     ]
   },
   {
-    name: "Custom Booths",
-    slug: "custom-booths",
-    icon: "🏗️",
+    name: "Accessories",
+    slug: "accessories",
+    icon: "💡",
     subcategories: [
-      { name: "10x10 Displays", slug: "10x10", description: "100 sq ft inline booths" },
-      { name: "10x20 Displays", slug: "10x20", description: "200 sq ft inline booths" },
-      { name: "20x20 Displays", slug: "20x20", description: "Island booth displays" },
-      { name: "Custom Design", slug: "custom", description: "Fully custom exhibits" }
-    ]
-  },
-  {
-    name: "By Budget",
-    slug: "by-budget",
-    icon: "💰",
-    subcategories: [
-      { name: "Under $500", slug: "budget", description: "Economy options" },
-      { name: "$500 - $2,000", slug: "mid-range", description: "Standard quality" },
-      { name: "$2,000+", slug: "premium", description: "Premium displays" }
+      {
+        name: "Lighting",
+        children: [
+          { name: "LED Lights", slug: "led-light", count: 12 },
+          { name: "Spotlights", slug: "spotlight", count: 8 }
+        ]
+      },
+      {
+        name: "Furniture & Cases",
+        children: [
+          { name: "Table Covers", slug: "table-cover", count: 6 },
+          { name: "Shipping Cases", slug: "shipping-case", count: 10 },
+          { name: "Monitor Mounts", slug: "monitor-mount", count: 5 }
+        ]
+      },
+      {
+        name: "Graphics & Prints",
+        children: [
+          { name: "Graphic Replacements", slug: "graphic-replacement", count: 0 },
+          { name: "Custom Prints", slug: "custom-print", count: 0 }
+        ]
+      }
     ]
   }
 ];
+
+// Mapping of pricing_category values from Nimlok catalog to our menu structure
+export const pricingCategoryMap = {
+  'hanging_structure': ['hanging-structures'],
+  'backwall': ['backwalls-displays'],
+  'counter': ['counters-pedestals'],
+  'banner_stand': ['banner-stands'],
+  'flag': ['flags-outdoor'],
+  'tent': ['flags-outdoor'],
+  'accessory': ['accessories'],
+  'lighting': ['accessories'],
+  'case': ['accessories'],
+  'pedestal': ['counters-pedestals'],
+  'kiosk': ['counters-pedestals']
+};
 
 export function getCategoryProducts(categorySlug, subcategorySlug) {
   return fetch(`/api/products?category=${categorySlug}&subcategory=${subcategorySlug}`)

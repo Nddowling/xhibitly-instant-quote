@@ -44,15 +44,17 @@ export default function Product3DManager() {
     setIsLoading(false);
   };
 
-  // Map mega category to actual product categories
+  // Map mega category to actual product pricing categories and names
   const getCategoryMapping = (categorySlug) => {
     const categoryMap = {
-      'portable-displays': ['Portable Display', 'Portable Displays', 'Banner Stands', 'Accessories', 'Display Elements', 'Counters', 'Info Centers'],
-      'hanging-structures': ['Hanging Structure', 'Hanging Structures'],
-      'outdoor': ['Flags', 'Outdoor Signs', 'Tents & Canopies'],
-      'custom-booths': ['Custom Booth', 'Custom Booths']
+      'hanging-structures': { pricing: ['hanging_structure'], names: ['hanging', 'ring', 'square', 'structure'] },
+      'backwalls-displays': { pricing: ['backwall', 'display'], names: ['backwall', 'formulate', 'vector', 'waveline', 'hopup', 'hybrid', 'modify', 'frame'] },
+      'counters-pedestals': { pricing: ['counter', 'pedestal', 'kiosk'], names: ['counter', 'pedestal', 'kiosk', 'literature'] },
+      'banner-stands': { pricing: ['banner_stand'], names: ['banner', 'stand', 'retractable'] },
+      'flags-outdoor': { pricing: ['flag', 'tent'], names: ['flag', 'feather', 'teardrop', 'tent', 'canopy'] },
+      'accessories': { pricing: ['accessory', 'lighting', 'case'], names: ['light', 'led', 'case', 'table', 'cover', 'mount'] }
     };
-    return categoryMap[categorySlug] || [];
+    return categoryMap[categorySlug] || { pricing: [], names: [] };
   };
 
   // Get current category info
@@ -71,10 +73,23 @@ export default function Product3DManager() {
     }
     
     if (activeCategorySlug) {
-      const mappedCategories = getCategoryMapping(activeCategorySlug);
-      return products.filter(p => 
-        mappedCategories.some(cat => p.category?.toLowerCase().includes(cat.toLowerCase()))
-      );
+      const mapping = getCategoryMapping(activeCategorySlug);
+      return products.filter(p => {
+        // Check pricing_category field
+        const pricingMatch = mapping.pricing.some(pc => 
+          p.pricing_category?.toLowerCase() === pc.toLowerCase() ||
+          p.category?.toLowerCase().includes(pc.toLowerCase())
+        );
+        
+        // Check if product name contains any of the category keywords
+        const nameMatch = mapping.names.some(keyword => 
+          p.name?.toLowerCase().includes(keyword.toLowerCase()) ||
+          p.description?.toLowerCase().includes(keyword.toLowerCase()) ||
+          p.sku?.toLowerCase().includes(keyword.toLowerCase())
+        );
+        
+        return pricingMatch || nameMatch;
+      });
     }
     
     return [];
