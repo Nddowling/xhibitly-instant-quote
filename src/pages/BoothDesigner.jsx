@@ -784,12 +784,22 @@ function BoothProductCard({ sku, quantity = 1 }) {
                 }
 
                 // 4. Try heuristic: replace hyphens with spaces for Name lookup
-                // (e.g. "hybrid-pro-20ft" -> "hybrid pro 20ft")
-                const possibleName = sku.replace(/-/g, ' ').trim();
-                // Try case-insensitive search if API supports it, or just exact match on the transformed string
-                // Note: Standard base44 filter is exact match. 
-                // We'll try listing similar products if possible, but for now let's just try exact name match on cleaned string
-                // Since we can't do fuzzy search easily on frontend, we might miss some.
+                const possibleName = sku.replace(/-/g, ' ').trim().toLowerCase();
+                
+                // 5. Client-side partial match as a last resort
+                try {
+                    const recentProds = await base44.entities.Product.list('-created_date', 200);
+                    const match = recentProds.find(p => 
+                        (p.sku && p.sku.toLowerCase() === sku.toLowerCase()) || 
+                        (p.name && p.name.toLowerCase() === possibleName) ||
+                        (p.name && possibleName && p.name.toLowerCase().includes(possibleName))
+                    );
+                    
+                    if (match) {
+                        setProduct(match);
+                        return;
+                    }
+                } catch(e) {}
                 
                 // Fallback: Set basic info
                 setProduct({ name: sku, sku: sku, category: 'Product' });
