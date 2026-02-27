@@ -4,7 +4,7 @@ export const BoothEngine = {
         items: []
     }),
 
-    isValidPlacement: (scene, x, y, rot, w, d, itemIdToIgnore = null) => {
+    isValidPlacement: (scene, x, y, rot, w, d, itemIdToIgnore = null, isFlooring = false) => {
         const isRotated = rot === 90 || rot === 270;
         const actualW = isRotated ? d : w;
         const actualD = isRotated ? w : d;
@@ -14,12 +14,16 @@ export const BoothEngine = {
         const top = y + actualD / 2;
         const bottom = y - actualD / 2;
 
-        if (left < 0 || right > scene.booth.w_ft || bottom < 0 || top > scene.booth.d_ft) {
+        // Add small buffer for out of bounds
+        if (left < -0.01 || right > scene.booth.w_ft + 0.01 || bottom < -0.01 || top > scene.booth.d_ft + 0.01) {
             return { valid: false, reason: 'Out of bounds' };
         }
 
+        if (isFlooring) return { valid: true };
+
         for (const item of scene.items) {
             if (item.id === itemIdToIgnore) continue;
+            if (item.isFlooring) continue;
 
             const itemRotated = item.rot === 90 || item.rot === 270;
             const itemW = itemRotated ? item.d : item.w;
@@ -30,7 +34,8 @@ export const BoothEngine = {
             const iTop = item.y + itemD / 2;
             const iBottom = item.y - itemD / 2;
 
-            if (left < iRight && right > iLeft && bottom < iTop && top > iBottom) {
+            // Small buffer for floating point errors
+            if (left < iRight - 0.01 && right > iLeft + 0.01 && bottom < iTop - 0.01 && top > iBottom + 0.01) {
                 return { valid: false, reason: `Collision with another item` };
             }
         }
@@ -38,7 +43,7 @@ export const BoothEngine = {
         return { valid: true };
     },
 
-    addItem: (scene, sku, name, imageUrl, w = 3, d = 1, near = 'center') => {
+    addItem: (scene, sku, name, imageUrl, w = 3, d = 1, near = 'center', isFlooring = false) => {
         const item = {
             id: Math.random().toString(36).substring(2, 9),
             sku,
@@ -48,7 +53,8 @@ export const BoothEngine = {
             y: scene.booth.d_ft / 2,
             rot: 0,
             w,
-            d
+            d,
+            isFlooring
         };
 
         const step = 0.5; // 6 inch snap
