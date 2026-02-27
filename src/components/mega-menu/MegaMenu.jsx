@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import './MegaMenu.css';
+// CSS is now integrated via globals.css or directly in Layout
 
 /**
  * Mega Menu Component - Nimlok-style navigation
