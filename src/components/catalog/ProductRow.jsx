@@ -32,7 +32,7 @@ export default function ProductRow({ product, projectId }) {
   };
 
   return (
-    <Link to={`${createPageUrl('ProductDetail')}?id=${product.id}`} className="flex items-center gap-4 p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 hover:shadow-md transition-shadow cursor-pointer">
+    <Link to={`${createPageUrl('ProductDetail')}?id=${product.id}${projectId ? `&projectId=${projectId}` : ''}`} className="flex items-center gap-4 p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 hover:shadow-md transition-shadow cursor-pointer">
       {/* Thumbnail */}
       <div className="w-16 h-16 md:w-20 md:h-20 rounded-lg bg-slate-100 dark:bg-slate-800 flex-shrink-0 overflow-hidden">
         {product.image_url ? (
