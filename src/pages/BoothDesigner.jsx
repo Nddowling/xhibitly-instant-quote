@@ -419,6 +419,27 @@ export default function BoothDesigner() {
         }
     };
 
+    const handleAddProductFromChat = async (sku) => {
+        if (!boothDesign || !sku) return;
+        
+        try {
+            const currentSkus = boothDesign.product_skus || [];
+            const updatedSkus = [...currentSkus, sku];
+            
+            await base44.entities.BoothDesign.update(boothDesign.id, {
+                product_skus: updatedSkus
+            });
+            
+            // Show success toast
+            const toastModule = await import('sonner');
+            toastModule.toast.success('Product added to booth!');
+        } catch (error) {
+            console.error('Failed to add product:', error);
+            const toastModule = await import('sonner');
+            toastModule.toast.error('Failed to add product');
+        }
+    };
+
     // Engine UI Handlers
     const handleMoveItem = (id, newX, newY) => {
         if (!scene) return;
