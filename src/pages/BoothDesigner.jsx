@@ -293,13 +293,7 @@ export default function BoothDesigner() {
         }
     }, [conversation, step]);
 
-    // Watch for new renders
-    useEffect(() => {
-        if (boothDesign?.design_image_url && boothDesign.design_image_url !== lastRenderUrl) {
-            setLastRenderUrl(boothDesign.design_image_url);
-            setShowRenderPopup(true);
-        }
-    }, [boothDesign?.design_image_url, lastRenderUrl]);
+
 
     // Helper to extract numeric dimensions or defaults
     const getProductDimensions = (product, sku, boothW = 10, boothD = 10) => {
