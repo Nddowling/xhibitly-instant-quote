@@ -30,6 +30,7 @@ export default function BoothDesigner() {
     // Scene Engine State
     const [scene, setScene] = useState(null);
     const scrollRef = useRef(null);
+    const [viewMode, setViewMode] = useState('2d'); // '2d' | '3d'
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
