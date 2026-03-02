@@ -204,10 +204,23 @@ export default function BoothDesigner() {
             const { w, d } = parseBoothSize(boothSize);
             const initScene = BoothEngine.createScene(w, d);
             
+            let brandIdentity = null;
+            if (brandUrl && brandUrl.trim()) {
+                try {
+                    const res = await base44.functions.invoke('fetchBrandData', { website_url: brandUrl.trim() });
+                    if (res.data && res.data.brand) {
+                        brandIdentity = res.data.brand;
+                    }
+                } catch (e) {
+                    console.warn("Failed to fetch brand data", e);
+                }
+            }
+            
             const design = await base44.entities.BoothDesign.create({
                 design_name: designName,
                 booth_size: boothSize,
                 brand_url: brandUrl ? brandUrl.trim() : '',
+                brand_identity: brandIdentity,
                 tier: 'Modular',
                 dealer_id: user?.id,
                 product_skus: [],
