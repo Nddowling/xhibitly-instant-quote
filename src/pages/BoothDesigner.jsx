@@ -27,8 +27,6 @@ export default function BoothDesigner() {
     
     // Scene Engine State
     const [scene, setScene] = useState(null);
-    const [viewMode, setViewMode] = useState('2d');
-    const [snapshotDataUrl, setSnapshotDataUrl] = useState(null);
     const scrollRef = useRef(null);
 
     useEffect(() => {
