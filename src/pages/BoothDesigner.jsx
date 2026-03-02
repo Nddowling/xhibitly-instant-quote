@@ -11,6 +11,7 @@ import MessageBubble from '@/components/agents/MessageBubble';
 import ProjectSelector from '@/components/booth/ProjectSelector';
 import { BoothEngine } from '@/components/booth/BoothEngine';
 import BoothFloorplan from '@/components/booth/BoothFloorplan';
+import BoothSnapshotRenderer from '@/components/render/BoothSnapshotRenderer';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 
 export default function BoothDesigner() {
@@ -28,6 +29,7 @@ export default function BoothDesigner() {
     // Scene Engine State
     const [scene, setScene] = useState(null);
     const [viewMode, setViewMode] = useState('2d');
+    const [snapshotDataUrl, setSnapshotDataUrl] = useState(null);
     const scrollRef = useRef(null);
 
     useEffect(() => {
@@ -678,20 +680,24 @@ export default function BoothDesigner() {
                                     brandName={boothDesign?.brand_identity?.company_name || boothDesign?.brand_name || boothDesign?.brand_url}
                                 />
                             ) : (
-                                boothDesign?.design_image_url ? (
-                                    <div className="relative w-full aspect-[16/9]">
-                                        <img src={`${boothDesign.design_image_url}${boothDesign.design_image_url.includes('?') ? '&' : '?'}t=${new Date(boothDesign.render_generated_at || Date.now()).getTime()}`} alt="Booth Render" className="w-full h-full object-cover" />
-                                                        <div className="absolute top-4 right-4">
-                                            <GenerateRenderButton boothDesignId={boothDesign.id} skus={boothDesign?.product_skus} />
-                                        </div>
+                                <div className="relative w-full aspect-[16/9]">
+                                    <BoothSnapshotRenderer
+                                        sceneJson={scene}
+                                        brandIdentity={boothDesign?.brand_identity}
+                                        boothSize={boothDesign?.booth_size}
+                                        onSnapshotReady={(dataUrl) => setSnapshotDataUrl(dataUrl)}
+                                    />
+                                    <div className="absolute top-4 right-4">
+                                        <GenerateRenderButton 
+                                            boothDesignId={boothDesign?.id} 
+                                            skus={boothDesign?.product_skus} 
+                                            snapshotDataUrl={snapshotDataUrl}
+                                            onSuccess={(url) => {
+                                                setBoothDesign(prev => ({ ...prev, design_image_url: url }));
+                                            }}
+                                        />
                                     </div>
-                                ) : (
-                                    <div className="w-full aspect-[16/9] flex flex-col items-center justify-center text-slate-400 p-6 text-center">
-                                        <LayoutTemplate className="w-12 h-12 mb-3 opacity-20" />
-                                        <p className="text-sm font-medium text-slate-500 mb-4">No 3D render generated yet.</p>
-                                        <GenerateRenderButton boothDesignId={boothDesign?.id} skus={boothDesign?.product_skus} />
-                                    </div>
-                                )
+                                </div>
                             )}
                         </div>
 
@@ -717,17 +723,26 @@ export default function BoothDesigner() {
     );
 }
 
-function GenerateRenderButton({ boothDesignId, skus }) {
+function GenerateRenderButton({ boothDesignId, skus, snapshotDataUrl, onSuccess }) {
     const [isGenerating, setIsGenerating] = useState(false);
 
     const handleGenerate = async () => {
-        if (!boothDesignId || !skus || skus.length === 0) return;
+        if (!boothDesignId || !skus || skus.length === 0 || !snapshotDataUrl) return;
         setIsGenerating(true);
         try {
-            await base44.functions.invoke('generateBoothRender', { booth_design_id: boothDesignId });
+            const res = await base44.functions.invoke('uploadRenderedImage', { 
+                booth_design_id: boothDesignId,
+                data_url: snapshotDataUrl
+            });
+            if (res.data && res.data.success && onSuccess) {
+                onSuccess(res.data.url);
+                const toastModule = await import('sonner');
+                toastModule.toast.success('Snapshot saved successfully!');
+            }
         } catch (error) {
-            console.error("Failed to generate render:", error);
-            alert("Failed to generate render. Please try again.");
+            console.error("Failed to save snapshot:", error);
+            const toastModule = await import('sonner');
+            toastModule.toast.error("Failed to save snapshot. Please try again.");
         } finally {
             setIsGenerating(false);
         }
@@ -736,14 +751,14 @@ function GenerateRenderButton({ boothDesignId, skus }) {
     return (
         <Button 
             onClick={handleGenerate} 
-            disabled={isGenerating || !skus || skus.length === 0}
+            disabled={isGenerating || !skus || skus.length === 0 || !snapshotDataUrl}
             className="bg-primary hover:bg-primary/90 text-white shadow-md"
             size="sm"
         >
             {isGenerating ? (
-                <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Rendering...</>
+                <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Saving...</>
             ) : (
-                <><ImageIcon className="w-4 h-4 mr-2" /> Generate 3D Render</>
+                <><ImageIcon className="w-4 h-4 mr-2" /> Save Snapshot</>
             )}
         </Button>
     );
