@@ -563,7 +563,6 @@ export default function BoothDesigner() {
     }
 
     // MAIN DESIGNER SCREEN
-    const [viewMode, setViewMode] = useState('2d'); // '2d' | '3d'
     
     return (
         <div className="flex h-[calc(100vh-64px)] overflow-hidden bg-slate-50 dark:bg-slate-950">
