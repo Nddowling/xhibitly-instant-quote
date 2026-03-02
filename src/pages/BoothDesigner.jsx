@@ -422,7 +422,12 @@ export default function BoothDesigner() {
     };
 
     const handleAddProductFromChat = async (sku) => {
-        if (!boothDesign || !sku) return;
+        console.log("handleAddProductFromChat called with:", sku, "boothDesign:", boothDesign?.id);
+        if (!boothDesign || !sku) {
+            const toastModule = await import('sonner');
+            toastModule.toast.error('Cannot add product: missing design or SKU');
+            return;
+        }
         
         try {
             const currentSkus = boothDesign.product_skus || [];
@@ -434,7 +439,7 @@ export default function BoothDesigner() {
             
             // Show success toast
             const toastModule = await import('sonner');
-            toastModule.toast.success('Product added to booth!');
+            toastModule.toast.success(`Product ${sku} added to booth!`);
         } catch (error) {
             console.error('Failed to add product:', error);
             const toastModule = await import('sonner');
