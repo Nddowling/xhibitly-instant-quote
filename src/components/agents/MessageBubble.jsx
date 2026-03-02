@@ -116,19 +116,19 @@ export default function MessageBubble({ message, onAddProduct }) {
             return;
         }
 
-        // 3. Last resort: try URL
-        const srcSkuMatch = src?.match(/\b[A-Z0-9]+-[A-Z0-9-]+\b/i);
-        if (srcSkuMatch && !srcSkuMatch[0].toLowerCase().includes('placeholder')) {
-            onAddProduct(srcSkuMatch[0].toUpperCase());
-            return;
-        }
-
-        // 4. Fallback to the exact alt text (it might be the product name)
+        // 3. Fallback to the exact alt text (it might be the product name)
         // This is much safer than guessing from an image URL which might be shared or named incorrectly
         if (alt && alt.trim().length > 3 && alt.toLowerCase() !== 'image' && alt.toLowerCase() !== 'product') {
             // Remove "sku:" prefix if it exists but wasn't caught by the regex above
             const cleanAlt = alt.replace(/^sku:\s*/i, '').trim();
             onAddProduct(cleanAlt);
+            return;
+        }
+
+        // 4. Last resort: try URL
+        const srcSkuMatch = src?.match(/\b[A-Z0-9]+-[A-Z0-9-]+\b/i);
+        if (srcSkuMatch && !srcSkuMatch[0].toLowerCase().includes('placeholder')) {
+            onAddProduct(srcSkuMatch[0].toUpperCase());
         }
     };
     
