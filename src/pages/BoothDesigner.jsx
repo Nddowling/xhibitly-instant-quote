@@ -234,11 +234,7 @@ export default function BoothDesigner() {
             const currentCount = sceneCounts[sku] || 0;
             if (count > currentCount) {
                 // Fetch product for details
-                let product = null;
-                try {
-                    const res = await base44.entities.Product.filter({sku});
-                    if (res.length > 0) product = res[0];
-                } catch(e) {}
+                let product = await fetchProductDetails(sku);
 
                 const { w: bW, d: bD } = parseBoothSize(design.booth_size || boothSize);
                 const { w, d, isFlooring } = getProductDimensions(product, sku, bW, bD);
@@ -248,7 +244,7 @@ export default function BoothDesigner() {
                         updatedScene, 
                         sku, 
                         product?.name || sku, 
-                        product?.image_url || null, 
+                        product?.image_cached_url || product?.image_url || null, 
                         w, 
                         d, 
                         'center',
