@@ -115,6 +115,13 @@ export default function MessageBubble({ message, onAddProduct }) {
             onAddProduct(altSkuMatch[0].toUpperCase());
             return;
         }
+        
+        // 2.5 Try explicit SKU in src URL
+        const srcExplicitMatch = src?.match(/sku:\s*([A-Z0-9-_]+)/i);
+        if (srcExplicitMatch) {
+            onAddProduct(srcExplicitMatch[1].toUpperCase());
+            return;
+        }
 
         // 3. Fallback to the exact alt text (it might be the product name)
         // This is much safer than guessing from an image URL which might be shared or named incorrectly
