@@ -220,13 +220,19 @@ export default function MessageBubble({ message, onAddProduct }) {
                                                         onAddProduct && "cursor-pointer hover:border-primary hover:shadow-md transition-all duration-200"
                                                     )}
                                                     alt={props.alt || ''} 
-                                                    onClick={() => handleImageClick(props.src, props.alt)}
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        handleImageClick(props.src, props.alt);
+                                                    }}
                                                     {...props} 
                                                 />
                                                 {onAddProduct && (
                                                     <div 
                                                         className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center cursor-pointer"
-                                                        onClick={() => handleImageClick(props.src, props.alt)}
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            handleImageClick(props.src, props.alt);
+                                                        }}
                                                     >
                                                         <span className="bg-white text-slate-900 text-xs font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1">
                                                             <Box className="w-3 h-3" /> Add to Booth
