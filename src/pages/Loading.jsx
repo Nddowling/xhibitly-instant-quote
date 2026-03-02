@@ -441,18 +441,7 @@ function getBoothDims(boothSize) {
   return { width: w, depth: d };
 }
 
-function collectReferenceImages(brandAnalysis, products) {
-  const urls = [];
-  const logoUrl = brandAnalysis.logo_url || '';
-  if (logoUrl && /\.(png|jpg|jpeg|gif|webp|bmp|tiff|svg)(\?|$)/i.test(logoUrl)) {
-    urls.push(logoUrl);
-  }
-  const thumbs = products
-    .map(p => p.thumbnail_url || p.image_url)
-    .filter(url => url && /\.(png|jpg|jpeg|gif|webp|bmp|tiff|svg)(\?|$)/i.test(url));
-  urls.push(...[...new Set(thumbs)].slice(0, 4));
-  return urls;
-}
+
 
 // ═══════════════════════════════════════════════════════════════
 // LOADING STEPS
