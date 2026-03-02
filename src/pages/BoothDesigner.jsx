@@ -47,6 +47,26 @@ export default function BoothDesigner() {
         }
     }, []);
 
+    const handleGenerateRender = async () => {
+        if (!boothDesign) return;
+        setIsRendering(true);
+        try {
+            const res = await base44.functions.invoke('generateBoothRender', { booth_design_id: boothDesign.id });
+            if (res.data && res.data.image_url) {
+                setBoothDesign(prev => ({ ...prev, design_image_url: res.data.image_url }));
+                setLastRenderUrl(res.data.image_url);
+                setShowRenderPopup(true);
+            } else if (res.data && res.data.error) {
+                alert("Error: " + res.data.error);
+            }
+        } catch (e) {
+            console.error("Failed to generate render", e);
+            alert("Failed to generate render.");
+        } finally {
+            setIsRendering(false);
+        }
+    };
+
     // Start the design process
     const handleCreateQuote = async () => {
         try {
