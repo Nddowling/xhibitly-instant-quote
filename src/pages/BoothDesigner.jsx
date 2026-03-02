@@ -690,47 +690,6 @@ export default function BoothDesigner() {
     );
 }
 
-function GenerateRenderButton({ boothDesignId, skus, snapshotDataUrl, onSuccess }) {
-    const [isGenerating, setIsGenerating] = useState(false);
-
-    const handleGenerate = async () => {
-        if (!boothDesignId || !skus || skus.length === 0 || !snapshotDataUrl) return;
-        setIsGenerating(true);
-        try {
-            const res = await base44.functions.invoke('uploadRenderedImage', { 
-                booth_design_id: boothDesignId,
-                data_url: snapshotDataUrl
-            });
-            if (res.data && res.data.success && onSuccess) {
-                onSuccess(res.data.url);
-                const toastModule = await import('sonner');
-                toastModule.toast.success('Snapshot saved successfully!');
-            }
-        } catch (error) {
-            console.error("Failed to save snapshot:", error);
-            const toastModule = await import('sonner');
-            toastModule.toast.error("Failed to save snapshot. Please try again.");
-        } finally {
-            setIsGenerating(false);
-        }
-    };
-
-    return (
-        <Button 
-            onClick={handleGenerate} 
-            disabled={isGenerating || !skus || skus.length === 0 || !snapshotDataUrl}
-            className="bg-primary hover:bg-primary/90 text-white shadow-md"
-            size="sm"
-        >
-            {isGenerating ? (
-                <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Saving...</>
-            ) : (
-                <><ImageIcon className="w-4 h-4 mr-2" /> Save Snapshot</>
-            )}
-        </Button>
-    );
-}
-
 function BoothProductCard({ sku, quantity = 1 }) {
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
