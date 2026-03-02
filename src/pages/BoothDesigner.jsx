@@ -104,10 +104,9 @@ export default function BoothDesigner() {
     const parseBoothSize = (sizeStr) => {
         const parts = sizeStr.toLowerCase().split('x');
         if (parts.length === 2) {
-            const a = parseInt(parts[0]) || 10;
-            const b = parseInt(parts[1]) || 10;
-            // Usually booths are wider than they are deep (e.g., 10x20 means 20 wide, 10 deep)
-            return { w: Math.max(a, b), d: Math.min(a, b) };
+            // First number is width, second is depth. 
+            // e.g. 10x20 means 10ft wide, 20ft deep. 20x10 means 20ft wide, 10ft deep.
+            return { w: parseInt(parts[0]) || 10, d: parseInt(parts[1]) || 10 };
         }
         return { w: 10, d: 10 };
     };
