@@ -126,7 +126,9 @@ export default function MessageBubble({ message, onAddProduct }) {
         // 4. Fallback to the exact alt text (it might be the product name)
         // This is much safer than guessing from an image URL which might be shared or named incorrectly
         if (alt && alt.trim().length > 3 && alt.toLowerCase() !== 'image' && alt.toLowerCase() !== 'product') {
-            onAddProduct(alt.trim());
+            // Remove "sku:" prefix if it exists but wasn't caught by the regex above
+            const cleanAlt = alt.replace(/^sku:\s*/i, '').trim();
+            onAddProduct(cleanAlt);
         }
     };
     
