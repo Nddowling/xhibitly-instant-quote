@@ -125,6 +125,18 @@ Deno.serve(async (req) => {
             });
         }
 
+        function parsePrice(value) {
+            if (value === null || value === undefined || value === '') return null;
+            if (typeof value === 'number') return value;
+            const cleaned = String(value).replace(/[^0-9.]/g, '');
+            const parsed = parseFloat(cleaned);
+            if (isNaN(parsed)) return null;
+            if (parsed > 50000 || parsed < 10) {
+                console.log(`[Sanity Check] Parsed price out of normal bounds: original "${value}" -> parsed ${parsed}`);
+            }
+            return parsed;
+        }
+
         // IMPORT MODE - Actually create products
         console.log('🚀 Starting import...');
         const results = {
@@ -179,8 +191,8 @@ Deno.serve(async (req) => {
                     image_cached_url: imageCachedUrl,
 
                     // Pricing
-                    base_price: product.price ? parseFloat(product.price.replace(/[^0-9.]/g, '')) : null,
-                    market_value: null,
+                    base_price: parsePrice(product.price),
+                    market_value: parsePrice(product.market_value),
 
                     // Catalog references
                     handbook_page: pageMapping?.primary_page?.toString() || null,

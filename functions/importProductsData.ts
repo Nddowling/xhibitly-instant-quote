@@ -22,6 +22,18 @@ Deno.serve(async (req) => {
             success: 0,
             errors: []
         };
+
+        function parsePrice(value) {
+            if (value === null || value === undefined || value === '') return null;
+            if (typeof value === 'number') return value;
+            const cleaned = String(value).replace(/[^0-9.]/g, '');
+            const parsed = parseFloat(cleaned);
+            if (isNaN(parsed)) return null;
+            if (parsed > 50000 || parsed < 10) {
+                console.log(`[Sanity Check] Parsed price out of normal bounds: original "${value}" -> parsed ${parsed}`);
+            }
+            return parsed;
+        }
         
         const productsToInsert = [];
         const variantsToInsert = [];
@@ -55,13 +67,15 @@ Deno.serve(async (req) => {
                 }
             }
             
+            const parsedPrice = parsePrice(item.price || item.base_price);
+
             productsToInsert.push({
                 name: String(item.name || "Unnamed Product"),
                 sku: String(sku),
                 category: String(item.category || "Uncategorized"),
                 subcategory: String(item.subcategory || ""),
                 description: String(item.description || ""),
-                base_price: 0,
+                base_price: parsedPrice || 0,
                 image_url: finalImageUrl,
                 image_cached_url: imageCachedUrl
             });
@@ -71,7 +85,7 @@ Deno.serve(async (req) => {
                 manufacturer_sku: String(sku),
                 category_name: String(item.category || "Uncategorized"),
                 description: String(item.description || ""),
-                base_price: 0,
+                base_price: parsedPrice || 0,
                 image_url: finalImageUrl,
                 thumbnail_url: finalImageUrl
             });
