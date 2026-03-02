@@ -149,7 +149,7 @@ export default function BoothFloorplan({ scene, onMoveItem, onRotateItem, onRemo
                                         variant="ghost" 
                                         size="icon" 
                                         className="h-6 w-6 text-slate-600 hover:text-primary"
-                                        onPointerDown={(e) => { e.stopPropagation(); onRotateItem(item.id, 90); }}
+                                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); onRotateItem(item.id, 90); }}
                                         title="Rotate 90°"
                                     >
                                         <RotateCcw className="w-3 h-3" />
@@ -158,7 +158,7 @@ export default function BoothFloorplan({ scene, onMoveItem, onRotateItem, onRemo
                                         variant="ghost" 
                                         size="icon" 
                                         className="h-6 w-6 text-slate-600 hover:text-red-500"
-                                        onPointerDown={(e) => { e.stopPropagation(); onRemoveItem(item.id); }}
+                                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); onRemoveItem(item.id); }}
                                         title="Remove"
                                     >
                                         <Trash2 className="w-3 h-3" />
