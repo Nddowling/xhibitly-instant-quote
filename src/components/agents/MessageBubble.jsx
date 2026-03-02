@@ -197,15 +197,26 @@ export default function MessageBubble({ message, onAddProduct }) {
                                             );
                                         }
                                         return (
-                                            <img 
-                                                className={cn(
-                                                    "rounded-lg my-2 max-w-full border border-slate-200 dark:border-slate-800 shadow-sm",
-                                                    onAddProduct && "cursor-pointer hover:border-primary hover:shadow-md transition-all duration-200"
+                                            <div className="relative group inline-block">
+                                                <img 
+                                                    className={cn(
+                                                        "rounded-lg my-2 max-w-full border border-slate-200 dark:border-slate-800 shadow-sm",
+                                                        onAddProduct && "cursor-pointer hover:border-primary hover:shadow-md transition-all duration-200"
+                                                    )}
+                                                    alt={props.alt || ''} 
+                                                    onClick={() => handleImageClick(props.src, props.alt)}
+                                                    {...props} 
+                                                />
+                                                {onAddProduct && (
+                                                    <div 
+                                                        className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center cursor-pointer pointer-events-none"
+                                                    >
+                                                        <span className="bg-white text-slate-900 text-xs font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1">
+                                                            <Box className="w-3 h-3" /> Add to Booth
+                                                        </span>
+                                                    </div>
                                                 )}
-                                                alt={props.alt || ''} 
-                                                onClick={() => handleImageClick(props.src, props.alt)}
-                                                {...props} 
-                                            />
+                                            </div>
                                         );
                                     },
                                     p: ({ children }) => <p className="my-1 leading-relaxed">{children}</p>,
