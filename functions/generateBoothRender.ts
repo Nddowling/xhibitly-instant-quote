@@ -32,31 +32,30 @@ Deno.serve(async (req) => {
         } catch (e) {}
 
         let layoutDescription = "";
+        let productDetails = [];
+        
+        if (design.product_skus && design.product_skus.length > 0) {
+            for (const sku of design.product_skus) {
+                const products = await base44.asServiceRole.entities.Product.filter({ sku });
+                if (products.length > 0) {
+                    productDetails.push(`${products[0].name} (SKU: ${sku}) - ${products[0].category || ''}`);
+                } else {
+                    productDetails.push(sku);
+                }
+            }
+        }
+
         if (scene && scene.items && scene.items.length > 0) {
             const itemsDesc = scene.items.map(item => {
                 const xPos = item.x < scene.booth.w_ft / 3 ? 'left side' : item.x > (scene.booth.w_ft * 2/3) ? 'right side' : 'center';
                 const yPos = item.y < scene.booth.d_ft / 3 ? 'front' : item.y > (scene.booth.d_ft * 2/3) ? 'back' : 'middle';
                 return `- ${item.name || item.sku} positioned at the ${yPos} ${xPos} of the booth`;
             }).join('\n');
-            layoutDescription = `Booth Layout Map:\n${itemsDesc}`;
+            layoutDescription = `Booth Layout Map:\n${itemsDesc}\n\nProducts included in this booth:\n${productDetails.join('\n')}`;
+        } else if (productDetails.length > 0) {
+            layoutDescription = `Products included in this booth:\n${productDetails.join('\n')}`;
         } else {
-            // Fallback to just listing products if no scene map
-            let productDescriptions = [];
-            if (design.product_skus && design.product_skus.length > 0) {
-                for (const sku of design.product_skus) {
-                    const products = await base44.asServiceRole.entities.Product.filter({ sku });
-                    if (products.length > 0) {
-                        productDescriptions.push(products[0].name);
-                    } else {
-                        productDescriptions.push(sku);
-                    }
-                }
-            }
-            if (productDescriptions.length > 0) {
-                layoutDescription = `It includes the following products: ${productDescriptions.join(', ')}.`;
-            } else {
-                layoutDescription = 'It is a custom trade show booth.';
-            }
+            layoutDescription = 'It is a custom trade show booth.';
         }
 
         const prompt = `Create a photorealistic 3D render of a ${boothSize} trade show booth for the brand "${brandName}".
