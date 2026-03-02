@@ -178,7 +178,7 @@ export default function MessageBubble({ message, onAddProduct }) {
                                         <a {...props} target="_blank" rel="noopener noreferrer">{children}</a>
                                     ),
                                     img: ({ node, ...props }) => {
-                                        const isPlaceholder = props.src && (props.src.toLowerCase().includes('placeholder') || props.src === 'null' || props.src === 'undefined' || !props.src);
+                                        const isPlaceholder = !props.src || props.src === 'null' || props.src === 'undefined' || props.src.toLowerCase().includes('placeholder');
                                         if (isPlaceholder) {
                                             return (
                                                 <div 
