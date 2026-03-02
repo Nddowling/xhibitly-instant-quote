@@ -26,11 +26,6 @@ export default function BoothDesigner() {
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
     const [isSending, setIsSending] = useState(false);
-    const [isRendering, setIsRendering] = useState(false);
-    
-    // Render Popup State
-    const [showRenderPopup, setShowRenderPopup] = useState(false);
-    const [lastRenderUrl, setLastRenderUrl] = useState(null);
     
     // Scene Engine State
     const [scene, setScene] = useState(null);
