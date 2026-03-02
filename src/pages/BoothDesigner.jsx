@@ -19,7 +19,7 @@ export default function BoothDesigner() {
     const [boothSize, setBoothSize] = useState('10x10');
     const [designName, setDesignName] = useState('');
     const [boothDesign, setBoothDesign] = useState(null);
-    const [brandName, setBrandName] = useState('');
+    const [brandUrl, setBrandUrl] = useState('');
     const [conversation, setConversation] = useState(null);
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
@@ -150,7 +150,7 @@ export default function BoothDesigner() {
             const design = await base44.entities.BoothDesign.create({
                 design_name: designName,
                 booth_size: boothSize,
-                brand_name: brandName ? brandName.trim() : '',
+                brand_url: brandUrl ? brandUrl.trim() : '',
                 tier: 'Modular',
                 dealer_id: user?.id,
                 product_skus: [],
@@ -239,7 +239,7 @@ export default function BoothDesigner() {
             setBoothDesign(project);
             setDesignName(project.design_name);
             setBoothSize(project.booth_size);
-            setBrandName(project.brand_name || '');
+            setBrandUrl(project.brand_url || '');
             
             const initialScene = initializeScene(project);
             const reconciledScene = await reconcileSceneWithSkus(initialScene, project);
@@ -512,9 +512,9 @@ export default function BoothDesigner() {
                         <Input value={designName} onChange={e => setDesignName(e.target.value)} placeholder="e.g. CES 2026 Booth" />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium mb-1">Brand Name (Optional)</label>
-                        <Input value={brandName} onChange={e => setBrandName(e.target.value)} placeholder="e.g. Nike, Apple, Nexus" />
-                        <p className="text-xs text-slate-500 mt-1">This will be applied to the booth render graphics.</p>
+                        <label className="block text-sm font-medium mb-1">Brand URL (Optional)</label>
+                        <Input value={brandUrl} onChange={e => setBrandUrl(e.target.value)} placeholder="e.g. nike.com, apple.com" />
+                        <p className="text-xs text-slate-500 mt-1">We'll use this to fetch your brand colors and logo for the render.</p>
                     </div>
                     <div>
                         <label className="block text-sm font-medium mb-2">Booth Size</label>
@@ -675,7 +675,7 @@ export default function BoothDesigner() {
                                     onMoveItem={handleMoveItem}
                                     onRotateItem={handleRotateItem}
                                     onRemoveItem={handleRemoveItem}
-                                    brandName={brandName || boothDesign?.brand_name}
+                                    brandName={boothDesign?.brand_identity?.company_name || boothDesign?.brand_name || boothDesign?.brand_url}
                                 />
                             ) : (
                                 boothDesign?.design_image_url ? (

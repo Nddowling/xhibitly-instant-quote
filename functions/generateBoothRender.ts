@@ -96,14 +96,11 @@ Deno.serve(async (req) => {
         const productCount = products.reduce((sum, p) => sum + p.quantity, 0);
 
         // ── Ensure Brand Data ──────────────────────────────────────────────
-        if (!design.brand_identity && design.brand_name) {
+        const brandUrlToFetch = design.brand_url || design.brand_name;
+        if (!design.brand_identity && brandUrlToFetch) {
             try {
-                // Try to treat brand_name as domain, append .com if needed for better success chance
-                // Clean the brand name first (trim whitespace)
-                const cleanBrandName = design.brand_name.trim();
-                
-                // Try to treat brand_name as domain, append .com if needed for better success chance
-                const domainCandidate = cleanBrandName.includes('.') ? cleanBrandName : `${cleanBrandName.replace(/\s+/g, '')}.com`;
+                const cleanBrandUrl = brandUrlToFetch.trim();
+                const domainCandidate = cleanBrandUrl.includes('.') ? cleanBrandUrl : `${cleanBrandUrl.replace(/\s+/g, '')}.com`;
                 
                 const brandRes = await base44.functions.invoke('fetchBrandData', { 
                     website_url: domainCandidate 
