@@ -425,18 +425,42 @@ export default function BoothDesigner() {
             toastModule.toast.error('Cannot add product: missing design or SKU');
             return;
         }
+        if (!scene) {
+            const toastModule = await import('sonner');
+            toastModule.toast.error('Scene not initialized');
+            return;
+        }
         
         try {
-            const currentSkus = boothDesign.product_skus || [];
-            const updatedSkus = [...currentSkus, sku];
+            let product = null;
+            try {
+                const res = await base44.entities.Product.filter({sku});
+                if (res.length > 0) product = res[0];
+            } catch(e) {}
             
-            await base44.entities.BoothDesign.update(boothDesign.id, {
-                product_skus: updatedSkus
-            });
+            const { w: bW, d: bD } = parseBoothSize(boothDesign.booth_size || boothSize);
+            const { w, d, isFlooring } = getProductDimensions(product, sku, bW, bD);
             
-            // Show success toast
-            const toastModule = await import('sonner');
-            toastModule.toast.success(`Product ${sku} added to booth!`);
+            let updatedScene = { ...scene, items: [...(scene.items || [])] };
+            const res = BoothEngine.addItem(
+                updatedScene, 
+                sku, 
+                product?.name || sku, 
+                product?.image_url || null, 
+                w, 
+                d, 
+                'center',
+                isFlooring
+            );
+            
+            if (res.success) {
+                await saveScene(res.scene);
+                const toastModule = await import('sonner');
+                toastModule.toast.success(`Product ${sku} added to booth!`);
+            } else {
+                const toastModule = await import('sonner');
+                toastModule.toast.error(`Not enough space in the booth for ${sku}.`);
+            }
         } catch (error) {
             console.error('Failed to add product:', error);
             const toastModule = await import('sonner');
