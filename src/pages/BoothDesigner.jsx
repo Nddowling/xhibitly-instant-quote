@@ -29,8 +29,37 @@ export default function BoothDesigner() {
     
     // Scene Engine State
     const [scene, setScene] = useState(null);
+    const sceneRef = useRef(null);
     const scrollRef = useRef(null);
     const [viewMode, setViewMode] = useState('2d'); // '2d' | '3d'
+
+    useEffect(() => {
+        sceneRef.current = scene;
+    }, [scene]);
+
+    const fetchProductDetails = async (sku) => {
+        try {
+            let res = await base44.entities.Product.filter({ sku });
+            if (res.length > 0) return res[0];
+            
+            res = await base44.entities.Product.filter({ name: sku });
+            if (res.length > 0) return res[0];
+            
+            let pvRes = await base44.entities.ProductVariant.filter({ manufacturer_sku: sku });
+            if (pvRes.length > 0) {
+                return {
+                    name: pvRes[0].display_name,
+                    sku: pvRes[0].manufacturer_sku,
+                    category: pvRes[0].category_name,
+                    image_url: pvRes[0].thumbnail_url || pvRes[0].image_url,
+                    image_cached_url: pvRes[0].thumbnail_url || pvRes[0].image_url
+                };
+            }
+        } catch (e) {
+            console.error("Error fetching product details", e);
+        }
+        return null;
+    };
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
