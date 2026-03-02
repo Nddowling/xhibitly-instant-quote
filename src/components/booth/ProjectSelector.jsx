@@ -213,8 +213,8 @@ export default function ProjectSelector({ onSelectProject, onNewProject }) {
                                             className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-[#e2231a] hover:shadow-md cursor-pointer transition-all group bg-slate-50 dark:bg-slate-800/50"
                                         >
                                             <div className="flex justify-between items-start">
-                                                <div>
-                                                    <h4 className="font-semibold text-slate-900 dark:text-white group-hover:text-[#e2231a] transition-colors">
+                                                <div className="flex-1 min-w-0 pr-2">
+                                                    <h4 className="font-semibold text-slate-900 dark:text-white group-hover:text-[#e2231a] transition-colors truncate">
                                                         {project.design_name}
                                                     </h4>
                                                     {project._dealer_company && (
@@ -234,11 +234,21 @@ export default function ProjectSelector({ onSelectProject, onNewProject }) {
                                                         </span>
                                                     </div>
                                                 </div>
-                                                {project.design_image_url && (
-                                                    <div className="w-12 h-12 rounded-lg bg-slate-200 overflow-hidden">
-                                                        <img src={project.design_image_url} alt="" className="w-full h-full object-cover" />
-                                                    </div>
-                                                )}
+                                                <div className="flex items-center gap-2 shrink-0">
+                                                    {project.design_image_url && (
+                                                        <div className="w-12 h-12 rounded-lg bg-slate-200 overflow-hidden">
+                                                            <img src={project.design_image_url} alt="" className="w-full h-full object-cover" />
+                                                        </div>
+                                                    )}
+                                                    <Button 
+                                                        variant="ghost" 
+                                                        size="icon" 
+                                                        className="h-8 w-8 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/50"
+                                                        onClick={(e) => handleDeleteProject(e, project.id)}
+                                                    >
+                                                        <Trash2 className="w-4 h-4" />
+                                                    </Button>
+                                                </div>
                                             </div>
                                         </div>
                                     )) : (
