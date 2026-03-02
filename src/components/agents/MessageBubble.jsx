@@ -197,6 +197,7 @@ export default function MessageBubble({ message, onAddProduct }) {
                                                     )}
                                                     onClick={(e) => {
                                                         e.preventDefault();
+                                                        e.stopPropagation();
                                                         handleImageClick(props.src, props.alt);
                                                     }}
                                                 >
