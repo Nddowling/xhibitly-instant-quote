@@ -185,7 +185,7 @@ export default function MessageBubble({ message, onAddProduct }) {
                                             return (
                                                 <div 
                                                     className={cn(
-                                                        "rounded-lg my-2 w-full aspect-square max-w-[200px] bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center text-slate-400",
+                                                        "group rounded-lg my-2 w-full aspect-square max-w-[200px] bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center text-slate-400",
                                                         onAddProduct && "cursor-pointer hover:border-primary hover:text-primary hover:shadow-md transition-all duration-200"
                                                     )}
                                                     onClick={() => handleImageClick(props.src, props.alt)}
