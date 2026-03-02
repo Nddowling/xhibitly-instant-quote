@@ -254,28 +254,21 @@ export default function BoothDesigner() {
             const reconciledScene = await reconcileSceneWithSkus(initialScene, project);
             setScene(reconciledScene);
             
-            // Find existing conversation for this design
-            const conversations = await base44.agents.listConversations({ agent_name: 'booth_designer' });
+            // Always create a new conversation to avoid super long running chats
+            const conv = await base44.agents.createConversation({
+                agent_name: 'booth_designer',
+                metadata: {
+                    name: `Design Session: ${project.design_name} (${new Date().toLocaleString()})`,
+                    booth_design_id: project.id,
+                    booth_size: project.booth_size
+                }
+            });
+            setConversation(conv);
             
-            let existingConv = null;
-            if (conversations && conversations.length > 0) {
-                existingConv = conversations.find(c => c.metadata?.booth_design_id === project.id);
-            }
-            
-            if (existingConv) {
-                const fullConv = await base44.agents.getConversation(existingConv.id);
-                setConversation(fullConv);
-            } else {
-                const conv = await base44.agents.createConversation({
-                    agent_name: 'booth_designer',
-                    metadata: {
-                        name: `Design Session: ${project.design_name}`,
-                        booth_design_id: project.id,
-                        booth_size: project.booth_size
-                    }
-                });
-                setConversation(conv);
-            }
+            await base44.agents.addMessage(conv, {
+                role: 'user',
+                content: `Hi! Let's design my ${project.booth_size} booth. The BoothDesign entity ID is ${project.id}. I am looking for ideas and products from the catalog to add to my booth.`
+            });
             
             setStep('designing');
         } catch (error) {
