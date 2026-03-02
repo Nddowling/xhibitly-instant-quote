@@ -147,6 +147,18 @@ Deno.serve(async (req) => {
                 const imageUrl = (product.images && product.images.length > 0)
                     ? product.images[0].url
                     : null;
+                
+                let imageCachedUrl = null;
+                if (imageUrl) {
+                    try {
+                        const cacheRes = await base44.functions.invoke('cacheExternalImage', { url: imageUrl });
+                        if (cacheRes.data && cacheRes.data.success) {
+                            imageCachedUrl = cacheRes.data.cached_url;
+                        }
+                    } catch (e) {
+                        console.warn(`Failed to cache image for SKU ${product.sku}:`, e);
+                    }
+                }
 
                 // Prepare download URLs
                 const templates = (product.downloads || [])
@@ -164,6 +176,7 @@ Deno.serve(async (req) => {
                     subcategory: product.subcategory || null,
                     description: product.description || '',
                     image_url: imageUrl,
+                    image_cached_url: imageCachedUrl,
 
                     // Pricing
                     base_price: product.price ? parseFloat(product.price.replace(/[^0-9.]/g, '')) : null,
