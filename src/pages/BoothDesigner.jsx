@@ -657,50 +657,15 @@ export default function BoothDesigner() {
                     <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:20px_20px] opacity-40 rounded-2xl" />
                     
                     <div className="relative z-10 flex-1 flex flex-col">
-                        {/* View Toggle */}
-                        <div className="flex justify-center mb-4">
-                            <ToggleGroup type="single" value={viewMode} onValueChange={(v) => v && setViewMode(v)} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-1 shadow-sm">
-                                <ToggleGroupItem value="2d" aria-label="2D Floorplan" className="px-4 py-1.5 h-auto text-xs font-medium data-[state=on]:bg-primary/10 data-[state=on]:text-primary">
-                                    <Grid2X2 className="w-4 h-4 mr-2" />
-                                    2D Layout
-                                </ToggleGroupItem>
-                                <ToggleGroupItem value="3d" aria-label="3D Render" className="px-4 py-1.5 h-auto text-xs font-medium data-[state=on]:bg-primary/10 data-[state=on]:text-primary">
-                                    <ImageIcon className="w-4 h-4 mr-2" />
-                                    3D Render
-                                </ToggleGroupItem>
-                            </ToggleGroup>
-                        </div>
-
                         {/* Visualization Area */}
                         <div className="w-full bg-slate-100 dark:bg-slate-800/50 rounded-xl mb-6 border border-slate-200 dark:border-slate-700 overflow-hidden relative group shrink-0 min-h-[400px]">
-                            {viewMode === '2d' ? (
-                                <BoothFloorplan 
-                                    scene={scene} 
-                                    onMoveItem={handleMoveItem}
-                                    onRotateItem={handleRotateItem}
-                                    onRemoveItem={handleRemoveItem}
-                                    brandName={boothDesign?.brand_identity?.company_name || boothDesign?.brand_name || boothDesign?.brand_url}
-                                />
-                            ) : (
-                                <div className="relative w-full aspect-[16/9]">
-                                    <BoothSnapshotRenderer
-                                        sceneJson={scene}
-                                        brandIdentity={boothDesign?.brand_identity}
-                                        boothSize={boothDesign?.booth_size}
-                                        onSnapshotReady={(dataUrl) => setSnapshotDataUrl(dataUrl)}
-                                    />
-                                    <div className="absolute top-4 right-4">
-                                        <GenerateRenderButton 
-                                            boothDesignId={boothDesign?.id} 
-                                            skus={boothDesign?.product_skus} 
-                                            snapshotDataUrl={snapshotDataUrl}
-                                            onSuccess={(url) => {
-                                                setBoothDesign(prev => ({ ...prev, design_image_url: url }));
-                                            }}
-                                        />
-                                    </div>
-                                </div>
-                            )}
+                            <BoothFloorplan 
+                                scene={scene} 
+                                onMoveItem={handleMoveItem}
+                                onRotateItem={handleRotateItem}
+                                onRemoveItem={handleRemoveItem}
+                                brandName={boothDesign?.brand_identity?.company_name || boothDesign?.brand_name || boothDesign?.brand_url}
+                            />
                         </div>
 
                         <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-3">Included Products</h3>
