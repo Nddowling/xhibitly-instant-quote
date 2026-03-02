@@ -665,16 +665,7 @@ export default function BoothDesigner() {
                         >
                             Open Catalog
                         </Button>
-                        <Button 
-                            variant="outline"
-                            size="sm"
-                            className="h-8 shadow-sm"
-                            disabled={isRendering || !boothDesign?.product_skus?.length}
-                            onClick={handleGenerateRender}
-                        >
-                            {isRendering ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <ImageIcon className="w-4 h-4 mr-2" />}
-                            Generate Render
-                        </Button>
+
                         <Button 
                             variant="default"
                             size="sm"
