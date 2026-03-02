@@ -7,6 +7,25 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
 import { ArrowLeft, ShoppingCart, Loader2, Sparkles, Check, Package, Palette, DollarSign, X, ZoomIn } from 'lucide-react';
+import BoothSnapshotRenderer from '@/components/render/BoothSnapshotRenderer';
+import { BoothEngine } from '@/components/booth/BoothEngine';
+
+// Helper to build a basic scene from SKUs if scene_json is missing
+const buildSceneFromSkus = (design, boothSize) => {
+    const parts = (boothSize || '10x10').toLowerCase().split('x');
+    const w = parseInt(parts[0]) || 10;
+    const d = parseInt(parts[1]) || 10;
+    let scene = BoothEngine.createScene(w, d);
+    
+    if (design.product_skus && design.product_skus.length > 0) {
+        // Just add them to the center for now, BoothEngine will try to arrange them
+        design.product_skus.forEach(sku => {
+            const res = BoothEngine.addItem(scene, sku, sku, null, 3, 2, 'center', false);
+            if (res.success) scene = res.scene;
+        });
+    }
+    return JSON.stringify(scene);
+};
 
 export default function DesignConfigurator() {
   const navigate = useNavigate();
