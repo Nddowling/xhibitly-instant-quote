@@ -122,13 +122,10 @@ export const BoothEngine = {
         const item = scene.items[itemIndex];
         const newRot = (item.rot + degrees) % 360;
 
-        const check = BoothEngine.isValidPlacement(scene, item.x, item.y, newRot, item.w, item.d, itemId, item.isFlooring);
-        if (check.valid) {
-            const newItems = [...scene.items];
-            newItems[itemIndex] = { ...item, rot: newRot };
-            return { success: true, scene: { ...scene, items: newItems } };
-        }
-        return { success: false, reason: check.reason };
+        // Force rotation even if it temporarily overlaps, so the user isn't stuck
+        const newItems = [...scene.items];
+        newItems[itemIndex] = { ...item, rot: newRot };
+        return { success: true, scene: { ...scene, items: newItems } };
     },
     
     removeItem: (scene, itemId) => {
