@@ -23,27 +23,46 @@ Deno.serve(async (req) => {
         const brandName = design.brand_name || design.brand_identity?.company_name || design.brand_url || 'a generic brand';
         const boothSize = design.booth_size || '10x10';
         
-        // Fetch product details to include in the prompt
-        let productDescriptions = [];
-        if (design.product_skus && design.product_skus.length > 0) {
-            for (const sku of design.product_skus) {
-                const products = await base44.asServiceRole.entities.Product.filter({ sku });
-                if (products.length > 0) {
-                    productDescriptions.push(products[0].name);
-                } else {
-                    productDescriptions.push(sku);
+        // Parse the 2D scene map to understand product placements
+        let scene = null;
+        try {
+            if (design.scene_json) {
+                scene = JSON.parse(design.scene_json);
+            }
+        } catch (e) {}
+
+        let layoutDescription = "";
+        if (scene && scene.items && scene.items.length > 0) {
+            const itemsDesc = scene.items.map(item => {
+                const xPos = item.x < scene.booth.w_ft / 3 ? 'left side' : item.x > (scene.booth.w_ft * 2/3) ? 'right side' : 'center';
+                const yPos = item.y < scene.booth.d_ft / 3 ? 'front' : item.y > (scene.booth.d_ft * 2/3) ? 'back' : 'middle';
+                return `- ${item.name || item.sku} positioned at the ${yPos} ${xPos} of the booth`;
+            }).join('\n');
+            layoutDescription = `Booth Layout Map:\n${itemsDesc}`;
+        } else {
+            // Fallback to just listing products if no scene map
+            let productDescriptions = [];
+            if (design.product_skus && design.product_skus.length > 0) {
+                for (const sku of design.product_skus) {
+                    const products = await base44.asServiceRole.entities.Product.filter({ sku });
+                    if (products.length > 0) {
+                        productDescriptions.push(products[0].name);
+                    } else {
+                        productDescriptions.push(sku);
+                    }
                 }
+            }
+            if (productDescriptions.length > 0) {
+                layoutDescription = `It includes the following products: ${productDescriptions.join(', ')}.`;
+            } else {
+                layoutDescription = 'It is a custom trade show booth.';
             }
         }
 
-        const productsText = productDescriptions.length > 0 
-            ? `It includes the following products: ${productDescriptions.join(', ')}.` 
-            : 'It is a custom trade show booth.';
-
         const prompt = `Create a photorealistic 3D render of a ${boothSize} trade show booth for the brand "${brandName}".
         
-${productsText}
-${design.layout_instructions ? `Layout instructions: ${design.layout_instructions}` : ''}
+${layoutDescription}
+${design.layout_instructions ? `Additional layout instructions: ${design.layout_instructions}` : ''}
 ${additional_instructions ? `Additional style instructions: ${additional_instructions}` : ''}
 
 BRANDING REQUIREMENTS:
