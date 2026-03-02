@@ -230,14 +230,15 @@ export default function MessageBubble({ message, onAddProduct }) {
                                                 />
                                                 {onAddProduct && (
                                                     <div 
-                                                        className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center cursor-pointer"
-                                                        onClick={(e) => {
-                                                            e.preventDefault();
-                                                            e.stopPropagation();
-                                                            handleImageClick(props.src, props.alt);
-                                                        }}
+                                                        className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center cursor-pointer pointer-events-none"
                                                     >
-                                                        <span className="bg-white text-slate-900 text-xs font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1">
+                                                        <span className="bg-white text-slate-900 text-xs font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1 pointer-events-auto"
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                e.stopPropagation();
+                                                                handleImageClick(props.src, props.alt);
+                                                            }}
+                                                        >
                                                             <Box className="w-3 h-3" /> Add to Booth
                                                         </span>
                                                     </div>
