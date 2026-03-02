@@ -51,11 +51,11 @@ Deno.serve(async (req) => {
                 const yPos = item.y < scene.booth.d_ft / 3 ? 'front' : item.y > (scene.booth.d_ft * 2/3) ? 'back' : 'middle';
                 return `- ${item.name || item.sku} positioned at the ${yPos} ${xPos} of the booth`;
             }).join('\n');
-            layoutDescription = `Booth Layout Map:\n${itemsDesc}\n\nProducts included in this booth:\n${productDetails.join('\n')}`;
+            layoutDescription = `CRITICAL: The booth MUST ONLY contain the following specific items:\n${itemsDesc}\n\nDo NOT add any extra walls, counters, props, or displays that are not listed above. If the list is sparse, the booth should be mostly empty space.`;
         } else if (productDetails.length > 0) {
-            layoutDescription = `Products included in this booth:\n${productDetails.join('\n')}`;
+            layoutDescription = `CRITICAL: The booth MUST ONLY contain the following products:\n${productDetails.join('\n')}\n\nDo NOT add any extra walls, counters, props, or displays that are not listed above. If the list is sparse, the booth should be mostly empty space.`;
         } else {
-            layoutDescription = 'It is a custom trade show booth.';
+            layoutDescription = 'It is an empty custom trade show booth space.';
         }
 
         const prompt = `Create a photorealistic 3D render of a ${boothSize} trade show booth for the brand "${brandName}".
@@ -65,15 +65,16 @@ ${design.layout_instructions ? `Additional layout instructions: ${design.layout_
 ${additional_instructions ? `Additional style instructions: ${additional_instructions}` : ''}
 
 BRANDING REQUIREMENTS:
-✓ Apply "${brandName}" branding prominently on the booth walls, counters, and displays.
+✓ Apply "${brandName}" branding ONLY to the specific items listed above.
 ✓ Use the brand's official colors and typography if known.
 ✓ The booth should look highly professional, well-lit, and ready for a trade show floor.
 
 PHOTOGRAPHY SPECIFICATIONS:
-✓ Wide-angle view showing the entire booth.
+✓ Wide-angle view showing the entire booth space.
 ✓ Professional trade show lighting.
 ✓ Neutral trade show floor environment.
-✓ High-resolution architectural render quality.`;
+✓ High-resolution architectural render quality.
+✓ CRITICAL: Strictly adhere to the item list. Do not hallucinate extra booth structures.`;
 
         const result = await base44.asServiceRole.integrations.Core.GenerateImage({
             prompt: prompt
