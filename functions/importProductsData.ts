@@ -43,6 +43,18 @@ Deno.serve(async (req) => {
             }
             if (typeof finalImageUrl !== 'string') finalImageUrl = "";
             
+            let imageCachedUrl = "";
+            if (finalImageUrl) {
+                try {
+                    const cacheRes = await base44.functions.invoke('cacheExternalImage', { url: finalImageUrl });
+                    if (cacheRes.data && cacheRes.data.success) {
+                        imageCachedUrl = cacheRes.data.cached_url;
+                    }
+                } catch (e) {
+                    console.warn(`Failed to cache image for SKU ${sku}:`, e);
+                }
+            }
+            
             productsToInsert.push({
                 name: String(item.name || "Unnamed Product"),
                 sku: String(sku),
@@ -50,7 +62,8 @@ Deno.serve(async (req) => {
                 subcategory: String(item.subcategory || ""),
                 description: String(item.description || ""),
                 base_price: 0,
-                image_url: finalImageUrl
+                image_url: finalImageUrl,
+                image_cached_url: imageCachedUrl
             });
             
             variantsToInsert.push({
