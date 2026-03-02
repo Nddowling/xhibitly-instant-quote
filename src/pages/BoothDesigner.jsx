@@ -39,11 +39,30 @@ export default function BoothDesigner() {
 
     const fetchProductDetails = async (sku) => {
         try {
+            let product = null;
             let res = await base44.entities.Product.filter({ sku });
-            if (res.length > 0) return res[0];
+            if (res.length > 0) product = res[0];
+            else {
+                res = await base44.entities.Product.filter({ name: sku });
+                if (res.length > 0) product = res[0];
+            }
             
-            res = await base44.entities.Product.filter({ name: sku });
-            if (res.length > 0) return res[0];
+            if (product) {
+                // If we have a product but no cached URL, try to cache it to avoid CORS issues in 3D render
+                if (product.image_url && !product.image_cached_url) {
+                    try {
+                        const cacheRes = await base44.functions.invoke('cacheExternalImage', { url: product.image_url });
+                        if (cacheRes.data && cacheRes.data.success) {
+                            product.image_cached_url = cacheRes.data.cached_url;
+                            // Update the product in the background
+                            base44.entities.Product.update(product.id, { image_cached_url: product.image_cached_url }).catch(() => {});
+                        }
+                    } catch (e) {
+                        console.warn("Failed to cache image on the fly", e);
+                    }
+                }
+                return product;
+            }
             
             let pvRes = await base44.entities.ProductVariant.filter({ manufacturer_sku: sku });
             if (pvRes.length > 0) {
