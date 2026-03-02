@@ -715,6 +715,38 @@ export default function BoothDesigner() {
                     </div>
                 </div>
             </div>
+
+            {/* Render Popup */}
+            <Dialog open={showRenderPopup} onOpenChange={setShowRenderPopup}>
+                <DialogContent className="max-w-4xl bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
+                    <DialogHeader>
+                        <DialogTitle className="text-2xl font-bold text-slate-900 dark:text-white">Your Booth Render</DialogTitle>
+                    </DialogHeader>
+                    <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                        {boothDesign?.design_image_url && (
+                            <img 
+                                src={boothDesign.design_image_url} 
+                                alt="Booth Render" 
+                                className="w-full h-full object-cover"
+                            />
+                        )}
+                    </div>
+                    <div className="flex justify-end gap-3 mt-4">
+                        <Button variant="outline" onClick={() => setShowRenderPopup(false)}>
+                            Close
+                        </Button>
+                        <Button 
+                            className="bg-[#e2231a] hover:bg-[#b01b13] text-white"
+                            onClick={() => {
+                                setShowRenderPopup(false);
+                                handleCreateQuote();
+                            }}
+                        >
+                            Build Quote
+                        </Button>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }
