@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
-import { Search, Plus, User, Building, FolderOpen, ArrowLeft, Loader2, Calendar } from 'lucide-react';
+import { Search, Plus, User, Building, FolderOpen, ArrowLeft, Loader2, Calendar, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function ProjectSelector({ onSelectProject, onNewProject }) {
