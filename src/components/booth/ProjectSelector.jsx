@@ -126,6 +126,22 @@ export default function ProjectSelector({ onSelectProject, onNewProject }) {
         setClientProjects([]);
     };
 
+    const handleDeleteProject = async (e, projectId) => {
+        e.stopPropagation();
+        if (!window.confirm("Are you sure you want to delete this project?")) return;
+        
+        setIsLoading(true);
+        try {
+            await base44.entities.BoothDesign.delete(projectId);
+            setProjects(prev => prev.filter(p => p.id !== projectId));
+            setClientProjects(prev => prev.filter(p => p.id !== projectId));
+        } catch (error) {
+            console.error("Error deleting project:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     return (
         <div className="w-full max-w-4xl mx-auto p-6 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 min-h-[500px] flex flex-col">
             
