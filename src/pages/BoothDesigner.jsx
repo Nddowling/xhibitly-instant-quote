@@ -365,17 +365,18 @@ export default function BoothDesigner() {
 
     // Subscribe to the booth design entity to see added products live
     useEffect(() => {
-        if (boothDesign && step === 'designing') {
+        if (boothDesign?.id && step === 'designing') {
             const unsub = base44.entities.BoothDesign.subscribe(async (event) => {
                 if (event.type === 'update' && event.id === boothDesign.id) {
                     const newData = event.data;
                     setBoothDesign(newData);
 
                     // Sync AI-added products into our scene
-                    if (scene && newData.product_skus) {
-                        const sceneSkus = scene.items.map(i => i.sku);
+                    const currentScene = sceneRef.current;
+                    if (currentScene && newData.product_skus) {
+                        const sceneSkus = currentScene.items.map(i => i.sku);
                         if (newData.product_skus.length > sceneSkus.length) {
-                            let updatedScene = { ...scene };
+                            let updatedScene = { ...currentScene };
                             let changed = false;
                             
                             const dbCounts = newData.product_skus.reduce((acc, s) => { acc[s] = (acc[s]||0)+1; return acc; }, {});
@@ -385,11 +386,7 @@ export default function BoothDesigner() {
                                 const currentCount = sceneCounts[sku] || 0;
                                 if (count > currentCount) {
                                     // Fetch product to get name/image/dimensions
-                                    let product = null;
-                                    try {
-                                        const res = await base44.entities.Product.filter({sku});
-                                        if (res.length > 0) product = res[0];
-                                    } catch(e) {}
+                                    let product = await fetchProductDetails(sku);
                                     
                                     const { w: bW, d: bD } = parseBoothSize(newData.booth_size || '10x10');
                                     const { w, d, isFlooring } = getProductDimensions(product, sku, bW, bD);
@@ -399,7 +396,7 @@ export default function BoothDesigner() {
                                             updatedScene, 
                                             sku, 
                                             product?.name || sku, 
-                                            product?.image_url || null, 
+                                            product?.image_cached_url || product?.image_url || null, 
                                             w, 
                                             d, 
                                             'center',
@@ -414,7 +411,22 @@ export default function BoothDesigner() {
                             }
                             
                             if (changed) {
-                                saveScene(updatedScene);
+                                // IMPORTANT: Use boothDesign.id directly from closure since it never changes
+                                // and update the sceneRef immediately so subsequent events see it
+                                sceneRef.current = updatedScene;
+                                setScene(updatedScene);
+                                
+                                const skus = updatedScene.items.map(i => i.sku);
+                                const updateData = {
+                                    scene_json: JSON.stringify(updatedScene),
+                                    product_skus: skus
+                                };
+                                
+                                try {
+                                    await base44.entities.BoothDesign.update(boothDesign.id, updateData);
+                                } catch (e) {
+                                    console.error("Failed to save scene", e);
+                                }
                             }
                         }
                     }
@@ -422,7 +434,7 @@ export default function BoothDesigner() {
             });
             return () => unsub();
         }
-    }, [boothDesign, step, scene]);
+    }, [boothDesign?.id, step]);
 
     // Handle user sending a chat message
     const handleSend = async (e) => {
