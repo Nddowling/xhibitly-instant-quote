@@ -326,8 +326,8 @@ export default function ProjectSelector({ onSelectProject, onNewProject }) {
                                         className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-[#e2231a] hover:shadow-md cursor-pointer transition-all bg-white dark:bg-slate-900"
                                     >
                                         <div className="flex justify-between items-start">
-                                            <div>
-                                                <h4 className="font-semibold text-slate-900 dark:text-white">
+                                            <div className="flex-1 min-w-0 pr-2">
+                                                <h4 className="font-semibold text-slate-900 dark:text-white truncate">
                                                     {project.design_name}
                                                 </h4>
                                                 <div className="flex items-center gap-2 text-xs text-slate-500 mt-1">
@@ -338,11 +338,21 @@ export default function ProjectSelector({ onSelectProject, onNewProject }) {
                                                     {new Date(project.created_date).toLocaleDateString()}
                                                 </div>
                                             </div>
-                                            {project.design_image_url && (
-                                                <div className="w-16 h-12 rounded bg-slate-100 overflow-hidden">
-                                                    <img src={project.design_image_url} alt="" className="w-full h-full object-cover" />
-                                                </div>
-                                            )}
+                                            <div className="flex items-center gap-2 shrink-0">
+                                                {project.design_image_url && (
+                                                    <div className="w-16 h-12 rounded bg-slate-100 overflow-hidden">
+                                                        <img src={project.design_image_url} alt="" className="w-full h-full object-cover" />
+                                                    </div>
+                                                )}
+                                                <Button 
+                                                    variant="ghost" 
+                                                    size="icon" 
+                                                    className="h-8 w-8 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/50"
+                                                    onClick={(e) => handleDeleteProject(e, project.id)}
+                                                >
+                                                    <Trash2 className="w-4 h-4" />
+                                                </Button>
+                                            </div>
                                         </div>
                                     </div>
                                 )) : (
