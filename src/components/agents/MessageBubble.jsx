@@ -195,7 +195,10 @@ export default function MessageBubble({ message, onAddProduct }) {
                                                         "group rounded-lg my-2 w-full aspect-square max-w-[200px] bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center text-slate-400 relative overflow-hidden",
                                                         onAddProduct && "cursor-pointer hover:border-primary hover:text-primary hover:shadow-md transition-all duration-200"
                                                     )}
-                                                    onClick={() => handleImageClick(props.src, props.alt)}
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        handleImageClick(props.src, props.alt);
+                                                    }}
                                                 >
                                                     <Box className="w-10 h-10 mb-2 opacity-50" />
                                                     <span className="text-xs font-medium px-4 text-center">{props.alt?.replace(/sku:\s*/i, '') || 'Image not available'}</span>
