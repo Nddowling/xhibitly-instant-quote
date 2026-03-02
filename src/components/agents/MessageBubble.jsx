@@ -223,6 +223,7 @@ export default function MessageBubble({ message, onAddProduct }) {
                                                     alt={props.alt || ''} 
                                                     onClick={(e) => {
                                                         e.preventDefault();
+                                                        e.stopPropagation();
                                                         handleImageClick(props.src, props.alt);
                                                     }}
                                                     {...props} 
@@ -232,6 +233,7 @@ export default function MessageBubble({ message, onAddProduct }) {
                                                         className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center cursor-pointer"
                                                         onClick={(e) => {
                                                             e.preventDefault();
+                                                            e.stopPropagation();
                                                             handleImageClick(props.src, props.alt);
                                                         }}
                                                     >
