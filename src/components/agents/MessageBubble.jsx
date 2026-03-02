@@ -201,10 +201,10 @@ export default function MessageBubble({ message, onAddProduct }) {
                                                         handleImageClick(props.src, props.alt);
                                                     }}
                                                 >
-                                                    <Box className="w-10 h-10 mb-2 opacity-50" />
-                                                    <span className="text-xs font-medium px-4 text-center">{props.alt?.replace(/sku:\s*/i, '') || 'Image not available'}</span>
+                                                    <Box className="w-10 h-10 mb-2 opacity-50 pointer-events-none" />
+                                                    <span className="text-xs font-medium px-4 text-center pointer-events-none">{props.alt?.replace(/sku:\s*/i, '') || 'Image not available'}</span>
                                                     {onAddProduct && (
-                                                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
                                                             <span className="bg-white text-slate-900 text-xs font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1">
                                                                 <Box className="w-3 h-3" /> Add to Booth
                                                             </span>
