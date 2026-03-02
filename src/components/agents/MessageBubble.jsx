@@ -116,17 +116,17 @@ export default function MessageBubble({ message, onAddProduct }) {
             return;
         }
 
-        // 3. Fallback to the exact alt text (it might be the product name)
-        // This is much safer than guessing from an image URL which might be shared or named incorrectly
-        if (alt && alt.trim().length > 3 && alt.toLowerCase() !== 'image' && alt.toLowerCase() !== 'product') {
-            onAddProduct(alt.trim());
-            return;
-        }
-
-        // 4. Last resort: try URL
+        // 3. Last resort: try URL
         const srcSkuMatch = src?.match(/\b[A-Z0-9]+-[A-Z0-9-]+\b/i);
         if (srcSkuMatch) {
             onAddProduct(srcSkuMatch[0].toUpperCase());
+            return;
+        }
+
+        // 4. Fallback to the exact alt text (it might be the product name)
+        // This is much safer than guessing from an image URL which might be shared or named incorrectly
+        if (alt && alt.trim().length > 3 && alt.toLowerCase() !== 'image' && alt.toLowerCase() !== 'product') {
+            onAddProduct(alt.trim());
         }
     };
     
