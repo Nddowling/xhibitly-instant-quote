@@ -766,80 +766,8 @@ FOR EACH DESIGN: include tier, design_name, experience_story, visitor_journey, k
 
       designs.designs = validatedDesigns;
 
-      // ── STEP 6: Generate booth images (parallel) ──
-      updateProgress(6, 'Generating booth renderings...');
-      const imagePromises = designs.designs.map(async (design) => {
-        const designProducts = compatibleProducts.filter(p =>
-          design.product_skus.includes(p.manufacturer_sku || p.sku)
-        );
-        
-        // Image Caching Check
-        try {
-            const skusKey = design.product_skus.slice().sort().join(',');
-            const existingDesigns = await base44.entities.BoothDesign.filter({
-               booth_size: boothSize,
-               tier: design.tier,
-            });
-            if (existingDesigns && existingDesigns.length > 0) {
-                const cached = existingDesigns.find(d => (d.product_skus || []).slice().sort().join(',') === skusKey && d.design_image_url);
-                if (cached && cached.design_image_url) {
-                    console.log(`[Cache Hit] Using existing render for ${design.tier}`);
-                    return cached.design_image_url;
-                }
-            }
-        } catch(e) {
-            console.error("Cache check failed:", e);
-        }
-
-        const manifest = designProducts.map((p, i) => {
-          const d = p.dimensions || {};
-          const dimStr = d.width ? `${d.width}W×${d.height}H×${d.depth}D ft` : 'standard';
-          return `${i + 1}. "${p.display_name || p.name}" — ${p.category_name || p.category}, ${dimStr}. ${p.visual_description || p.description || ''}`;
-        }).join('\n');
-
-        const imagePrompt = `Photorealistic 3D trade show booth rendering for a ${companyResearch.industry || brandAnalysis.industry || ''} company (${brandAnalysis.company_name}).
-
-BOOTH: ${boothSize} (${dims.width}×${dims.depth}ft). Open front facing aisle. Grey carpet aisle, pipe-and-drape neighbors, convention center ceiling.
-
-COMPANY CONTEXT: This is a ${companyResearch.industry || brandAnalysis.industry || ''} company. Brand atmosphere: ${companyResearch.booth_atmosphere || brandAnalysis.brand_personality || 'professional'}. The booth should feel like visiting ${brandAnalysis.company_name}'s showroom.${companyResearch.physical_products_to_display?.length > 0 ? `
-
-INDUSTRY ELEMENTS to suggest in the scene: ${companyResearch.physical_products_to_display.join(', ')}` : ''}
-
-BRAND COLORS (apply to surfaces): Primary=${brandAnalysis.primary_color} (backwall frame, structural accents) | Secondary=${brandAnalysis.secondary_color} (counter body, trim).
-
-RENDER EXACTLY these ${designProducts.length} products — NOTHING ELSE. No invented screens, plants, chairs, monitors, or items not listed:
-${manifest}
-
-${PLACEMENT_GUIDE}
-
-${CAMERA_STYLE}
-${getMarkerPromptInstructions()}`;
-
-        const refImages = collectReferenceImages(brandAnalysis, designProducts);
-
-        const generateImageWithRetry = async (prompt, retries = 3) => {
-            for (let i = 0; i < retries; i++) {
-                try {
-                    const params = { prompt };
-                    if (refImages.length > 0) params.existing_image_urls = refImages;
-                    const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 45000));
-                    const result = await Promise.race([base44.integrations.Core.GenerateImage(params), timeout]);
-                    return result.url;
-                } catch (err) {
-                    console.error(`Image retry ${i+1} failed:`, err);
-                    if (i === retries - 1) return null;
-                    await new Promise(r => setTimeout(r, Math.pow(2, i) * 1000));
-                }
-            }
-        };
-
-        return await generateImageWithRetry(imagePrompt);
-      });
-
-      const generatedImages = await Promise.all(imagePromises);
-
       // ── STEP 6: Save to DB (parallel) ──
-      // Store both raw image (with marker zones) and final composited image
+      updateProgress(6, 'Finalizing your booth designs...');
       const savePromises = designs.designs.map((design, i) =>
         base44.entities.BoothDesign.create({
           dealer_id: dealerId,
@@ -854,8 +782,6 @@ ${getMarkerPromptInstructions()}`;
           total_price: design.total_price,
           design_rationale: design.design_rationale,
           spatial_layout: design.spatial_layout,
-          design_image_url: generatedImages[i],
-          raw_image_url: generatedImages[i], // Raw image contains marker zones for compositor
           line_items: design.line_items
         })
       );
