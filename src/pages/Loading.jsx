@@ -5,7 +5,7 @@ import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Sparkles, CheckCircle, Palette, Layers, Lightbulb, ShieldCheck } from 'lucide-react';
 import { enforceAllDesigns } from '../components/utils/boothRulesEngine';
-import { getMarkerPromptInstructions } from '../utils/brandCompositor';
+
 
 // ═══════════════════════════════════════════════════════════════
 // BRAND EXTRACTION — VALIDATION UTILITIES
