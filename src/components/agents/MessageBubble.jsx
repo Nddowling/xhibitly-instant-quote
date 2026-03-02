@@ -177,17 +177,34 @@ export default function MessageBubble({ message, onAddProduct }) {
                                     a: ({ children, ...props }) => (
                                         <a {...props} target="_blank" rel="noopener noreferrer">{children}</a>
                                     ),
-                                    img: ({ node, ...props }) => (
-                                        <img 
-                                            className={cn(
-                                                "rounded-lg my-2 max-w-full border border-slate-200 dark:border-slate-800 shadow-sm",
-                                                onAddProduct && "cursor-pointer hover:border-primary hover:shadow-md transition-all duration-200"
-                                            )}
-                                            alt={props.alt || ''} 
-                                            onClick={() => handleImageClick(props.src, props.alt)}
-                                            {...props} 
-                                        />
-                                    ),
+                                    img: ({ node, ...props }) => {
+                                        const isPlaceholder = props.src && props.src.toLowerCase().includes('placeholder');
+                                        if (isPlaceholder) {
+                                            return (
+                                                <div 
+                                                    className={cn(
+                                                        "rounded-lg my-2 w-full aspect-square max-w-[200px] bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center text-slate-400",
+                                                        onAddProduct && "cursor-pointer hover:border-primary hover:text-primary hover:shadow-md transition-all duration-200"
+                                                    )}
+                                                    onClick={() => handleImageClick(props.src, props.alt)}
+                                                >
+                                                    <Box className="w-10 h-10 mb-2 opacity-50" />
+                                                    <span className="text-xs font-medium px-4 text-center">Image not available</span>
+                                                </div>
+                                            );
+                                        }
+                                        return (
+                                            <img 
+                                                className={cn(
+                                                    "rounded-lg my-2 max-w-full border border-slate-200 dark:border-slate-800 shadow-sm",
+                                                    onAddProduct && "cursor-pointer hover:border-primary hover:shadow-md transition-all duration-200"
+                                                )}
+                                                alt={props.alt || ''} 
+                                                onClick={() => handleImageClick(props.src, props.alt)}
+                                                {...props} 
+                                            />
+                                        );
+                                    },
                                     p: ({ children }) => <p className="my-1 leading-relaxed">{children}</p>,
                                     ul: ({ children }) => <ul className="my-1 ml-4 list-disc">{children}</ul>,
                                     ol: ({ children }) => <ol className="my-1 ml-4 list-decimal">{children}</ol>,
