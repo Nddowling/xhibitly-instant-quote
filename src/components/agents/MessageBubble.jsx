@@ -118,7 +118,7 @@ export default function MessageBubble({ message, onAddProduct }) {
 
         // 3. Last resort: try URL
         const srcSkuMatch = src?.match(/\b[A-Z0-9]+-[A-Z0-9-]+\b/i);
-        if (srcSkuMatch) {
+        if (srcSkuMatch && !srcSkuMatch[0].toLowerCase().includes('placeholder')) {
             onAddProduct(srcSkuMatch[0].toUpperCase());
             return;
         }
