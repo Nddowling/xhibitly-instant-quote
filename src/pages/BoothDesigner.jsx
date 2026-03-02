@@ -12,6 +12,7 @@ import MessageBubble from '@/components/agents/MessageBubble';
 import ProjectSelector from '@/components/booth/ProjectSelector';
 import { BoothEngine } from '@/components/booth/BoothEngine';
 import BoothFloorplan from '@/components/booth/BoothFloorplan';
+import BoothSnapshotRenderer from '@/components/render/BoothSnapshotRenderer';
 
 
 export default function BoothDesigner() {
