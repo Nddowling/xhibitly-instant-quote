@@ -483,22 +483,9 @@ export default function BoothDesigner() {
 
     const handleRemoveItem = (id) => {
         if (!scene) return;
-        // Find the sku before removing
-        const item = scene.items.find(i => i.id === id);
-        if (!item) return;
-
         const res = BoothEngine.removeItem(scene, id);
         if (res.success) {
             saveScene(res.scene);
-            // Also remove from DB product_skus
-            if (boothDesign) {
-                const newSkus = [...(boothDesign.product_skus || [])];
-                const skuIndex = newSkus.indexOf(item.sku);
-                if (skuIndex > -1) {
-                    newSkus.splice(skuIndex, 1);
-                    base44.entities.BoothDesign.update(boothDesign.id, { product_skus: newSkus });
-                }
-            }
         }
     };
 
