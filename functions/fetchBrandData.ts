@@ -131,6 +131,18 @@ Deno.serve(async (req) => {
         const parsed = parseBrandfetchResponse(data);
 
         if (parsed) {
+            // Cache the logo if it exists
+            if (parsed.logo_url) {
+                try {
+                    const cacheRes = await base44.functions.invoke('cacheExternalImage', { url: parsed.logo_url });
+                    if (cacheRes.data && cacheRes.data.success) {
+                        parsed.logo_cached_url = cacheRes.data.cached_url;
+                    }
+                } catch (e) {
+                    console.warn('Failed to cache logo:', e);
+                }
+            }
+
             // Store in CompanyBrand
             await base44.asServiceRole.entities.CompanyBrand.create({
                 domain,
