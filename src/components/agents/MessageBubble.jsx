@@ -100,7 +100,10 @@ export default function MessageBubble({ message, onAddProduct }) {
     const isUser = message.role === 'user';
     
     const handleImageClick = (src, alt) => {
-        if (!onAddProduct) return;
+        if (!onAddProduct) {
+            toast.error("Cannot add product: missing handler");
+            return;
+        }
         
         // 1. Try explicit SKU in alt text (e.g. "sku:FMLT-DS-20-12")
         const explicitMatch = alt?.match(/sku:\s*([A-Z0-9-_]+)/i);
@@ -123,20 +126,33 @@ export default function MessageBubble({ message, onAddProduct }) {
             return;
         }
 
-        // 3. Last resort: try URL
+        // 3. Fallback to the exact alt text (it might be the product name)
+        if (alt && alt.trim().length > 3 && alt.toLowerCase() !== 'image' && alt.toLowerCase() !== 'product') {
+            const cleanAlt = alt.replace(/^sku:\s*/i, '').trim();
+            onAddProduct(cleanAlt);
+            return;
+        }
+
+        // 4. Last resort: try URL
         const srcSkuMatch = src?.match(/\b[A-Z0-9]+-[A-Z0-9-]+\b/i);
         if (srcSkuMatch && !srcSkuMatch[0].toLowerCase().includes('placeholder')) {
             onAddProduct(srcSkuMatch[0].toUpperCase());
             return;
         }
+        
+        // 5. Try to extract filename from URL as a last-last resort
+        try {
+            if (src) {
+                const urlParts = src.split('/');
+                const filename = urlParts[urlParts.length - 1].split('.')[0];
+                if (filename && filename.length > 3) {
+                    onAddProduct(filename);
+                    return;
+                }
+            }
+        } catch (e) {}
 
-        // 4. Fallback to the exact alt text (it might be the product name)
-        // This is much safer than guessing from an image URL which might be shared or named incorrectly
-        if (alt && alt.trim().length > 3 && alt.toLowerCase() !== 'image' && alt.toLowerCase() !== 'product') {
-            // Remove "sku:" prefix if it exists but wasn't caught by the regex above
-            const cleanAlt = alt.replace(/^sku:\s*/i, '').trim();
-            onAddProduct(cleanAlt);
-        }
+        toast.error("Could not identify product from image");
     };
     
     return (
