@@ -218,23 +218,13 @@ export default function Results() {
                   <CardContent className={`p-6 ${design.tier === 'Hybrid' ? 'pt-14' : ''}`}>
                     {/* Visual Header - Composited Booth Image */}
                     <div className={`aspect-[4/3] bg-gradient-to-br ${styles.gradient} rounded-xl mb-4 overflow-hidden flex items-center justify-center border border-slate-200`}>
-                      {design.design_image_url && brandIdentity ? (
-                        <CompositedBoothImage
-                          rawUrl={design.raw_image_url || design.design_image_url}
+                        <BoothSnapshotRenderer
+                          sceneJson={design.scene_json || buildSceneFromSkus(design, quoteData.boothSize)}
                           brandIdentity={brandIdentity}
-                          designName={design.design_name}
+                          boothSize={quoteData.boothSize}
+                          width={800}
+                          height={600}
                         />
-                      ) : generatingImages[design.id] ? (
-                        <div className="text-center p-6">
-                          <Loader2 className="w-16 h-16 text-slate-400 mx-auto mb-3 animate-spin" />
-                          <div className="text-sm text-slate-500 font-medium">Generating booth preview...</div>
-                        </div>
-                      ) : (
-                        <div className="text-center p-6">
-                          <Sparkles className="w-16 h-16 text-slate-400 mx-auto mb-3" />
-                          <div className="text-sm text-slate-500 font-medium">Curated from {design.product_skus?.length || 0} Products</div>
-                        </div>
-                      )}
                     </div>
 
                     {/* Tier Badge + Design Name */}
