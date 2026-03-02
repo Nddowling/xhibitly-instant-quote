@@ -715,13 +715,42 @@ export default function BoothDesigner() {
                     <div className="relative z-10 flex-1 flex flex-col">
                         {/* Visualization Area */}
                         <div className="w-full bg-slate-100 dark:bg-slate-800/50 rounded-xl mb-6 border border-slate-200 dark:border-slate-700 overflow-hidden relative group shrink-0 min-h-[400px]">
-                            <BoothFloorplan 
-                                scene={scene} 
-                                onMoveItem={handleMoveItem}
-                                onRotateItem={handleRotateItem}
-                                onRemoveItem={handleRemoveItem}
-                                brandName={boothDesign?.brand_identity?.company_name || boothDesign?.brand_name || boothDesign?.brand_url}
-                            />
+                            <div className="absolute top-2 left-2 z-20 flex gap-2">
+                                <Button 
+                                    variant={viewMode === '2d' ? 'default' : 'secondary'} 
+                                    size="sm" 
+                                    className="h-8 text-xs shadow-sm"
+                                    onClick={() => setViewMode('2d')}
+                                >
+                                    2D Plan
+                                </Button>
+                                <Button 
+                                    variant={viewMode === '3d' ? 'default' : 'secondary'} 
+                                    size="sm" 
+                                    className="h-8 text-xs shadow-sm"
+                                    onClick={() => setViewMode('3d')}
+                                >
+                                    3D Preview
+                                </Button>
+                            </div>
+                            
+                            {viewMode === '3d' ? (
+                                <BoothSnapshotRenderer
+                                    sceneJson={scene}
+                                    brandIdentity={boothDesign?.brand_identity}
+                                    boothSize={boothSize}
+                                    interactive={true}
+                                    autoSnapshot={false}
+                                />
+                            ) : (
+                                <BoothFloorplan 
+                                    scene={scene} 
+                                    onMoveItem={handleMoveItem}
+                                    onRotateItem={handleRotateItem}
+                                    onRemoveItem={handleRemoveItem}
+                                    brandName={boothDesign?.brand_identity?.company_name || boothDesign?.brand_name || boothDesign?.brand_url}
+                                />
+                            )}
                         </div>
 
                         <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-3">Included Products</h3>
