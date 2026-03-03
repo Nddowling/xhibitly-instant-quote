@@ -240,6 +240,7 @@ export default function BoothSnapshotRenderer({
   height = 720,
   autoSnapshot = true,
   interactive = false,
+  onMoveItem,
 }) {
   const containerRef = useRef(null);
   const rendererRef = useRef(null);
@@ -278,6 +279,9 @@ export default function BoothSnapshotRenderer({
     const dist = Math.max(bW, bD) * 1.35;
     camera.position.set(-bW * 0.32, dist * 0.55, bD * 0.85 + AISLE_DEPTH);
     camera.lookAt(0, WALL_H * 0.28, -bD * 0.12);
+
+    // ── INTERACTION STATE ──
+    const interactableObjects = [];
 
     // ── RENDERER ──
     const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
@@ -472,12 +476,14 @@ export default function BoothSnapshotRenderer({
         backing.receiveShadow = true;
 
         const group = new THREE.Group();
+        group.userData = { id: item.id };
         frontPlane.position.z = 0.07;
         group.add(backing);
         group.add(frontPlane);
         group.position.set(wx, pH / 2, wz);
         if (item.rot) group.rotation.y = -THREE.MathUtils.degToRad(item.rot);
         scene.add(group);
+        interactableObjects.push(group);
 
         // Label
         const lTex = makeLabelTex(item.name || item.sku);
@@ -495,11 +501,13 @@ export default function BoothSnapshotRenderer({
             roughness: 0.7
           })
         );
+        box.userData = { id: item.id };
         box.position.set(wx, itemH / 2, wz);
         box.castShadow = true;
         box.receiveShadow = true;
         if (item.rot) box.rotation.y = -THREE.MathUtils.degToRad(item.rot);
         scene.add(box);
+        interactableObjects.push(box);
 
         const lTex = makeLabelTex(item.name || item.sku);
         const label = new THREE.Sprite(new THREE.SpriteMaterial({ map: lTex, transparent: true }));
@@ -557,18 +565,89 @@ export default function BoothSnapshotRenderer({
         }
       });
 
-    // ── Optional interactive orbit ──
+    // ── Optional interactive orbit & drag ──
     if (interactive) {
-      let dragging = false;
+      let isOrbiting = false;
+      let draggedObject = null;
+      let dragOffset = new THREE.Vector3();
+      const dragPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+      const raycaster = new THREE.Raycaster();
+      const mouse = new THREE.Vector2();
+
       let prev = { x: 0, y: 0 };
       let theta = Math.atan2(camera.position.x, camera.position.z);
       let phi = Math.acos(camera.position.y / camera.position.length());
       const rad = camera.position.length();
 
       const el = renderer.domElement;
-      const onDown = (e) => { dragging = true; prev = { x: e.clientX, y: e.clientY }; };
+
+      const getMousePos = (e) => {
+        const rect = el.getBoundingClientRect();
+        return {
+          x: ((e.clientX - rect.left) / rect.width) * 2 - 1,
+          y: -((e.clientY - rect.top) / rect.height) * 2 + 1
+        };
+      };
+
+      const onDown = (e) => { 
+        const m = getMousePos(e);
+        mouse.x = m.x;
+        mouse.y = m.y;
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObjects(interactableObjects, true);
+        
+        if (intersects.length > 0) {
+          let obj = intersects[0].object;
+          while (obj && !obj.userData.id && obj.parent) {
+            obj = obj.parent;
+          }
+          if (obj && obj.userData.id) {
+            draggedObject = obj;
+            raycaster.ray.intersectPlane(dragPlane, dragOffset);
+            dragOffset.sub(obj.position);
+            el.style.cursor = 'grabbing';
+            return;
+          }
+        }
+
+        isOrbiting = true; 
+        prev = { x: e.clientX, y: e.clientY }; 
+        el.style.cursor = 'grabbing';
+      };
+
       const onMove = (e) => {
-        if (!dragging) return;
+        if (draggedObject) {
+          const m = getMousePos(e);
+          mouse.x = m.x;
+          mouse.y = m.y;
+          raycaster.setFromCamera(mouse, camera);
+          const intersectPoint = new THREE.Vector3();
+          raycaster.ray.intersectPlane(dragPlane, intersectPoint);
+          
+          if (intersectPoint) {
+            const newPos = intersectPoint.sub(dragOffset);
+            draggedObject.position.x = newPos.x;
+            draggedObject.position.z = newPos.z;
+            renderer.render(scene, camera);
+          }
+          return;
+        }
+
+        if (!isOrbiting) {
+          // Hover effect
+          const m = getMousePos(e);
+          mouse.x = m.x;
+          mouse.y = m.y;
+          raycaster.setFromCamera(mouse, camera);
+          const intersects = raycaster.intersectObjects(interactableObjects, true);
+          if (intersects.length > 0) {
+            el.style.cursor = 'grab';
+          } else {
+            el.style.cursor = 'default';
+          }
+          return;
+        }
+
         theta -= (e.clientX - prev.x) * 0.005;
         phi = Math.max(0.3, Math.min(Math.PI * 0.45, phi + (e.clientY - prev.y) * 0.005));
         camera.position.set(
@@ -580,7 +659,17 @@ export default function BoothSnapshotRenderer({
         renderer.render(scene, camera);
         prev = { x: e.clientX, y: e.clientY };
       };
-      const onUp = () => { dragging = false; };
+
+      const onUp = () => { 
+        if (draggedObject && onMoveItem) {
+          const newX = draggedObject.position.x + bW / 2;
+          const newY = -draggedObject.position.z + bD / 2;
+          onMoveItem(draggedObject.userData.id, newX, newY);
+        }
+        draggedObject = null;
+        isOrbiting = false; 
+        el.style.cursor = 'default';
+      };
 
       el.addEventListener('mousedown', onDown);
       el.addEventListener('mousemove', onMove);
