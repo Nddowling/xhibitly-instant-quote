@@ -571,36 +571,46 @@ export default function BoothSnapshotRenderer({
         label.position.set(wx, (size.y * scale) + 0.35, wz);
         scene.add(label);
       } else if (productTex) {
-        // ── Textured product billboard with backing panel ──
+        // ── Extruded 3D Box from Image ──
         const aspect = productTex.image.width / productTex.image.height;
         let pW = dispW, pH = itemH;
         const ta = pW / pH;
         if (aspect > ta) { pH = pW / aspect; }
         else { pW = pH * aspect; }
 
-        const frontPlane = new THREE.Mesh(
-          new THREE.PlaneGeometry(pW, pH),
-          new THREE.MeshStandardMaterial({ map: productTex, transparent: true, roughness: 0.5, side: THREE.FrontSide })
-        );
+        // Give it actual depth based on the catalog dims, minimum 0.5ft
+        const boxDepth = Math.max(0.5, dispD);
 
-        const backing = new THREE.Mesh(
-          new THREE.BoxGeometry(pW + 0.04, pH + 0.04, 0.12),
-          new THREE.MeshStandardMaterial({ color: 0xf0f0f0, roughness: 0.6 })
+        // Materials: right, left, top, bottom, front, back
+        // We make the side color a subtle neutral grey, or use primary brand color
+        const sideMat = new THREE.MeshStandardMaterial({ color: brand.secondary_color || 0xd0d0d0, roughness: 0.8 });
+        
+        // Ensure image fits nicely on the front face
+        const frontMat = new THREE.MeshStandardMaterial({ 
+          map: productTex, 
+          transparent: true, 
+          roughness: 0.5,
+          alphaTest: 0.1 // helps with transparent PNGs so the back doesn't look weird
+        });
+        
+        const box = new THREE.Mesh(
+          new THREE.BoxGeometry(pW, pH, boxDepth),
+          [sideMat, sideMat, sideMat, sideMat, frontMat, sideMat]
         );
-        backing.castShadow = true;
-        backing.receiveShadow = true;
+        box.castShadow = true;
+        box.receiveShadow = true;
 
         const group = new THREE.Group();
         group.userData = { id: item.id };
-        frontPlane.position.z = 0.07;
-        group.add(backing);
-        group.add(frontPlane);
+        group.add(box);
+        
+        // Position group so it sits on the floor
         group.position.set(wx, pH / 2, wz);
         if (item.rot) group.rotation.y = -THREE.MathUtils.degToRad(item.rot);
         
-        // Add a subtle selection box/outline for interactable objects so they don't look like flat images
+        // Add a subtle selection box/outline for interactable objects
         const boxHelper = new THREE.BoxHelper(group, 0x3b82f6);
-        boxHelper.visible = false; // Hidden by default, could show on hover
+        boxHelper.visible = false;
         group.add(boxHelper);
         
         scene.add(group);
@@ -615,8 +625,9 @@ export default function BoothSnapshotRenderer({
         scene.add(label);
       } else {
         // ── Placeholder box ──
+        const boxDepth = Math.max(0.5, dispD);
         const box = new THREE.Mesh(
-          new THREE.BoxGeometry(dispW, itemH, dispD),
+          new THREE.BoxGeometry(dispW, itemH, boxDepth),
           new THREE.MeshStandardMaterial({
             map: makePlaceholderTex(item.name || item.sku, brand.secondary_color || '#334155'),
             roughness: 0.7
@@ -629,7 +640,7 @@ export default function BoothSnapshotRenderer({
         group.position.set(wx, itemH / 2, wz);
         if (item.rot) group.rotation.y = -THREE.MathUtils.degToRad(item.rot);
         
-        // Add a subtle selection box/outline for interactable objects so they don't look like flat images
+        // Add a subtle selection box/outline for interactable objects
         const boxHelper = new THREE.BoxHelper(group, 0x3b82f6);
         boxHelper.visible = false; // Hidden by default, could show on hover
         group.add(boxHelper);
