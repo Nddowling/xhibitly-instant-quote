@@ -34,6 +34,25 @@ export default function ProductDetail() {
           navigate(createPageUrl('Product3DManager'));
           return;
         }
+
+        // Fetch Supabase assets
+        try {
+            const imgRes = await base44.functions.invoke('listSupabaseAssets', { path: `products/${prod.sku}/image` });
+            if (imgRes.data && imgRes.data.files && imgRes.data.files.length > 0) {
+                const imgFile = imgRes.data.files.find(f => f.name.match(/\.(png|jpe?g|gif|webp)$/i));
+                if (imgFile) {
+                    prod.image_url = imgFile.publicUrl;
+                }
+            }
+
+            const tplRes = await base44.functions.invoke('listSupabaseAssets', { path: `products/${prod.sku}/template` });
+            if (tplRes.data && tplRes.data.files && tplRes.data.files.length > 0) {
+                prod.template_urls = tplRes.data.files.map(f => f.publicUrl);
+            }
+        } catch (e) {
+            console.warn("Failed to fetch Supabase assets", e);
+        }
+
         setProduct(prod);
       } catch (e) {
         navigate(createPageUrl('Product3DManager'));
