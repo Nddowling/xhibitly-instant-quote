@@ -228,6 +228,7 @@ ACTION REQUIRED: Call the customer immediately to finalize the order.
                   sceneJson={design.scene_json || buildSceneFromSkus(design, quoteData.boothSize)}
                   brandIdentity={brandIdentity}
                   boothSize={quoteData.boothSize}
+                  boothType={design.booth_type || 'inline'}
                   interactive={true}
                   autoSnapshot={false}
                 />
