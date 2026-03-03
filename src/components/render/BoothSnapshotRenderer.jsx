@@ -783,6 +783,11 @@ export default function BoothSnapshotRenderer({
       };
 
       const onUp = () => { 
+        if (draggedObject && onMoveItem) {
+          const newX = draggedObject.position.x + bW / 2;
+          const newY = -draggedObject.position.z + bD / 2;
+          onMoveItem(draggedObject.userData.id, newX, newY);
+        }
         draggedObject = null;
         isOrbiting = false; 
         el.style.cursor = 'default';
