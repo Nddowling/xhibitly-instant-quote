@@ -91,33 +91,49 @@ export default function BoothDesigner() {
                 if (res.length > 0) product = res[0];
             }
             
-            if (product) {
-                // If we have a product but no cached URL, try to cache it to avoid CORS issues in 3D render
-                if (product.image_url && !product.image_cached_url) {
-                    try {
-                        const cacheRes = await base44.functions.invoke('cacheExternalImage', { url: product.image_url });
-                        if (cacheRes.data && cacheRes.data.success) {
-                            product.image_cached_url = cacheRes.data.cached_url;
-                            // Update the product in the background
-                            base44.entities.Product.update(product.id, { image_cached_url: product.image_cached_url }).catch(() => {});
-                        }
-                    } catch (e) {
-                        console.warn("Failed to cache image on the fly", e);
+            if (!product) {
+                let pvRes = await base44.entities.ProductVariant.filter({ manufacturer_sku: sku });
+                if (pvRes.length > 0) {
+                    product = {
+                        name: pvRes[0].display_name,
+                        sku: pvRes[0].manufacturer_sku,
+                        category: pvRes[0].category_name,
+                        image_url: pvRes[0].thumbnail_url || pvRes[0].image_url,
+                        image_cached_url: pvRes[0].thumbnail_url || pvRes[0].image_url
+                    };
+                }
+            }
+
+            if (!product) {
+                product = { sku, name: sku, category: 'Product' };
+            }
+
+            // Fetch Supabase assets
+            try {
+                // Fetch images
+                const imgRes = await base44.functions.invoke('listSupabaseAssets', { path: `products/${sku}/image` });
+                if (imgRes.data && imgRes.data.files && imgRes.data.files.length > 0) {
+                    const imgFile = imgRes.data.files.find(f => f.name.match(/\.(png|jpe?g|gif|webp)$/i));
+                    if (imgFile) {
+                        product.image_url = imgFile.publicUrl;
+                        product.image_cached_url = imgFile.publicUrl;
                     }
                 }
-                return product;
+
+                // Fetch 3D models (other)
+                const otherRes = await base44.functions.invoke('listSupabaseAssets', { path: `products/${sku}/other` });
+                if (otherRes.data && otherRes.data.files && otherRes.data.files.length > 0) {
+                    const modelFile = otherRes.data.files.find(f => f.name.match(/\.(glb|gltf)$/i));
+                    if (modelFile) {
+                        product.model_url = modelFile.publicUrl;
+                        product.model_glb_url = modelFile.publicUrl;
+                    }
+                }
+            } catch (e) {
+                console.warn("Failed to fetch Supabase assets for SKU:", sku, e);
             }
-            
-            let pvRes = await base44.entities.ProductVariant.filter({ manufacturer_sku: sku });
-            if (pvRes.length > 0) {
-                return {
-                    name: pvRes[0].display_name,
-                    sku: pvRes[0].manufacturer_sku,
-                    category: pvRes[0].category_name,
-                    image_url: pvRes[0].thumbnail_url || pvRes[0].image_url,
-                    image_cached_url: pvRes[0].thumbnail_url || pvRes[0].image_url
-                };
-            }
+
+            return product;
         } catch (e) {
             console.error("Error fetching product details", e);
         }
