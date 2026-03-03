@@ -988,9 +988,15 @@ function BoothProductCard({ sku, quantity = 1 }) {
                 try {
                     const imgRes = await base44.functions.invoke('listSupabaseAssets', { path: `products/${sku}/image` });
                     if (imgRes.data && imgRes.data.files && imgRes.data.files.length > 0) {
-                        const imgFile = imgRes.data.files.find(f => f.name.match(/\.(png|jpe?g|gif|webp)$/i));
-                        if (imgFile) {
-                            foundProduct.image_url = imgFile.publicUrl;
+                        const validFiles = imgRes.data.files.filter(f => f.name.match(/\.(png|jpe?g|gif|webp)$/i));
+                        if (validFiles.length > 0) {
+                            let imgFile = validFiles.find(f => f.name.toLowerCase().includes('front')) ||
+                                          validFiles.find(f => f.name.toLowerCase().includes('main')) ||
+                                          validFiles.find(f => !f.name.toLowerCase().includes('cover') && !f.name.toLowerCase().includes('spread')) ||
+                                          validFiles[0];
+                            if (imgFile) {
+                                foundProduct.image_url = imgFile.publicUrl;
+                            }
                         }
                     }
                 } catch (e) {
