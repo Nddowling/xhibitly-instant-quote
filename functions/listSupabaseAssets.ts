@@ -17,7 +17,7 @@ Deno.serve(async (req) => {
 
         // Parse the request body to get the bucket name and optional path
         const body = await req.json().catch(() => ({}));
-        const bucketName = body.bucket || 'assets'; // Default to 'assets' if not provided
+        const bucketName = body.bucket || 'orbus-assets'; // Default to 'orbus-assets' if not provided
         const path = body.path || ''; // Optional path within the bucket
 
         // List files in the specified bucket and path
