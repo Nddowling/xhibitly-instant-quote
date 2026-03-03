@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 // ═══════════════════════════════════════════════════════════════
 // XHIBITLY Booth Renderer v2.0
@@ -223,6 +224,20 @@ function loadTex(url) {
       (tex) => { tex.colorSpace = THREE.SRGBColorSpace; resolve(tex); },
       undefined,
       () => { console.warn('[BoothRenderer] Texture load failed:', url); resolve(null); }
+    );
+  });
+}
+
+function loadGLTF(url) {
+  return new Promise((resolve) => {
+    if (!url) { resolve(null); return; }
+    const loader = new GLTFLoader();
+    loader.setCrossOrigin('anonymous');
+    loader.load(
+      url,
+      (gltf) => { resolve(gltf.scene); },
+      undefined,
+      (err) => { console.warn('[BoothRenderer] GLTF load failed:', url, err); resolve(null); }
     );
   });
 }
@@ -453,9 +468,59 @@ export default function BoothSnapshotRenderer({
       const dispD = isRot ? iW : iD;
 
       let productTex = null;
-      if (item.imageUrl) productTex = await loadTex(item.imageUrl);
+      let modelMesh = null;
+      
+      if (item.modelUrl) {
+        modelMesh = await loadGLTF(item.modelUrl);
+      } else if (item.imageUrl) {
+        productTex = await loadTex(item.imageUrl);
+      }
 
-      if (productTex) {
+      if (modelMesh) {
+        // ── 3D Model ──
+        const box = new THREE.Box3().setFromObject(modelMesh);
+        const size = box.getSize(new THREE.Vector3());
+        const center = box.getCenter(new THREE.Vector3());
+        
+        // Reset position to center
+        modelMesh.position.x += (modelMesh.position.x - center.x);
+        modelMesh.position.y += (modelMesh.position.y - center.y);
+        modelMesh.position.z += (modelMesh.position.z - center.z);
+        
+        // Scale to fit
+        const scaleX = dispW / (size.x || 1);
+        const scaleZ = dispD / (size.z || 1);
+        const scaleY = itemH / (size.y || 1);
+        const scale = Math.min(scaleX, scaleZ, scaleY);
+        
+        modelMesh.scale.set(scale, scale, scale);
+        
+        modelMesh.traverse((child) => {
+          if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+          }
+        });
+        
+        const group = new THREE.Group();
+        group.userData = { id: item.id };
+        group.add(modelMesh);
+        
+        // Position group
+        group.position.set(wx, (size.y * scale) / 2, wz);
+        if (item.rot) group.rotation.y = -THREE.MathUtils.degToRad(item.rot);
+        
+        scene.add(group);
+        interactableObjects.push(group);
+        
+        // Label
+        const lTex = makeLabelTex(item.name || item.sku);
+        const label = new THREE.Sprite(new THREE.SpriteMaterial({ map: lTex, transparent: true }));
+        const ls = Math.min(dispW * 1.1, 4.5);
+        label.scale.set(ls, ls * 0.11, 1);
+        label.position.set(wx, (size.y * scale) + 0.35, wz);
+        scene.add(label);
+      } else if (productTex) {
         // ── Textured product billboard with backing panel ──
         const aspect = productTex.image.width / productTex.image.height;
         let pW = dispW, pH = itemH;

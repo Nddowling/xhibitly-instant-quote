@@ -43,12 +43,13 @@ export const BoothEngine = {
         return { valid: true };
     },
 
-    addItem: (scene, sku, name, imageUrl, w = 3, d = 1, near = 'center', isFlooring = false) => {
+    addItem: (scene, sku, name, imageUrl, w = 3, d = 1, near = 'center', isFlooring = false, modelUrl = null) => {
         const item = {
             id: Math.random().toString(36).substring(2, 9),
             sku,
             name,
             imageUrl,
+            modelUrl,
             x: scene.booth.w_ft / 2,
             y: scene.booth.d_ft / 2,
             rot: 0,
