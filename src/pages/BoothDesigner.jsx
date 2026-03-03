@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Loader2, Send, Box, LayoutTemplate, Image as ImageIcon, ArrowLeft, Grid2X2 } from 'lucide-react';
+import { Loader2, Send, Box, LayoutTemplate, Image as ImageIcon, ArrowLeft, Grid2X2, Mic, MicOff } from 'lucide-react';
 import MessageBubble from '@/components/agents/MessageBubble';
 import ProjectSelector from '@/components/booth/ProjectSelector';
 import { BoothEngine } from '@/components/booth/BoothEngine';
@@ -26,6 +26,8 @@ export default function BoothDesigner() {
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
     const [isSending, setIsSending] = useState(false);
+    const [isRecording, setIsRecording] = useState(false);
+    const recognitionRef = useRef(null);
     
     // Scene Engine State
     const [scene, setScene] = useState(null);
@@ -36,6 +38,47 @@ export default function BoothDesigner() {
     useEffect(() => {
         sceneRef.current = scene;
     }, [scene]);
+
+    useEffect(() => {
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognitionRef.current = new SpeechRecognition();
+            recognitionRef.current.continuous = false;
+            recognitionRef.current.interimResults = true;
+
+            recognitionRef.current.onresult = (event) => {
+                let interimTranscript = '';
+                let finalTranscript = '';
+
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    if (event.results[i].isFinal) {
+                        finalTranscript += event.results[i][0].transcript;
+                    } else {
+                        interimTranscript += event.results[i][0].transcript;
+                    }
+                }
+                
+                if (finalTranscript) {
+                    setInput(prev => prev + (prev ? ' ' : '') + finalTranscript);
+                }
+            };
+
+            recognitionRef.current.onend = () => {
+                setIsRecording(false);
+            };
+        }
+    }, []);
+
+    const toggleRecording = () => {
+        if (isRecording) {
+            recognitionRef.current?.stop();
+            setIsRecording(false);
+        } else {
+            setInput(''); // Clear input on new recording
+            recognitionRef.current?.start();
+            setIsRecording(true);
+        }
+    };
 
     const fetchProductDetails = async (sku) => {
         try {
@@ -687,14 +730,23 @@ export default function BoothDesigner() {
                         </div>
                     )}
                     <form onSubmit={handleSend} className="flex gap-2">
+                        <Button 
+                            type="button" 
+                            variant="outline" 
+                            size="icon"
+                            onClick={toggleRecording}
+                            className={cn("shrink-0 transition-colors", isRecording ? "bg-red-100 text-red-600 border-red-200 hover:bg-red-200 hover:text-red-700" : "text-slate-500")}
+                        >
+                            {isRecording ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+                        </Button>
                         <Input 
                             value={input} 
                             onChange={e => setInput(e.target.value)} 
-                            placeholder="Ask for backwalls, counters, branding..." 
+                            placeholder={isRecording ? "Listening..." : "Ask for backwalls, counters, branding..."}
                             disabled={isSending}
                             className="flex-1"
                         />
-                        <Button type="submit" disabled={isSending || !input.trim()} className="bg-primary hover:bg-primary/90 shadow-sm transition-all">
+                        <Button type="submit" disabled={isSending || (!input.trim() && !isRecording)} className="bg-primary hover:bg-primary/90 shadow-sm transition-all">
                             <Send className="w-4 h-4" />
                         </Button>
                     </form>
@@ -768,6 +820,7 @@ export default function BoothDesigner() {
                                     boothSize={boothSize}
                                     interactive={true}
                                     autoSnapshot={false}
+                                    onMoveItem={handleMoveItem}
                                 />
                             ) : (
                                 <BoothFloorplan 
