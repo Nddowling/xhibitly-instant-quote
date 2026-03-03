@@ -222,6 +222,7 @@ export default function Results() {
                           sceneJson={design.scene_json || buildSceneFromSkus(design, quoteData.boothSize)}
                           brandIdentity={brandIdentity}
                           boothSize={quoteData.boothSize}
+                          boothType={design.booth_type || 'inline'}
                           width={800}
                           height={600}
                         />
