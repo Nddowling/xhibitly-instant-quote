@@ -561,6 +561,12 @@ export default function BoothSnapshotRenderer({
         group.add(frontPlane);
         group.position.set(wx, pH / 2, wz);
         if (item.rot) group.rotation.y = -THREE.MathUtils.degToRad(item.rot);
+        
+        // Add a subtle selection box/outline for interactable objects so they don't look like flat images
+        const boxHelper = new THREE.BoxHelper(group, 0x3b82f6);
+        boxHelper.visible = false; // Hidden by default, could show on hover
+        group.add(boxHelper);
+        
         scene.add(group);
         interactableObjects.push(group);
 
@@ -580,13 +586,23 @@ export default function BoothSnapshotRenderer({
             roughness: 0.7
           })
         );
-        box.userData = { id: item.id };
-        box.position.set(wx, itemH / 2, wz);
+        
+        const group = new THREE.Group();
+        group.userData = { id: item.id };
+        group.add(box);
+        group.position.set(wx, itemH / 2, wz);
+        if (item.rot) group.rotation.y = -THREE.MathUtils.degToRad(item.rot);
+        
+        // Add a subtle selection box/outline for interactable objects so they don't look like flat images
+        const boxHelper = new THREE.BoxHelper(group, 0x3b82f6);
+        boxHelper.visible = false; // Hidden by default, could show on hover
+        group.add(boxHelper);
+        
         box.castShadow = true;
         box.receiveShadow = true;
-        if (item.rot) box.rotation.y = -THREE.MathUtils.degToRad(item.rot);
-        scene.add(box);
-        interactableObjects.push(box);
+        
+        scene.add(group);
+        interactableObjects.push(group);
 
         const lTex = makeLabelTex(item.name || item.sku);
         const label = new THREE.Sprite(new THREE.SpriteMaterial({ map: lTex, transparent: true }));
