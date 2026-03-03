@@ -515,11 +515,17 @@ export default function BoothSnapshotRenderer({
         group.add(modelMesh);
         
         // Position group
+        // Adjust Y position so the bottom of the model sits on the floor
         group.position.set(wx, (size.y * scale) / 2, wz);
         if (item.rot) group.rotation.y = -THREE.MathUtils.degToRad(item.rot);
         
         scene.add(group);
         interactableObjects.push(group);
+        
+        // Add a subtle selection box/outline for interactable objects so they don't look like flat images
+        const boxHelper = new THREE.BoxHelper(group, 0x3b82f6);
+        boxHelper.visible = false; // Hidden by default, could show on hover
+        group.add(boxHelper);
         
         // Label
         const lTex = makeLabelTex(item.name || item.sku);
@@ -720,10 +726,30 @@ export default function BoothSnapshotRenderer({
           mouse.y = m.y;
           raycaster.setFromCamera(mouse, camera);
           const intersects = raycaster.intersectObjects(interactableObjects, true);
+          
+          // Hide all box helpers first
+          interactableObjects.forEach(obj => {
+              obj.children.forEach(child => {
+                  if (child.type === 'LineSegments') child.visible = false;
+              });
+          });
+
           if (intersects.length > 0) {
             el.style.cursor = 'grab';
+            // Show box helper for hovered object
+            let obj = intersects[0].object;
+            while (obj && !obj.userData.id && obj.parent) {
+                obj = obj.parent;
+            }
+            if (obj && obj.userData.id) {
+                obj.children.forEach(child => {
+                    if (child.type === 'LineSegments') child.visible = true;
+                });
+                renderer.render(scene, camera);
+            }
           } else {
             el.style.cursor = 'default';
+            renderer.render(scene, camera);
           }
           return;
         }
