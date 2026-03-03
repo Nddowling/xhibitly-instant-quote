@@ -587,7 +587,15 @@ export default function BoothDesigner() {
     const handleMoveItem = (id, newX, newY) => {
         if (!scene) return;
         const res = BoothEngine.moveItem(scene, id, newX, newY);
-        if (res.success) saveScene(res.scene);
+        if (res.success) {
+            // Optimistically update scene immediately to prevent lag
+            setScene(res.scene);
+            // Debounce the save to prevent rate limits
+            if (window.saveTimeout) clearTimeout(window.saveTimeout);
+            window.saveTimeout = setTimeout(() => {
+                saveScene(res.scene);
+            }, 500);
+        }
     };
 
     const handleRotateItem = (id, degrees) => {

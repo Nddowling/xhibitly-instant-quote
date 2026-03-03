@@ -694,6 +694,13 @@ export default function BoothSnapshotRenderer({
             draggedObject.position.x = newPos.x;
             draggedObject.position.z = newPos.z;
             renderer.render(scene, camera);
+            
+            // Call onMoveItem continuously while dragging so the 2D plan syncs
+            if (onMoveItem) {
+                const newX = draggedObject.position.x + bW / 2;
+                const newY = -draggedObject.position.z + bD / 2;
+                onMoveItem(draggedObject.userData.id, newX, newY);
+            }
           }
           return;
         }
