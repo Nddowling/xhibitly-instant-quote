@@ -250,6 +250,7 @@ export default function BoothSnapshotRenderer({
   sceneJson,
   brandIdentity,
   boothSize = '10x10',
+  boothType = 'inline',
   onSnapshotReady,
   width = 1280,
   height = 720,
@@ -291,9 +292,19 @@ export default function BoothSnapshotRenderer({
 
     // ── CAMERA (3/4 elevated front-left) ──
     const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 200);
-    const dist = Math.max(bW, bD) * 1.35;
-    camera.position.set(-bW * 0.32, dist * 0.55, bD * 0.85 + AISLE_DEPTH);
-    camera.lookAt(0, WALL_H * 0.28, -bD * 0.12);
+    
+    // Better framing for wider booths (like 10x20)
+    const distZ = Math.max(bW * 1.25, bD * 1.5) + AISLE_DEPTH;
+    const heightY = Math.max(10, bW * 0.4);
+    
+    if (boothType === 'island') {
+        camera.position.set(-bW * 0.6, heightY * 1.2, bD * 0.8 + AISLE_DEPTH);
+        camera.lookAt(0, WALL_H * 0.2, 0);
+    } else {
+        // Slight angle, but centered enough to see the whole width
+        camera.position.set(-bW * 0.15, heightY, distZ);
+        camera.lookAt(0, WALL_H * 0.3, -bD * 0.1);
+    }
 
     // ── INTERACTION STATE ──
     const interactableObjects = [];
@@ -343,6 +354,20 @@ export default function BoothSnapshotRenderer({
     // BOOTH STRUCTURE
     // ══════════════════════════════════════════════════════════
 
+    const isIsland = boothType === 'island';
+    const isPeninsula = boothType === 'peninsula';
+    const isCorner = boothType === 'corner';
+    const isInline = boothType === 'inline';
+
+    const pipeMat = new THREE.MeshStandardMaterial({ color: 0x888888, metalness: 0.7, roughness: 0.3 });
+    const pr = 0.04;
+
+    const makeUpright = (x, z) => {
+      const pole = new THREE.Mesh(new THREE.CylinderGeometry(pr, pr, DRAPE_H, 8), pipeMat.clone());
+      pole.position.set(x, DRAPE_H / 2, z);
+      return pole;
+    };
+
     // Booth carpet
     const carpetTex = makeCarpetTex(brand.primary_color || '#1a1a2e');
     carpetTex.repeat.set(bW / 4, bD / 4);
@@ -367,14 +392,25 @@ export default function BoothSnapshotRenderer({
     scene.add(aisleMesh);
 
     // Back wall
-    const bwTex = makeBackwallTex(brand, bW);
-    const bwMesh = new THREE.Mesh(
-      new THREE.PlaneGeometry(bW, WALL_H),
-      new THREE.MeshStandardMaterial({ map: bwTex, roughness: 0.4 })
-    );
-    bwMesh.position.set(0, WALL_H / 2, -bD / 2);
-    bwMesh.receiveShadow = true;
-    scene.add(bwMesh);
+    if (!isIsland) {
+      const bwTex = makeBackwallTex(brand, bW);
+      const bwMesh = new THREE.Mesh(
+        new THREE.PlaneGeometry(bW, WALL_H),
+        new THREE.MeshStandardMaterial({ map: bwTex, roughness: 0.4 })
+      );
+      bwMesh.position.set(0, WALL_H / 2, -bD / 2);
+      bwMesh.receiveShadow = true;
+      scene.add(bwMesh);
+
+      // Back rail
+      const backRail = new THREE.Mesh(new THREE.CylinderGeometry(pr, pr, bW, 8), pipeMat);
+      backRail.rotation.z = Math.PI / 2;
+      backRail.position.set(0, DRAPE_H, -bD / 2);
+      scene.add(backRail);
+
+      scene.add(makeUpright(-bW/2, -bD/2));
+      scene.add(makeUpright(bW/2, -bD/2));
+    }
 
     // Pipe & drape sides
     const dTex = makeDrapeTex();
@@ -389,44 +425,37 @@ export default function BoothSnapshotRenderer({
       m.receiveShadow = true;
       return m;
     };
-    scene.add(makeDrape(-bW / 2, 'left'));
-    scene.add(makeDrape(bW / 2, 'right'));
 
-    // Pipe rails (metal rods at top of drapes)
-    const pipeMat = new THREE.MeshStandardMaterial({ color: 0x888888, metalness: 0.7, roughness: 0.3 });
-    const pr = 0.04;
+    if (isInline) {
+      scene.add(makeDrape(-bW / 2, 'left'));
+      scene.add(makeDrape(bW / 2, 'right'));
 
-    // Back rail
-    const backRail = new THREE.Mesh(new THREE.CylinderGeometry(pr, pr, bW, 8), pipeMat);
-    backRail.rotation.z = Math.PI / 2;
-    backRail.position.set(0, DRAPE_H, -bD / 2);
-    scene.add(backRail);
+      const leftRail = new THREE.Mesh(new THREE.CylinderGeometry(pr, pr, bD, 8), pipeMat.clone());
+      leftRail.rotation.x = Math.PI / 2;
+      leftRail.position.set(-bW / 2, DRAPE_H, 0);
+      scene.add(leftRail);
 
-    // Side rails
-    const leftRail = new THREE.Mesh(new THREE.CylinderGeometry(pr, pr, bD, 8), pipeMat.clone());
-    leftRail.rotation.x = Math.PI / 2;
-    leftRail.position.set(-bW / 2, DRAPE_H, 0);
-    scene.add(leftRail);
-    const rightRail = leftRail.clone();
-    rightRail.position.set(bW / 2, DRAPE_H, 0);
-    scene.add(rightRail);
+      const rightRail = leftRail.clone();
+      rightRail.position.set(bW / 2, DRAPE_H, 0);
+      scene.add(rightRail);
 
-    // Uprights (vertical poles at corners)
-    const makeUpright = (x, z) => {
-      const pole = new THREE.Mesh(new THREE.CylinderGeometry(pr, pr, DRAPE_H, 8), pipeMat.clone());
-      pole.position.set(x, DRAPE_H / 2, z);
-      return pole;
-    };
-    scene.add(makeUpright(-bW/2, -bD/2));
-    scene.add(makeUpright(bW/2, -bD/2));
-    scene.add(makeUpright(-bW/2, bD/2));
-    scene.add(makeUpright(bW/2, bD/2));
+      scene.add(makeUpright(-bW/2, bD/2));
+      scene.add(makeUpright(bW/2, bD/2));
+    } else if (isCorner) {
+      scene.add(makeDrape(bW / 2, 'right'));
+      const rightRail = new THREE.Mesh(new THREE.CylinderGeometry(pr, pr, bD, 8), pipeMat.clone());
+      rightRail.rotation.x = Math.PI / 2;
+      rightRail.position.set(bW / 2, DRAPE_H, 0);
+      scene.add(rightRail);
+      scene.add(makeUpright(bW/2, bD/2));
+    }
 
     // ══════════════════════════════════════════════════════════
     // LOGO ON BACK WALL
     // ══════════════════════════════════════════════════════════
 
     const logoPromise = (async () => {
+      if (isIsland) return;
       const logoUrl = brand.logo_cached_url || brand.logo_url;
       if (!logoUrl) return;
       const tex = await loadTex(logoUrl);

@@ -19,6 +19,7 @@ export default function BoothDesigner() {
     const navigate = useNavigate();
     const [step, setStep] = useState('selector'); // selector, setup, loading, designing
     const [boothSize, setBoothSize] = useState('10x10');
+    const [boothType, setBoothType] = useState('inline');
     const [designName, setDesignName] = useState('');
     const [boothDesign, setBoothDesign] = useState(null);
     const [brandUrl, setBrandUrl] = useState('');
@@ -262,6 +263,7 @@ export default function BoothDesigner() {
             const design = await base44.entities.BoothDesign.create({
                 design_name: designName,
                 booth_size: boothSize,
+                booth_type: boothType,
                 brand_url: brandUrl ? brandUrl.trim() : '',
                 brand_identity: brandIdentity,
                 tier: 'Modular',
@@ -348,6 +350,7 @@ export default function BoothDesigner() {
             setBoothDesign(project);
             setDesignName(project.design_name);
             setBoothSize(project.booth_size);
+            setBoothType(project.booth_type || 'inline');
             setBrandUrl(project.brand_url || '');
             
             const initialScene = initializeScene(project);
@@ -661,10 +664,30 @@ export default function BoothDesigner() {
                                 <Button 
                                     key={size} 
                                     variant={boothSize === size ? 'default' : 'outline'}
-                                    onClick={() => setBoothSize(size)}
+                                    onClick={() => {
+                                        setBoothSize(size);
+                                        if (size === '20x20') setBoothType('island');
+                                        else if (boothType === 'island') setBoothType('inline');
+                                    }}
                                     className={cn("w-full transition-all", boothSize === size ? "bg-primary hover:bg-primary/90 text-white shadow-md" : "hover:border-primary/50 hover:bg-primary/5 hover:text-primary")}
                                 >
                                     {size}
+                                </Button>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="mt-4">
+                        <label className="block text-sm font-medium mb-2">Booth Type</label>
+                        <div className="grid grid-cols-2 gap-2">
+                            {['inline', 'corner', 'island', 'peninsula'].map(type => (
+                                <Button 
+                                    key={type} 
+                                    variant={boothType === type ? 'default' : 'outline'}
+                                    onClick={() => setBoothType(type)}
+                                    className={cn("w-full transition-all capitalize", boothType === type ? "bg-primary hover:bg-primary/90 text-white shadow-md" : "hover:border-primary/50 hover:bg-primary/5 hover:text-primary")}
+                                    disabled={boothSize === '20x20' && (type === 'inline' || type === 'corner')}
+                                >
+                                    {type}
                                 </Button>
                             ))}
                         </div>
@@ -828,6 +851,7 @@ export default function BoothDesigner() {
                                     sceneJson={scene}
                                     brandIdentity={boothDesign?.brand_identity}
                                     boothSize={boothSize}
+                                    boothType={boothDesign?.booth_type || boothType}
                                     interactive={true}
                                     autoSnapshot={false}
                                     onMoveItem={handleMoveItem}
