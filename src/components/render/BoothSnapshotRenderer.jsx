@@ -488,10 +488,18 @@ export default function BoothSnapshotRenderer({
         modelMesh.position.z += (modelMesh.position.z - center.z);
         
         // Scale to fit
-        const scaleX = dispW / (size.x || 1);
-        const scaleZ = dispD / (size.z || 1);
-        const scaleY = itemH / (size.y || 1);
-        const scale = Math.min(scaleX, scaleZ, scaleY);
+        // Don't scale if the model is already sized correctly (e.g. from Roomtodo)
+        // Only scale if it's wildly out of bounds or if we want to force it to our dimensions
+        let scaleX = dispW / (size.x || 1);
+        let scaleZ = dispD / (size.z || 1);
+        let scaleY = itemH / (size.y || 1);
+        let scale = Math.min(scaleX, scaleZ, scaleY);
+        
+        // If the model is already somewhat reasonably sized (e.g. between 1 and 20 units), 
+        // it might be pre-scaled in feet/meters. Let's assume 1 unit = 1 foot for GLBs in this context.
+        if (size.x > 0.5 && size.x < 30) {
+            scale = 1; // Keep original scale
+        }
         
         modelMesh.scale.set(scale, scale, scale);
         
