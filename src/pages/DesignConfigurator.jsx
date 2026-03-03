@@ -62,13 +62,34 @@ export default function DesignConfigurator() {
       designProducts = allVariants.filter(v =>
         designData.product_skus.includes(v.manufacturer_sku) ||
         designData.product_skus.includes(v.id)
-      );
+      ).map(v => ({
+        ...v,
+        sku: v.manufacturer_sku,
+        name: v.display_name,
+        category: v.category_name
+      }));
 
       if (designProducts.length === 0) {
         const allProducts = await base44.entities.Product.filter({ is_active: true });
         designProducts = allProducts.filter(p =>
           designData.product_skus.includes(p.sku)
         );
+      }
+
+      // Fetch Supabase images for these products
+      for (let i = 0; i < designProducts.length; i++) {
+          const p = designProducts[i];
+          try {
+              const imgRes = await base44.functions.invoke('listSupabaseAssets', { path: `products/${p.sku}/image` });
+              if (imgRes.data && imgRes.data.files && imgRes.data.files.length > 0) {
+                  const imgFile = imgRes.data.files.find(f => f.name.match(/\.(png|jpe?g|gif|webp)$/i));
+                  if (imgFile) {
+                      p.image_url = imgFile.publicUrl;
+                  }
+              }
+          } catch(e) {
+              console.warn("Failed to fetch image for", p.sku);
+          }
       }
     }
 
