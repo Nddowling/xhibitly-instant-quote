@@ -9,7 +9,7 @@ import { Switch } from '@/components/ui/switch';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { User, Trash2, Moon, Sun, Shield, Edit, Save, X } from 'lucide-react';
+import { User, Trash2, Moon, Sun, Shield, Edit, Save, X, Wrench } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function Settings() {
@@ -19,6 +19,8 @@ export default function Settings() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isCaching, setIsCaching] = useState(false);
+  const [cacheProgress, setCacheProgress] = useState({ total: 0, current: 0, errors: 0 });
   const [editForm, setEditForm] = useState({
     contact_name: '',
     company_name: '',
@@ -141,6 +143,39 @@ export default function Settings() {
     } catch (e) {
       console.error('Error deleting account:', e);
       setIsDeleting(false);
+    }
+  };
+
+  const handleBulkCacheImages = async () => {
+    setIsCaching(true);
+    setCacheProgress({ total: 0, current: 0, errors: 0 });
+    
+    try {
+      // Fetch products (adjust limit if you have more than 1000)
+      const allProducts = await base44.entities.Product.list('', 1000); 
+      const productsToCache = allProducts.filter(p => p.image_url && !p.image_cached_url);
+      
+      setCacheProgress(prev => ({ ...prev, total: productsToCache.length }));
+      
+      for (let i = 0; i < productsToCache.length; i++) {
+        const product = productsToCache[i];
+        try {
+          const res = await base44.functions.invoke('cacheExternalImage', { url: product.image_url });
+          if (res.data && res.data.success && res.data.cached_url) {
+            await base44.entities.Product.update(product.id, { image_cached_url: res.data.cached_url });
+          } else {
+            setCacheProgress(prev => ({ ...prev, errors: prev.errors + 1 }));
+          }
+        } catch (err) {
+          console.error(`Failed to cache image for product ${product.sku}:`, err);
+          setCacheProgress(prev => ({ ...prev, errors: prev.errors + 1 }));
+        }
+        setCacheProgress(prev => ({ ...prev, current: i + 1 }));
+      }
+    } catch (error) {
+      console.error("Error during bulk caching:", error);
+    } finally {
+      setIsCaching(false);
     }
   };
 
@@ -337,6 +372,50 @@ export default function Settings() {
             </CardContent>
           </Card>
         </motion.div>
+
+        {/* Developer Tools */}
+        {user?.is_sales_rep && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25 }}
+          >
+            <Card className="mb-6 dark:bg-slate-900 dark:border-slate-800">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 dark:text-white">
+                  <Wrench className="w-5 h-5" />
+                  Developer Tools
+                </CardTitle>
+                <CardDescription className="dark:text-slate-400">
+                  System maintenance and utilities
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div>
+                    <Label className="text-slate-900 dark:text-white font-medium">Bulk Cache Product Images</Label>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 mb-3">
+                      Fixes the "grey box" issue in 3D rendering by caching external product images to bypass CORS restrictions.
+                    </p>
+                    <Button 
+                      onClick={handleBulkCacheImages} 
+                      disabled={isCaching}
+                      variant="outline"
+                      className="w-full sm:w-auto"
+                    >
+                      {isCaching ? `Caching... (${cacheProgress.current}/${cacheProgress.total})` : 'Start Bulk Cache'}
+                    </Button>
+                    {isCaching && (
+                      <p className="text-xs text-slate-500 mt-2">
+                        Processing... Errors: {cacheProgress.errors}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
 
         {/* Danger Zone */}
         <motion.div
