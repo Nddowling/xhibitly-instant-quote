@@ -113,10 +113,17 @@ export default function BoothDesigner() {
                 // Fetch images
                 const imgRes = await base44.functions.invoke('listSupabaseAssets', { path: `products/${sku}/image` });
                 if (imgRes.data && imgRes.data.files && imgRes.data.files.length > 0) {
-                    const imgFile = imgRes.data.files.find(f => f.name.match(/\.(png|jpe?g|gif|webp)$/i));
-                    if (imgFile) {
-                        product.image_url = imgFile.publicUrl;
-                        product.image_cached_url = imgFile.publicUrl;
+                    const validFiles = imgRes.data.files.filter(f => f.name.match(/\.(png|jpe?g|gif|webp)$/i));
+                    if (validFiles.length > 0) {
+                        // Prefer files with 'front' or 'main' in the name, avoid 'cover' or 'spread'
+                        let imgFile = validFiles.find(f => f.name.toLowerCase().includes('front')) ||
+                                      validFiles.find(f => f.name.toLowerCase().includes('main')) ||
+                                      validFiles.find(f => !f.name.toLowerCase().includes('cover') && !f.name.toLowerCase().includes('spread')) ||
+                                      validFiles[0];
+                        if (imgFile) {
+                            product.image_url = imgFile.publicUrl;
+                            product.image_cached_url = imgFile.publicUrl;
+                        }
                     }
                 }
 
