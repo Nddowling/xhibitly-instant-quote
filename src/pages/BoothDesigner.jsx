@@ -243,6 +243,7 @@ export default function BoothDesigner() {
     const handleStart = async () => {
         if (!designName) return;
         setStep('loading');
+        setMessages([]);
         try {
             const user = await base44.auth.me();
             const { w, d } = parseBoothSize(boothSize);
