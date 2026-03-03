@@ -214,16 +214,23 @@ function makePlaceholderTex(name, color, tw = 512, th = 512) {
 // TEXTURE LOADER
 // ═══════════════════════════════════════════════════════════════
 
+function getProxiedUrl(url) {
+  if (!url) return null;
+  if (url.includes('supabase.co') || url.includes('base44') || url.startsWith('data:')) return url;
+  return `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+}
+
 function loadTex(url) {
   return new Promise((resolve) => {
     if (!url) { resolve(null); return; }
+    const proxied = getProxiedUrl(url);
     const loader = new THREE.TextureLoader();
     loader.setCrossOrigin('anonymous');
     loader.load(
-      url,
+      proxied,
       (tex) => { tex.colorSpace = THREE.SRGBColorSpace; resolve(tex); },
       undefined,
-      () => { console.warn('[BoothRenderer] Texture load failed:', url); resolve(null); }
+      () => { console.warn('[BoothRenderer] Texture load failed:', proxied); resolve(null); }
     );
   });
 }
