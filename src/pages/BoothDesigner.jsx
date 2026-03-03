@@ -927,52 +927,70 @@ function BoothProductCard({ sku, quantity = 1 }) {
         async function fetchProduct() {
             setLoading(true);
             try {
+                let foundProduct = null;
                 // 1. Try finding by SKU directly
                 let res = await base44.entities.Product.filter({ sku });
                 if (res.length > 0) {
-                    setProduct(res[0]);
-                    return;
-                }
-
-                // 2. Try finding by name (in case SKU passed is actually the name)
-                res = await base44.entities.Product.filter({ name: sku });
-                if (res.length > 0) {
-                    setProduct(res[0]);
-                    return;
-                }
-
-                // 3. Try ProductVariant by manufacturer_sku
-                let pvRes = await base44.entities.ProductVariant.filter({ manufacturer_sku: sku });
-                if (pvRes.length > 0) {
-                    setProduct({
-                        name: pvRes[0].display_name,
-                        sku: pvRes[0].manufacturer_sku,
-                        category: pvRes[0].category_name,
-                        image_url: pvRes[0].thumbnail_url || pvRes[0].image_url
-                    });
-                    return;
-                }
-
-                // 4. Try heuristic: replace hyphens with spaces for Name lookup
-                const possibleName = sku.replace(/-/g, ' ').trim().toLowerCase();
-                
-                // 5. Client-side partial match as a last resort
-                try {
-                    const recentProds = await base44.entities.Product.list('-created_date', 200);
-                    const match = recentProds.find(p => 
-                        (p.sku && p.sku.toLowerCase() === sku.toLowerCase()) || 
-                        (p.name && p.name.toLowerCase() === possibleName) ||
-                        (p.name && possibleName && p.name.toLowerCase().includes(possibleName))
-                    );
-                    
-                    if (match) {
-                        setProduct(match);
-                        return;
+                    foundProduct = res[0];
+                } else {
+                    // 2. Try finding by name (in case SKU passed is actually the name)
+                    res = await base44.entities.Product.filter({ name: sku });
+                    if (res.length > 0) {
+                        foundProduct = res[0];
                     }
-                } catch(e) {}
+                }
+
+                if (!foundProduct) {
+                    // 3. Try ProductVariant by manufacturer_sku
+                    let pvRes = await base44.entities.ProductVariant.filter({ manufacturer_sku: sku });
+                    if (pvRes.length > 0) {
+                        foundProduct = {
+                            name: pvRes[0].display_name,
+                            sku: pvRes[0].manufacturer_sku,
+                            category: pvRes[0].category_name,
+                            image_url: pvRes[0].thumbnail_url || pvRes[0].image_url
+                        };
+                    }
+                }
+
+                if (!foundProduct) {
+                    // 4. Try heuristic: replace hyphens with spaces for Name lookup
+                    const possibleName = sku.replace(/-/g, ' ').trim().toLowerCase();
+                    
+                    // 5. Client-side partial match as a last resort
+                    try {
+                        const recentProds = await base44.entities.Product.list('-created_date', 200);
+                        const match = recentProds.find(p => 
+                            (p.sku && p.sku.toLowerCase() === sku.toLowerCase()) || 
+                            (p.name && p.name.toLowerCase() === possibleName) ||
+                            (p.name && possibleName && p.name.toLowerCase().includes(possibleName))
+                        );
+                        
+                        if (match) {
+                            foundProduct = match;
+                        }
+                    } catch(e) {}
+                }
                 
-                // Fallback: Set basic info
-                setProduct({ name: sku, sku: sku, category: 'Product' });
+                if (!foundProduct) {
+                    // Fallback: Set basic info
+                    foundProduct = { name: sku, sku: sku, category: 'Product' };
+                }
+
+                // Fetch Supabase image
+                try {
+                    const imgRes = await base44.functions.invoke('listSupabaseAssets', { path: `products/${sku}/image` });
+                    if (imgRes.data && imgRes.data.files && imgRes.data.files.length > 0) {
+                        const imgFile = imgRes.data.files.find(f => f.name.match(/\.(png|jpe?g|gif|webp)$/i));
+                        if (imgFile) {
+                            foundProduct.image_url = imgFile.publicUrl;
+                        }
+                    }
+                } catch (e) {
+                    console.warn("Failed to fetch Supabase image for SKU:", sku, e);
+                }
+
+                setProduct(foundProduct);
             } catch (e) {
                 console.error("Error fetching product:", e);
                 setProduct({ name: sku, sku: sku, category: 'Product' });
