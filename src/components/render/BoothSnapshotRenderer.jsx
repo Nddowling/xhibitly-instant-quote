@@ -300,17 +300,18 @@ export default function BoothSnapshotRenderer({
     // ── CAMERA (3/4 elevated front-left) ──
     const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 200);
     
-    // Better framing for wider booths (like 10x20)
-    const distZ = Math.max(bW * 1.25, bD * 1.5) + AISLE_DEPTH;
-    const heightY = Math.max(10, bW * 0.4);
+    // Better framing for wider booths (like 10x20) - ensure we zoom out enough
+    const maxDim = Math.max(bW, bD);
+    const distZ = maxDim * 1.5 + AISLE_DEPTH + 8; // Extra buffer so things don't look massive
+    const heightY = Math.max(12, maxDim * 0.6); // Slightly higher angle for better overview
     
     if (boothType === 'island') {
-        camera.position.set(-bW * 0.6, heightY * 1.2, bD * 0.8 + AISLE_DEPTH);
+        camera.position.set(-maxDim * 0.8, heightY * 1.2, maxDim * 0.8 + AISLE_DEPTH);
         camera.lookAt(0, WALL_H * 0.2, 0);
     } else {
-        // Slight angle, but centered enough to see the whole width
-        camera.position.set(-bW * 0.15, heightY, distZ);
-        camera.lookAt(0, WALL_H * 0.3, -bD * 0.1);
+        // More centered angle to see the whole width comfortably
+        camera.position.set(-bW * 0.1, heightY, distZ);
+        camera.lookAt(0, WALL_H * 0.4, -bD * 0.2);
     }
 
     // ── INTERACTION STATE ──
