@@ -202,6 +202,22 @@ export default function ProductDetail() {
               </div>
             )}
 
+            {product.template_urls && product.template_urls.length > 0 && (
+              <div>
+                <h3 className="text-lg font-semibold flex items-center gap-2 mb-3">
+                  <LayoutTemplate className="w-5 h-5 text-slate-400" />
+                  Templates
+                </h3>
+                <div className="flex gap-2 flex-wrap mb-6">
+                  {product.template_urls.map((url, i) => (
+                    <a key={i} href={url} target="_blank" rel="noreferrer" className="text-sm text-primary hover:underline flex items-center gap-1 bg-primary/10 px-3 py-1.5 rounded-md">
+                      <FileDown className="w-4 h-4" /> Template {i + 1}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {(product.features?.length > 0 || product.dimensions || product.booth_sizes?.length > 0) && (
               <div>
                 <h3 className="text-lg font-semibold flex items-center gap-2 mb-3">
