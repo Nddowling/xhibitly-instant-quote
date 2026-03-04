@@ -557,9 +557,9 @@ export default function BoothSnapshotRenderer({
         const center = box.getCenter(new THREE.Vector3());
 
         // Reset position to center
-        modelMesh.position.x += (modelMesh.position.x - center.x);
-        modelMesh.position.y += (modelMesh.position.y - center.y);
-        modelMesh.position.z += (modelMesh.position.z - center.z);
+        modelMesh.position.x -= center.x;
+        modelMesh.position.y -= center.y;
+        modelMesh.position.z -= center.z;
 
         // Scale and position based on product dimensions
         const targetW = dispW || 2;
