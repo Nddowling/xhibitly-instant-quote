@@ -4,6 +4,83 @@ import { Button } from "@/components/ui/button";
 import { Copy, Zap, CheckCircle2, AlertCircle, Loader2, ChevronRight, Clock, Box } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { base44 } from "@/api/base44Client";
+
+const ChatProductImage = ({ src, alt, sku, onAddProduct, onClick }) => {
+    const [imgSrc, setImgSrc] = React.useState(src);
+    const [loading, setLoading] = React.useState(false);
+    const isPlaceholder = !imgSrc || imgSrc === 'null' || imgSrc === 'undefined' || imgSrc.toLowerCase().includes('placeholder');
+
+    React.useEffect(() => {
+        if (isPlaceholder && sku) {
+            setLoading(true);
+            base44.functions.invoke('listSupabaseAssets', { path: `products/${sku}/image` })
+                .then(res => {
+                    if (res.data && res.data.files && res.data.files.length > 0) {
+                        const validFiles = res.data.files.filter(f => f.name.match(/\.(png|jpe?g|gif|webp)$/i));
+                        if (validFiles.length > 0) {
+                            let imgFile = validFiles.find(f => f.name.toLowerCase().includes('front')) ||
+                                          validFiles.find(f => f.name.toLowerCase().includes('main')) ||
+                                          validFiles.find(f => !f.name.toLowerCase().includes('cover') && !f.name.toLowerCase().includes('spread')) ||
+                                          validFiles[0];
+                            if (imgFile) {
+                                setImgSrc(imgFile.publicUrl);
+                            }
+                        }
+                    }
+                })
+                .catch(e => console.warn("Failed to fetch image for chat", e))
+                .finally(() => setLoading(false));
+        }
+    }, [sku, isPlaceholder]);
+
+    if (isPlaceholder) {
+        return (
+            <div 
+                className={cn(
+                    "group rounded-lg my-2 w-full aspect-square max-w-[200px] bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center text-slate-400 relative overflow-hidden",
+                    onAddProduct && "cursor-pointer hover:border-primary hover:text-primary hover:shadow-md transition-all duration-200"
+                )}
+                onClick={onClick}
+            >
+                {loading ? <Loader2 className="w-8 h-8 mb-2 animate-spin" /> : <Box className="w-10 h-10 mb-2 opacity-50 pointer-events-none" />}
+                <span className="text-xs font-medium px-4 text-center pointer-events-none">{alt?.replace(/sku:\s*/i, '') || sku || 'Image not available'}</span>
+                {onAddProduct && (
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                        <span className="bg-white text-slate-900 text-xs font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1">
+                            <Box className="w-3 h-3" /> Add to Booth
+                        </span>
+                    </div>
+                )}
+            </div>
+        );
+    }
+
+    return (
+        <div className="relative group inline-block">
+            <img 
+                className={cn(
+                    "rounded-lg my-2 max-w-full border border-slate-200 dark:border-slate-800 shadow-sm",
+                    onAddProduct && "cursor-pointer hover:border-primary hover:shadow-md transition-all duration-200"
+                )}
+                src={imgSrc}
+                alt={alt || ''} 
+                onClick={onClick}
+            />
+            {onAddProduct && (
+                <div 
+                    className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center cursor-pointer pointer-events-none"
+                >
+                    <span className="bg-white text-slate-900 text-xs font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1 pointer-events-auto"
+                        onClick={onClick}
+                    >
+                        <Box className="w-3 h-3" /> Add to Booth
+                    </span>
+                </div>
+            )}
+        </div>
+    );
+};
 
 const FunctionDisplay = ({ toolCall }) => {
     const [expanded, setExpanded] = useState(false);
