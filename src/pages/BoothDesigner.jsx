@@ -127,14 +127,23 @@ export default function BoothDesigner() {
                     }
                 }
 
-                // Fetch 3D models (other)
-                const otherRes = await base44.functions.invoke('listSupabaseAssets', { path: `products/${sku}/other` });
-                if (otherRes.data && otherRes.data.files && otherRes.data.files.length > 0) {
-                    const modelFile = otherRes.data.files.find(f => f.name.match(/\.(glb|gltf)$/i));
-                    if (modelFile) {
-                        product.model_url = modelFile.publicUrl;
-                        product.model_glb_url = modelFile.publicUrl;
+                // Fetch 3D models (other or model_3d)
+                let modelFile = null;
+                const modelRes = await base44.functions.invoke('listSupabaseAssets', { path: `products/${sku}/model_3d` });
+                if (modelRes.data && modelRes.data.files && modelRes.data.files.length > 0) {
+                    modelFile = modelRes.data.files.find(f => f.name.match(/\.(glb|gltf)$/i));
+                }
+                
+                if (!modelFile) {
+                    const otherRes = await base44.functions.invoke('listSupabaseAssets', { path: `products/${sku}/other` });
+                    if (otherRes.data && otherRes.data.files && otherRes.data.files.length > 0) {
+                        modelFile = otherRes.data.files.find(f => f.name.match(/\.(glb|gltf)$/i));
                     }
+                }
+
+                if (modelFile) {
+                    product.model_url = modelFile.publicUrl;
+                    product.model_glb_url = modelFile.publicUrl;
                 }
             } catch (e) {
                 console.warn("Failed to fetch Supabase assets for SKU:", sku, e);
