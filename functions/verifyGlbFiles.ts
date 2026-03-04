@@ -15,75 +15,35 @@ Deno.serve(async (req) => {
             return Response.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const bucketName = 'orbus-assets';
-        let allFiles = [];
+        const { data: buckets } = await supabase.storage.listBuckets();
         
-        // Recursive function to list all files
-        async function listAllFiles(path = '') {
-            const { data, error } = await supabase.storage.from(bucketName).list(path, { limit: 1000 });
-            if (error) {
-                console.error(`Error listing path ${path}:`, error);
-                return;
-            }
-            if (!data) return;
+        let results = {
+            buckets: buckets?.map(b => b.name) || [],
+            rootFolders: {}
+        };
 
-            for (const item of data) {
-                if (item.id === null) {
-                    // It's a folder
-                    const newPath = path ? `${path}/${item.name}` : item.name;
-                    await listAllFiles(newPath);
-                } else {
-                    // It's a file
-                    if (item.name.endsWith('.glb') || item.name.endsWith('.gltf')) {
-                        allFiles.push(path ? `${path}/${item.name}` : item.name);
-                    }
+        if (buckets) {
+            for (const bucket of buckets) {
+                const { data: rootItems } = await supabase.storage.from(bucket.name).list('', { limit: 100 });
+                results.rootFolders[bucket.name] = rootItems?.map(i => i.name) || [];
+                
+                // If there's a models folder, check it
+                if (rootItems?.some(i => i.name === 'models')) {
+                    const { data: modelsFiles } = await supabase.storage.from(bucket.name).list('models', { limit: 1000 });
+                    results[`${bucket.name}_models_count`] = modelsFiles?.length || 0;
+                    results[`${bucket.name}_models_sample`] = modelsFiles?.slice(0, 5).map(f => f.name) || [];
+                }
+                
+                // If there's a glb folder, check it
+                if (rootItems?.some(i => i.name === 'glb' || i.name === '3d')) {
+                    const folderName = rootItems.find(i => i.name === 'glb' || i.name === '3d').name;
+                    const { data: files } = await supabase.storage.from(bucket.name).list(folderName, { limit: 1000 });
+                    results[`${bucket.name}_${folderName}_count`] = files?.length || 0;
                 }
             }
         }
 
-        // We'll just check if there's a models folder first
-        const { data: rootItems } = await supabase.storage.from(bucketName).list('', { limit: 100 });
-        
-        let glbFiles = [];
-        for (const item of rootItems || []) {
-            if (item.name === 'models') {
-                const { data: modelsFiles } = await supabase.storage.from(bucketName).list('models', { limit: 1000 });
-                if (modelsFiles) {
-                    glbFiles = modelsFiles.filter(f => f.name.endsWith('.glb') || f.name.endsWith('.gltf')).map(f => `models/${f.name}`);
-                }
-            }
-        }
-
-        if (glbFiles.length === 0) {
-            // Let's do a deeper search in products
-            const { data: products } = await supabase.storage.from(bucketName).list('products', { limit: 1000 });
-            if (products) {
-                for (const product of products) {
-                    if (product.id === null) {
-                        const { data: productFiles } = await supabase.storage.from(bucketName).list(`products/${product.name}`, { limit: 100 });
-                        if (productFiles) {
-                            for (const pf of productFiles) {
-                                if (pf.id === null) {
-                                    const { data: subFiles } = await supabase.storage.from(bucketName).list(`products/${product.name}/${pf.name}`, { limit: 100 });
-                                    if (subFiles) {
-                                        const glbs = subFiles.filter(f => f.name.endsWith('.glb') || f.name.endsWith('.gltf'));
-                                        glbs.forEach(g => glbFiles.push(`products/${product.name}/${pf.name}/${g.name}`));
-                                    }
-                                } else if (pf.name.endsWith('.glb') || pf.name.endsWith('.gltf')) {
-                                    glbFiles.push(`products/${product.name}/${pf.name}`);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return Response.json({
-            rootItems: rootItems?.map(i => i.name) || [],
-            glbCount: glbFiles.length,
-            glbFiles: glbFiles.slice(0, 10) // Show first 10
-        });
+        return Response.json(results);
 
     } catch (error) {
         return Response.json({ error: error.message }, { status: 500 });
