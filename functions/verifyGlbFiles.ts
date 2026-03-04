@@ -15,35 +15,30 @@ Deno.serve(async (req) => {
             return Response.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const { data: buckets } = await supabase.storage.listBuckets();
+        const bucketName = 'orbus-assets';
         
-        let results = {
-            buckets: buckets?.map(b => b.name) || [],
-            rootFolders: {}
-        };
+        // Let's use the search API again but specifically in the products folder
+        const { data: searchData, error: searchError } = await supabase
+            .storage
+            .from(bucketName)
+            .list('products', {
+                limit: 1000,
+                search: '.glb'
+            });
+            
+        const { data: searchData2 } = await supabase
+            .storage
+            .from(bucketName)
+            .list('products', {
+                limit: 1000,
+                search: 'glb'
+            });
 
-        if (buckets) {
-            for (const bucket of buckets) {
-                const { data: rootItems } = await supabase.storage.from(bucket.name).list('', { limit: 100 });
-                results.rootFolders[bucket.name] = rootItems?.map(i => i.name) || [];
-                
-                // If there's a models folder, check it
-                if (rootItems?.some(i => i.name === 'models')) {
-                    const { data: modelsFiles } = await supabase.storage.from(bucket.name).list('models', { limit: 1000 });
-                    results[`${bucket.name}_models_count`] = modelsFiles?.length || 0;
-                    results[`${bucket.name}_models_sample`] = modelsFiles?.slice(0, 5).map(f => f.name) || [];
-                }
-                
-                // If there's a glb folder, check it
-                if (rootItems?.some(i => i.name === 'glb' || i.name === '3d')) {
-                    const folderName = rootItems.find(i => i.name === 'glb' || i.name === '3d').name;
-                    const { data: files } = await supabase.storage.from(bucket.name).list(folderName, { limit: 1000 });
-                    results[`${bucket.name}_${folderName}_count`] = files?.length || 0;
-                }
-            }
-        }
-
-        return Response.json(results);
+        return Response.json({ 
+            searchResult: searchData,
+            searchResult2: searchData2,
+            error: searchError
+        });
 
     } catch (error) {
         return Response.json({ error: error.message }, { status: 500 });
