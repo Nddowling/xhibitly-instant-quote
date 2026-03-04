@@ -80,7 +80,7 @@ export default function Product3DManager() {
       }
     }
 
-    return activeCategorySlug ? filtered : [];
+    return activeCategorySlug ? filtered : products;
   };
 
   const filteredProducts = getFilteredProducts();
@@ -125,9 +125,7 @@ export default function Product3DManager() {
                 <p className="text-slate-500 dark:text-slate-400 text-sm">
                   {searchTerm.length >= 2 
                     ? `${filteredProducts.length} result${filteredProducts.length !== 1 ? 's' : ''} for "${searchTerm}"`
-                    : activeCategorySlug 
-                    ? `${filteredProducts.length} product${filteredProducts.length !== 1 ? 's' : ''}`
-                    : 'Browse by category above or search below'
+                    : `${filteredProducts.length} product${filteredProducts.length !== 1 ? 's' : ''}`
                   }
                 </p>
               </div>
@@ -163,7 +161,7 @@ export default function Product3DManager() {
               <ProductRow key={p.id} product={p} projectId={projectId} />
             ))}
           </motion.div>
-        ) : (searchTerm.length >= 2 || activeCategorySlug) ? (
+        ) : (
           <div className="text-center py-16">
             <p className="text-slate-400 text-lg mb-1">No products found</p>
             <p className="text-slate-500 dark:text-slate-400 text-sm">
@@ -171,11 +169,6 @@ export default function Product3DManager() {
                 ? 'Try a different search term' 
                 : 'This category is currently empty'}
             </p>
-          </div>
-        ) : (
-          <div className="text-center py-16">
-            <p className="text-slate-400 text-lg mb-1">Welcome to the Product Catalog</p>
-            <p className="text-slate-500 dark:text-slate-400 text-sm">Use the menu above to browse by category or search for products</p>
           </div>
         )}
       </div>
