@@ -811,8 +811,13 @@ export default function BoothSnapshotRenderer({
           }
           if (obj && obj.userData.id) {
             draggedObject = obj;
-            raycaster.ray.intersectPlane(dragPlane, dragOffset);
-            dragOffset.sub(obj.position);
+            const intersectPoint = new THREE.Vector3();
+            raycaster.ray.intersectPlane(dragPlane, intersectPoint);
+            if (intersectPoint) {
+                dragOffset.copy(intersectPoint).sub(obj.position);
+            } else {
+                dragOffset.set(0, 0, 0);
+            }
             el.style.cursor = 'grabbing';
             return;
           }
