@@ -643,6 +643,9 @@ export default function BoothDesigner() {
             window.saveTimeout = setTimeout(() => {
                 saveScene(res.scene);
             }, 500);
+        } else {
+            // Force re-render to snap back to original valid position
+            setScene({ ...scene });
         }
     };
 
