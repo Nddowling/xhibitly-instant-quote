@@ -412,6 +412,16 @@ export default function BoothSnapshotRenderer({
       return pole;
     };
 
+    // Infinite ground plane
+    const groundMesh = new THREE.Mesh(
+      new THREE.PlaneGeometry(500, 500),
+      new THREE.MeshStandardMaterial({ color: 0xe5e5e5, roughness: 1, metalness: 0 })
+    );
+    groundMesh.rotation.x = -Math.PI / 2;
+    groundMesh.position.y = -0.02;
+    groundMesh.receiveShadow = true;
+    scene.add(groundMesh);
+
     // Booth carpet
     const carpetTex = makeCarpetTex(brand.primary_color || '#1a1a2e');
     carpetTex.repeat.set(bW / 4, bD / 4);
