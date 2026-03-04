@@ -358,7 +358,8 @@ export default function BoothDesigner() {
                         w, 
                         d, 
                         'center',
-                        isFlooring
+                        isFlooring,
+                        product?.model_url || product?.model_glb_url || null
                     );
                     if (res.success) {
                         updatedScene = res.scene;
