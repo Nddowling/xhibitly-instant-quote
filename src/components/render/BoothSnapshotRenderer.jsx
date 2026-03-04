@@ -238,13 +238,14 @@ function loadTex(url) {
 function loadGLTF(url) {
   return new Promise((resolve) => {
     if (!url) { resolve(null); return; }
+    const proxied = getProxiedUrl(url);
     const loader = new GLTFLoader();
     loader.setCrossOrigin('anonymous');
     loader.load(
-      url,
+      proxied,
       (gltf) => { resolve(gltf.scene); },
       undefined,
-      (err) => { console.warn('[BoothRenderer] GLTF load failed:', url, err); resolve(null); }
+      (err) => { console.warn('[BoothRenderer] GLTF load failed:', proxied, err); resolve(null); }
     );
   });
 }
