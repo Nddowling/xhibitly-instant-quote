@@ -974,7 +974,9 @@ export default function BoothDesigner() {
     );
 }
 
-function BoothProductCard({ sku, quantity = 1 }) {
+import { X } from 'lucide-react'; // Wait, X is already imported at top.
+
+function BoothProductCard({ sku, quantity = 1, onRemove }) {
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
 
