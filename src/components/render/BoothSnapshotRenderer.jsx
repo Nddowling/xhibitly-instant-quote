@@ -592,9 +592,8 @@ export default function BoothSnapshotRenderer({
         group.add(modelMesh);
 
         // Position group - bottom of model sits on floor
-        // Use the bounding box minimum Y to ensure it sits exactly on the floor
-        const bottomY = box.min.y * scale;
-        group.position.set(wx, -bottomY, wz);
+        // Since we centered the mesh, its bottom is at -(size.y * scale) / 2
+        group.position.set(wx, (size.y * scale) / 2, wz);
         if (item.rot) group.rotation.y = -THREE.MathUtils.degToRad(item.rot);
 
         scene.add(group);
