@@ -660,6 +660,42 @@ export default function BoothDesigner() {
         }
     };
 
+    const handleRemoveProduct = async (skuToRemove) => {
+        if (!boothDesign) return;
+        
+        // Remove one instance of the SKU from product_skus
+        const skus = [...(boothDesign.product_skus || [])];
+        const idx = skus.indexOf(skuToRemove);
+        if (idx > -1) {
+            skus.splice(idx, 1);
+        }
+        
+        // Find an item in the scene with this SKU and remove it
+        let updatedScene = { ...scene };
+        if (scene && scene.items) {
+            // Find the last added item with this SKU to remove
+            const itemsWithSku = scene.items.filter(i => i.sku === skuToRemove);
+            if (itemsWithSku.length > 0) {
+                const itemToRemove = itemsWithSku[itemsWithSku.length - 1];
+                updatedScene.items = scene.items.filter(i => i.id !== itemToRemove.id);
+                setScene(updatedScene);
+                sceneRef.current = updatedScene;
+            }
+        }
+        
+        const updateData = {
+            product_skus: skus,
+            scene_json: JSON.stringify(updatedScene)
+        };
+        
+        try {
+            await base44.entities.BoothDesign.update(boothDesign.id, updateData);
+            setBoothDesign(prev => ({ ...prev, ...updateData }));
+        } catch (e) {
+            console.error("Failed to remove product", e);
+        }
+    };
+
     // SELECTOR / SETUP SCREEN
     if (step === 'selector') {
         return (
