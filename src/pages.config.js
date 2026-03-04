@@ -47,6 +47,7 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
+import BoothDesigner from './pages/BoothDesigner';
 import BrandVerification from './pages/BrandVerification';
 import CatalogImport from './pages/CatalogImport';
 import Confirmation from './pages/Confirmation';
@@ -69,12 +70,12 @@ import SalesQuoteStart from './pages/SalesQuoteStart';
 import Settings from './pages/Settings';
 import StudentHome from './pages/StudentHome';
 import UserTypeSelection from './pages/UserTypeSelection';
-import BoothDesigner from './pages/BoothDesigner';
 import BoothEditorPage from './pages/BoothEditorPage';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "BoothDesigner": BoothDesigner,
     "BrandVerification": BrandVerification,
     "CatalogImport": CatalogImport,
     "Confirmation": Confirmation,
@@ -97,7 +98,6 @@ export const PAGES = {
     "Settings": Settings,
     "StudentHome": StudentHome,
     "UserTypeSelection": UserTypeSelection,
-    "BoothDesigner": BoothDesigner,
     "BoothEditorPage": BoothEditorPage,
 }
 

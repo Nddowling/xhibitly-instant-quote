@@ -141,9 +141,9 @@ export default function BoothDesigner() {
                     }
                 }
 
-                if (modelFile) {
-                    product.model_url = modelFile.publicUrl;
-                    product.model_glb_url = modelFile.publicUrl;
+                if (modelFile && (modelFile.publicUrl || modelFile.url)) {
+                    product.model_url = modelFile.publicUrl || modelFile.url;
+                    product.model_glb_url = modelFile.publicUrl || modelFile.url;
                 }
             } catch (e) {
                 console.warn("Failed to fetch Supabase assets for SKU:", sku, e);
