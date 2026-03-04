@@ -292,50 +292,58 @@ export default function BoothSnapshotRenderer({
     const bD = sceneData.booth.d_ft || 10;
     const brand = brandIdentity || {};
 
-    // ── THREE SCENE ──
+    // ── PROFESSIONAL SCENE (Clean studio look) ──
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xe2e2e2);
-    scene.fog = new THREE.Fog(0xe2e2e2, 45, 90);
+    scene.background = new THREE.Color(0xf0f0f0); // Lighter, cleaner background (like your reference)
+    scene.fog = new THREE.Fog(0xf0f0f0, 50, 100); // Subtle depth fog
 
-    // ── CAMERA (3/4 elevated front-left) ──
-    const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 200);
-    
-    // Better framing for wider booths (like 10x20) - ensure we zoom out enough
+    // ── PROFESSIONAL CAMERA ANGLE (Like the reference image) ──
+    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 200); // Slightly wider FOV for dramatic look
+
+    // Professional 3/4 view - matches trade show catalog photography
     const maxDim = Math.max(bW, bD);
-    const distZ = maxDim * 1.5 + AISLE_DEPTH + 8; // Extra buffer so things don't look massive
-    const heightY = Math.max(12, maxDim * 0.6); // Slightly higher angle for better overview
-    
+    const distZ = maxDim * 1.4 + AISLE_DEPTH + 6; // Closer for more dramatic perspective
+    const heightY = Math.max(14, maxDim * 0.7); // Higher angle for professional overview
+
     if (boothType === 'island') {
-        camera.position.set(-maxDim * 0.8, heightY * 1.2, maxDim * 0.8 + AISLE_DEPTH);
-        camera.lookAt(0, WALL_H * 0.2, 0);
+        // Island booth - dramatic corner view
+        camera.position.set(-maxDim * 0.9, heightY * 1.3, maxDim * 0.9 + AISLE_DEPTH);
+        camera.lookAt(0, WALL_H * 0.25, 0);
     } else {
-        // More centered angle to see the whole width comfortably
-        camera.position.set(-bW * 0.1, heightY, distZ);
-        camera.lookAt(0, WALL_H * 0.4, -bD * 0.2);
+        // Inline/corner - professional front-angled view (like your reference image)
+        camera.position.set(-bW * 0.4, heightY, distZ); // More side angle for depth
+        camera.lookAt(0, WALL_H * 0.35, -bD * 0.15);
     }
 
     // ── INTERACTION STATE ──
     const interactableObjects = [];
 
-    // ── RENDERER ──
-    const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+    // ── PROFESSIONAL RENDERER (Catalog-quality output) ──
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      preserveDrawingBuffer: true,
+      alpha: false, // Solid background for clean look
+      powerPreference: 'high-performance' // Use GPU for smooth interactions
+    });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.05;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Soft shadows like your reference
+    renderer.toneMapping = THREE.ACESFilmicToneMapping; // Cinematic color grading
+    renderer.toneMappingExposure = 1.1; // Slightly brighter for trade show appeal
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     rendererRef.current = renderer;
 
     while (containerRef.current.firstChild) containerRef.current.removeChild(containerRef.current.firstChild);
     containerRef.current.appendChild(renderer.domElement);
 
-    // ── LIGHTING ──
-    scene.add(new THREE.AmbientLight(0xffffff, 0.45));
-    scene.add(new THREE.HemisphereLight(0xf0f0ff, 0x404040, 0.35));
+    // ── ENHANCED PBR LIGHTING ──
+    // Trade show lighting: bright, professional, makes products pop
+    scene.add(new THREE.AmbientLight(0xffffff, 0.5)); // Slightly brighter ambient
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x606060, 0.4)); // Sky/ground lighting
 
-    const mainLight = new THREE.DirectionalLight(0xffffff, 1.0);
+    // Main Key Light - simulates overhead trade show lights
+    const mainLight = new THREE.DirectionalLight(0xffffff, 1.2); // Brighter for product visibility
     mainLight.position.set(bW * 0.3, CEILING_Y, bD * 0.2);
     mainLight.target.position.set(0, 0, -bD * 0.2);
     mainLight.castShadow = true;
@@ -350,13 +358,20 @@ export default function BoothSnapshotRenderer({
     scene.add(mainLight);
     scene.add(mainLight.target);
 
-    const fill = new THREE.DirectionalLight(0xffeedd, 0.35);
+    // Fill Light - warm, softer, fills shadows
+    const fill = new THREE.DirectionalLight(0xfff5e6, 0.45); // Warmer and slightly brighter
     fill.position.set(bW * 0.5, 10, bD * 0.8);
     scene.add(fill);
 
-    const rim = new THREE.DirectionalLight(0xddeeff, 0.25);
+    // Rim/Back Light - cooler, adds depth and separation
+    const rim = new THREE.DirectionalLight(0xe6f2ff, 0.35); // Cooler blue rim
     rim.position.set(-bW * 0.3, 12, -bD * 1.2);
     scene.add(rim);
+
+    // Front spotlight - highlights products from visitor view
+    const frontLight = new THREE.DirectionalLight(0xffffff, 0.4);
+    frontLight.position.set(0, 8, bD * 1.5); // From front/aisle
+    scene.add(frontLight);
 
     // ══════════════════════════════════════════════════════════
     // BOOTH STRUCTURE
@@ -514,75 +529,96 @@ export default function BoothSnapshotRenderer({
       }
 
       if (modelMesh) {
-        // ── 3D Model ──
+        // ── 3D Model (GLB/GLTF) ── ENHANCED FOR PBR MATERIALS
         const box = new THREE.Box3().setFromObject(modelMesh);
         const size = box.getSize(new THREE.Vector3());
         const center = box.getCenter(new THREE.Vector3());
-        
+
         // Reset position to center
         modelMesh.position.x += (modelMesh.position.x - center.x);
         modelMesh.position.y += (modelMesh.position.y - center.y);
         modelMesh.position.z += (modelMesh.position.z - center.z);
-        
+
         // Scale and position based on product dimensions
         const targetW = dispW || 2;
         const scale = targetW / (size.x || 1);
         modelMesh.scale.set(scale, scale, scale);
-        
+
+        // Enhanced material handling for PBR models
         modelMesh.traverse((child) => {
           if (child.isMesh) {
             child.castShadow = true;
             child.receiveShadow = true;
+
+            // Enhance PBR materials for better appearance
+            if (child.material) {
+              const mat = child.material;
+              if (mat.isMeshStandardMaterial || mat.isMeshPhysicalMaterial) {
+                // Ensure materials respond correctly to lighting
+                mat.needsUpdate = true;
+                // If too dark, slightly increase roughness
+                if (mat.roughness < 0.3) mat.roughness = 0.4;
+                // Slightly boost metalness for trade show appeal
+                if (mat.metalness && mat.metalness > 0.1) mat.metalness = Math.min(1, mat.metalness * 1.2);
+              }
+            }
           }
         });
-        
+
         const group = new THREE.Group();
-        group.userData = { id: item.id };
+        group.userData = { id: item.id, hasGLB: true }; // Mark as GLB for special handling
         group.add(modelMesh);
-        
-        // Position group
-        // Adjust Y position so the bottom of the model sits on the floor
+
+        // Position group - bottom of model sits on floor
         group.position.set(wx, (size.y * scale) / 2, wz);
         if (item.rot) group.rotation.y = -THREE.MathUtils.degToRad(item.rot);
-        
+
         scene.add(group);
         interactableObjects.push(group);
-        
-        // Add a subtle selection box/outline for interactable objects so they don't look like flat images
+
+        // Add selection indicator (hidden by default)
         const boxHelper = new THREE.BoxHelper(group, 0x3b82f6);
-        boxHelper.visible = false; // Hidden by default, could show on hover
+        boxHelper.visible = false;
         group.add(boxHelper);
-        
-        // Label
+
+        // Professional label for 3D models
         const lTex = makeLabelTex(item.name || item.sku);
-        const label = new THREE.Sprite(new THREE.SpriteMaterial({ map: lTex, transparent: true }));
+        const label = new THREE.Sprite(new THREE.SpriteMaterial({ map: lTex, transparent: true, opacity: 0.95 }));
         const ls = Math.min(dispW * 1.1, 4.5);
         label.scale.set(ls, ls * 0.11, 1);
         label.position.set(wx, (size.y * scale) + 0.35, wz);
         scene.add(label);
       } else if (productTex) {
-        // ── Extruded 3D Box from Image ──
+        // ── PROFESSIONAL 3D Display from Product Image ──
         const aspect = productTex.image.width / productTex.image.height;
         let pW = dispW, pH = itemH;
         const ta = pW / pH;
         if (aspect > ta) { pH = pW / aspect; }
         else { pW = pH * aspect; }
 
-        // Give it actual depth based on the catalog dims, minimum 0.5ft
+        // Give it realistic depth based on catalog dimensions
         const boxDepth = Math.max(0.5, dispD);
 
-        // Materials: right, left, top, bottom, front, back
-        // We make the side color a subtle neutral grey, or use primary brand color
-        const sideMat = new THREE.MeshStandardMaterial({ color: brand.secondary_color || 0xd0d0d0, roughness: 0.8 });
-        
-        // Ensure image fits nicely on the front face
-        const frontMat = new THREE.MeshStandardMaterial({ 
-          map: productTex, 
-          transparent: true, 
-          roughness: 0.5,
-          alphaTest: 0.1 // helps with transparent PNGs so the back doesn't look weird
+        // BRANDED SIDE MATERIALS - Use brand colors for professional look
+        const brandColor = brand.primary_color || brand.secondary_color || '#334155';
+        const sideMat = new THREE.MeshStandardMaterial({
+          color: brandColor,
+          roughness: 0.7,
+          metalness: 0.1 // Slight sheen for trade show appeal
         });
-        
+
+        // FRONT MATERIAL - High-quality product image display
+        const frontMat = new THREE.MeshStandardMaterial({
+          map: productTex,
+          transparent: true,
+          roughness: 0.4, // Slight gloss for professional finish
+          metalness: 0,
+          alphaTest: 0.1, // Clean PNG transparency
+          emissive: 0xffffff,
+          emissiveIntensity: 0.05, // Subtle glow so image pops
+          emissiveMap: productTex // Apply glow to image areas only
+        });
+
         const box = new THREE.Mesh(
           new THREE.BoxGeometry(pW, pH, boxDepth),
           [sideMat, sideMat, sideMat, sideMat, frontMat, sideMat]
@@ -591,58 +627,65 @@ export default function BoothSnapshotRenderer({
         box.receiveShadow = true;
 
         const group = new THREE.Group();
-        group.userData = { id: item.id };
+        group.userData = { id: item.id, hasImage: true };
         group.add(box);
-        
+
         // Position group so it sits on the floor
         group.position.set(wx, pH / 2, wz);
         if (item.rot) group.rotation.y = -THREE.MathUtils.degToRad(item.rot);
-        
-        // Add a subtle selection box/outline for interactable objects
+
+        // Selection indicator
         const boxHelper = new THREE.BoxHelper(group, 0x3b82f6);
         boxHelper.visible = false;
         group.add(boxHelper);
-        
+
         scene.add(group);
         interactableObjects.push(group);
 
-        // Label
+        // Professional label
         const lTex = makeLabelTex(item.name || item.sku);
-        const label = new THREE.Sprite(new THREE.SpriteMaterial({ map: lTex, transparent: true }));
+        const label = new THREE.Sprite(new THREE.SpriteMaterial({ map: lTex, transparent: true, opacity: 0.95 }));
         const ls = Math.min(pW * 1.1, 4.5);
         label.scale.set(ls, ls * 0.11, 1);
         label.position.set(wx, pH + 0.35, wz);
         scene.add(label);
       } else {
-        // ── Placeholder box ──
+        // ── PROFESSIONAL BRANDED PLACEHOLDER ──
         const boxDepth = Math.max(0.5, dispD);
+        const placeholderTex = makePlaceholderTex(item.name || item.sku, brand.primary_color || '#334155');
+
+        // Create professional looking placeholder with brand colors
         const box = new THREE.Mesh(
           new THREE.BoxGeometry(dispW, itemH, boxDepth),
           new THREE.MeshStandardMaterial({
-            map: makePlaceholderTex(item.name || item.sku, brand.secondary_color || '#334155'),
-            roughness: 0.7
+            map: placeholderTex,
+            roughness: 0.65,
+            metalness: 0.05,
+            emissive: brand.primary_color ? new THREE.Color(brand.primary_color) : 0x000000,
+            emissiveIntensity: 0.03 // Very subtle glow for brand color
           })
         );
-        
+
         const group = new THREE.Group();
-        group.userData = { id: item.id };
+        group.userData = { id: item.id, isPlaceholder: true };
         group.add(box);
         group.position.set(wx, itemH / 2, wz);
         if (item.rot) group.rotation.y = -THREE.MathUtils.degToRad(item.rot);
-        
-        // Add a subtle selection box/outline for interactable objects
+
+        // Selection indicator
         const boxHelper = new THREE.BoxHelper(group, 0x3b82f6);
-        boxHelper.visible = false; // Hidden by default, could show on hover
+        boxHelper.visible = false;
         group.add(boxHelper);
-        
+
         box.castShadow = true;
         box.receiveShadow = true;
-        
+
         scene.add(group);
         interactableObjects.push(group);
 
+        // Professional label
         const lTex = makeLabelTex(item.name || item.sku);
-        const label = new THREE.Sprite(new THREE.SpriteMaterial({ map: lTex, transparent: true }));
+        const label = new THREE.Sprite(new THREE.SpriteMaterial({ map: lTex, transparent: true, opacity: 0.95 }));
         const ls = Math.min(dispW * 1.1, 4.5);
         label.scale.set(ls, ls * 0.11, 1);
         label.position.set(wx, itemH + 0.35, wz);
@@ -755,13 +798,22 @@ export default function BoothSnapshotRenderer({
           raycaster.setFromCamera(mouse, camera);
           const intersectPoint = new THREE.Vector3();
           raycaster.ray.intersectPlane(dragPlane, intersectPoint);
-          
+
           if (intersectPoint) {
             const newPos = intersectPoint.sub(dragOffset);
             draggedObject.position.x = newPos.x;
             draggedObject.position.z = newPos.z;
+
+            // Show selection box while dragging for visual feedback
+            draggedObject.children.forEach(child => {
+                if (child.type === 'LineSegments') {
+                    child.visible = true;
+                    child.material.color.setHex(0x22c55e); // Green while dragging
+                }
+            });
+
             renderer.render(scene, camera);
-            
+
             // Call onMoveItem continuously while dragging so the 2D plan syncs
             if (onMoveItem) {
                 const newX = draggedObject.position.x + bW / 2;
@@ -773,30 +825,36 @@ export default function BoothSnapshotRenderer({
         }
 
         if (!isOrbiting) {
-          // Hover effect
+          // PROFESSIONAL HOVER EFFECT (Like your reference image)
           const m = getMousePos(e);
           mouse.x = m.x;
           mouse.y = m.y;
           raycaster.setFromCamera(mouse, camera);
           const intersects = raycaster.intersectObjects(interactableObjects, true);
-          
+
           // Hide all box helpers first
           interactableObjects.forEach(obj => {
               obj.children.forEach(child => {
-                  if (child.type === 'LineSegments') child.visible = false;
+                  if (child.type === 'LineSegments') {
+                      child.visible = false;
+                      child.material.color.setHex(0x3b82f6); // Reset to blue
+                  }
               });
           });
 
           if (intersects.length > 0) {
             el.style.cursor = 'grab';
-            // Show box helper for hovered object
+            // Show box helper for hovered object with professional highlight
             let obj = intersects[0].object;
             while (obj && !obj.userData.id && obj.parent) {
                 obj = obj.parent;
             }
             if (obj && obj.userData.id) {
                 obj.children.forEach(child => {
-                    if (child.type === 'LineSegments') child.visible = true;
+                    if (child.type === 'LineSegments') {
+                        child.visible = true;
+                        child.material.color.setHex(0x3b82f6); // Blue highlight
+                    }
                 });
                 renderer.render(scene, camera);
             }
@@ -807,6 +865,7 @@ export default function BoothSnapshotRenderer({
           return;
         }
 
+        // SMOOTH ORBIT CONTROLS
         theta -= (e.clientX - prev.x) * 0.005;
         phi = Math.max(0.3, Math.min(Math.PI * 0.45, phi + (e.clientY - prev.y) * 0.005));
         camera.position.set(
@@ -819,14 +878,26 @@ export default function BoothSnapshotRenderer({
         prev = { x: e.clientX, y: e.clientY };
       };
 
-      const onUp = () => { 
-        if (draggedObject && onMoveItem) {
-          const newX = draggedObject.position.x + bW / 2;
-          const newY = -draggedObject.position.z + bD / 2;
-          onMoveItem(draggedObject.userData.id, newX, newY);
+      const onUp = () => {
+        if (draggedObject) {
+          // Hide selection box after drag completes
+          draggedObject.children.forEach(child => {
+              if (child.type === 'LineSegments') {
+                  child.visible = false;
+                  child.material.color.setHex(0x3b82f6); // Reset to blue
+              }
+          });
+
+          if (onMoveItem) {
+            const newX = draggedObject.position.x + bW / 2;
+            const newY = -draggedObject.position.z + bD / 2;
+            onMoveItem(draggedObject.userData.id, newX, newY);
+          }
+
+          renderer.render(scene, camera);
         }
         draggedObject = null;
-        isOrbiting = false; 
+        isOrbiting = false;
         el.style.cursor = 'default';
       };
 
