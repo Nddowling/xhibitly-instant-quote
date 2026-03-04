@@ -43,9 +43,9 @@ export default function ProductRow({ product, projectId }) {
   return (
     <Link to={`${createPageUrl('ProductDetail')}?id=${product.id}${projectId ? `&projectId=${projectId}` : ''}`} className="flex items-center gap-4 p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 hover:shadow-md transition-shadow cursor-pointer">
       {/* Thumbnail */}
-      <div className="w-16 h-16 md:w-20 md:h-20 rounded-lg bg-slate-100 dark:bg-slate-800 flex-shrink-0 overflow-hidden">
-        {product.image_url ? (
-          <img src={product.image_url} alt={product.name} className="w-full h-full object-contain" />
+      <div className="w-16 h-16 md:w-20 md:h-20 rounded-lg bg-slate-100 dark:bg-slate-800 flex-shrink-0 overflow-hidden relative">
+        {product.image_cached_url || product.image_url ? (
+          <img src={product.image_cached_url || product.image_url} alt={product.name} className="w-full h-full object-contain" />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-slate-300 text-2xl">
             📦
@@ -61,6 +61,9 @@ export default function ProductRow({ product, projectId }) {
           </h4>
           {product.is_rental && (
             <Badge className="bg-[#e2231a]/10 text-[#e2231a] text-[10px] px-1.5 py-0">Rental</Badge>
+          )}
+          {(product.model_url || product.model_glb_url) && (
+            <Badge className="bg-blue-100 text-blue-700 border-blue-200 text-[10px] px-1.5 py-0">3D Model</Badge>
           )}
         </div>
         {product.sku && (
