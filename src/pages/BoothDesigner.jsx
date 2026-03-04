@@ -1071,7 +1071,15 @@ function BoothProductCard({ sku, quantity = 1, onRemove }) {
     );
 
     return (
-        <Card className="overflow-hidden hover:shadow-md transition-shadow bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm border-slate-200 dark:border-slate-700 relative">
+        <Card className="overflow-hidden hover:shadow-md transition-shadow bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm border-slate-200 dark:border-slate-700 relative group/card">
+            {onRemove && (
+                <button 
+                    onClick={(e) => { e.stopPropagation(); onRemove(); }}
+                    className="absolute top-2 left-2 z-20 bg-white/80 hover:bg-red-100 text-slate-400 hover:text-red-600 rounded-full p-1 opacity-0 group-hover/card:opacity-100 transition-all shadow-sm"
+                >
+                    <X className="w-3 h-3" />
+                </button>
+            )}
             {quantity > 1 && (
                 <div className="absolute top-2 right-2 z-10 bg-[#e2231a] text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-sm">
                     x{quantity}
