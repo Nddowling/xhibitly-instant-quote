@@ -7,16 +7,28 @@ Deno.serve(async (req) => {
         const supabaseKey = Deno.env.get('SUPABASE_SERVICE_KEY');
         const supabase = createClient(supabaseUrl, supabaseKey);
 
-        const { data: products, error: pErr } = await supabase.storage.from('orbus-assets').list('products', { limit: 100 });
+        const { data: products, error: pErr } = await supabase.storage.from('orbus-assets').list('products', { limit: 3000 });
         if (pErr) throw pErr;
 
-        const { data: barricade } = await supabase.storage.from('orbus-assets').list('products/BARRICADE-COVER/model_3d', { limit: 10 });
+        const glbProducts = [];
+        
+        const batchSize = 50;
+        for (let i = 0; i < products.length; i += batchSize) {
+            const batch = products.slice(i, i + batchSize);
+            const promises = batch.map(async (p) => {
+                if (p.name && p.name !== '.emptyFolderPlaceholder') {
+                    const { data: files } = await supabase.storage.from('orbus-assets').list(`products/${p.name}/model_3d`, { limit: 10 });
+                    if (files && files.some(f => f.name.endsWith('.glb') || f.name.endsWith('.gltf'))) {
+                        return p.name;
+                    }
+                }
+                return null;
+            });
+            const results = await Promise.all(promises);
+            glbProducts.push(...results.filter(Boolean));
+        }
 
-        return Response.json({ 
-            productsCount: products?.length, 
-            firstFew: products?.slice(0, 5),
-            barricadeFiles: barricade
-        });
+        return Response.json({ count: glbProducts.length, products: glbProducts });
     } catch (error) {
         return Response.json({ error: error.message }, { status: 500 });
     }
