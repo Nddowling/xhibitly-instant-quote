@@ -17,42 +17,32 @@ Deno.serve(async (req) => {
 
         const bucketName = 'orbus-assets';
         
-        // We'll use the search feature of Supabase storage list
-        const { data, error } = await supabase
+        // Search the entire bucket for glb files
+        const { data: searchData, error: searchError } = await supabase
             .storage
             .from(bucketName)
-            .list('products', {
+            .list('', {
                 limit: 100,
                 offset: 0,
                 search: 'glb'
             });
 
-        if (error) {
-            return Response.json({ error: error.message }, { status: 500 });
-        }
+        const { data: searchData2 } = await supabase
+            .storage
+            .from(bucketName)
+            .list('', {
+                limit: 100,
+                offset: 0,
+                search: '.glb'
+            });
 
-        // Also let's just get a list of product folders and check a few
-        const { data: folders } = await supabase.storage.from(bucketName).list('products', { limit: 50 });
-        
-        let glbFiles = [];
-        
-        // Check the first 20 folders for an 'other' folder containing glb
-        if (folders) {
-            for (const folder of folders.slice(0, 20)) {
-                if (!folder.id) continue; // It's a folder
-                const { data: otherFiles } = await supabase.storage.from(bucketName).list(`products/${folder.name}/other`, { limit: 10 });
-                if (otherFiles) {
-                    const glbs = otherFiles.filter(f => f.name.endsWith('.glb') || f.name.endsWith('.gltf'));
-                    for (const glb of glbs) {
-                        glbFiles.push(`products/${folder.name}/other/${glb.name}`);
-                    }
-                }
-            }
-        }
+        // Let's also just list the root to see if there's a models folder
+        const { data: rootFolders } = await supabase.storage.from(bucketName).list('', { limit: 50 });
 
         return Response.json({ 
-            searchResult: data,
-            foundInFolders: glbFiles
+            searchResult: searchData,
+            searchResult2: searchData2,
+            rootFolders: rootFolders
         });
 
     } catch (error) {
