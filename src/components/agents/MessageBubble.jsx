@@ -280,63 +280,28 @@ export default function MessageBubble({ message, onAddProduct }) {
                                         <a {...props} target="_blank" rel="noopener noreferrer">{children}</a>
                                     ),
                                     img: ({ node, ...props }) => {
-                                        const isPlaceholder = !props.src || props.src === 'null' || props.src === 'undefined' || props.src.toLowerCase().includes('placeholder');
-                                        if (isPlaceholder) {
-                                            return (
-                                                <div 
-                                                    className={cn(
-                                                        "group rounded-lg my-2 w-full aspect-square max-w-[200px] bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center text-slate-400 relative overflow-hidden",
-                                                        onAddProduct && "cursor-pointer hover:border-primary hover:text-primary hover:shadow-md transition-all duration-200"
-                                                    )}
-                                                    onClick={(e) => {
-                                                        e.preventDefault();
-                                                        e.stopPropagation();
-                                                        handleImageClick(props.src, props.alt);
-                                                    }}
-                                                >
-                                                    <Box className="w-10 h-10 mb-2 opacity-50 pointer-events-none" />
-                                                    <span className="text-xs font-medium px-4 text-center pointer-events-none">{props.alt?.replace(/sku:\s*/i, '') || 'Image not available'}</span>
-                                                    {onAddProduct && (
-                                                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
-                                                            <span className="bg-white text-slate-900 text-xs font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1">
-                                                                <Box className="w-3 h-3" /> Add to Booth
-                                                            </span>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            );
+                                        const alt = props.alt || '';
+                                        let sku = null;
+                                        const explicitMatch = alt.match(/sku:\s*([A-Z0-9-_]+)/i);
+                                        if (explicitMatch) {
+                                            sku = explicitMatch[1].toUpperCase();
+                                        } else {
+                                            const altSkuMatch = alt.match(/\b[A-Z0-9]+-[A-Z0-9-]+\b/i);
+                                            if (altSkuMatch) sku = altSkuMatch[0].toUpperCase();
                                         }
+                                        
                                         return (
-                                            <div className="relative group inline-block">
-                                                <img 
-                                                    className={cn(
-                                                        "rounded-lg my-2 max-w-full border border-slate-200 dark:border-slate-800 shadow-sm",
-                                                        onAddProduct && "cursor-pointer hover:border-primary hover:shadow-md transition-all duration-200"
-                                                    )}
-                                                    alt={props.alt || ''} 
-                                                    onClick={(e) => {
-                                                        e.preventDefault();
-                                                        e.stopPropagation();
-                                                        handleImageClick(props.src, props.alt);
-                                                    }}
-                                                    {...props} 
-                                                />
-                                                {onAddProduct && (
-                                                    <div 
-                                                        className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center cursor-pointer pointer-events-none"
-                                                    >
-                                                        <span className="bg-white text-slate-900 text-xs font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1 pointer-events-auto"
-                                                            onClick={(e) => {
-                                                                e.preventDefault();
-                                                                e.stopPropagation();
-                                                                handleImageClick(props.src, props.alt);
-                                                            }}
-                                                        >
-                                                            <Box className="w-3 h-3" /> Add to Booth
-                                                        </span>
-                                                    </div>
-                                                )}
-                                            </div>
+                                            <ChatProductImage 
+                                                src={props.src} 
+                                                alt={props.alt} 
+                                                sku={sku} 
+                                                onAddProduct={onAddProduct}
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    e.stopPropagation();
+                                                    handleImageClick(props.src, props.alt);
+                                                }}
+                                            />
                                         );
                                     },
                                     p: ({ children }) => <p className="my-1 leading-relaxed">{children}</p>,
