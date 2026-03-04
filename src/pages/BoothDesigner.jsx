@@ -868,19 +868,20 @@ export default function BoothDesigner() {
             </div>
 
             {/* Right Column: Booth Space Visualization */}
-            <div className="hidden md:flex w-2/3 p-6 flex-col">
-                <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-bold flex items-center gap-3 text-slate-900 dark:text-white">
-                        <div className="p-2 bg-primary/10 rounded-lg text-primary border border-primary/20 shadow-sm">
+            <div className="hidden md:flex w-2/3 flex-col relative bg-slate-100 dark:bg-slate-900">
+                {/* Top Bar Overlay */}
+                <div className="absolute top-0 left-0 right-0 p-4 flex items-center justify-between z-20 pointer-events-none">
+                    <h2 className="text-xl font-bold flex items-center gap-3 text-slate-900 dark:text-white drop-shadow-md pointer-events-auto">
+                        <div className="p-2 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-lg text-primary border border-slate-200 dark:border-slate-700 shadow-sm">
                             <LayoutTemplate className="w-5 h-5" />
                         </div>
-                        Set Space: {boothSize}
+                        <span className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm">Set Space: {boothSize}</span>
                     </h2>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 pointer-events-auto">
                         <Button 
                             variant="outline"
                             size="sm"
-                            className="h-8 shadow-sm"
+                            className="h-9 shadow-sm bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-slate-200 dark:border-slate-700"
                             onClick={() => navigate(createPageUrl('Product3DManager') + '?projectId=' + boothDesign.id)}
                         >
                             Open Catalog
@@ -889,80 +890,81 @@ export default function BoothDesigner() {
                         <Button 
                             variant="default"
                             size="sm"
-                            className="h-8 shadow-sm bg-[#e2231a] hover:bg-[#b01b13] text-white"
+                            className="h-9 shadow-sm bg-[#e2231a] hover:bg-[#b01b13] text-white"
                             disabled={!boothDesign?.product_skus?.length}
                             onClick={handleCreateQuote}
                         >
                             Create Quote
                         </Button>
-                        <div className="text-sm font-medium text-primary bg-primary/10 px-4 py-1.5 rounded-full border border-primary/20 shadow-sm flex items-center gap-2">
-                            <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                            {boothDesign?.product_skus?.length || 0} Products Added
-                        </div>
                     </div>
                 </div>
 
-                <div className="flex-1 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 overflow-y-auto relative flex flex-col">
-                    <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:20px_20px] opacity-40 rounded-2xl" />
+                {/* Main 3D/2D Area */}
+                <div className="flex-1 w-full relative overflow-hidden">
+                    <div className="absolute top-20 left-4 z-20 flex gap-2 pointer-events-auto">
+                        <Button 
+                            variant={viewMode === '2d' ? 'default' : 'secondary'} 
+                            size="sm" 
+                            className="h-8 text-xs shadow-sm bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm"
+                            onClick={() => setViewMode('2d')}
+                        >
+                            2D Plan
+                        </Button>
+                        <Button 
+                            variant={viewMode === '3d' ? 'default' : 'secondary'} 
+                            size="sm" 
+                            className="h-8 text-xs shadow-sm bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm"
+                            onClick={() => setViewMode('3d')}
+                        >
+                            3D Preview
+                        </Button>
+                    </div>
                     
-                    <div className="relative z-10 flex-1 flex flex-col">
-                        {/* Visualization Area */}
-                        <div className="w-full bg-slate-100 dark:bg-slate-800/50 rounded-xl mb-6 border border-slate-200 dark:border-slate-700 overflow-hidden relative group shrink-0 min-h-[400px]">
-                            <div className="absolute top-2 left-2 z-20 flex gap-2">
-                                <Button 
-                                    variant={viewMode === '2d' ? 'default' : 'secondary'} 
-                                    size="sm" 
-                                    className="h-8 text-xs shadow-sm"
-                                    onClick={() => setViewMode('2d')}
-                                >
-                                    2D Plan
-                                </Button>
-                                <Button 
-                                    variant={viewMode === '3d' ? 'default' : 'secondary'} 
-                                    size="sm" 
-                                    className="h-8 text-xs shadow-sm"
-                                    onClick={() => setViewMode('3d')}
-                                >
-                                    3D Preview
-                                </Button>
-                            </div>
-                            
-                            {viewMode === '3d' ? (
-                                <BoothSnapshotRenderer
-                                    sceneJson={scene}
-                                    brandIdentity={boothDesign?.brand_identity}
-                                    boothSize={boothSize}
-                                    boothType={boothDesign?.booth_type || boothType}
-                                    interactive={true}
-                                    autoSnapshot={false}
-                                    onMoveItem={handleMoveItem}
-                                />
-                            ) : (
-                                <BoothFloorplan 
-                                    scene={scene} 
-                                    onMoveItem={handleMoveItem}
-                                    onRotateItem={handleRotateItem}
-                                    onRemoveItem={handleRemoveItem}
-                                    brandName={boothDesign?.brand_identity?.company_name || boothDesign?.brand_name || boothDesign?.brand_url}
-                                />
-                            )}
-                        </div>
+                    {viewMode === '3d' ? (
+                        <BoothSnapshotRenderer
+                            sceneJson={scene}
+                            brandIdentity={boothDesign?.brand_identity}
+                            boothSize={boothSize}
+                            boothType={boothDesign?.booth_type || boothType}
+                            interactive={true}
+                            autoSnapshot={false}
+                            onMoveItem={handleMoveItem}
+                        />
+                    ) : (
+                        <BoothFloorplan 
+                            scene={scene} 
+                            onMoveItem={handleMoveItem}
+                            onRotateItem={handleRotateItem}
+                            onRemoveItem={handleRemoveItem}
+                            brandName={boothDesign?.brand_identity?.company_name || boothDesign?.brand_name || boothDesign?.brand_url}
+                        />
+                    )}
+                </div>
 
-                        <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-3">Included Products</h3>
-                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 pb-4">
-                            {Object.entries((boothDesign?.product_skus || []).reduce((acc, sku) => {
-                                acc[sku] = (acc[sku] || 0) + 1;
-                                return acc;
-                            }, {})).map(([sku, count], idx) => (
-                                <BoothProductCard key={idx} sku={sku} quantity={count} />
-                            ))}
-                            
-                            {(!boothDesign?.product_skus || boothDesign.product_skus.length === 0) && (
-                                <div className="col-span-full flex flex-col items-center justify-center py-12 text-slate-400 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-xl">
-                                    <p className="text-sm font-medium">No products added yet</p>
-                                </div>
-                            )}
+                {/* Bottom Products Strip */}
+                <div className="h-48 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 p-4 overflow-y-auto">
+                    <div className="flex items-center justify-between mb-3">
+                        <h3 className="text-sm font-semibold text-slate-900 dark:text-white">Included Products</h3>
+                        <div className="text-xs font-medium text-primary bg-primary/10 px-3 py-1 rounded-full flex items-center gap-2">
+                            <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                            {boothDesign?.product_skus?.length || 0} Products
                         </div>
+                    </div>
+                    <div className="flex gap-4 overflow-x-auto pb-2">
+                        {Object.entries((boothDesign?.product_skus || []).reduce((acc, sku) => {
+                            acc[sku] = (acc[sku] || 0) + 1;
+                            return acc;
+                        }, {})).map(([sku, count], idx) => (
+                            <div key={idx} className="w-48 shrink-0">
+                                <BoothProductCard sku={sku} quantity={count} onRemove={() => handleRemoveProduct(sku)} />
+                            </div>
+                        ))}
+                        
+                        {(!boothDesign?.product_skus || boothDesign.product_skus.length === 0) && (
+                            <div className="flex-1 flex flex-col items-center justify-center py-6 text-slate-400 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-xl">
+                                <p className="text-sm font-medium">No products added yet</p>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
