@@ -15,29 +15,53 @@ Deno.serve(async (req) => {
             return Response.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const bucketName = 'orbus-assets';
+        // Query the storage.objects table directly to find all GLB files
+        // Note: Supabase JS client doesn't expose the storage schema directly through the standard API
+        // but we can try to query it if it's exposed, or just use the REST API directly.
+        // Actually, the storage schema is not exposed to the public API by default.
         
-        // Let's use the search API again but specifically in the products folder
-        const { data: searchData, error: searchError } = await supabase
-            .storage
-            .from(bucketName)
-            .list('products', {
-                limit: 1000,
-                search: '.glb'
+        // Let's try to list all products and check their 'other' folder in parallel
+        const bucketName = 'orbus-assets';
+        const { data: products } = await supabase.storage.from(bucketName).list('products', { limit: 5000 });
+        
+        if (!products) {
+            return Response.json({ error: 'No products found' });
+        }
+
+        let glbFiles = [];
+        let checkedCount = 0;
+        
+        // Process in batches of 50 to avoid rate limits
+        const batchSize = 50;
+        for (let i = 0; i < products.length; i += batchSize) {
+            const batch = products.slice(i, i + batchSize);
+            const promises = batch.map(async (product) => {
+                if (product.id === null) { // It's a folder
+                    const { data: files } = await supabase.storage.from(bucketName).list(`products/${product.name}/other`, { limit: 100 });
+                    if (files) {
+                        const glbs = files.filter(f => f.name.endsWith('.glb') || f.name.endsWith('.gltf'));
+                        if (glbs.length > 0) {
+                            return glbs.map(g => `products/${product.name}/other/${g.name}`);
+                        }
+                    }
+                }
+                return [];
             });
             
-        const { data: searchData2 } = await supabase
-            .storage
-            .from(bucketName)
-            .list('products', {
-                limit: 1000,
-                search: 'glb'
-            });
+            const results = await Promise.all(promises);
+            for (const res of results) {
+                glbFiles.push(...res);
+            }
+            checkedCount += batch.length;
+            
+            // If we found some, we can stop early if we just want to verify they exist, 
+            // but the user said there should be 60, so let's count them all.
+        }
 
         return Response.json({ 
-            searchResult: searchData,
-            searchResult2: searchData2,
-            error: searchError
+            totalProductsChecked: checkedCount,
+            glbCount: glbFiles.length,
+            glbFiles: glbFiles
         });
 
     } catch (error) {
