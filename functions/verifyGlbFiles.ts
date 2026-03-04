@@ -15,12 +15,6 @@ Deno.serve(async (req) => {
             return Response.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        // Query the storage.objects table directly to find all GLB files
-        // Note: Supabase JS client doesn't expose the storage schema directly through the standard API
-        // but we can try to query it if it's exposed, or just use the REST API directly.
-        // Actually, the storage schema is not exposed to the public API by default.
-        
-        // Let's try to list all products and check their 'other' folder in parallel
         const bucketName = 'orbus-assets';
         const { data: products } = await supabase.storage.from(bucketName).list('products', { limit: 5000 });
         
@@ -31,17 +25,32 @@ Deno.serve(async (req) => {
         let glbFiles = [];
         let checkedCount = 0;
         
-        // Process in batches of 50 to avoid rate limits
+        // Process in batches of 50
         const batchSize = 50;
         for (let i = 0; i < products.length; i += batchSize) {
             const batch = products.slice(i, i + batchSize);
             const promises = batch.map(async (product) => {
                 if (product.id === null) { // It's a folder
-                    const { data: files } = await supabase.storage.from(bucketName).list(`products/${product.name}/other`, { limit: 100 });
+                    // Check root of product folder
+                    const { data: files } = await supabase.storage.from(bucketName).list(`products/${product.name}`, { limit: 100 });
                     if (files) {
                         const glbs = files.filter(f => f.name.endsWith('.glb') || f.name.endsWith('.gltf'));
                         if (glbs.length > 0) {
-                            return glbs.map(g => `products/${product.name}/other/${g.name}`);
+                            return glbs.map(g => `products/${product.name}/${g.name}`);
+                        }
+                        
+                        // Check if there's a 3d or models folder
+                        const subFolders = files.filter(f => f.id === null);
+                        for (const sub of subFolders) {
+                            if (sub.name !== 'image' && sub.name !== 'other') { // we already checked other, but let's check it again just in case
+                                const { data: subFiles } = await supabase.storage.from(bucketName).list(`products/${product.name}/${sub.name}`, { limit: 100 });
+                                if (subFiles) {
+                                    const subGlbs = subFiles.filter(f => f.name.endsWith('.glb') || f.name.endsWith('.gltf'));
+                                    if (subGlbs.length > 0) {
+                                        return subGlbs.map(g => `products/${product.name}/${sub.name}/${g.name}`);
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -53,9 +62,6 @@ Deno.serve(async (req) => {
                 glbFiles.push(...res);
             }
             checkedCount += batch.length;
-            
-            // If we found some, we can stop early if we just want to verify they exist, 
-            // but the user said there should be 60, so let's count them all.
         }
 
         return Response.json({ 
