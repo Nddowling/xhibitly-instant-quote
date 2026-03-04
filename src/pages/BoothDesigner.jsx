@@ -931,37 +931,6 @@ export default function BoothDesigner() {
                                 autoSnapshot={false}
                                 onMoveItem={handleMoveItem}
                             />
-                            {/* Professional Controls Overlay */}
-                            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-slate-900/90 text-white px-6 py-3 rounded-full shadow-2xl backdrop-blur-sm border border-white/10 pointer-events-none">
-                                <div className="flex items-center gap-6 text-xs font-medium">
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-5 h-5 rounded border-2 border-white/40 flex items-center justify-center">
-                                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" /></svg>
-                                        </div>
-                                        <span className="opacity-90">Drag to move</span>
-                                    </div>
-                                    <div className="w-px h-4 bg-white/20"></div>
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-5 h-5 rounded border-2 border-white/40 flex items-center justify-center">
-                                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
-                                        </div>
-                                        <span className="opacity-90">Right-click to rotate view</span>
-                                    </div>
-                                    <div className="w-px h-4 bg-white/20"></div>
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-5 h-5 rounded-full bg-blue-500/30 border-2 border-blue-400/60 flex items-center justify-center">
-                                            <div className="w-2 h-2 rounded-full bg-blue-400"></div>
-                                        </div>
-                                        <span className="opacity-90">Blue = Hover</span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-5 h-5 rounded-full bg-green-500/30 border-2 border-green-400/60 flex items-center justify-center">
-                                            <div className="w-2 h-2 rounded-full bg-green-400"></div>
-                                        </div>
-                                        <span className="opacity-90">Green = Dragging</span>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     ) : (
                         <BoothFloorplan 

@@ -326,7 +326,13 @@ export default function BoothSnapshotRenderer({
       alpha: false, // Solid background for clean look
       powerPreference: 'high-performance' // Use GPU for smooth interactions
     });
-    renderer.setSize(width, height);
+    
+    const initW = containerRef.current?.clientWidth || width;
+    const initH = containerRef.current?.clientHeight || height;
+    renderer.setSize(initW, initH);
+    camera.aspect = initW / initH;
+    camera.updateProjectionMatrix();
+    
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Soft shadows like your reference
@@ -337,6 +343,20 @@ export default function BoothSnapshotRenderer({
 
     while (containerRef.current.firstChild) containerRef.current.removeChild(containerRef.current.firstChild);
     containerRef.current.appendChild(renderer.domElement);
+
+    const resizeObserver = new ResizeObserver(entries => {
+      for (let entry of entries) {
+        const { width: w, height: h } = entry.contentRect;
+        if (w && h && rendererRef.current) {
+          rendererRef.current.setSize(w, h);
+          camera.aspect = w / h;
+          camera.updateProjectionMatrix();
+        }
+      }
+    });
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
 
     // ── ENHANCED PBR LIGHTING ──
     // Trade show lighting: bright, professional, makes products pop
@@ -525,7 +545,8 @@ export default function BoothSnapshotRenderer({
       
       if (item.modelUrl) {
         modelMesh = await loadGLTF(item.modelUrl);
-      } else if (item.imageUrl) {
+      }
+      if (!modelMesh && item.imageUrl) {
         productTex = await loadTex(item.imageUrl);
       }
 
@@ -913,6 +934,7 @@ export default function BoothSnapshotRenderer({
 
     // ── Cleanup ──
     return () => {
+      resizeObserver.disconnect();
       if (frameRef.current) cancelAnimationFrame(frameRef.current);
       if (rendererRef.current) { rendererRef.current.dispose(); rendererRef.current = null; }
     };
@@ -927,7 +949,7 @@ export default function BoothSnapshotRenderer({
         </div>
       ) : (
         <>
-          <div ref={containerRef} className="w-full h-full [&>canvas]:w-full [&>canvas]:h-full [&>canvas]:object-contain" />
+          <div ref={containerRef} className="w-full h-full [&>canvas]:w-full [&>canvas]:h-full [&>canvas]:block" />
           {status === 'loading' && (
             <div className="absolute inset-0 flex items-center justify-center bg-slate-100/80 dark:bg-slate-900/80 backdrop-blur-sm">
               <div className="flex flex-col items-center gap-2">
