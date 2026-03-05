@@ -558,6 +558,7 @@ export default function BoothSnapshotRenderer({
     if (!sceneJson || !containerRef.current) return;
 
     let sceneData;
+    let envMap = null;
     try {
       sceneData = typeof sceneJson === 'string' ? JSON.parse(sceneJson) : sceneJson;
     } catch {
