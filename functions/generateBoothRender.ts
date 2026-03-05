@@ -273,42 +273,82 @@ FRAMING: Straight-on architectural photo from the front of the booth, showing th
 This is a precise inventory verification photograph showing: ${productNameList} - NOTHING ELSE.`;
         }
 
-        // ── Call image generation ──────────────────────────────────────────
-        const imageRes = await base44.integrations.Core.GenerateImage({
-            prompt,
-            existing_image_urls: referenceImageUrls,
-        });
+        // ── Build 3D Scene Data ────────────────────────────────────────────
+        // Parse booth dimensions
+        const [w_ft, d_ft] = design.booth_size.split('x').map(n => parseInt(n) || 10);
 
-        if (!imageRes || !imageRes.url) {
-            throw new Error('Image generation returned no URL');
+        // Build scene items from products
+        let sceneItems = [];
+
+        // Check if we have existing layout from scene_json
+        let existingLayout = null;
+        if (design.scene_json) {
+            try {
+                const parsed = JSON.parse(design.scene_json);
+                if (parsed && parsed.items && parsed.items.length > 0) {
+                    existingLayout = parsed.items;
+                }
+            } catch (e) {
+                console.warn('Could not parse scene_json', e);
+            }
         }
 
-        // ── Save result back to the design ────────────────────────────────
-        const renderHistory = Array.isArray(design.render_history)
-            ? design.render_history
-            : [];
+        // Build items list
+        let itemId = 0;
+        for (const product of products) {
+            for (let i = 0; i < product.quantity; i++) {
+                // Find existing layout position if available
+                const existingItem = existingLayout?.find(item =>
+                    item.sku === product.sku || item.name === product.name
+                );
 
-        if (existingRender) {
-            renderHistory.push({
-                url: existingRender,
-                generated_at: design.render_generated_at || new Date().toISOString(),
-                product_skus: skus,
-            });
+                sceneItems.push({
+                    id: `item-${itemId++}`,
+                    sku: product.sku,
+                    name: product.name,
+                    category: product.category,
+                    description: product.description,
+                    imageUrl: product.image_cached_url || product.image_url,
+                    modelUrl: product.model_glb_url || null,
+                    // Use existing position or default to center
+                    x: existingItem?.x || w_ft / 2,
+                    y: existingItem?.y || d_ft / 2,
+                    w: existingItem?.w || 3,
+                    d: existingItem?.d || 1,
+                    h: existingItem?.h || 7,
+                    rot: existingItem?.rot || 0,
+                    isFlooring: product.category?.toLowerCase().includes('flooring') ||
+                               product.category?.toLowerCase().includes('carpet') || false,
+                });
+            }
         }
 
+        // Build 3D scene manifest
+        const sceneData = {
+            booth: {
+                w_ft,
+                d_ft,
+                type: design.booth_type || 'inline',
+            },
+            items: sceneItems,
+        };
+
+        // ── Save scene data back to design ────────────────────────────────
         const updatedDesign = await base44.entities.BoothDesign.update(booth_design_id, {
-            design_image_url: imageRes.url,
+            scene_json: JSON.stringify(sceneData),
             render_generated_at: new Date().toISOString(),
-            render_history: renderHistory.slice(-10), // keep last 10 renders
         });
 
         return Response.json({
             success: true,
-            url: imageRes.url,
-            design: updatedDesign,
-            products_rendered: products.map(p => ({ sku: p.sku, name: p.name })),
-            reference_images_used: referenceImageUrls.length,
-            mode: existingRender ? 'iterative' : 'initial',
+            render_mode: '3d',
+            scene: sceneData,
+            brand_identity: design.brand_identity,
+            brand_name: brandName,
+            booth_size: design.booth_size,
+            booth_type: design.booth_type || 'inline',
+            products_rendered: products.map(p => ({ sku: p.sku, name: p.name, quantity: p.quantity })),
+            mode: existingLayout ? 'layout_preserved' : 'auto_layout',
         });
 
     } catch (error) {

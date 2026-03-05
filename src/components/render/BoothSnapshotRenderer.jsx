@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 // ═══════════════════════════════════════════════════════════════
 // XHIBITLY Booth Renderer v2.0
@@ -17,6 +18,94 @@ const WALL_H = 8;
 const DRAPE_H = 8;
 const AISLE_DEPTH = 5;
 const CEILING_Y = 16;
+
+// Contact shadow — soft circular shadow blob under products
+function makeContactShadowTex(sz = 128) {
+  const c = document.createElement('canvas');
+  c.width = sz; c.height = sz;
+  const ctx = c.getContext('2d');
+  const cx = sz / 2, cy = sz / 2, r = sz * 0.45;
+  const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+  g.addColorStop(0, 'rgba(0,0,0,0.35)');
+  g.addColorStop(0.4, 'rgba(0,0,0,0.2)');
+  g.addColorStop(0.7, 'rgba(0,0,0,0.08)');
+  g.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, sz, sz);
+  const t = new THREE.CanvasTexture(c);
+  return t;
+}
+
+// Measurement grid overlay for the booth floor
+function makeGridTex(widthFt, depthFt, pxPerFt = 64) {
+  const w = widthFt * pxPerFt;
+  const h = depthFt * pxPerFt;
+  const c = document.createElement('canvas');
+  c.width = w; c.height = h;
+  const ctx = c.getContext('2d');
+  ctx.clearRect(0, 0, w, h);
+
+  // 1-foot grid lines
+  ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+  ctx.lineWidth = 1;
+  for (let x = 0; x <= widthFt; x++) {
+    const px = x * pxPerFt;
+    ctx.beginPath(); ctx.moveTo(px, 0); ctx.lineTo(px, h); ctx.stroke();
+  }
+  for (let y = 0; y <= depthFt; y++) {
+    const py = y * pxPerFt;
+    ctx.beginPath(); ctx.moveTo(0, py); ctx.lineTo(w, py); ctx.stroke();
+  }
+
+  // 5-foot grid lines (bolder)
+  ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+  ctx.lineWidth = 2;
+  for (let x = 0; x <= widthFt; x += 5) {
+    const px = x * pxPerFt;
+    ctx.beginPath(); ctx.moveTo(px, 0); ctx.lineTo(px, h); ctx.stroke();
+  }
+  for (let y = 0; y <= depthFt; y += 5) {
+    const py = y * pxPerFt;
+    ctx.beginPath(); ctx.moveTo(0, py); ctx.lineTo(w, py); ctx.stroke();
+  }
+
+  // Dimension labels along bottom and left edges
+  ctx.font = `bold ${Math.max(10, pxPerFt * 0.2)}px "Helvetica Neue", Arial, sans-serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.2)';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  // Bottom edge (width)
+  for (let x = 0; x <= widthFt; x += 5) {
+    if (x > 0) ctx.fillText(`${x}'`, x * pxPerFt, h - pxPerFt * 0.35);
+  }
+  // Left edge (depth)
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  for (let y = 0; y <= depthFt; y += 5) {
+    if (y > 0) ctx.fillText(`${y}'`, pxPerFt * 0.1, h - y * pxPerFt);
+  }
+
+  const t = new THREE.CanvasTexture(c);
+  return t;
+}
+
+// Helper: add contact shadow under a product group
+function addContactShadow(scene, shadowTex, x, z, radiusW, radiusD) {
+  const shadow = new THREE.Mesh(
+    new THREE.PlaneGeometry(radiusW * 1.4, radiusD * 1.4),
+    new THREE.MeshBasicMaterial({
+      map: shadowTex,
+      transparent: true,
+      depthWrite: false,
+      opacity: 0.7,
+    })
+  );
+  shadow.rotation.x = -Math.PI / 2;
+  shadow.position.set(x, 0.008, z);
+  shadow.renderOrder = -1;
+  scene.add(shadow);
+  return shadow;
+}
 
 // Product type → default 3D height
 const H_MAP = {
@@ -269,8 +358,102 @@ export default function BoothSnapshotRenderer({
   const containerRef = useRef(null);
   const rendererRef = useRef(null);
   const frameRef = useRef(null);
+  const cameraRef = useRef(null);
+  const controlsRef = useRef(null);
+  const sceneRef = useRef(null);
+  const boothDimsRef = useRef({ w: 10, d: 10 });
   const [status, setStatus] = useState('loading');
   const [errorMsg, setErrorMsg] = useState(null);
+  const [cameraMode, setCameraMode] = useState('catalog'); // catalog, front, top, walkthrough
+
+  // ── Camera Preset Definitions ──
+  const applyCameraPreset = useCallback((preset) => {
+    const cam = cameraRef.current;
+    const ctrl = controlsRef.current;
+    if (!cam || !ctrl) return;
+    const { w: bW, d: bD } = boothDimsRef.current;
+    const maxDim = Math.max(bW, bD);
+
+    setCameraMode(preset);
+
+    switch (preset) {
+      case 'catalog': {
+        // Classic 3/4 trade show catalog angle
+        cam.position.set(-bW * 0.35, maxDim * 0.65 + 4, maxDim * 1.1 + 7);
+        ctrl.target.set(0, WALL_H * 0.25, -bD * 0.1);
+        cam.fov = 45;
+        break;
+      }
+      case 'front': {
+        // Straight-on front view (what an attendee sees walking up)
+        cam.position.set(0, WALL_H * 0.5, bD / 2 + maxDim * 0.9 + 5);
+        ctrl.target.set(0, WALL_H * 0.35, 0);
+        cam.fov = 45;
+        break;
+      }
+      case 'top': {
+        // Top-down plan view
+        cam.position.set(0, maxDim * 2.2 + 8, 0.01);
+        ctrl.target.set(0, 0, 0);
+        cam.fov = 50;
+        break;
+      }
+      case 'walkthrough': {
+        // Eye-level inside the booth (5'6" = ~1.67m ≈ 5.5ft)
+        cam.position.set(0, 5.5, bD * 0.3);
+        ctrl.target.set(0, 5.5, -bD * 0.4);
+        cam.fov = 65; // Wider FOV for immersive feel
+        break;
+      }
+      default: break;
+    }
+    cam.updateProjectionMatrix();
+    ctrl.update();
+  }, []);
+
+  // ── Screenshot Export ──
+  const captureScreenshot = useCallback((scale = 2) => {
+    const ren = rendererRef.current;
+    const cam = cameraRef.current;
+    const sc = sceneRef.current;
+    if (!ren || !cam || !sc) return null;
+
+    // Save current size
+    const origW = ren.domElement.width;
+    const origH = ren.domElement.height;
+    const origPixelRatio = ren.getPixelRatio();
+
+    // Render at high res
+    const exportW = origW * scale;
+    const exportH = origH * scale;
+    ren.setSize(exportW, exportH, false);
+    ren.setPixelRatio(1);
+    cam.aspect = exportW / exportH;
+    cam.updateProjectionMatrix();
+    ren.render(sc, cam);
+
+    const dataUrl = ren.domElement.toDataURL('image/png');
+
+    // Restore original size
+    ren.setSize(origW, origH, false);
+    ren.setPixelRatio(origPixelRatio);
+    cam.aspect = origW / origH;
+    cam.updateProjectionMatrix();
+    ren.render(sc, cam);
+
+    return dataUrl;
+  }, []);
+
+  const downloadScreenshot = useCallback(() => {
+    const dataUrl = captureScreenshot(2);
+    if (!dataUrl) return;
+    const a = document.createElement('a');
+    a.href = dataUrl;
+    a.download = `booth-render-${Date.now()}.png`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }, [captureScreenshot]);
 
   useEffect(() => {
     if (!sceneJson || !containerRef.current) return;
@@ -295,26 +478,37 @@ export default function BoothSnapshotRenderer({
 
     // ── PROFESSIONAL SCENE (Clean studio look) ──
     const scene = new THREE.Scene();
+    sceneRef.current = scene;
+    boothDimsRef.current = { w: bW, d: bD };
     scene.background = new THREE.Color(0xf0f0f0); // Lighter, cleaner background (like your reference)
-    scene.fog = new THREE.Fog(0xf0f0f0, 50, 100); // Subtle depth fog
+    scene.fog = new THREE.Fog(0xf0f0f0, 80, 250); // Subtle depth fog
 
-    // ── PROFESSIONAL CAMERA ANGLE (Like the reference image) ──
-    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 200); // Slightly wider FOV for dramatic look
+    // ── CAMERA — Adaptive for booth size & type ──
+    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 500);
 
-    // Professional 3/4 view - matches trade show catalog photography
     const maxDim = Math.max(bW, bD);
-    const distZ = maxDim * 1.4 + AISLE_DEPTH + 6; // Closer for more dramatic perspective
-    const heightY = Math.max(14, maxDim * 0.7); // Higher angle for professional overview
+    // Distance scales with booth size — bigger booths need to be further away
+    const baseDist = maxDim * 1.3 + 8;
 
-    if (boothType === 'island') {
-        // Island booth - dramatic corner view
-        camera.position.set(-maxDim * 0.9, heightY * 1.3, maxDim * 0.9 + AISLE_DEPTH);
-        camera.lookAt(0, WALL_H * 0.25, 0);
+    if (isIsland) {
+      // Island: elevated corner view showing all 4 open sides
+      camera.position.set(-maxDim * 0.7, maxDim * 0.9, maxDim * 0.7 + AISLE_DEPTH);
+      camera.lookAt(0, WALL_H * 0.2, 0);
+    } else if (isCorner) {
+      // Corner: angled to show the open front and open left side
+      camera.position.set(-bW * 0.6, maxDim * 0.65, baseDist * 0.7);
+      camera.lookAt(0, WALL_H * 0.3, -bD * 0.1);
+    } else if (isPeninsula) {
+      // Peninsula: front-angled to show open sides
+      camera.position.set(-bW * 0.5, maxDim * 0.7, baseDist * 0.75);
+      camera.lookAt(0, WALL_H * 0.25, 0);
     } else {
-        // Inline/corner - professional front-angled view (like your reference image)
-        camera.position.set(-bW * 0.4, heightY, distZ); // More side angle for depth
-        camera.lookAt(0, WALL_H * 0.35, -bD * 0.15);
+      // Inline: classic trade show catalog 3/4 view from front
+      camera.position.set(-bW * 0.35, maxDim * 0.65 + 4, baseDist * 0.85);
+      camera.lookAt(0, WALL_H * 0.3, -bD * 0.1);
     }
+
+    cameraRef.current = camera;
 
     // ── INTERACTION STATE ──
     const interactableObjects = [];
@@ -395,34 +589,89 @@ export default function BoothSnapshotRenderer({
     scene.add(frontLight);
 
     // ══════════════════════════════════════════════════════════
-    // BOOTH STRUCTURE
+    // ENVIRONMENT MAP (makes PBR/metallic materials look real)
+    // ══════════════════════════════════════════════════════════
+
+    const pmremGenerator = new THREE.PMREMGenerator(renderer);
+    pmremGenerator.compileEquirectangularShader();
+
+    // Generate a simple studio-style environment from a gradient
+    const envScene = new THREE.Scene();
+    const envGeo = new THREE.SphereGeometry(20, 32, 16);
+    const envCanvas = document.createElement('canvas');
+    envCanvas.width = 512; envCanvas.height = 256;
+    const envCtx = envCanvas.getContext('2d');
+    const envGrad = envCtx.createLinearGradient(0, 0, 0, 256);
+    envGrad.addColorStop(0, '#ffffff');
+    envGrad.addColorStop(0.3, '#e8ecf0');
+    envGrad.addColorStop(0.6, '#c0c8d0');
+    envGrad.addColorStop(1, '#a0a8b0');
+    envCtx.fillStyle = envGrad;
+    envCtx.fillRect(0, 0, 512, 256);
+    const envTex = new THREE.CanvasTexture(envCanvas);
+    envTex.mapping = THREE.EquirectangularReflectionMapping;
+    const envMat = new THREE.MeshBasicMaterial({ map: envTex, side: THREE.BackSide });
+    envScene.add(new THREE.Mesh(envGeo, envMat));
+    const envMap = pmremGenerator.fromScene(envScene, 0.04).texture;
+    scene.environment = envMap;
+    pmremGenerator.dispose();
+    envScene.clear();
+
+    // ══════════════════════════════════════════════════════════
+    // BOOTH STRUCTURE — Inline / Corner / Peninsula / Island
+    //
+    // Trade show convention:
+    //   Inline:    Back wall + both side drapes (open front only)
+    //   Corner:    Back wall + one side drape (open front + one side)
+    //   Peninsula: Back wall only (open front + both sides)
+    //   Island:    No walls (open all 4 sides)
+    //
+    // Coordinate system:
+    //   Center of booth = (0, 0, 0)
+    //   Front/aisle = +Z,  Back = -Z
+    //   Left = -X,  Right = +X
     // ══════════════════════════════════════════════════════════
 
     const isIsland = boothType === 'island';
     const isPeninsula = boothType === 'peninsula';
     const isCorner = boothType === 'corner';
-    const isInline = boothType === 'inline';
+    const isInline = !isIsland && !isPeninsula && !isCorner;
 
     const pipeMat = new THREE.MeshStandardMaterial({ color: 0x888888, metalness: 0.7, roughness: 0.3 });
-    const pr = 0.04;
+    const pr = 0.05; // pipe radius
 
     const makeUpright = (x, z) => {
       const pole = new THREE.Mesh(new THREE.CylinderGeometry(pr, pr, DRAPE_H, 8), pipeMat.clone());
       pole.position.set(x, DRAPE_H / 2, z);
+      pole.castShadow = true;
       return pole;
     };
 
-    // Infinite ground plane
-    const groundMesh = new THREE.Mesh(
-      new THREE.PlaneGeometry(500, 500),
-      new THREE.MeshStandardMaterial({ color: 0xe5e5e5, roughness: 1, metalness: 0 })
-    );
+    const makeRail = (x1, z1, x2, z2, y) => {
+      const dx = x2 - x1, dz = z2 - z1;
+      const len = Math.sqrt(dx * dx + dz * dz);
+      const rail = new THREE.Mesh(new THREE.CylinderGeometry(pr * 0.8, pr * 0.8, len, 8), pipeMat.clone());
+      rail.position.set((x1 + x2) / 2, y, (z1 + z2) / 2);
+      rail.rotation.z = Math.PI / 2;
+      // Align along the direction
+      if (Math.abs(dz) > Math.abs(dx)) {
+        rail.rotation.z = 0;
+        rail.rotation.x = Math.PI / 2;
+      }
+      rail.castShadow = true;
+      return rail;
+    };
+
+    // ── Ground Plane (convention hall floor) ──
+    const groundGeo = new THREE.PlaneGeometry(200, 200);
+    const groundMat = new THREE.MeshStandardMaterial({ color: 0xd5d5d5, roughness: 1, metalness: 0 });
+    const groundMesh = new THREE.Mesh(groundGeo, groundMat);
     groundMesh.rotation.x = -Math.PI / 2;
     groundMesh.position.y = -0.02;
     groundMesh.receiveShadow = true;
     scene.add(groundMesh);
 
-    // Booth carpet
+    // ── Booth Carpet ──
     const carpetTex = makeCarpetTex(brand.primary_color || '#1a1a2e');
     carpetTex.repeat.set(bW / 4, bD / 4);
     const floorMesh = new THREE.Mesh(
@@ -430,78 +679,177 @@ export default function BoothSnapshotRenderer({
       new THREE.MeshStandardMaterial({ map: carpetTex, roughness: 0.95 })
     );
     floorMesh.rotation.x = -Math.PI / 2;
+    floorMesh.position.y = 0.001;
     floorMesh.receiveShadow = true;
     scene.add(floorMesh);
 
-    // Aisle
+    // ── Measurement Grid Overlay ──
+    const gridTex = makeGridTex(bW, bD);
+    const gridMesh = new THREE.Mesh(
+      new THREE.PlaneGeometry(bW, bD),
+      new THREE.MeshBasicMaterial({ map: gridTex, transparent: true, depthWrite: false })
+    );
+    gridMesh.rotation.x = -Math.PI / 2;
+    gridMesh.position.y = 0.003;
+    scene.add(gridMesh);
+
+    // Dimension labels at booth edges (3D text sprites)
+    const makeDimLabel = (text, x, y, z) => {
+      const c = document.createElement('canvas');
+      c.width = 128; c.height = 48;
+      const ctx = c.getContext('2d');
+      ctx.clearRect(0, 0, 128, 48);
+      ctx.fillStyle = 'rgba(0,0,0,0.5)';
+      ctx.beginPath(); ctx.roundRect(4, 4, 120, 40, 6); ctx.fill();
+      ctx.font = 'bold 22px "Helvetica Neue", Arial, sans-serif';
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(text, 64, 24);
+      const tex = new THREE.CanvasTexture(c);
+      const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, opacity: 0.7 }));
+      sprite.scale.set(2, 0.75, 1);
+      sprite.position.set(x, y, z);
+      scene.add(sprite);
+    };
+    // Width label (front edge, centered)
+    makeDimLabel(`${bW}' wide`, 0, 0.3, bD / 2 + 0.8);
+    // Depth label (left edge, centered)  
+    makeDimLabel(`${bD}' deep`, -bW / 2 - 1.2, 0.3, 0);
+
+    // ── Contact shadow texture (shared) ──
+    const contactShadowTex = makeContactShadowTex();
+
+    // ── Booth boundary lines (subtle floor tape) ──
+    const tapeColor = 0x666666;
+    const tapeMat = new THREE.MeshBasicMaterial({ color: tapeColor, transparent: true, opacity: 0.4 });
+    const tapeW = 0.06;
+    // Front edge
+    const frontTape = new THREE.Mesh(new THREE.PlaneGeometry(bW, tapeW), tapeMat);
+    frontTape.rotation.x = -Math.PI / 2;
+    frontTape.position.set(0, 0.005, bD / 2);
+    scene.add(frontTape);
+    // Back edge
+    const backTape = new THREE.Mesh(new THREE.PlaneGeometry(bW, tapeW), tapeMat.clone());
+    backTape.rotation.x = -Math.PI / 2;
+    backTape.position.set(0, 0.005, -bD / 2);
+    scene.add(backTape);
+    // Left edge
+    const leftTape = new THREE.Mesh(new THREE.PlaneGeometry(tapeW, bD), tapeMat.clone());
+    leftTape.rotation.x = -Math.PI / 2;
+    leftTape.position.set(-bW / 2, 0.005, 0);
+    scene.add(leftTape);
+    // Right edge
+    const rightTape = new THREE.Mesh(new THREE.PlaneGeometry(tapeW, bD), tapeMat.clone());
+    rightTape.rotation.x = -Math.PI / 2;
+    rightTape.position.set(bW / 2, 0.005, 0);
+    scene.add(rightTape);
+
+    // ── Aisle floor (in front of booth) ──
+    const aisleW = bW + 16;
+    const aisleD = AISLE_DEPTH + 2;
     const aisleTex = makeAisleTex();
-    aisleTex.repeat.set((bW + 10) / 4, (AISLE_DEPTH + 4) / 4);
+    aisleTex.repeat.set(aisleW / 4, aisleD / 4);
     const aisleMesh = new THREE.Mesh(
-      new THREE.PlaneGeometry(bW + 10, AISLE_DEPTH + 4),
+      new THREE.PlaneGeometry(aisleW, aisleD),
       new THREE.MeshStandardMaterial({ map: aisleTex, roughness: 0.9 })
     );
     aisleMesh.rotation.x = -Math.PI / 2;
-    aisleMesh.position.set(0, -0.005, bD / 2 + AISLE_DEPTH / 2 + 0.5);
+    aisleMesh.position.set(0, -0.01, bD / 2 + aisleD / 2 + 0.3);
     aisleMesh.receiveShadow = true;
     scene.add(aisleMesh);
 
-    // Back wall
+    // For island/peninsula, also place aisle behind
+    if (isIsland || isPeninsula) {
+      const backAisle = aisleMesh.clone();
+      backAisle.position.set(0, -0.01, -(bD / 2 + aisleD / 2 + 0.3));
+      scene.add(backAisle);
+    }
+    // For island/corner, also place aisle on open sides
+    if (isIsland) {
+      const leftAisle = new THREE.Mesh(
+        new THREE.PlaneGeometry(AISLE_DEPTH + 2, bD + aisleD * 2 + 1),
+        new THREE.MeshStandardMaterial({ map: aisleTex.clone(), roughness: 0.9 })
+      );
+      leftAisle.rotation.x = -Math.PI / 2;
+      leftAisle.position.set(-bW / 2 - AISLE_DEPTH / 2 - 1.3, -0.01, 0);
+      scene.add(leftAisle);
+      const rightAisle = leftAisle.clone();
+      rightAisle.position.set(bW / 2 + AISLE_DEPTH / 2 + 1.3, -0.01, 0);
+      scene.add(rightAisle);
+    }
+
+    // ── Drape texture (shared) ──
+    const dTex = makeDrapeTex();
+    dTex.repeat.set(1, 2);
+
+    const makeDrape = (length, posX, posZ, rotY) => {
+      const m = new THREE.Mesh(
+        new THREE.PlaneGeometry(length, DRAPE_H),
+        new THREE.MeshStandardMaterial({ map: dTex.clone(), roughness: 0.9, side: THREE.DoubleSide })
+      );
+      m.rotation.y = rotY;
+      m.position.set(posX, DRAPE_H / 2, posZ);
+      m.receiveShadow = true;
+      m.castShadow = true;
+      return m;
+    };
+
+    // ── BACK WALL (everyone except island) ──
     if (!isIsland) {
       const bwTex = makeBackwallTex(brand, bW);
       const bwMesh = new THREE.Mesh(
         new THREE.PlaneGeometry(bW, WALL_H),
-        new THREE.MeshStandardMaterial({ map: bwTex, roughness: 0.4 })
+        new THREE.MeshStandardMaterial({ map: bwTex, roughness: 0.4, side: THREE.DoubleSide })
       );
       bwMesh.position.set(0, WALL_H / 2, -bD / 2);
       bwMesh.receiveShadow = true;
+      bwMesh.castShadow = true;
       scene.add(bwMesh);
 
-      // Back rail
-      const backRail = new THREE.Mesh(new THREE.CylinderGeometry(pr, pr, bW, 8), pipeMat);
-      backRail.rotation.z = Math.PI / 2;
-      backRail.position.set(0, DRAPE_H, -bD / 2);
-      scene.add(backRail);
-
-      scene.add(makeUpright(-bW/2, -bD/2));
-      scene.add(makeUpright(bW/2, -bD/2));
+      // Back rail + uprights
+      scene.add(makeRail(-bW / 2, -bD / 2, bW / 2, -bD / 2, DRAPE_H));
+      scene.add(makeUpright(-bW / 2, -bD / 2));
+      scene.add(makeUpright(bW / 2, -bD / 2));
     }
 
-    // Pipe & drape sides
-    const dTex = makeDrapeTex();
-    dTex.repeat.set(1, 2);
-    const makeDrape = (xPos, side) => {
-      const m = new THREE.Mesh(
-        new THREE.PlaneGeometry(bD, DRAPE_H),
-        new THREE.MeshStandardMaterial({ map: dTex.clone(), roughness: 0.9, side: THREE.DoubleSide })
-      );
-      m.rotation.y = side === 'left' ? Math.PI / 2 : -Math.PI / 2;
-      m.position.set(xPos, DRAPE_H / 2, 0);
-      m.receiveShadow = true;
-      return m;
-    };
-
+    // ── SIDE WALLS (depends on booth type) ──
+    // Inline: both sides closed
     if (isInline) {
-      scene.add(makeDrape(-bW / 2, 'left'));
-      scene.add(makeDrape(bW / 2, 'right'));
+      // Left drape
+      scene.add(makeDrape(bD, -bW / 2, 0, Math.PI / 2));
+      scene.add(makeRail(-bW / 2, -bD / 2, -bW / 2, bD / 2, DRAPE_H));
+      scene.add(makeUpright(-bW / 2, bD / 2));
 
-      const leftRail = new THREE.Mesh(new THREE.CylinderGeometry(pr, pr, bD, 8), pipeMat.clone());
-      leftRail.rotation.x = Math.PI / 2;
-      leftRail.position.set(-bW / 2, DRAPE_H, 0);
-      scene.add(leftRail);
+      // Right drape
+      scene.add(makeDrape(bD, bW / 2, 0, -Math.PI / 2));
+      scene.add(makeRail(bW / 2, -bD / 2, bW / 2, bD / 2, DRAPE_H));
+      scene.add(makeUpright(bW / 2, bD / 2));
+    }
 
-      const rightRail = leftRail.clone();
-      rightRail.position.set(bW / 2, DRAPE_H, 0);
-      scene.add(rightRail);
+    // Corner: one side closed (right side), left open
+    if (isCorner) {
+      scene.add(makeDrape(bD, bW / 2, 0, -Math.PI / 2));
+      scene.add(makeRail(bW / 2, -bD / 2, bW / 2, bD / 2, DRAPE_H));
+      scene.add(makeUpright(bW / 2, bD / 2));
+    }
 
-      scene.add(makeUpright(-bW/2, bD/2));
-      scene.add(makeUpright(bW/2, bD/2));
-    } else if (isCorner) {
-      scene.add(makeDrape(bW / 2, 'right'));
-      const rightRail = new THREE.Mesh(new THREE.CylinderGeometry(pr, pr, bD, 8), pipeMat.clone());
-      rightRail.rotation.x = Math.PI / 2;
-      rightRail.position.set(bW / 2, DRAPE_H, 0);
-      scene.add(rightRail);
-      scene.add(makeUpright(bW/2, bD/2));
+    // Peninsula: both sides open, only back wall (already added above)
+    // Island: nothing (already handled — no back wall either)
+
+    // ── Neighbor booth hints (for inline, show adjacent booth drapes) ──
+    if (isInline) {
+      const neighborMat = new THREE.MeshStandardMaterial({ color: 0x909090, roughness: 0.8, transparent: true, opacity: 0.3, side: THREE.DoubleSide });
+      // Left neighbor
+      const leftNeighborWall = new THREE.Mesh(new THREE.PlaneGeometry(8, DRAPE_H * 0.9), neighborMat);
+      leftNeighborWall.position.set(-bW / 2 - 4, DRAPE_H * 0.45, 0);
+      leftNeighborWall.rotation.y = Math.PI / 2;
+      scene.add(leftNeighborWall);
+      // Right neighbor
+      const rightNeighborWall = new THREE.Mesh(new THREE.PlaneGeometry(8, DRAPE_H * 0.9), neighborMat.clone());
+      rightNeighborWall.position.set(bW / 2 + 4, DRAPE_H * 0.45, 0);
+      rightNeighborWall.rotation.y = -Math.PI / 2;
+      scene.add(rightNeighborWall);
     }
 
     // ══════════════════════════════════════════════════════════
@@ -552,75 +900,306 @@ export default function BoothSnapshotRenderer({
 
       let productTex = null;
       let modelMesh = null;
+      let logoTex = null;
       
       if (item.modelUrl) {
         modelMesh = await loadGLTF(item.modelUrl);
+        // Pre-load logo for GLB branding
+        const logoUrl = brand.logo_cached_url || brand.logo_url;
+        if (logoUrl && modelMesh) {
+          logoTex = await loadTex(logoUrl);
+        }
       }
       if (!modelMesh && item.imageUrl) {
         productTex = await loadTex(item.imageUrl);
       }
 
       if (modelMesh) {
-        // ── 3D Model (GLB/GLTF) ── ENHANCED FOR PBR MATERIALS
-        const box = new THREE.Box3().setFromObject(modelMesh);
-        const size = box.getSize(new THREE.Vector3());
-        const center = box.getCenter(new THREE.Vector3());
+        // ══════════════════════════════════════════════════════════
+        // 3D MODEL BRANDING PIPELINE
+        // 
+        // 1. Scale & position (fix CAD origin offsets)
+        // 2. Classify meshes (structural vs brandable)
+        // 3. Apply brand colors to brandable surfaces
+        // 4. Place logo on the largest front-facing panel
+        // 5. Professional material tuning
+        // ══════════════════════════════════════════════════════════
 
-        // Reset position to center
-        modelMesh.position.x -= center.x;
-        modelMesh.position.y -= center.y;
-        modelMesh.position.z -= center.z;
+        // ── Step 1: Scale & Position ──
+        const origBox = new THREE.Box3().setFromObject(modelMesh);
+        const origSize = origBox.getSize(new THREE.Vector3());
 
-        // Scale and position based on product dimensions
         const targetW = dispW || 2;
-        const scale = targetW / (size.x || 1);
-        modelMesh.scale.set(scale, scale, scale);
+        const scaleFactor = targetW / (origSize.x || 1);
+        modelMesh.scale.setScalar(scaleFactor);
 
-        // Enhanced material handling for PBR models
+        const scaledBox = new THREE.Box3().setFromObject(modelMesh);
+        const scaledCenter = scaledBox.getCenter(new THREE.Vector3());
+        const scaledSize = scaledBox.getSize(new THREE.Vector3());
+
+        modelMesh.position.x = -scaledCenter.x;
+        modelMesh.position.y = -scaledBox.min.y;
+        modelMesh.position.z = -scaledCenter.z;
+
+        // ── Step 2: Classify & Brand Meshes ──
+        const brandPrimary = new THREE.Color(brand.primary_color || '#1a1a2e');
+        const brandSecondary = new THREE.Color(brand.secondary_color || '#16213e');
+        const brandAccent = new THREE.Color(brand.accent_color_1 || '#ffffff');
+
+        // Collect meshes with their surface areas for logo placement
+        const meshCandidates = [];
+
         modelMesh.traverse((child) => {
-          if (child.isMesh) {
-            child.castShadow = true;
-            child.receiveShadow = true;
+          if (!child.isMesh) return;
+          child.castShadow = true;
+          child.receiveShadow = true;
 
-            // Enhance PBR materials for better appearance
-            if (child.material) {
-              const mat = child.material;
-              if (mat.isMeshStandardMaterial || mat.isMeshPhysicalMaterial) {
-                // Ensure materials respond correctly to lighting
-                mat.needsUpdate = true;
-                // If too dark, slightly increase roughness
-                if (mat.roughness < 0.3) mat.roughness = 0.4;
-                // Slightly boost metalness for trade show appeal
-                if (mat.metalness && mat.metalness > 0.1) mat.metalness = Math.min(1, mat.metalness * 1.2);
-              }
+          const geo = child.geometry;
+          const matName = (child.material?.name || '').toLowerCase();
+          const meshName = (child.name || '').toLowerCase();
+
+          // Classify: is this structural hardware or a brandable panel?
+          const isHardware = 
+            matName.includes('metal') || matName.includes('steel') || matName.includes('aluminum') ||
+            matName.includes('chrome') || matName.includes('iron') ||
+            meshName.includes('pole') || meshName.includes('frame') || meshName.includes('leg') ||
+            meshName.includes('bolt') || meshName.includes('hinge') || meshName.includes('clamp') ||
+            meshName.includes('base_plate') || meshName.includes('foot');
+
+          const isGlass =
+            matName.includes('glass') || matName.includes('acrylic') || matName.includes('clear') ||
+            (child.material?.opacity != null && child.material.opacity < 0.8);
+
+          // Compute approximate surface area from bounding box
+          const meshBox = new THREE.Box3().setFromObject(child);
+          const meshSize = meshBox.getSize(new THREE.Vector3());
+          const surfaceArea = 2 * (meshSize.x * meshSize.y + meshSize.y * meshSize.z + meshSize.x * meshSize.z);
+
+          // Compute dominant face normal (which direction does the biggest face point?)
+          let dominantNormal = new THREE.Vector3(0, 0, 1); // default: forward
+          if (geo.attributes.normal && geo.attributes.position) {
+            const normals = geo.attributes.normal;
+            const avgNormal = new THREE.Vector3();
+            for (let i = 0; i < normals.count; i++) {
+              avgNormal.x += Math.abs(normals.getX(i));
+              avgNormal.y += Math.abs(normals.getY(i));
+              avgNormal.z += Math.abs(normals.getZ(i));
+            }
+            avgNormal.normalize();
+            dominantNormal = avgNormal;
+          }
+
+          // Is this a large, flat panel facing forward or up? → logo candidate
+          const isFlatPanel = (
+            surfaceArea > 0.1 &&
+            !isHardware && !isGlass &&
+            (dominantNormal.z > 0.4 || dominantNormal.y > 0.6 || // faces forward or up
+             (meshSize.x > meshSize.z * 2 && meshSize.y > meshSize.z * 2)) // or is very flat
+          );
+
+          if (isFlatPanel) {
+            meshCandidates.push({ mesh: child, area: surfaceArea, normal: dominantNormal, size: meshSize });
+          }
+
+          // ── Apply Materials ──
+          let newMat;
+
+          if (isHardware) {
+            // Keep hardware looking like hardware — brushed metal
+            newMat = new THREE.MeshStandardMaterial({
+              color: 0xb0b0b0,
+              roughness: 0.35,
+              metalness: 0.85,
+              envMapIntensity: 1.2,
+            });
+          } else if (isGlass) {
+            // Transparent/acrylic panels
+            newMat = new THREE.MeshPhysicalMaterial({
+              color: 0xffffff,
+              roughness: 0.05,
+              metalness: 0,
+              transmission: 0.9,
+              thickness: 0.5,
+              transparent: true,
+              opacity: 0.3,
+            });
+          } else {
+            // Brandable surface — apply brand color
+            const originalColor = child.material?.color;
+            const isVeryLight = originalColor && originalColor.r > 0.85 && originalColor.g > 0.85 && originalColor.b > 0.85;
+            const isVeryDark = originalColor && originalColor.r < 0.15 && originalColor.g < 0.15 && originalColor.b < 0.15;
+
+            // Largest surfaces get primary, smaller get secondary
+            const usePrimary = surfaceArea > 0.5 || isVeryLight || isVeryDark;
+            const brandColor = usePrimary ? brandPrimary : brandSecondary;
+
+            newMat = new THREE.MeshStandardMaterial({
+              color: brandColor,
+              roughness: 0.55,
+              metalness: 0.05,
+              envMapIntensity: 0.6,
+            });
+
+            // If the original material had a texture, keep it but tint it
+            if (child.material?.map) {
+              newMat.map = child.material.map;
+              newMat.color.set(0xffffff); // Let texture show through
             }
           }
+
+          child.material = newMat;
+          child.material.needsUpdate = true;
         });
 
+        // ── Step 3: Place Logo on Best Candidate ──
+        if (logoTex && meshCandidates.length > 0) {
+          // Sort by area, pick the largest flat panel
+          meshCandidates.sort((a, b) => b.area - a.area);
+          const target = meshCandidates[0];
+
+          // Create a logo decal plane positioned on the target surface
+          const logoAspect = logoTex.image.width / logoTex.image.height;
+          const targetMeshCenter = new THREE.Vector3();
+          new THREE.Box3().setFromObject(target.mesh).getCenter(targetMeshCenter);
+
+          // Size logo to ~60% of the target panel width
+          const panelW = target.size.x;
+          const panelH = target.size.y;
+          let logoW = panelW * 0.55;
+          let logoH = logoW / logoAspect;
+          if (logoH > panelH * 0.45) {
+            logoH = panelH * 0.45;
+            logoW = logoH * logoAspect;
+          }
+
+          // Ensure minimum visible size
+          if (logoW < 0.3) { logoW = 0.3; logoH = logoW / logoAspect; }
+
+          const logoPlane = new THREE.Mesh(
+            new THREE.PlaneGeometry(logoW, logoH),
+            new THREE.MeshStandardMaterial({
+              map: logoTex,
+              transparent: true,
+              alphaTest: 0.05,
+              roughness: 0.3,
+              metalness: 0,
+              emissive: 0xffffff,
+              emissiveIntensity: 0.08, // Subtle glow so logo pops
+              depthWrite: true,
+              polygonOffset: true,
+              polygonOffsetFactor: -1,
+            })
+          );
+
+          // Position logo on the front face of the target panel
+          // Convert target center to model-local coords
+          const localCenter = modelMesh.worldToLocal(targetMeshCenter.clone());
+
+          // Determine which face to place on based on dominant normal
+          if (target.normal.z > target.normal.y && target.normal.z > target.normal.x) {
+            // Forward-facing panel
+            logoPlane.position.set(localCenter.x, localCenter.y, localCenter.z + target.size.z * 0.51);
+          } else if (target.normal.y > target.normal.x) {
+            // Upward-facing (table top, etc.)
+            logoPlane.position.set(localCenter.x, localCenter.y + target.size.y * 0.51, localCenter.z);
+            logoPlane.rotation.x = -Math.PI / 2;
+          } else {
+            // Side-facing
+            logoPlane.position.set(localCenter.x + target.size.x * 0.51, localCenter.y, localCenter.z);
+            logoPlane.rotation.y = Math.PI / 2;
+          }
+
+          modelMesh.add(logoPlane);
+        }
+
+        // ── Step 4: If no logo, add brand accent stripe ──
+        if (!logoTex && meshCandidates.length > 0) {
+          const target = meshCandidates[0];
+          const targetMeshCenter = new THREE.Vector3();
+          new THREE.Box3().setFromObject(target.mesh).getCenter(targetMeshCenter);
+          const localCenter = modelMesh.worldToLocal(targetMeshCenter.clone());
+
+          // Accent stripe across the top of the main panel
+          const stripeW = target.size.x * 0.9;
+          const stripeH = target.size.y * 0.06;
+          const stripe = new THREE.Mesh(
+            new THREE.PlaneGeometry(stripeW, stripeH),
+            new THREE.MeshStandardMaterial({
+              color: brandAccent,
+              roughness: 0.3,
+              metalness: 0.1,
+              emissive: brandAccent,
+              emissiveIntensity: 0.15,
+              polygonOffset: true,
+              polygonOffsetFactor: -1,
+            })
+          );
+          stripe.position.set(localCenter.x, localCenter.y + target.size.y * 0.35, localCenter.z + target.size.z * 0.51);
+          modelMesh.add(stripe);
+
+          // Company name text texture on the panel
+          const companyName = brand.company_name;
+          if (companyName) {
+            const nameCanvas = document.createElement('canvas');
+            nameCanvas.width = 1024; nameCanvas.height = 256;
+            const nctx = nameCanvas.getContext('2d');
+            nctx.clearRect(0, 0, 1024, 256);
+            const fontSize = Math.min(120, 900 / Math.max(companyName.length * 0.55, 1));
+            nctx.font = `bold ${fontSize}px "Helvetica Neue", Helvetica, Arial, sans-serif`;
+            nctx.textAlign = 'center';
+            nctx.textBaseline = 'middle';
+            nctx.fillStyle = '#ffffff';
+            nctx.fillText(companyName, 512, 128);
+
+            const nameTex = new THREE.CanvasTexture(nameCanvas);
+            nameTex.colorSpace = THREE.SRGBColorSpace;
+
+            const nameW = target.size.x * 0.7;
+            const nameH = nameW * 0.25;
+            const namePlane = new THREE.Mesh(
+              new THREE.PlaneGeometry(nameW, nameH),
+              new THREE.MeshStandardMaterial({
+                map: nameTex,
+                transparent: true,
+                alphaTest: 0.05,
+                roughness: 0.4,
+                emissive: 0xffffff,
+                emissiveIntensity: 0.05,
+                polygonOffset: true,
+                polygonOffsetFactor: -2,
+              })
+            );
+            namePlane.position.set(localCenter.x, localCenter.y, localCenter.z + target.size.z * 0.52);
+            modelMesh.add(namePlane);
+          }
+        }
+
+        // ── Step 5: Assemble Group & Place ──
         const group = new THREE.Group();
-        group.userData = { id: item.id, hasGLB: true }; // Mark as GLB for special handling
+        group.userData = { id: item.id, hasGLB: true };
         group.add(modelMesh);
 
-        // Position group - bottom of model sits on floor
-        // Since we centered the mesh, its bottom is at -(size.y * scale) / 2
-        group.position.set(wx, (size.y * scale) / 2, wz);
+        group.position.set(wx, 0, wz);
         if (item.rot) group.rotation.y = -THREE.MathUtils.degToRad(item.rot);
 
         scene.add(group);
         interactableObjects.push(group);
 
-        // Add selection indicator (hidden by default)
+        // Selection indicator (hidden by default)
         const boxHelper = new THREE.BoxHelper(group, 0x3b82f6);
         boxHelper.visible = false;
         group.add(boxHelper);
 
-        // Professional label for 3D models
+        // Product label above model
         const lTex = makeLabelTex(item.name || item.sku);
         const label = new THREE.Sprite(new THREE.SpriteMaterial({ map: lTex, transparent: true, opacity: 0.95 }));
         const ls = Math.min(dispW * 1.1, 4.5);
         label.scale.set(ls, ls * 0.11, 1);
-        label.position.set(wx, (size.y * scale) + 0.35, wz);
+        label.position.set(wx, scaledSize.y + 0.35, wz);
         scene.add(label);
+
+        // Contact shadow
+        addContactShadow(scene, contactShadowTex, wx, wz, dispW, dispD);
       } else if (productTex) {
         // ── PROFESSIONAL 3D Display from Product Image ──
         const aspect = productTex.image.width / productTex.image.height;
@@ -682,6 +1261,9 @@ export default function BoothSnapshotRenderer({
         label.scale.set(ls, ls * 0.11, 1);
         label.position.set(wx, pH + 0.35, wz);
         scene.add(label);
+
+        // Contact shadow
+        addContactShadow(scene, contactShadowTex, wx, wz, pW, boxDepth);
       } else {
         // ── PROFESSIONAL BRANDED PLACEHOLDER ──
         const boxDepth = Math.max(0.5, dispD);
@@ -723,6 +1305,9 @@ export default function BoothSnapshotRenderer({
         label.scale.set(ls, ls * 0.11, 1);
         label.position.set(wx, itemH + 0.35, wz);
         scene.add(label);
+
+        // Contact shadow
+        addContactShadow(scene, contactShadowTex, wx, wz, dispW, Math.max(0.5, dispD));
       }
     });
 
@@ -773,181 +1358,246 @@ export default function BoothSnapshotRenderer({
         }
       });
 
-    // ── Optional interactive orbit & drag ──
+    // ── Interactive Controls: OrbitControls + Raycast Drag ──
+    let controls = null;
+
     if (interactive) {
-      let isOrbiting = false;
+      // ── ORBIT CONTROLS (zoom, pan, rotate) ──
+      controls = new OrbitControls(camera, renderer.domElement);
+      controlsRef.current = controls;
+      controls.target.set(0, WALL_H * 0.25, -bD * 0.1);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.08;
+      controls.enablePan = true;
+      controls.panSpeed = 0.8;
+      controls.rotateSpeed = 0.6;
+      // Zoom limits — can zoom in close but not through the floor
+      controls.minDistance = 3;
+      controls.maxDistance = Math.max(bW, bD) * 4;
+      // Angle limits — don't go below floor or straight up
+      controls.minPolarAngle = 0.1; // Just above horizon
+      controls.maxPolarAngle = Math.PI / 2 - 0.05; // Don't go below floor
+      controls.update();
+
+      // ── DRAG & DROP SYSTEM ──
       let draggedObject = null;
       let dragOffset = new THREE.Vector3();
       const dragPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
       const raycaster = new THREE.Raycaster();
       const mouse = new THREE.Vector2();
-
-      let prev = { x: 0, y: 0 };
-      let theta = Math.atan2(camera.position.x, camera.position.z);
-      let phi = Math.acos(camera.position.y / camera.position.length());
-      const rad = camera.position.length();
+      let hoveredObject = null;
 
       const el = renderer.domElement;
 
-      const getMousePos = (e) => {
+      const getNDC = (e) => {
         const rect = el.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
         return {
-          x: ((e.clientX - rect.left) / rect.width) * 2 - 1,
-          y: -((e.clientY - rect.top) / rect.height) * 2 + 1
+          x: ((clientX - rect.left) / rect.width) * 2 - 1,
+          y: -((clientY - rect.top) / rect.height) * 2 + 1
         };
       };
 
-      const onDown = (e) => { 
-        const m = getMousePos(e);
-        mouse.x = m.x;
-        mouse.y = m.y;
+      const findInteractable = (ndc) => {
+        mouse.set(ndc.x, ndc.y);
         raycaster.setFromCamera(mouse, camera);
-        const intersects = raycaster.intersectObjects(interactableObjects, true);
-        
-        if (intersects.length > 0) {
-          let obj = intersects[0].object;
-          while (obj && !obj.userData.id && obj.parent) {
-            obj = obj.parent;
-          }
-          if (obj && obj.userData.id) {
-            draggedObject = obj;
-            const intersectPoint = new THREE.Vector3();
-            raycaster.ray.intersectPlane(dragPlane, intersectPoint);
-            if (intersectPoint) {
-                dragOffset.copy(intersectPoint).sub(obj.position);
-            } else {
-                dragOffset.set(0, 0, 0);
-            }
-            el.style.cursor = 'grabbing';
-            return;
-          }
-        }
-
-        isOrbiting = true; 
-        prev = { x: e.clientX, y: e.clientY }; 
-        el.style.cursor = 'grabbing';
+        const hits = raycaster.intersectObjects(interactableObjects, true);
+        if (hits.length === 0) return null;
+        let obj = hits[0].object;
+        while (obj && !obj.userData.id && obj.parent) obj = obj.parent;
+        return (obj && obj.userData.id) ? obj : null;
       };
 
+      const showBoxHelper = (obj, color) => {
+        if (!obj) return;
+        obj.children.forEach(child => {
+          if (child.type === 'LineSegments') {
+            child.visible = true;
+            child.material.color.setHex(color);
+          }
+        });
+      };
+
+      const hideAllBoxHelpers = () => {
+        interactableObjects.forEach(obj => {
+          obj.children.forEach(child => {
+            if (child.type === 'LineSegments') {
+              child.visible = false;
+              child.material.color.setHex(0x3b82f6);
+            }
+          });
+        });
+      };
+
+      // ── POINTER DOWN ──
+      const onDown = (e) => {
+        const ndc = getNDC(e);
+        const obj = findInteractable(ndc);
+
+        if (obj) {
+          // Start dragging — disable orbit
+          draggedObject = obj;
+          controls.enabled = false;
+          el.style.cursor = 'grabbing';
+
+          mouse.set(ndc.x, ndc.y);
+          raycaster.setFromCamera(mouse, camera);
+          const hit = new THREE.Vector3();
+          raycaster.ray.intersectPlane(dragPlane, hit);
+          if (hit) {
+            dragOffset.copy(hit).sub(obj.position);
+          } else {
+            dragOffset.set(0, 0, 0);
+          }
+
+          showBoxHelper(obj, 0x22c55e); // Green while dragging
+        }
+        // If no object hit, OrbitControls handles orbit/zoom naturally
+      };
+
+      // ── POINTER MOVE ──
       const onMove = (e) => {
         if (draggedObject) {
-          const m = getMousePos(e);
-          mouse.x = m.x;
-          mouse.y = m.y;
+          // Dragging an item
+          const ndc = getNDC(e);
+          mouse.set(ndc.x, ndc.y);
           raycaster.setFromCamera(mouse, camera);
-          const intersectPoint = new THREE.Vector3();
-          raycaster.ray.intersectPlane(dragPlane, intersectPoint);
+          const hit = new THREE.Vector3();
+          raycaster.ray.intersectPlane(dragPlane, hit);
 
-          if (intersectPoint) {
-            const newPos = intersectPoint.sub(dragOffset);
-            draggedObject.position.x = newPos.x;
-            draggedObject.position.z = newPos.z;
-
-            // Show selection box while dragging for visual feedback
-            draggedObject.children.forEach(child => {
-                if (child.type === 'LineSegments') {
-                    child.visible = true;
-                    child.material.color.setHex(0x22c55e); // Green while dragging
-                }
-            });
-
-            renderer.render(scene, camera);
+          if (hit) {
+            const newPos = hit.sub(dragOffset);
+            // Clamp to booth bounds
+            const halfW = bW / 2 - 0.5;
+            const halfD = bD / 2 - 0.5;
+            draggedObject.position.x = Math.max(-halfW, Math.min(halfW, newPos.x));
+            draggedObject.position.z = Math.max(-halfD, Math.min(halfD, newPos.z));
           }
           return;
         }
 
-        if (!isOrbiting) {
-          // PROFESSIONAL HOVER EFFECT (Like your reference image)
-          const m = getMousePos(e);
-          mouse.x = m.x;
-          mouse.y = m.y;
-          raycaster.setFromCamera(mouse, camera);
-          const intersects = raycaster.intersectObjects(interactableObjects, true);
+        // Hover detection (only when not dragging)
+        if (!e.buttons) {
+          const ndc = getNDC(e);
+          const obj = findInteractable(ndc);
 
-          // Hide all box helpers first
-          interactableObjects.forEach(obj => {
-              obj.children.forEach(child => {
-                  if (child.type === 'LineSegments') {
-                      child.visible = false;
-                      child.material.color.setHex(0x3b82f6); // Reset to blue
-                  }
-              });
-          });
-
-          if (intersects.length > 0) {
-            el.style.cursor = 'grab';
-            // Show box helper for hovered object with professional highlight
-            let obj = intersects[0].object;
-            while (obj && !obj.userData.id && obj.parent) {
-                obj = obj.parent;
+          if (obj !== hoveredObject) {
+            hideAllBoxHelpers();
+            hoveredObject = obj;
+            if (obj) {
+              showBoxHelper(obj, 0x3b82f6); // Blue hover
+              el.style.cursor = 'grab';
+            } else {
+              el.style.cursor = 'default';
             }
-            if (obj && obj.userData.id) {
-                obj.children.forEach(child => {
-                    if (child.type === 'LineSegments') {
-                        child.visible = true;
-                        child.material.color.setHex(0x3b82f6); // Blue highlight
-                    }
-                });
-                renderer.render(scene, camera);
-            }
-          } else {
-            el.style.cursor = 'default';
-            renderer.render(scene, camera);
           }
-          return;
         }
-
-        // SMOOTH ORBIT CONTROLS
-        theta -= (e.clientX - prev.x) * 0.005;
-        phi = Math.max(0.3, Math.min(Math.PI * 0.45, phi + (e.clientY - prev.y) * 0.005));
-        camera.position.set(
-          rad * Math.sin(phi) * Math.sin(theta),
-          rad * Math.cos(phi),
-          rad * Math.sin(phi) * Math.cos(theta)
-        );
-        camera.lookAt(0, WALL_H * 0.28, -bD * 0.12);
-        renderer.render(scene, camera);
-        prev = { x: e.clientX, y: e.clientY };
       };
 
+      // ── POINTER UP ──
       const onUp = () => {
         if (draggedObject) {
-          // Hide selection box after drag completes
-          draggedObject.children.forEach(child => {
-              if (child.type === 'LineSegments') {
-                  child.visible = false;
-                  child.material.color.setHex(0x3b82f6); // Reset to blue
-              }
-          });
-
+          // Convert 3D position back to 2D scene coords and fire callback
           if (onMoveItem) {
             const newX = draggedObject.position.x + bW / 2;
             const newY = -draggedObject.position.z + bD / 2;
             onMoveItem(draggedObject.userData.id, newX, newY);
           }
 
-          renderer.render(scene, camera);
+          hideAllBoxHelpers();
+          draggedObject = null;
+          controls.enabled = true;
+          el.style.cursor = 'default';
         }
-        draggedObject = null;
-        isOrbiting = false;
-        el.style.cursor = 'default';
       };
 
+      // Mouse events
       el.addEventListener('mousedown', onDown);
       el.addEventListener('mousemove', onMove);
       el.addEventListener('mouseup', onUp);
       el.addEventListener('mouseleave', onUp);
 
-      const animate = () => { frameRef.current = requestAnimationFrame(animate); renderer.render(scene, camera); };
+      // Touch events (mobile/tablet)
+      el.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1) {
+          const ndc = getNDC(e);
+          const obj = findInteractable(ndc);
+          if (obj) {
+            e.preventDefault(); // Prevent OrbitControls from taking over
+            onDown(e);
+          }
+        }
+      }, { passive: false });
+      el.addEventListener('touchmove', (e) => {
+        if (draggedObject && e.touches.length === 1) {
+          e.preventDefault();
+          onMove(e);
+        }
+      }, { passive: false });
+      el.addEventListener('touchend', onUp);
+      el.addEventListener('touchcancel', onUp);
+
+      // ── WASD WALKTHROUGH CONTROLS ──
+      const keysDown = new Set();
+      const WALK_SPEED = 0.15;
+
+      const onKeyDown = (e) => keysDown.add(e.code);
+      const onKeyUp = (e) => keysDown.delete(e.code);
+      window.addEventListener('keydown', onKeyDown);
+      window.addEventListener('keyup', onKeyUp);
+
+      const updateWalkthrough = () => {
+        if (keysDown.size === 0) return;
+        const cam = cameraRef.current;
+        const ctrl = controlsRef.current;
+        if (!cam || !ctrl) return;
+
+        // Get camera forward/right vectors (on XZ plane)
+        const forward = new THREE.Vector3();
+        cam.getWorldDirection(forward);
+        forward.y = 0;
+        forward.normalize();
+
+        const right = new THREE.Vector3();
+        right.crossVectors(forward, new THREE.Vector3(0, 1, 0)).normalize();
+
+        const move = new THREE.Vector3();
+        if (keysDown.has('KeyW') || keysDown.has('ArrowUp')) move.add(forward);
+        if (keysDown.has('KeyS') || keysDown.has('ArrowDown')) move.sub(forward);
+        if (keysDown.has('KeyD') || keysDown.has('ArrowRight')) move.add(right);
+        if (keysDown.has('KeyA') || keysDown.has('ArrowLeft')) move.sub(right);
+
+        if (move.lengthSq() > 0) {
+          move.normalize().multiplyScalar(WALK_SPEED);
+          cam.position.add(move);
+          ctrl.target.add(move);
+        }
+      };
+
+      // ── RENDER LOOP ──
+      const animate = () => {
+        frameRef.current = requestAnimationFrame(animate);
+        updateWalkthrough();
+        controls.update(); // Required for damping
+        renderer.render(scene, camera);
+      };
       animate();
+    } else {
+      // Non-interactive: single render after assets load
     }
 
     // ── Cleanup ──
     return () => {
       resizeObserver.disconnect();
       if (frameRef.current) cancelAnimationFrame(frameRef.current);
+      if (controls) controls.dispose();
+      if (envMap) envMap.dispose();
+      window.removeEventListener('keydown', () => {});
+      window.removeEventListener('keyup', () => {});
       if (rendererRef.current) { rendererRef.current.dispose(); rendererRef.current = null; }
     };
-  }, [sceneJson, brandIdentity, boothSize, width, height, interactive, autoSnapshot]);
+  }, [sceneJson, brandIdentity, boothSize, boothType, width, height, interactive, autoSnapshot]);
 
   return (
     <div className="relative w-full h-full flex items-center justify-center bg-slate-100 dark:bg-slate-900 rounded-lg overflow-hidden">
@@ -959,6 +1609,51 @@ export default function BoothSnapshotRenderer({
       ) : (
         <>
           <div ref={containerRef} className="w-full h-full [&>canvas]:w-full [&>canvas]:h-full [&>canvas]:block" />
+
+          {/* ── Camera Toolbar ── */}
+          {interactive && status === 'ready' && (
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md rounded-xl px-2 py-1.5 shadow-lg border border-slate-200 dark:border-slate-700 z-30">
+              {[
+                { id: 'catalog', label: '3/4 View', icon: '📐' },
+                { id: 'front', label: 'Front', icon: '👤' },
+                { id: 'top', label: 'Top', icon: '🔽' },
+                { id: 'walkthrough', label: 'Walk', icon: '🚶' },
+              ].map(preset => (
+                <button
+                  key={preset.id}
+                  onClick={() => applyCameraPreset(preset.id)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                    cameraMode === preset.id 
+                      ? 'bg-primary text-white shadow-sm' 
+                      : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
+                  }`}
+                  title={preset.label}
+                >
+                  <span className="text-sm">{preset.icon}</span>
+                  <span className="hidden sm:inline">{preset.label}</span>
+                </button>
+              ))}
+
+              <div className="w-px h-6 bg-slate-200 dark:bg-slate-600 mx-1" />
+
+              <button
+                onClick={downloadScreenshot}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-emerald-50 hover:text-emerald-700 dark:hover:bg-emerald-900/30 dark:hover:text-emerald-400 transition-all"
+                title="Export high-res screenshot"
+              >
+                <span className="text-sm">📸</span>
+                <span className="hidden sm:inline">Export</span>
+              </button>
+            </div>
+          )}
+
+          {/* ── Walkthrough hint ── */}
+          {interactive && status === 'ready' && cameraMode === 'walkthrough' && (
+            <div className="absolute top-3 left-1/2 -translate-x-1/2 bg-black/60 text-white text-xs font-medium px-4 py-2 rounded-full backdrop-blur-sm z-30 animate-pulse">
+              WASD or Arrow Keys to walk · Mouse to look around
+            </div>
+          )}
+
           {status === 'loading' && (
             <div className="absolute inset-0 flex items-center justify-center bg-slate-100/80 dark:bg-slate-900/80 backdrop-blur-sm">
               <div className="flex flex-col items-center gap-2">
