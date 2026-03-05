@@ -1107,11 +1107,7 @@ export default function BoothDesigner() {
                                                         className="group text-left bg-slate-50 dark:bg-slate-800 hover:bg-primary/5 dark:hover:bg-primary/10 border border-slate-200 dark:border-slate-700 hover:border-primary/40 rounded-xl p-2 transition-all"
                                                     >
                                                         <div className="aspect-square bg-white dark:bg-slate-700 rounded-lg mb-1.5 overflow-hidden flex items-center justify-center border border-slate-100 dark:border-slate-600">
-                                                            {(p.image_cached_url || p.image_url) ? (
-                                                                <img src={p.image_cached_url || p.image_url} alt={p.name} className="w-full h-full object-contain" />
-                                                            ) : (
-                                                                <span className="text-slate-300 text-2xl">📦</span>
-                                                            )}
+                                                            <CatalogProductImage src={p.image_cached_url || p.image_url} alt={p.name} />
                                                         </div>
                                                         <p className="text-[10px] font-semibold text-slate-800 dark:text-slate-200 leading-tight line-clamp-2 group-hover:text-primary transition-colors">{p.name}</p>
                                                         {p.sku && <p className="text-[9px] text-slate-400 mt-0.5">{p.sku}</p>}
