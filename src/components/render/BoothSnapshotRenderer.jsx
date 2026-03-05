@@ -575,12 +575,13 @@ export default function BoothSnapshotRenderer({
     const bD = sceneData.booth.d_ft || 10;
     const brand = brandIdentity || {};
 
-    // ── PROFESSIONAL SCENE (Clean studio look) ──
+    // ── CONVENTION CENTER SCENE ──
     const scene = new THREE.Scene();
     sceneRef.current = scene;
     boothDimsRef.current = { w: bW, d: bD };
-    scene.background = new THREE.Color(0xcecece); // Convention center hall grey
-    scene.fog = new THREE.Fog(0xcecece, 70, 200); // Depth haze like a large hall
+    // Dark hall atmosphere — booths pop against the dark background
+    scene.background = new THREE.Color(0x1a1c1e);
+    scene.fog = new THREE.FogExp2(0x1a1c1e, 0.015); // Exponential fog: dramatic near falloff
 
     // ── Booth type flags (needed for camera + structure) ──
     const isIsland = boothType === 'island';
@@ -657,70 +658,88 @@ export default function BoothSnapshotRenderer({
       resizeObserver.observe(containerRef.current);
     }
 
-    // ── ENHANCED PBR LIGHTING ──
-    // Trade show lighting: bright, professional, makes products pop
-    scene.add(new THREE.AmbientLight(0xffffff, 0.5)); // Slightly brighter ambient
-    scene.add(new THREE.HemisphereLight(0xffffff, 0x606060, 0.4)); // Sky/ground lighting
+    // ══════════════════════════════════════════════════════════
+    // TRADE SHOW LIGHTING RIG
+    // Dark hall + focused booth spotlights = professional look
+    // ══════════════════════════════════════════════════════════
 
-    // Main Key Light - simulates overhead trade show lights
-    const mainLight = new THREE.DirectionalLight(0xffffff, 1.2); // Brighter for product visibility
-    mainLight.position.set(bW * 0.3, CEILING_Y, bD * 0.2);
-    mainLight.target.position.set(0, 0, -bD * 0.2);
+    // Very low ambient — only the booth area is lit
+    scene.add(new THREE.AmbientLight(0x1a2030, 0.6));
+    scene.add(new THREE.HemisphereLight(0x2a3040, 0x080808, 0.3));
+
+    // Main overhead key — warm white, directional shadow
+    const mainLight = new THREE.DirectionalLight(0xfff4e0, 1.4);
+    mainLight.position.set(bW * 0.2, CEILING_Y * 0.85, bD * 0.5);
+    mainLight.target.position.set(0, 0, -bD * 0.1);
     mainLight.castShadow = true;
     mainLight.shadow.mapSize.set(2048, 2048);
     mainLight.shadow.camera.near = 1;
-    mainLight.shadow.camera.far = 50;
-    mainLight.shadow.camera.left = -bW;
-    mainLight.shadow.camera.right = bW;
-    mainLight.shadow.camera.top = bD * 2;
-    mainLight.shadow.camera.bottom = -bD;
+    mainLight.shadow.camera.far = 60;
+    mainLight.shadow.camera.left  = -(bW + 4);
+    mainLight.shadow.camera.right  =  (bW + 4);
+    mainLight.shadow.camera.top    =  (bD + 6);
+    mainLight.shadow.camera.bottom = -(bD + 2);
     mainLight.shadow.bias = -0.001;
     scene.add(mainLight);
     scene.add(mainLight.target);
 
-    // Fill Light - warm, softer, fills shadows
-    const fill = new THREE.DirectionalLight(0xfff5e6, 0.45); // Warmer and slightly brighter
-    fill.position.set(bW * 0.5, 10, bD * 0.8);
+    // Fill from front-left — fills facial/product shadows
+    const fill = new THREE.DirectionalLight(0xd0e8ff, 0.5);
+    fill.position.set(-bW * 0.6, 12, bD * 1.2);
     scene.add(fill);
 
-    // Rim/Back Light - cooler, adds depth and separation
-    const rim = new THREE.DirectionalLight(0xe6f2ff, 0.35); // Cooler blue rim
-    rim.position.set(-bW * 0.3, 12, -bD * 1.2);
+    // Rim from behind — product separation from backwall
+    const rim = new THREE.DirectionalLight(0xffffff, 0.3);
+    rim.position.set(bW * 0.4, 14, -bD * 1.5);
     scene.add(rim);
 
-    // Front spotlight - highlights products from visitor view
-    const frontLight = new THREE.DirectionalLight(0xffffff, 0.4);
-    frontLight.position.set(0, 8, bD * 1.5); // From front/aisle
-    scene.add(frontLight);
+    // Truss spotlights (PointLights over the booth, warm color temp)
+    const trussPositions = [
+      [-bW * 0.3, CEILING_Y - 2, -bD * 0.15],
+      [ bW * 0.3, CEILING_Y - 2, -bD * 0.15],
+      [0,         CEILING_Y - 2,  bD * 0.2],
+    ];
+    trussPositions.forEach(([tx, ty, tz]) => {
+      const spot = new THREE.PointLight(0xffe8b0, 1.0, bW * 2.5, 1.8);
+      spot.position.set(tx, ty, tz);
+      scene.add(spot);
+    });
 
     // ══════════════════════════════════════════════════════════
-    // ENVIRONMENT MAP (makes PBR/metallic materials look real)
+    // ENVIRONMENT MAP (dark hall — metallic surfaces reflect hall)
     // ══════════════════════════════════════════════════════════
 
     const pmremGenerator = new THREE.PMREMGenerator(renderer);
     pmremGenerator.compileEquirectangularShader();
-
-    // Generate a simple studio-style environment from a gradient
     const envScene = new THREE.Scene();
-    const envGeo = new THREE.SphereGeometry(20, 32, 16);
     const envCanvas = document.createElement('canvas');
     envCanvas.width = 512; envCanvas.height = 256;
     const envCtx = envCanvas.getContext('2d');
     const envGrad = envCtx.createLinearGradient(0, 0, 0, 256);
-    envGrad.addColorStop(0, '#ffffff');
-    envGrad.addColorStop(0.3, '#e8ecf0');
-    envGrad.addColorStop(0.6, '#c0c8d0');
-    envGrad.addColorStop(1, '#a0a8b0');
+    envGrad.addColorStop(0,    '#2a3040'); // Dark overhead
+    envGrad.addColorStop(0.25, '#1e2530');
+    envGrad.addColorStop(0.5,  '#151820');
+    envGrad.addColorStop(0.75, '#0e1015');
+    envGrad.addColorStop(1,    '#080808'); // Dark ground bounce
     envCtx.fillStyle = envGrad;
     envCtx.fillRect(0, 0, 512, 256);
+    // Add 3 bright light patches (simulating overhead fixtures)
+    [[128, 30], [256, 25], [384, 30]].forEach(([x, y]) => {
+      const g = envCtx.createRadialGradient(x, y, 0, x, y, 40);
+      g.addColorStop(0, 'rgba(255,240,180,0.9)');
+      g.addColorStop(1, 'rgba(255,240,180,0)');
+      envCtx.fillStyle = g;
+      envCtx.fillRect(x - 40, 0, 80, 70);
+    });
     const envTex = new THREE.CanvasTexture(envCanvas);
     envTex.mapping = THREE.EquirectangularReflectionMapping;
-    const envMat = new THREE.MeshBasicMaterial({ map: envTex, side: THREE.BackSide });
-    envScene.add(new THREE.Mesh(envGeo, envMat));
-    const envMap = pmremGenerator.fromScene(envScene, 0.04).texture;
-    scene.environment = envMap;
+    const envScene2 = new THREE.Scene();
+    const envGeo2 = new THREE.SphereGeometry(20, 32, 16);
+    const envMat2 = new THREE.MeshBasicMaterial({ map: envTex, side: THREE.BackSide });
+    envScene2.add(new THREE.Mesh(envGeo2, envMat2));
+    scene.environment = pmremGenerator.fromScene(envScene2, 0.04).texture;
+    envScene2.clear();
     pmremGenerator.dispose();
-    envScene.clear();
 
     // ══════════════════════════════════════════════════════════
     // BOOTH STRUCTURE — Inline / Corner / Peninsula / Island
@@ -762,13 +781,14 @@ export default function BoothSnapshotRenderer({
       return rail;
     };
 
-    // ── Ground Plane (convention hall concrete floor) ──
+    // ── Ground Plane (convention hall polished epoxy floor) ──
+    // Light gray, slightly reflective — contrasts with dark hall walls
     const concreteTex = makeConcreteFloorTex();
     concreteTex.repeat.set(50, 50);
     const groundMat = new THREE.MeshStandardMaterial({
       map: concreteTex,
-      roughness: 0.82,
-      metalness: 0.08, // polished concrete has a slight sheen
+      roughness: 0.55,  // Polished epoxy is smoother than raw concrete
+      metalness: 0.18,  // Slight reflectivity
     });
     const groundMesh = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), groundMat);
     groundMesh.rotation.x = -Math.PI / 2;
@@ -850,14 +870,14 @@ export default function BoothSnapshotRenderer({
     rightTape.position.set(bW / 2, 0.005, 0);
     scene.add(rightTape);
 
-    // ── Aisle floor (in front of booth) ──
+    // ── Aisle floor (in front of booth) — same polished epoxy ──
     const aisleW = bW + 16;
     const aisleD = AISLE_DEPTH + 2;
-    const aisleTex = makeAisleTex();
+    const aisleTex = makeConcreteFloorTex();
     aisleTex.repeat.set(aisleW / 4, aisleD / 4);
     const aisleMesh = new THREE.Mesh(
       new THREE.PlaneGeometry(aisleW, aisleD),
-      new THREE.MeshStandardMaterial({ map: aisleTex, roughness: 0.9 })
+      new THREE.MeshStandardMaterial({ map: aisleTex, roughness: 0.55, metalness: 0.15 })
     );
     aisleMesh.rotation.x = -Math.PI / 2;
     aisleMesh.position.set(0, -0.01, bD / 2 + aisleD / 2 + 0.3);
@@ -885,63 +905,108 @@ export default function BoothSnapshotRenderer({
     }
 
     // ══════════════════════════════════════════════════════════
-    // CONVENTION CENTER HALL — walls, ceiling, atmosphere
-    // Creates the sense of being inside a large exhibition hall
+    // CONVENTION CENTER HALL — dark curtain walls + truss rig
     // ══════════════════════════════════════════════════════════
-    const HALL_W = 120;
-    const HALL_D = 120;
-    const HALL_H = 24;
+    const HALL_W = 130;
+    const HALL_D = 130;
+    const HALL_H = 26;
 
-    const hallWallTex = makeHallWallTex();
-    hallWallTex.repeat.set(10, 3);
-    const hallWallMat = new THREE.MeshStandardMaterial({ map: hallWallTex, roughness: 0.92, side: THREE.FrontSide });
+    // ── Hall curtain walls — black pipe-and-drape backdrop ──
+    const hallDrapeTex = makeDrapeTex(512);
+    hallDrapeTex.repeat.set(8, 1);
+    const hallDrapeMat = new THREE.MeshStandardMaterial({
+      map: hallDrapeTex,
+      color: 0x111418,   // Very dark charcoal, like show draping
+      roughness: 0.97,
+      metalness: 0,
+      side: THREE.FrontSide,
+    });
 
-    // Back hall wall
-    const backHallWall = new THREE.Mesh(new THREE.PlaneGeometry(HALL_W, HALL_H), hallWallMat);
-    backHallWall.position.set(0, HALL_H / 2, -HALL_D / 2);
-    scene.add(backHallWall);
+    const makeHallWall = (w, h, px, py, pz, ry) => {
+      const t = hallDrapeTex.clone();
+      t.repeat.set(w / 5, 1);
+      const m = new THREE.Mesh(
+        new THREE.PlaneGeometry(w, h),
+        new THREE.MeshStandardMaterial({ map: t, color: 0x111418, roughness: 0.97, metalness: 0 })
+      );
+      m.rotation.y = ry;
+      m.position.set(px, py, pz);
+      return m;
+    };
 
-    // Left hall wall
-    const leftHallWall = new THREE.Mesh(new THREE.PlaneGeometry(HALL_D, HALL_H), hallWallMat.clone());
-    leftHallWall.rotation.y = Math.PI / 2;
-    leftHallWall.position.set(-HALL_W / 2, HALL_H / 2, 0);
-    scene.add(leftHallWall);
+    scene.add(makeHallWall(HALL_W, HALL_H, 0,          HALL_H / 2, -HALL_D / 2,  0));
+    scene.add(makeHallWall(HALL_D, HALL_H, -HALL_W / 2, HALL_H / 2, 0,            Math.PI / 2));
+    scene.add(makeHallWall(HALL_D, HALL_H,  HALL_W / 2, HALL_H / 2, 0,           -Math.PI / 2));
+    // Front "back of hall" wall (behind camera viewpoint)
+    scene.add(makeHallWall(HALL_W, HALL_H, 0, HALL_H / 2, HALL_D / 2, Math.PI));
 
-    // Right hall wall
-    const rightHallWall = new THREE.Mesh(new THREE.PlaneGeometry(HALL_D, HALL_H), hallWallMat.clone());
-    rightHallWall.rotation.y = -Math.PI / 2;
-    rightHallWall.position.set(HALL_W / 2, HALL_H / 2, 0);
-    scene.add(rightHallWall);
-
-    // Ceiling
-    const ceilingTex = makeHallCeilingTex();
-    ceilingTex.repeat.set(8, 8);
+    // ── Industrial ceiling — dark steel/truss above ──
     const ceilingMesh = new THREE.Mesh(
       new THREE.PlaneGeometry(HALL_W, HALL_D),
-      new THREE.MeshStandardMaterial({ map: ceilingTex, roughness: 1 })
+      new THREE.MeshStandardMaterial({ color: 0x0d0f11, roughness: 1, metalness: 0.3 })
     );
     ceilingMesh.rotation.x = Math.PI / 2;
     ceilingMesh.position.set(0, HALL_H, 0);
     scene.add(ceilingMesh);
 
-    // Ceiling spotlights over booth (PointLights simulating can lights)
-    const spotPositions = [
-      [-bW * 0.25, HALL_H - 0.5, -bD * 0.2],
-      [ bW * 0.25, HALL_H - 0.5, -bD * 0.2],
-      [0,          HALL_H - 0.5,  bD * 0.1],
-    ];
-    spotPositions.forEach(([sx, sy, sz]) => {
-      const spot = new THREE.PointLight(0xfff8e8, 0.6, 30, 1.5);
-      spot.position.set(sx, sy, sz);
-      scene.add(spot);
-      // Visual fixture disc
-      const fix = new THREE.Mesh(
-        new THREE.CircleGeometry(0.18, 12),
-        new THREE.MeshBasicMaterial({ color: 0xfff0c0 })
+    // ── Overhead Lighting Truss ──
+    // Steel tube truss spanning across the booth
+    const trussY = HALL_H - 1.5;
+    const trussMat = new THREE.MeshStandardMaterial({ color: 0x2a2a2a, metalness: 0.9, roughness: 0.2 });
+    const tubeR = 0.07;
+
+    // Two main horizontal bars (left-right)
+    [-bD * 0.2, -bD * 0.55].forEach(tz => {
+      const bar = new THREE.Mesh(
+        new THREE.CylinderGeometry(tubeR, tubeR, bW + 4, 8),
+        trussMat
       );
-      fix.rotation.x = Math.PI / 2;
-      fix.position.set(sx, HALL_H - 0.05, sz);
-      scene.add(fix);
+      bar.rotation.z = Math.PI / 2;
+      bar.position.set(0, trussY, tz);
+      scene.add(bar);
+
+      // Vertical drops to the floor (truss legs)
+      [-bW / 2 - 1.5, bW / 2 + 1.5].forEach(tx => {
+        const leg = new THREE.Mesh(
+          new THREE.CylinderGeometry(tubeR * 0.7, tubeR * 0.7, trussY, 6),
+          trussMat
+        );
+        leg.position.set(tx, trussY / 2, tz);
+        scene.add(leg);
+      });
+
+      // Spotlight heads hanging from the bar
+      const numSpots = Math.max(2, Math.round(bW / 4));
+      for (let i = 0; i < numSpots; i++) {
+        const sx = -bW / 2 + (bW / (numSpots - 1)) * i;
+        // Fixture body (small cone pointing down)
+        const head = new THREE.Mesh(
+          new THREE.ConeGeometry(0.18, 0.35, 8),
+          new THREE.MeshStandardMaterial({ color: 0x1a1a1a, metalness: 0.8, roughness: 0.3 })
+        );
+        head.position.set(sx, trussY - 0.4, tz);
+        head.rotation.x = Math.PI; // Point down
+        scene.add(head);
+
+        // Bright circle where light hits floor (emissive glow disc)
+        const glow = new THREE.Mesh(
+          new THREE.CircleGeometry(0.12, 10),
+          new THREE.MeshBasicMaterial({ color: 0xfff0a0, transparent: true, opacity: 0.8 })
+        );
+        glow.rotation.x = Math.PI / 2;
+        glow.position.set(sx, trussY - 0.01, tz);
+        scene.add(glow);
+      }
+    });
+
+    // ── Neighboring booth ghost silhouettes (in the dark bg) ──
+    const ghostMat = new THREE.MeshStandardMaterial({
+      color: 0x1e2530, roughness: 1, metalness: 0, transparent: true, opacity: 0.55
+    });
+    [[-bW - 12, 0], [bW + 12, 0]].forEach(([nx, nz]) => {
+      const wall = new THREE.Mesh(new THREE.BoxGeometry(10, WALL_H * 0.9, 0.3), ghostMat);
+      wall.position.set(nx, WALL_H * 0.45, nz - bD * 0.1);
+      scene.add(wall);
     });
 
     // ── Drape texture (shared) ──
