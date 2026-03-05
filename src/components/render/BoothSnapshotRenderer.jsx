@@ -1817,7 +1817,7 @@ export default function BoothSnapshotRenderer({
       resizeObserver.disconnect();
       if (frameRef.current) cancelAnimationFrame(frameRef.current);
       if (controls) controls.dispose();
-      if (envMap) envMap.dispose();
+      if (scene && scene.environment) scene.environment.dispose();
       window.removeEventListener('keydown', () => {});
       window.removeEventListener('keyup', () => {});
       if (rendererRef.current) { rendererRef.current.dispose(); rendererRef.current = null; }
