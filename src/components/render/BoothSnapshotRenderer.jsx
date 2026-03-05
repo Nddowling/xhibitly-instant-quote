@@ -637,7 +637,7 @@ export default function BoothSnapshotRenderer({
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Soft shadows like your reference
     renderer.toneMapping = THREE.ACESFilmicToneMapping; // Cinematic color grading
-    renderer.toneMappingExposure = 1.1; // Slightly brighter for trade show appeal
+    renderer.toneMappingExposure = 1.45; // Brighter trade show look
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     rendererRef.current = renderer;
 
@@ -664,8 +664,8 @@ export default function BoothSnapshotRenderer({
     // ══════════════════════════════════════════════════════════
 
     // Very low ambient — only the booth area is lit
-    scene.add(new THREE.AmbientLight(0x1a2030, 0.6));
-    scene.add(new THREE.HemisphereLight(0x2a3040, 0x080808, 0.3));
+    scene.add(new THREE.AmbientLight(0x3a4560, 1.0));
+    scene.add(new THREE.HemisphereLight(0x506080, 0x202020, 0.6));
 
     // Main overhead key — warm white, directional shadow
     const mainLight = new THREE.DirectionalLight(0xfff4e0, 1.4);
@@ -1613,8 +1613,9 @@ export default function BoothSnapshotRenderer({
       controls.enablePan = true;
       controls.panSpeed = 0.8;
       controls.rotateSpeed = 0.6;
+      controls.zoomSpeed = 3.5; // Much faster scroll zoom
       // Zoom limits — can zoom in close but not through the floor
-      controls.minDistance = 3;
+      controls.minDistance = 2;
       controls.maxDistance = Math.max(bW, bD) * 4;
       // Angle limits — don't go below floor or straight up
       controls.minPolarAngle = 0.1; // Just above horizon
