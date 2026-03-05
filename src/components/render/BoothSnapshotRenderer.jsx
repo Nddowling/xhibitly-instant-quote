@@ -637,11 +637,6 @@ export default function BoothSnapshotRenderer({
     //   Left = -X,  Right = +X
     // ══════════════════════════════════════════════════════════
 
-    const isIsland = boothType === 'island';
-    const isPeninsula = boothType === 'peninsula';
-    const isCorner = boothType === 'corner';
-    const isInline = !isIsland && !isPeninsula && !isCorner;
-
     const pipeMat = new THREE.MeshStandardMaterial({ color: 0x888888, metalness: 0.7, roughness: 0.3 });
     const pr = 0.05; // pipe radius
 
