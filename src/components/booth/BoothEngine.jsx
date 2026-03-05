@@ -43,7 +43,7 @@ export const BoothEngine = {
         return { valid: true };
     },
 
-    addItem: (scene, sku, name, imageUrl, w = 3, d = 1, near = 'center', isFlooring = false, modelUrl = null) => {
+    addItem: (scene, sku, name, imageUrl, w = 3, d = 1, near = 'center', isFlooring = false, modelUrl = null, extra = {}) => {
         const item = {
             id: Math.random().toString(36).substring(2, 9),
             sku,
@@ -55,7 +55,10 @@ export const BoothEngine = {
             rot: 0,
             w,
             d,
-            isFlooring
+            isFlooring,
+            // Branding metadata — used by the 3D renderer
+            category: extra.category || '',
+            brandingConfig: extra.brandingConfig || null,
         };
 
         const step = 0.5; // 6 inch snap

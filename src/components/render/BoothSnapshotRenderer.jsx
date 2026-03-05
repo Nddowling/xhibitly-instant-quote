@@ -1158,135 +1158,163 @@ export default function BoothSnapshotRenderer({
 
       if (modelMesh) {
         // ══════════════════════════════════════════════════════════
-        // 3D MODEL BRANDING PIPELINE
-        // 
-        // 1. Scale & position (fix CAD origin offsets)
-        // 2. Classify meshes (structural vs brandable)
-        // 3. Apply brand colors to brandable surfaces
-        // 4. Place logo on the largest front-facing panel
-        // 5. Professional material tuning
+        // 3D MODEL BRANDING PIPELINE v2
+        //
+        // Classification priority (highest → lowest):
+        //   1. BRAND_* / STRUCT_* mesh name prefix (explicit tagging)
+        //   2. item.brandingConfig.brandMeshTags / hwMeshTags (DB config)
+        //   3. item.brandingConfig.isBrandable (product-level flag)
+        //   4. Category/name keywords → derive isBrandable
+        //   5. Geometry heuristics → detect structural vs graphic meshes
         // ══════════════════════════════════════════════════════════
 
         // ── Step 1: Scale & Position ──
         const origBox = new THREE.Box3().setFromObject(modelMesh);
         const origSize = origBox.getSize(new THREE.Vector3());
-
         const targetW = dispW || 2;
         const scaleFactor = targetW / (origSize.x || 1);
         modelMesh.scale.setScalar(scaleFactor);
-
         const scaledBox = new THREE.Box3().setFromObject(modelMesh);
         const scaledCenter = scaledBox.getCenter(new THREE.Vector3());
         const scaledSize = scaledBox.getSize(new THREE.Vector3());
-
         modelMesh.position.x = -scaledCenter.x;
         modelMesh.position.y = -scaledBox.min.y;
         modelMesh.position.z = -scaledCenter.z;
 
-        // ── Step 2: Classify & Brand Meshes ──
-        const brandPrimary = new THREE.Color(brand.primary_color || '#1a1a2e');
-        const brandSecondary = new THREE.Color(brand.secondary_color || '#16213e');
-        const brandAccent = new THREE.Color(brand.accent_color_1 || '#ffffff');
+        // ── Step 2: Determine product-level brandability ──
+        const cfg = item.brandingConfig || {};
+        const cat = (item.category || '').toLowerCase();
+        const itemName = (item.name || item.sku || '').toLowerCase();
 
-        // Collect meshes with their surface areas for logo placement
-        const meshCandidates = [];
+        const BRANDABLE_CATS = ['backwall','banner','display','sign','lightbox','light box',
+          'fabric','graphic','kiosk','counter','exhibit','wall','tower','tension','hop-up',
+          'retractable','telescopic','curved','straight'];
+        const HARDWARE_CATS = ['flooring','carpet','pole','hardware','foot','bracket',
+          'clamp','accessory','base plate','stand base','ceiling'];
+
+        // Explicit DB config → otherwise derive from category/name
+        const productIsBrandable =
+          cfg.isBrandable !== undefined ? cfg.isBrandable :
+          BRANDABLE_CATS.some(k => cat.includes(k) || itemName.includes(k)) ? true :
+          HARDWARE_CATS.some(k => cat.includes(k) || itemName.includes(k)) ? false :
+          true; // default: brand it if unsure
+
+        const customBrandTags = (cfg.brandMeshTags || []).map(t => t.toLowerCase());
+        const customHwTags    = (cfg.hwMeshTags    || []).map(t => t.toLowerCase());
+
+        const brandPrimary   = new THREE.Color(brand.primary_color   || '#1a1a2e');
+        const brandSecondary = new THREE.Color(brand.secondary_color || '#16213e');
+
+        const meshCandidates = []; // for logo placement
 
         modelMesh.traverse((child) => {
           if (!child.isMesh) return;
           child.castShadow = true;
           child.receiveShadow = true;
 
-          const geo = child.geometry;
-          const matName = (child.material?.name || '').toLowerCase();
+          const geo      = child.geometry;
+          const matName  = (child.material?.name || '').toLowerCase();
           const meshName = (child.name || '').toLowerCase();
 
-          // Classify: is this structural hardware or a brandable panel?
-          const isHardware = 
-            matName.includes('metal') || matName.includes('steel') || matName.includes('aluminum') ||
-            matName.includes('chrome') || matName.includes('iron') ||
-            meshName.includes('pole') || meshName.includes('frame') || meshName.includes('leg') ||
-            meshName.includes('bolt') || meshName.includes('hinge') || meshName.includes('clamp') ||
-            meshName.includes('base_plate') || meshName.includes('foot');
+          const meshBox  = new THREE.Box3().setFromObject(child);
+          const meshSize = meshBox.getSize(new THREE.Vector3());
+          const surfaceArea = meshSize.x * meshSize.y * 2
+                            + meshSize.y * meshSize.z * 2
+                            + meshSize.x * meshSize.z * 2;
+
+          // ── PRIORITY 1: Explicit naming convention ──
+          // New GLBs tagged with BRAND_* / STRUCT_* during conversion
+          const forceBrand  = meshName.startsWith('brand_');
+          const forceStruct = meshName.startsWith('struct_');
+
+          // ── PRIORITY 2: Custom tags from DB branding_config ──
+          const taggedBrand = customBrandTags.length > 0 &&
+            customBrandTags.some(t => meshName.includes(t) || matName.includes(t));
+          const taggedHw = customHwTags.length > 0 &&
+            customHwTags.some(t => meshName.includes(t) || matName.includes(t));
+
+          // ── PRIORITY 3: Name/material keyword heuristics ──
+          const nameIsHw =
+            matName.includes('metal') || matName.includes('steel') ||
+            matName.includes('aluminum') || matName.includes('chrome') ||
+            meshName.includes('pole') || meshName.includes('frame') ||
+            meshName.includes('leg')  || meshName.includes('foot') ||
+            meshName.includes('base') || meshName.includes('rod') ||
+            meshName.includes('bolt') || meshName.includes('tube') ||
+            meshName.includes('pipe') || meshName.includes('bracket') ||
+            meshName.includes('rail') || meshName.includes('hinge') ||
+            meshName.includes('clamp');
 
           const isGlass =
-            matName.includes('glass') || matName.includes('acrylic') || matName.includes('clear') ||
-            (child.material?.opacity != null && child.material.opacity < 0.8);
+            matName.includes('glass') || matName.includes('acrylic') ||
+            matName.includes('clear') ||
+            (child.material?.opacity != null && child.material.opacity < 0.75);
 
-          // Compute approximate surface area from bounding box
-          const meshBox = new THREE.Box3().setFromObject(child);
-          const meshSize = meshBox.getSize(new THREE.Vector3());
-          const surfaceArea = 2 * (meshSize.x * meshSize.y + meshSize.y * meshSize.z + meshSize.x * meshSize.z);
+          // ── PRIORITY 4: Geometry heuristic ──
+          // A thin/long mesh (tube ratio) = structural, not a graphic panel
+          const dims = [meshSize.x, meshSize.y, meshSize.z].sort((a, b) => a - b);
+          const isTubeShape = dims[0] < 0.12 && dims[2] > 0.4; // thin in 2 axes
 
-          // Compute dominant face normal (which direction does the biggest face point?)
-          let dominantNormal = new THREE.Vector3(0, 0, 1); // default: forward
-          if (geo.attributes.normal && geo.attributes.position) {
-            const normals = geo.attributes.normal;
-            const avgNormal = new THREE.Vector3();
-            for (let i = 0; i < normals.count; i++) {
-              avgNormal.x += Math.abs(normals.getX(i));
-              avgNormal.y += Math.abs(normals.getY(i));
-              avgNormal.z += Math.abs(normals.getZ(i));
+          // Flat panel (large face): good logo candidate
+          const isFlatPanel =
+            !isGlass && surfaceArea > 0.2 && !isTubeShape &&
+            (meshSize.x > meshSize.z * 3 || meshSize.y > meshSize.z * 3 ||
+             (meshSize.x > 0.4 && meshSize.y > 0.4 && meshSize.z < 0.3));
+
+          // ── Final classification ──
+          const isHardware = forceStruct || taggedHw ||
+            (!forceBrand && !taggedBrand && (nameIsHw || isTubeShape));
+
+          const isBrandable = !isHardware && !isGlass &&
+            (forceBrand || taggedBrand || productIsBrandable);
+
+          // Track logo candidates
+          if (isBrandable && isFlatPanel) {
+            let dominantNormal = new THREE.Vector3(0, 0, 1);
+            if (geo.attributes?.normal) {
+              const nAttr = geo.attributes.normal;
+              const avg = new THREE.Vector3();
+              for (let ni = 0; ni < nAttr.count; ni++) {
+                avg.x += Math.abs(nAttr.getX(ni));
+                avg.y += Math.abs(nAttr.getY(ni));
+                avg.z += Math.abs(nAttr.getZ(ni));
+              }
+              dominantNormal = avg.normalize();
             }
-            avgNormal.normalize();
-            dominantNormal = avgNormal;
-          }
-
-          // Is this a large, flat panel facing forward or up? → logo candidate
-          const isFlatPanel = (
-            surfaceArea > 0.1 &&
-            !isHardware && !isGlass &&
-            (dominantNormal.z > 0.4 || dominantNormal.y > 0.6 || // faces forward or up
-             (meshSize.x > meshSize.z * 2 && meshSize.y > meshSize.z * 2)) // or is very flat
-          );
-
-          if (isFlatPanel) {
             meshCandidates.push({ mesh: child, area: surfaceArea, normal: dominantNormal, size: meshSize });
           }
 
-          // ── Apply Materials ──
+          // ── Apply material ──
           let newMat;
-
-          if (isHardware) {
-            // Keep hardware looking like hardware — brushed metal
-            newMat = new THREE.MeshStandardMaterial({
-              color: 0xb0b0b0,
-              roughness: 0.35,
-              metalness: 0.85,
-              envMapIntensity: 1.2,
-            });
-          } else if (isGlass) {
-            // Transparent/acrylic panels
+          if (isGlass) {
             newMat = new THREE.MeshPhysicalMaterial({
-              color: 0xffffff,
-              roughness: 0.05,
-              metalness: 0,
-              transmission: 0.9,
-              thickness: 0.5,
-              transparent: true,
-              opacity: 0.3,
+              color: 0xffffff, roughness: 0.05, metalness: 0,
+              transmission: 0.9, thickness: 0.5,
+              transparent: true, opacity: 0.25,
             });
-          } else {
-            // Brandable surface — apply brand color
-            const originalColor = child.material?.color;
-            const isVeryLight = originalColor && originalColor.r > 0.85 && originalColor.g > 0.85 && originalColor.b > 0.85;
-            const isVeryDark = originalColor && originalColor.r < 0.15 && originalColor.g < 0.15 && originalColor.b < 0.15;
-
-            // Largest surfaces get primary, smaller get secondary
-            const usePrimary = surfaceArea > 0.5 || isVeryLight || isVeryDark;
-            const brandColor = usePrimary ? brandPrimary : brandSecondary;
-
+          } else if (isHardware) {
             newMat = new THREE.MeshStandardMaterial({
-              color: brandColor,
-              roughness: 0.55,
-              metalness: 0.05,
-              envMapIntensity: 0.6,
+              color: 0xb8b8b8, roughness: 0.35, metalness: 0.85, envMapIntensity: 1.2,
             });
-
-            // If the original material had a texture, keep it but tint it
+          } else if (isBrandable) {
+            // Large flat surfaces → primary brand color, smaller → secondary
+            const usePrimary = surfaceArea >= 0.5 || isFlatPanel;
+            newMat = new THREE.MeshStandardMaterial({
+              color: usePrimary ? brandPrimary : brandSecondary,
+              roughness: 0.6, metalness: 0.05, envMapIntensity: 0.5,
+            });
+            // Preserve original texture if present (don't obliterate printed graphics)
             if (child.material?.map) {
               newMat.map = child.material.map;
-              newMat.color.set(0xffffff); // Let texture show through
+              newMat.color.set(0xffffff);
             }
+          } else {
+            // Not brandable but not hardware — keep original look
+            if (child.material) {
+              child.material.needsUpdate = true;
+              return; // keep as-is
+            }
+            newMat = new THREE.MeshStandardMaterial({ color: 0xe0e0e0, roughness: 0.7 });
           }
 
           child.material = newMat;

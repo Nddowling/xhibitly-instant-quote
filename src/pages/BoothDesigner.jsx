@@ -359,7 +359,8 @@ export default function BoothDesigner() {
                         d, 
                         'center',
                         isFlooring,
-                        product?.model_url || product?.model_glb_url || null
+                        product?.model_url || product?.model_glb_url || null,
+                        { category: product?.category || '', brandingConfig: deriveBrandingConfig(product) }
                     );
                     if (res.success) {
                         updatedScene = res.scene;
@@ -443,6 +444,32 @@ export default function BoothDesigner() {
     }, [conversation, step]);
 
 
+
+    // Derive branding config from product metadata
+    // Tells the 3D renderer which meshes should receive brand color/logo
+    const deriveBrandingConfig = (product) => {
+        const cat = (product?.category || '').toLowerCase();
+        const name = (product?.name || '').toLowerCase();
+
+        // If product has explicit branding_config from DB, use it directly
+        if (product?.branding_config) return product.branding_config;
+
+        const BRANDABLE_KEYWORDS = ['backwall', 'banner', 'display', 'sign', 'lightbox',
+            'light box', 'fabric', 'graphic', 'kiosk', 'counter', 'exhibit', 'wall', 'tower'];
+        const HARDWARE_KEYWORDS = ['flooring', 'carpet', 'pole', 'hardware', 'stand base',
+            'foot', 'bracket', 'clamp', 'base plate', 'accessory'];
+
+        const isBrandable =
+            BRANDABLE_KEYWORDS.some(k => cat.includes(k) || name.includes(k)) ? true :
+            HARDWARE_KEYWORDS.some(k => cat.includes(k) || name.includes(k)) ? false : true;
+
+        return {
+            isBrandable,
+            // Explicit mesh tag overrides — product.branding_config in DB can populate these
+            brandMeshTags: product?.branding_config?.brand_mesh_tags || [],
+            hwMeshTags: product?.branding_config?.hw_mesh_tags || [],
+        };
+    };
 
     // Helper to extract numeric dimensions or defaults
     const getProductDimensions = (product, sku, boothW = 10, boothD = 10) => {
@@ -613,9 +640,10 @@ export default function BoothDesigner() {
                 d, 
                 'center',
                 isFlooring,
-                product?.model_url || product?.model_glb_url || null
+                product?.model_url || product?.model_glb_url || null,
+                { category: product?.category || '', brandingConfig: deriveBrandingConfig(product) }
             );
-            
+
             if (res.success) {
                 await saveScene(res.scene);
                 const toastModule = await import('sonner');
