@@ -1444,8 +1444,8 @@ export default function BoothSnapshotRenderer({
           mouse.set(ndc.x, ndc.y);
           raycaster.setFromCamera(mouse, camera);
           const hit = new THREE.Vector3();
-          raycaster.ray.intersectPlane(dragPlane, hit);
-          if (hit) {
+          const result = raycaster.ray.intersectPlane(dragPlane, hit);
+          if (result) {
             dragOffset.copy(hit).sub(obj.position);
           } else {
             dragOffset.set(0, 0, 0);
@@ -1464,9 +1464,9 @@ export default function BoothSnapshotRenderer({
           mouse.set(ndc.x, ndc.y);
           raycaster.setFromCamera(mouse, camera);
           const hit = new THREE.Vector3();
-          raycaster.ray.intersectPlane(dragPlane, hit);
+          const result = raycaster.ray.intersectPlane(dragPlane, hit);
 
-          if (hit) {
+          if (result) {
             const newPos = hit.sub(dragOffset);
             // Clamp to booth bounds
             const halfW = bW / 2 - 0.5;
