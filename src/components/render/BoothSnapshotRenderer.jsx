@@ -1391,8 +1391,8 @@ export default function BoothSnapshotRenderer({
 
       const getNDC = (e) => {
         const rect = el.getBoundingClientRect();
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        const clientX = e.clientX;
+        const clientY = e.clientY;
         return {
           x: ((clientX - rect.left) / rect.width) * 2 - 1,
           y: -((clientY - rect.top) / rect.height) * 2 + 1
