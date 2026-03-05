@@ -44,20 +44,55 @@ export default function Product3DManager() {
     setIsLoading(false);
   };
 
-  // Get current category info
+  // Get current category display name for the heading
   const activeCategory = megaCategories.find(c => c.slug === activeCategorySlug);
   const activeCategoryName = activeCategory?.name || null;
-  
+
   let activeSubcategoryName = null;
   if (activeCategory && activeSubcategorySlug) {
     for (const sub of activeCategory.subcategories) {
       const found = sub.children?.find(c => c.slug === activeSubcategorySlug);
-      if (found) {
-        activeSubcategoryName = found.name;
-        break;
-      }
+      if (found) { activeSubcategoryName = found.name; break; }
     }
   }
+
+  // Mapping from mega-menu slugs → actual DB category values
+  const SLUG_TO_DB_CATEGORIES = {
+    // Portable Displays
+    'portable-displays': ['Retractable', 'Telescopic', 'Collapsible Displays', 'Bar Counter', 'Xclaim Fabric Popup'],
+    'retractable': ['Retractable'],
+    'telescopic': ['Telescopic'],
+    'spring-back': ['Xclaim Fabric Popup'],
+    // Fabric Displays
+    'fabric-displays': ['Master', 'Designer', 'Essential Lite', 'Hopup Tension Fabric', 'Embrace Tension Fabric', 'Modulate', 'Vector Fast Frame', 'Fabric Banners'],
+    'fabric-banners': ['Fabric Banners', 'Modulate'],
+    'light-boxes': ['Freestanding', 'Blaze Wall Mounted', 'Fabric Light Boxes'],
+    'table-covers': ['Embrace Tension Fabric'],
+    // Hanging Structures
+    'hanging-structures': ['Towers', 'Arches', 'Architectural Structures'],
+    'ring-structures': ['Towers'],
+    'square-structures': ['Architectural Structures'],
+    'other-hanging': ['Arches'],
+    // Display Components
+    'display-components': ['Counters', 'Fabric Counters', 'Info Centers', 'Fabric Kiosks', 'Modular Kiosks', 'Display Lighting', 'Bar Counter'],
+    'counters': ['Counters', 'Fabric Counters', 'Bar Counter'],
+    'info-centers': ['Info Centers', 'Fabric Kiosks', 'Modular Kiosks'],
+    'sign-stands': ['Signs'],
+    // Modular Displays
+    'modular-displays': ['10 Inline', '20 Inline', 'Hybrid Pro Modular Displays', 'Island Exhibits', 'Formulate Fabric Structures'],
+    '10x10-kits': ['10 Inline', 'Embrace Tension Fabric'],
+    '20x20-kits': ['20 Inline', 'Island Exhibits'],
+    'retail-displays': ['Collapsible Displays'],
+    // Outdoor
+    'outdoor': ['Banners Flags', 'Tents', 'Signs'],
+    'flags': ['Banners Flags'],
+    'tents': ['Tents'],
+    // Accessories
+    'accessories': ['Display Lighting', 'Shipping Cases'],
+    'display-lighting': ['Display Lighting'],
+    'shipping-cases': ['Shipping Cases'],
+    'hardware-kits': ['Shipping Cases'],
+  };
 
   // Filter products based on URL category/subcategory
   const getFilteredProducts = () => {
@@ -69,18 +104,15 @@ export default function Product3DManager() {
         p.product_line?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
-    
-    let filtered = [];
-    
-    if (activeCategoryName) {
-      filtered = products.filter(p => p.category === activeCategoryName);
-      
-      if (activeSubcategoryName) {
-        filtered = filtered.filter(p => p.subcategory === activeSubcategoryName);
-      }
-    }
 
-    return activeCategorySlug ? filtered : products;
+    if (!activeCategorySlug) return products;
+
+    // Use the subcategory slug if present, otherwise the category slug
+    const slug = activeSubcategorySlug || activeCategorySlug;
+    const dbCategories = SLUG_TO_DB_CATEGORIES[slug];
+    if (!dbCategories) return products;
+
+    return products.filter(p => dbCategories.includes(p.category));
   };
 
   const filteredProducts = getFilteredProducts();

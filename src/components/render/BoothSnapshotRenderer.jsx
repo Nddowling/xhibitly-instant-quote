@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { SKU_BRANDING_PROFILES } from '@/data/skuBrandingProfiles';
 
 // ═══════════════════════════════════════════════════════════════
 // XHIBITLY Booth Renderer v2.0
@@ -453,6 +454,9 @@ export default function BoothSnapshotRenderer({
   autoSnapshot = true,
   interactive = false,
   onMoveItem,
+  onRotateItem,
+  onRemoveItem,
+  onToggleWallMount,
 }) {
   const containerRef = useRef(null);
   const rendererRef = useRef(null);
@@ -461,9 +465,16 @@ export default function BoothSnapshotRenderer({
   const controlsRef = useRef(null);
   const sceneRef = useRef(null);
   const boothDimsRef = useRef({ w: 10, d: 10 });
+  // Track placed product groups by item ID for incremental position updates
+  const itemGroupMapRef = useRef(new Map()); // Map<id, THREE.Group>
+  // Snapshot of the last fully-rendered scene items for diffing
+  const prevSceneItemsRef = useRef(null);
   const [status, setStatus] = useState('loading');
   const [errorMsg, setErrorMsg] = useState(null);
   const [cameraMode, setCameraMode] = useState('catalog'); // catalog, front, top, walkthrough
+  const [selectedItem, setSelectedItem] = useState(null); // { id, name }
+  // Stable ref so pointer handlers (in useEffect) can call React setters
+  const setSelectedItemRef = useRef(setSelectedItem);
 
   // ── Camera Preset Definitions ──
   const applyCameraPreset = useCallback((preset) => {
@@ -569,6 +580,44 @@ export default function BoothSnapshotRenderer({
       setErrorMsg('No booth dimensions');
       setStatus('error');
       return;
+    }
+
+    // ── INCREMENTAL UPDATE (no full rebuild on drag) ──────────────────
+    // If the booth dimensions + item list are unchanged, only update positions
+    // This eliminates flicker on every drag/rotate without rebuilding the scene.
+    const prevItems = prevSceneItemsRef.current;
+    const newItems = sceneData.items || [];
+    if (
+      prevItems !== null &&
+      sceneRef.current &&
+      rendererRef.current &&
+      sceneData.booth.w_ft === boothDimsRef.current.w &&
+      sceneData.booth.d_ft === boothDimsRef.current.d &&
+      prevItems.length === newItems.length &&
+      prevItems.every((pi, idx) => pi.id === newItems[idx]?.id && pi.sku === newItems[idx]?.sku)
+    ) {
+      // Same items — just sync positions & rotations for any that moved
+      const bW = boothDimsRef.current.w;
+      const bD = boothDimsRef.current.d;
+      let anyMoved = false;
+      for (const item of newItems) {
+        const group = itemGroupMapRef.current.get(item.id);
+        if (!group || item.isFlooring || (item.mountType && item.mountType !== 'floor')) continue;
+        const wx = item.x - bW / 2;
+        const wz = -(item.y - bD / 2);
+        if (Math.abs(group.position.x - wx) > 0.001 || Math.abs(group.position.z - wz) > 0.001) {
+          group.position.x = wx;
+          group.position.z = wz;
+          anyMoved = true;
+        }
+        const newRot = item.rot ? -THREE.MathUtils.degToRad(item.rot) : 0;
+        if (Math.abs(group.rotation.y - newRot) > 0.001) {
+          group.rotation.y = newRot;
+          anyMoved = true;
+        }
+      }
+      if (anyMoved) prevSceneItemsRef.current = newItems;
+      return; // Skip full scene rebuild
     }
 
     const bW = sceneData.booth.w_ft || 10;
@@ -1123,12 +1172,62 @@ export default function BoothSnapshotRenderer({
     // PLACE PRODUCTS
     // ══════════════════════════════════════════════════════════
 
+    // Helper: position and orient a product group based on mountType
+    // floorY = the y-offset for floor items (centers the box at correct height)
+    // size   = { x, y, z } of the item's bounding box in world units
+    const placeItemGroup = (group, item, floorWX, floorWZ, floorY, size, isWallMounted, boothW, boothD) => {
+      const wallGap = 0.04; // small gap between wall surface and item
+
+      if (!isWallMounted) {
+        group.position.set(floorWX, floorY, floorWZ);
+        if (item.rot) group.rotation.y = -THREE.MathUtils.degToRad(item.rot);
+        return;
+      }
+
+      const mountH = item.mountHeight ?? 3;
+      // wallOffset is measured from the left/front edge in booth-space (like x in 2D)
+      // Convert to centered 3D coords
+      const offsetAlongWall = (item.wallOffset ?? boothW / 2) - boothW / 2;
+      const offsetAlongSide = (item.wallOffset ?? boothD / 2) - boothD / 2;
+
+      switch (item.mountType) {
+        case 'wall_back':
+          // Back wall at z = -boothD/2, item faces viewer (+z)
+          group.position.set(offsetAlongWall, mountH + size.y / 2, -boothD / 2 + size.z / 2 + wallGap);
+          group.rotation.y = 0;
+          break;
+        case 'wall_left':
+          // Left wall at x = -boothW/2, item faces right (+x)
+          group.position.set(-boothW / 2 + size.z / 2 + wallGap, mountH + size.y / 2, -offsetAlongSide);
+          group.rotation.y = -Math.PI / 2;
+          break;
+        case 'wall_right':
+          // Right wall at x = +boothW/2, item faces left (-x)
+          group.position.set(boothW / 2 - size.z / 2 - wallGap, mountH + size.y / 2, -offsetAlongSide);
+          group.rotation.y = Math.PI / 2;
+          break;
+        case 'ceiling':
+          // Hang from ceiling, item faces down
+          group.position.set(offsetAlongWall, WALL_H - size.y / 2, floorWZ);
+          group.rotation.y = item.rot ? -THREE.MathUtils.degToRad(item.rot) : 0;
+          break;
+        default:
+          group.position.set(floorWX, floorY, floorWZ);
+          if (item.rot) group.rotation.y = -THREE.MathUtils.degToRad(item.rot);
+      }
+    };
+
+    // Full rebuild — clear item group tracking and snapshot
+    itemGroupMapRef.current.clear();
+    prevSceneItemsRef.current = null;
+
     const items = sceneData.items || [];
 
     const productPromises = items.filter(i => !i.isFlooring).map(async (item) => {
       const itemH = guessHeight(item);
       const iW = item.w || 3;
       const iD = item.d || 1;
+      const isWallMounted = item.mountType && item.mountType !== 'floor';
 
       // 2D scene → 3D world coord transform
       // 2D: (0,0) = front-left, x→right, y→back
@@ -1182,22 +1281,21 @@ export default function BoothSnapshotRenderer({
         modelMesh.position.z = -scaledCenter.z;
 
         // ── Step 2: Determine product-level brandability ──
+        // Priority: DB branding_config > SKU profile > keyword heuristics
         const cfg = item.brandingConfig || {};
-        const cat = (item.category || '').toLowerCase();
-        const itemName = (item.name || item.sku || '').toLowerCase();
+        const skuProfile = SKU_BRANDING_PROFILES[item.sku] || null;
 
-        const BRANDABLE_CATS = ['backwall','banner','display','sign','lightbox','light box',
-          'fabric','graphic','kiosk','counter','exhibit','wall','tower','tension','hop-up',
-          'retractable','telescopic','curved','straight'];
-        const HARDWARE_CATS = ['flooring','carpet','pole','hardware','foot','bracket',
-          'clamp','accessory','base plate','stand base','ceiling'];
-
-        // Explicit DB config → otherwise derive from category/name
         const productIsBrandable =
           cfg.isBrandable !== undefined ? cfg.isBrandable :
-          BRANDABLE_CATS.some(k => cat.includes(k) || itemName.includes(k)) ? true :
-          HARDWARE_CATS.some(k => cat.includes(k) || itemName.includes(k)) ? false :
-          true; // default: brand it if unsure
+          skuProfile !== null ? (skuProfile.canBrand === true) :
+          true; // default: brand if unknown
+
+        // brandSurface drives how aggressively we brand:
+        //   'full'  → brand ALL non-glass meshes (e.g. tension fabric towers, arches)
+        //   'front' → brand largest flat panel only (banner stands, lightboxes)
+        //   'panel' → use geometry heuristics to find flat panels (modular backwalls)
+        //   'none'  → no branding (pure hardware/accessories)
+        const brandSurface = cfg.brandSurface || skuProfile?.brandSurface || 'panel';
 
         const customBrandTags = (cfg.brandMeshTags || []).map(t => t.toLowerCase());
         const customHwTags    = (cfg.hwMeshTags    || []).map(t => t.toLowerCase());
@@ -1262,11 +1360,19 @@ export default function BoothSnapshotRenderer({
              (meshSize.x > 0.4 && meshSize.y > 0.4 && meshSize.z < 0.3));
 
           // ── Final classification ──
-          const isHardware = forceStruct || taggedHw ||
-            (!forceBrand && !taggedBrand && (nameIsHw || isTubeShape));
+          // 'full' surface: brand everything except glass (tension fabric, arches, towers)
+          // 'none' surface: nothing is brandable (pure hardware)
+          // 'front'/'panel': use geometry heuristics to find flat panels
+          const isHardware = brandSurface === 'none' ? true :
+            brandSurface === 'full' ? false :
+            forceStruct || taggedHw ||
+              (!forceBrand && !taggedBrand && (nameIsHw || isTubeShape));
 
-          const isBrandable = !isHardware && !isGlass &&
-            (forceBrand || taggedBrand || productIsBrandable);
+          const isBrandable = !isGlass && (
+            brandSurface === 'full' ? productIsBrandable :
+            brandSurface === 'none' ? false :
+            !isHardware && (forceBrand || taggedBrand || productIsBrandable)
+          );
 
           // Track logo candidates
           if (isBrandable && isFlatPanel) {
@@ -1446,30 +1552,30 @@ export default function BoothSnapshotRenderer({
 
         // ── Step 5: Assemble Group & Place ──
         const group = new THREE.Group();
-        group.userData = { id: item.id, hasGLB: true };
+        group.userData = { id: item.id, hasGLB: true, isWallMounted };
+        itemGroupMapRef.current.set(item.id, group);
         group.add(modelMesh);
 
-        group.position.set(wx, 0, wz);
-        if (item.rot) group.rotation.y = -THREE.MathUtils.degToRad(item.rot);
+        placeItemGroup(group, item, wx, wz, 0, { x: scaledSize.x, y: scaledSize.y, z: scaledSize.z }, isWallMounted, bW, bD);
 
         scene.add(group);
-        interactableObjects.push(group);
+        if (!isWallMounted) interactableObjects.push(group);
 
         // Selection indicator (hidden by default)
         const boxHelper = new THREE.BoxHelper(group, 0x3b82f6);
         boxHelper.visible = false;
         group.add(boxHelper);
 
-        // Product label above model
-        const lTex = makeLabelTex(item.name || item.sku);
-        const label = new THREE.Sprite(new THREE.SpriteMaterial({ map: lTex, transparent: true, opacity: 0.95 }));
-        const ls = Math.min(dispW * 1.1, 4.5);
-        label.scale.set(ls, ls * 0.11, 1);
-        label.position.set(wx, scaledSize.y + 0.35, wz);
-        scene.add(label);
-
-        // Contact shadow
-        addContactShadow(scene, contactShadowTex, wx, wz, dispW, dispD);
+        // Product label (follows group world position)
+        if (!isWallMounted) {
+          const lTex = makeLabelTex(item.name || item.sku);
+          const label = new THREE.Sprite(new THREE.SpriteMaterial({ map: lTex, transparent: true, opacity: 0.95 }));
+          const ls = Math.min(dispW * 1.1, 4.5);
+          label.scale.set(ls, ls * 0.11, 1);
+          label.position.set(wx, scaledSize.y + 0.35, wz);
+          scene.add(label);
+          addContactShadow(scene, contactShadowTex, wx, wz, dispW, dispD);
+        }
       } else if (productTex) {
         // ── PROFESSIONAL 3D Display from Product Image ──
         const aspect = productTex.image.width / productTex.image.height;
@@ -1509,12 +1615,11 @@ export default function BoothSnapshotRenderer({
         box.receiveShadow = true;
 
         const group = new THREE.Group();
-        group.userData = { id: item.id, hasImage: true };
+        group.userData = { id: item.id, hasImage: true, isWallMounted };
+        itemGroupMapRef.current.set(item.id, group);
         group.add(box);
 
-        // Position group so it sits on the floor
-        group.position.set(wx, pH / 2, wz);
-        if (item.rot) group.rotation.y = -THREE.MathUtils.degToRad(item.rot);
+        placeItemGroup(group, item, wx, wz, pH / 2, { x: pW, y: pH, z: boxDepth }, isWallMounted, bW, bD);
 
         // Selection indicator
         const boxHelper = new THREE.BoxHelper(group, 0x3b82f6);
@@ -1522,18 +1627,17 @@ export default function BoothSnapshotRenderer({
         group.add(boxHelper);
 
         scene.add(group);
-        interactableObjects.push(group);
+        if (!isWallMounted) interactableObjects.push(group);
 
-        // Professional label
-        const lTex = makeLabelTex(item.name || item.sku);
-        const label = new THREE.Sprite(new THREE.SpriteMaterial({ map: lTex, transparent: true, opacity: 0.95 }));
-        const ls = Math.min(pW * 1.1, 4.5);
-        label.scale.set(ls, ls * 0.11, 1);
-        label.position.set(wx, pH + 0.35, wz);
-        scene.add(label);
-
-        // Contact shadow
-        addContactShadow(scene, contactShadowTex, wx, wz, pW, boxDepth);
+        if (!isWallMounted) {
+          const lTex = makeLabelTex(item.name || item.sku);
+          const label = new THREE.Sprite(new THREE.SpriteMaterial({ map: lTex, transparent: true, opacity: 0.95 }));
+          const ls = Math.min(pW * 1.1, 4.5);
+          label.scale.set(ls, ls * 0.11, 1);
+          label.position.set(wx, pH + 0.35, wz);
+          scene.add(label);
+          addContactShadow(scene, contactShadowTex, wx, wz, pW, boxDepth);
+        }
       } else {
         // ── PROFESSIONAL BRANDED PLACEHOLDER ──
         const boxDepth = Math.max(0.5, dispD);
@@ -1552,32 +1656,31 @@ export default function BoothSnapshotRenderer({
         );
 
         const group = new THREE.Group();
-        group.userData = { id: item.id, isPlaceholder: true };
+        group.userData = { id: item.id, isPlaceholder: true, isWallMounted };
+        itemGroupMapRef.current.set(item.id, group);
         group.add(box);
-        group.position.set(wx, itemH / 2, wz);
-        if (item.rot) group.rotation.y = -THREE.MathUtils.degToRad(item.rot);
+        box.castShadow = true;
+        box.receiveShadow = true;
+
+        placeItemGroup(group, item, wx, wz, itemH / 2, { x: dispW, y: itemH, z: boxDepth }, isWallMounted, bW, bD);
 
         // Selection indicator
         const boxHelper = new THREE.BoxHelper(group, 0x3b82f6);
         boxHelper.visible = false;
         group.add(boxHelper);
 
-        box.castShadow = true;
-        box.receiveShadow = true;
-
         scene.add(group);
-        interactableObjects.push(group);
+        if (!isWallMounted) interactableObjects.push(group);
 
-        // Professional label
-        const lTex = makeLabelTex(item.name || item.sku);
-        const label = new THREE.Sprite(new THREE.SpriteMaterial({ map: lTex, transparent: true, opacity: 0.95 }));
-        const ls = Math.min(dispW * 1.1, 4.5);
-        label.scale.set(ls, ls * 0.11, 1);
-        label.position.set(wx, itemH + 0.35, wz);
-        scene.add(label);
-
-        // Contact shadow
-        addContactShadow(scene, contactShadowTex, wx, wz, dispW, Math.max(0.5, dispD));
+        if (!isWallMounted) {
+          const lTex = makeLabelTex(item.name || item.sku);
+          const label = new THREE.Sprite(new THREE.SpriteMaterial({ map: lTex, transparent: true, opacity: 0.95 }));
+          const ls = Math.min(dispW * 1.1, 4.5);
+          label.scale.set(ls, ls * 0.11, 1);
+          label.position.set(wx, itemH + 0.35, wz);
+          scene.add(label);
+          addContactShadow(scene, contactShadowTex, wx, wz, dispW, Math.max(0.5, dispD));
+        }
       }
     });
 
@@ -1609,6 +1712,8 @@ export default function BoothSnapshotRenderer({
     Promise.all([logoPromise, ...productPromises, ...flooringPromises])
       .then(() => {
         renderer.render(scene, camera);
+        // Stamp the rendered items so subsequent position-only changes use incremental path
+        prevSceneItemsRef.current = sceneData.items || [];
         setStatus('ready');
         if (autoSnapshot && onSnapshotReady) {
           setTimeout(() => {
@@ -1651,22 +1756,26 @@ export default function BoothSnapshotRenderer({
       controls.update();
 
       // ── DRAG & DROP SYSTEM ──
+      // pendingObj: candidate for drag or click (decided after movement threshold)
+      let pendingObj = null;
+      let pointerDownPos = { x: 0, y: 0 };
       let draggedObject = null;
       let dragOffset = new THREE.Vector3();
+      const DRAG_THRESHOLD = 6; // px — under this = click, over = drag
       const dragPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
       const raycaster = new THREE.Raycaster();
       const mouse = new THREE.Vector2();
       let hoveredObject = null;
+      // Currently selected object (persists after click)
+      let selectedObject = null;
 
       const el = renderer.domElement;
 
       const getNDC = (e) => {
         const rect = el.getBoundingClientRect();
-        const clientX = e.clientX;
-        const clientY = e.clientY;
         return {
-          x: ((clientX - rect.left) / rect.width) * 2 - 1,
-          y: -((clientY - rect.top) / rect.height) * 2 + 1
+          x: ((e.clientX - rect.left) / rect.width) * 2 - 1,
+          y: -((e.clientY - rect.top) / rect.height) * 2 + 1
         };
       };
 
@@ -1701,45 +1810,64 @@ export default function BoothSnapshotRenderer({
         });
       };
 
+      const selectObject = (obj) => {
+        hideAllBoxHelpers();
+        selectedObject = obj;
+        if (obj) {
+          showBoxHelper(obj, 0x3b82f6);
+          const id = obj.userData.id;
+          const item = sceneData.items?.find(i => i.id === id);
+          setSelectedItemRef.current({
+            id,
+            name: item?.name || item?.sku || id,
+            mountType: item?.mountType || 'floor',
+          });
+        } else {
+          setSelectedItemRef.current(null);
+        }
+      };
+
       // ── POINTER DOWN ──
       const onDown = (e) => {
         const ndc = getNDC(e);
         const obj = findInteractable(ndc);
-
         if (obj) {
-          // Start dragging — disable orbit
-          draggedObject = obj;
+          pendingObj = obj;
+          pointerDownPos = { x: e.clientX, y: e.clientY };
           controls.enabled = false;
           el.style.cursor = 'grabbing';
-
+          // Pre-compute drag offset for if this becomes a drag
           mouse.set(ndc.x, ndc.y);
           raycaster.setFromCamera(mouse, camera);
           const hit = new THREE.Vector3();
-          const result = raycaster.ray.intersectPlane(dragPlane, hit);
-          if (result) {
-            dragOffset.copy(hit).sub(obj.position);
-          } else {
-            dragOffset.set(0, 0, 0);
-          }
-
-          showBoxHelper(obj, 0x22c55e); // Green while dragging
+          raycaster.ray.intersectPlane(dragPlane, hit);
+          dragOffset.copy(hit.lengthSq() > 0 ? hit.sub(obj.position) : new THREE.Vector3());
+        } else {
+          // Clicked empty space — deselect
+          selectObject(null);
         }
-        // If no object hit, OrbitControls handles orbit/zoom naturally
       };
 
       // ── POINTER MOVE ──
       const onMove = (e) => {
+        if (pendingObj && !draggedObject) {
+          const dx = Math.abs(e.clientX - pointerDownPos.x);
+          const dy = Math.abs(e.clientY - pointerDownPos.y);
+          if (dx > DRAG_THRESHOLD || dy > DRAG_THRESHOLD) {
+            // Threshold crossed — commit to drag
+            draggedObject = pendingObj;
+            showBoxHelper(draggedObject, 0x22c55e); // Green while dragging
+          }
+        }
+
         if (draggedObject) {
-          // Dragging an item
           const ndc = getNDC(e);
           mouse.set(ndc.x, ndc.y);
           raycaster.setFromCamera(mouse, camera);
           const hit = new THREE.Vector3();
-          const result = raycaster.ray.intersectPlane(dragPlane, hit);
-
-          if (result) {
+          raycaster.ray.intersectPlane(dragPlane, hit);
+          if (hit.lengthSq() > 0) {
             const newPos = hit.sub(dragOffset);
-            // Clamp to booth bounds
             const halfW = bW / 2 - 0.5;
             const halfD = bD / 2 - 0.5;
             draggedObject.position.x = Math.max(-halfW, Math.min(halfW, newPos.x));
@@ -1748,39 +1876,53 @@ export default function BoothSnapshotRenderer({
           return;
         }
 
-        // Hover detection (only when not dragging)
-        if (!e.buttons) {
+        // Hover highlight (only when nothing pressed)
+        if (!e.buttons && !pendingObj) {
           const ndc = getNDC(e);
           const obj = findInteractable(ndc);
-
           if (obj !== hoveredObject) {
+            // Restore selected item highlight, then apply hover
             hideAllBoxHelpers();
+            if (selectedObject) showBoxHelper(selectedObject, 0x3b82f6);
             hoveredObject = obj;
-            if (obj) {
-              showBoxHelper(obj, 0x3b82f6); // Blue hover
+            if (obj && obj !== selectedObject) {
+              showBoxHelper(obj, 0x94a3b8); // Muted blue hover
               el.style.cursor = 'grab';
             } else {
-              el.style.cursor = 'default';
+              el.style.cursor = obj === selectedObject ? 'grab' : 'default';
             }
           }
         }
       };
 
       // ── POINTER UP ──
-      const onUp = () => {
-        if (draggedObject) {
-          // Convert 3D position back to 2D scene coords and fire callback
+      const onUp = (e) => {
+        if (pendingObj && !draggedObject) {
+          // It was a click — select (or deselect if same item)
+          if (selectedObject === pendingObj) {
+            selectObject(null);
+          } else {
+            selectObject(pendingObj);
+          }
+        } else if (draggedObject) {
+          // Drop — fire move callback
           if (onMoveItem) {
             const newX = draggedObject.position.x + bW / 2;
             const newY = -draggedObject.position.z + bD / 2;
             onMoveItem(draggedObject.userData.id, newX, newY);
           }
-
-          hideAllBoxHelpers();
-          draggedObject = null;
-          controls.enabled = true;
-          el.style.cursor = 'default';
+          // Keep selection on the dragged item
+          if (draggedObject !== selectedObject) {
+            selectObject(draggedObject);
+          } else {
+            showBoxHelper(draggedObject, 0x3b82f6);
+          }
         }
+
+        pendingObj = null;
+        draggedObject = null;
+        controls.enabled = true;
+        el.style.cursor = hoveredObject ? 'grab' : 'default';
       };
 
       // Pointer events (handles both mouse and touch)
@@ -1861,6 +2003,54 @@ export default function BoothSnapshotRenderer({
       ) : (
         <>
           <div ref={containerRef} className="w-full h-full [&>canvas]:w-full [&>canvas]:h-full [&>canvas]:block" />
+
+          {/* ── Selected Item Controls ── */}
+          {interactive && status === 'ready' && selectedItem && (
+            <div className="absolute top-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 bg-white/95 dark:bg-slate-800/95 backdrop-blur-md rounded-xl px-3 py-2 shadow-xl border border-blue-200 dark:border-blue-700 z-40 animate-in slide-in-from-top-2 duration-150">
+              <span className="text-xs font-semibold text-slate-700 dark:text-slate-200 truncate max-w-[160px]">
+                {selectedItem.name}
+              </span>
+              <div className="w-px h-5 bg-slate-200 dark:bg-slate-600 mx-1" />
+              {selectedItem.mountType === 'floor' && (
+                <button
+                  onClick={() => onRotateItem?.(selectedItem.id, 90)}
+                  className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+                  title="Rotate 90°"
+                >
+                  ↻ Rotate
+                </button>
+              )}
+              <button
+                onClick={() => {
+                  const next = selectedItem.mountType === 'floor' ? 'wall_back' : 'floor';
+                  onToggleWallMount?.(selectedItem.id, next);
+                  setSelectedItem(s => s ? { ...s, mountType: next } : null);
+                }}
+                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                  selectedItem.mountType !== 'floor'
+                    ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300'
+                    : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
+                }`}
+                title={selectedItem.mountType !== 'floor' ? 'Move to floor' : 'Mount to back wall'}
+              >
+                {selectedItem.mountType !== 'floor' ? '⬇ Floor' : '⬆ Wall'}
+              </button>
+              <button
+                onClick={() => { onRemoveItem?.(selectedItem.id); setSelectedItem(null); }}
+                className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors"
+                title="Remove from booth"
+              >
+                ✕ Remove
+              </button>
+              <button
+                onClick={() => setSelectedItem(null)}
+                className="ml-1 w-6 h-6 flex items-center justify-center rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 text-xs transition-colors"
+                title="Deselect"
+              >
+                ×
+              </button>
+            </div>
+          )}
 
           {/* ── Camera Toolbar ── */}
           {interactive && status === 'ready' && (

@@ -7,12 +7,13 @@ import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Loader2, Send, Box, LayoutTemplate, Image as ImageIcon, ArrowLeft, Grid2X2, Mic, MicOff, X } from 'lucide-react';
+import { Loader2, Send, Box, LayoutTemplate, ArrowLeft, Mic, MicOff } from 'lucide-react';
 import MessageBubble from '@/components/agents/MessageBubble';
 import ProjectSelector from '@/components/booth/ProjectSelector';
 import { BoothEngine } from '@/components/booth/BoothEngine';
-import BoothFloorplan from '@/components/booth/BoothFloorplan';
 import BoothSnapshotRenderer from '@/components/render/BoothSnapshotRenderer';
+import { BOOTH_KITS, KIT_SIZES } from '@/data/boothKits';
+import { SKU_BRANDING_PROFILES } from '@/data/skuBrandingProfiles';
 
 
 export default function BoothDesigner() {
@@ -34,7 +35,15 @@ export default function BoothDesigner() {
     const [scene, setScene] = useState(null);
     const sceneRef = useRef(null);
     const scrollRef = useRef(null);
-    const [viewMode, setViewMode] = useState('2d'); // '2d' | '3d'
+
+    // Catalog Sidebar State
+    const [showCatalog, setShowCatalog] = useState(false);
+    const [catalogProducts, setCatalogProducts] = useState([]);
+    const [catalogLoading, setCatalogLoading] = useState(false);
+    const [catalogSearch, setCatalogSearch] = useState('');
+    const [catalogCategory, setCatalogCategory] = useState('All');
+    const [catalogTab, setCatalogTab] = useState('kits');
+    const [catalogKitSize, setCatalogKitSize] = useState('all');
 
     useEffect(() => {
         sceneRef.current = scene;
@@ -347,20 +356,21 @@ export default function BoothDesigner() {
                 let product = await fetchProductDetails(sku);
 
                 const { w: bW, d: bD } = parseBoothSize(design.booth_size || boothSize);
-                const { w, d, isFlooring } = getProductDimensions(product, sku, bW, bD);
+                const { w, d, isFlooring, near } = getProductDimensions(product, sku, bW, bD);
 
                 for(let i=0; i < (count - currentCount); i++) {
+                    const mountType = getMountType(product);
                     const res = BoothEngine.addItem(
-                        updatedScene, 
-                        sku, 
-                        product?.name || sku, 
-                        product?.image_cached_url || product?.image_url || null, 
-                        w, 
-                        d, 
-                        'center',
+                        updatedScene,
+                        sku,
+                        product?.name || sku,
+                        product?.image_cached_url || product?.image_url || null,
+                        w,
+                        d,
+                        mountType !== 'floor' ? 'center' : near,
                         isFlooring,
                         product?.model_url || product?.model_glb_url || null,
-                        { category: product?.category || '', brandingConfig: deriveBrandingConfig(product) }
+                        { category: product?.category || '', brandingConfig: deriveBrandingConfig(product), mountType }
                     );
                     if (res.success) {
                         updatedScene = res.scene;
@@ -369,7 +379,7 @@ export default function BoothDesigner() {
                 }
             }
         }
-        
+
         if (changed) {
             // Update the DB in the background
             base44.entities.BoothDesign.update(design.id, { scene_json: JSON.stringify(updatedScene) });
@@ -445,30 +455,53 @@ export default function BoothDesigner() {
 
 
 
-    // Derive branding config from product metadata
-    // Tells the 3D renderer which meshes should receive brand color/logo
-    const deriveBrandingConfig = (product) => {
+    // Load catalog products when the drawer is opened (lazy)
+    useEffect(() => {
+        if (!showCatalog || catalogProducts.length > 0) return;
+        setCatalogLoading(true);
+        base44.entities.Product.list().then(products => {
+            setCatalogProducts(products || []);
+        }).catch(console.error).finally(() => setCatalogLoading(false));
+    }, [showCatalog]);
+
+    // Determines how a product mounts using researched SKU branding profiles.
+    // Falls back to keyword heuristics for products not in the profile.
+    const getMountType = (product) => {
+        const profile = SKU_BRANDING_PROFILES[product?.sku];
+        if (profile?.defaultMountType) return profile.defaultMountType;
+        // Fallback keyword heuristics for non-catalogued products
         const cat = (product?.category || '').toLowerCase();
         const name = (product?.name || '').toLowerCase();
+        if (['ceiling', 'hanging overhead', 'suspended ceiling'].some(k => cat.includes(k) || name.includes(k))) return 'ceiling';
+        if (['wall mount', 'wall-mount', 'wall sign', 'blaze wall'].some(k => cat.includes(k) || name.includes(k))) return 'wall_back';
+        return 'floor';
+    };
 
-        // If product has explicit branding_config from DB, use it directly
+    // Derive branding config from product metadata using researched SKU profiles.
+    const deriveBrandingConfig = (product) => {
         if (product?.branding_config) return product.branding_config;
 
+        const profile = SKU_BRANDING_PROFILES[product?.sku];
+        if (profile) {
+            return {
+                isBrandable: profile.canBrand === true,
+                brandSurface: profile.brandSurface,
+                brandMeshTags: [],
+                hwMeshTags: [],
+            };
+        }
+
+        // Fallback heuristics for products not in the profile
+        const cat = (product?.category || '').toLowerCase();
+        const name = (product?.name || '').toLowerCase();
         const BRANDABLE_KEYWORDS = ['backwall', 'banner', 'display', 'sign', 'lightbox',
             'light box', 'fabric', 'graphic', 'kiosk', 'counter', 'exhibit', 'wall', 'tower'];
         const HARDWARE_KEYWORDS = ['flooring', 'carpet', 'pole', 'hardware', 'stand base',
             'foot', 'bracket', 'clamp', 'base plate', 'accessory'];
-
         const isBrandable =
             BRANDABLE_KEYWORDS.some(k => cat.includes(k) || name.includes(k)) ? true :
             HARDWARE_KEYWORDS.some(k => cat.includes(k) || name.includes(k)) ? false : true;
-
-        return {
-            isBrandable,
-            // Explicit mesh tag overrides — product.branding_config in DB can populate these
-            brandMeshTags: product?.branding_config?.brand_mesh_tags || [],
-            hwMeshTags: product?.branding_config?.hw_mesh_tags || [],
-        };
+        return { isBrandable, brandSurface: 'panel', brandMeshTags: [], hwMeshTags: [] };
     };
 
     // Helper to extract numeric dimensions or defaults
@@ -496,21 +529,29 @@ export default function BoothDesigner() {
             extractedW = parseInt(dimMatch[1]); // Usually width is first
         }
 
-        // Apply width and sensible depth based on type
-        if (cat.includes('backwall') || cat.includes('display') || name.includes('wall')) {
-            w = extractedW || 10; 
-            d = 2; // Make backwalls 2ft deep instead of 1ft so they are easier to grab
-        } else if (cat.includes('counter') || cat.includes('podium') || name.includes('counter')) {
-            w = extractedW || 3; 
+        // Apply width, depth, and smart placement hint based on type
+        let near = 'center';
+        if (cat.includes('backwall') || cat.includes('display') || name.includes('backwall')) {
+            w = extractedW || 10;
             d = 2;
+            near = 'back_wall';
+        } else if (cat.includes('counter') || cat.includes('podium') || name.includes('counter')) {
+            w = extractedW || 3;
+            d = 2;
+            near = 'front';
         } else if (cat.includes('banner') || name.includes('banner')) {
-            w = extractedW || 3; 
+            w = extractedW || 3;
             d = 1;
+            near = 'back_wall';
+        } else if (cat.includes('tower') || cat.includes('kiosk') || name.includes('kiosk')) {
+            w = extractedW || 3;
+            d = 3;
+            near = 'center';
         } else if (extractedW) {
             w = extractedW;
         }
 
-        return { w, d, isFlooring };
+        return { w, d, isFlooring, near };
     };
 
     // Subscribe to the booth design entity to see added products live
@@ -539,19 +580,21 @@ export default function BoothDesigner() {
                                     let product = await fetchProductDetails(sku);
                                     
                                     const { w: bW, d: bD } = parseBoothSize(newData.booth_size || '10x10');
-                                    const { w, d, isFlooring } = getProductDimensions(product, sku, bW, bD);
-                                    
+                                    const { w, d, isFlooring, near } = getProductDimensions(product, sku, bW, bD);
+
+                                    const mountType = getMountType(product);
                                     for(let i=0; i < (count - currentCount); i++) {
                                         const res = BoothEngine.addItem(
-                                            updatedScene, 
-                                            sku, 
-                                            product?.name || sku, 
-                                            product?.image_cached_url || product?.image_url || null, 
-                                            w, 
-                                            d, 
-                                            'center',
+                                            updatedScene,
+                                            sku,
+                                            product?.name || sku,
+                                            product?.image_cached_url || product?.image_url || null,
+                                            w,
+                                            d,
+                                            mountType !== 'floor' ? 'center' : near,
                                             isFlooring,
-                                            product?.model_url || product?.model_glb_url || null
+                                            product?.model_url || product?.model_glb_url || null,
+                                            { category: product?.category || '', brandingConfig: deriveBrandingConfig(product), mountType }
                                         );
                                         if (res.success) {
                                             updatedScene = res.scene;
@@ -628,20 +671,21 @@ export default function BoothDesigner() {
             let product = await fetchProductDetails(sku);
             
             const { w: bW, d: bD } = parseBoothSize(boothDesign.booth_size || boothSize);
-            const { w, d, isFlooring } = getProductDimensions(product, sku, bW, bD);
-            
+            const { w, d, isFlooring, near } = getProductDimensions(product, sku, bW, bD);
+
             let updatedScene = { ...scene, items: [...(scene.items || [])] };
+            const mountType = getMountType(product);
             const res = BoothEngine.addItem(
-                updatedScene, 
-                sku, 
-                product?.name || sku, 
-                product?.image_cached_url || product?.image_url || null, 
-                w, 
-                d, 
-                'center',
+                updatedScene,
+                sku,
+                product?.name || sku,
+                product?.image_cached_url || product?.image_url || null,
+                w,
+                d,
+                mountType !== 'floor' ? 'center' : near,
                 isFlooring,
                 product?.model_url || product?.model_glb_url || null,
-                { category: product?.category || '', brandingConfig: deriveBrandingConfig(product) }
+                { category: product?.category || '', brandingConfig: deriveBrandingConfig(product), mountType }
             );
 
             if (res.success) {
@@ -689,6 +733,21 @@ export default function BoothDesigner() {
         if (res.success) {
             saveScene(res.scene);
         }
+    };
+
+    const handleToggleWallMount = (id, newMountType) => {
+        if (!scene) return;
+        const itemIndex = scene.items.findIndex(i => i.id === id);
+        if (itemIndex < 0) return;
+        const item = scene.items[itemIndex];
+        const newItems = [...scene.items];
+        newItems[itemIndex] = {
+            ...item,
+            mountType: newMountType,
+            mountHeight: newMountType !== 'floor' ? 3 : 0,
+            wallOffset: newMountType !== 'floor' ? scene.booth.w_ft / 2 : item.x,
+        };
+        saveScene({ ...scene, items: newItems });
     };
 
     const handleRemoveProduct = async (skuToRemove) => {
@@ -909,16 +968,16 @@ export default function BoothDesigner() {
                         <span className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm">Set Space: {boothSize}</span>
                     </h2>
                     <div className="flex items-center gap-3 pointer-events-auto">
-                        <Button 
-                            variant="outline"
+                        <Button
+                            variant={showCatalog ? 'default' : 'outline'}
                             size="sm"
-                            className="h-9 shadow-sm bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-slate-200 dark:border-slate-700"
-                            onClick={() => navigate(createPageUrl('Product3DManager') + '?projectId=' + boothDesign.id)}
+                            className={cn("h-9 shadow-sm backdrop-blur-sm border-slate-200 dark:border-slate-700", showCatalog ? "bg-primary text-white" : "bg-white/80 dark:bg-slate-800/80")}
+                            onClick={() => setShowCatalog(v => !v)}
                         >
-                            Open Catalog
+                            + Browse Products
                         </Button>
 
-                        <Button 
+                        <Button
                             variant="default"
                             size="sm"
                             className="h-9 shadow-sm bg-[#e2231a] hover:bg-[#b01b13] text-white"
@@ -930,49 +989,143 @@ export default function BoothDesigner() {
                     </div>
                 </div>
 
-                {/* Main 3D/2D Area */}
+                {/* 3D Booth Editor */}
                 <div className="flex-1 w-full relative overflow-hidden">
-                    <div className="absolute top-20 left-4 z-20 flex gap-2 pointer-events-auto">
-                        <Button 
-                            variant={viewMode === '2d' ? 'default' : 'secondary'} 
-                            size="sm" 
-                            className="h-8 text-xs shadow-sm bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm"
-                            onClick={() => setViewMode('2d')}
-                        >
-                            2D Plan
-                        </Button>
-                        <Button 
-                            variant={viewMode === '3d' ? 'default' : 'secondary'} 
-                            size="sm" 
-                            className="h-8 text-xs shadow-sm bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm"
-                            onClick={() => setViewMode('3d')}
-                        >
-                            3D Preview
-                        </Button>
-                    </div>
-                    
-                    {viewMode === '3d' ? (
-                        <div className="relative w-full h-full">
-                            <BoothSnapshotRenderer
-                                sceneJson={scene}
-                                brandIdentity={boothDesign?.brand_identity}
-                                boothSize={boothSize}
-                                boothType={boothDesign?.booth_type || boothType}
-                                interactive={true}
-                                autoSnapshot={false}
-                                onMoveItem={handleMoveItem}
-                            />
-                        </div>
-                    ) : (
-                        <BoothFloorplan 
-                            scene={scene} 
-                            onMoveItem={handleMoveItem}
-                            onRotateItem={handleRotateItem}
-                            onRemoveItem={handleRemoveItem}
-                            brandName={boothDesign?.brand_identity?.company_name || boothDesign?.brand_name || boothDesign?.brand_url}
-                        />
-                    )}
+                    <BoothSnapshotRenderer
+                        sceneJson={scene}
+                        brandIdentity={boothDesign?.brand_identity}
+                        boothSize={boothSize}
+                        boothType={boothDesign?.booth_type || boothType}
+                        interactive={true}
+                        autoSnapshot={false}
+                        onMoveItem={handleMoveItem}
+                        onRotateItem={handleRotateItem}
+                        onRemoveItem={handleRemoveItem}
+                        onToggleWallMount={handleToggleWallMount}
+                    />
                 </div>
+
+                {/* Catalog Drawer — slides in from the right over the 3D view */}
+                {showCatalog && (() => {
+                    const categories = ['All', ...Array.from(new Set(catalogProducts.map(p => p.category).filter(Boolean))).sort()];
+                    const filtered = catalogProducts.filter(p => {
+                        const matchCat = catalogCategory === 'All' || p.category === catalogCategory;
+                        const q = catalogSearch.toLowerCase();
+                        const matchSearch = !q || (p.name || '').toLowerCase().includes(q) || (p.sku || '').toLowerCase().includes(q);
+                        return matchCat && matchSearch;
+                    });
+                    const filteredKits = catalogKitSize === 'all' ? BOOTH_KITS : BOOTH_KITS.filter(k => k.size === catalogKitSize);
+                    return (
+                        <div className="absolute top-0 right-0 bottom-0 w-80 bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 z-30 flex flex-col shadow-2xl">
+                            {/* Drawer Header */}
+                            <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200 dark:border-slate-800 shrink-0">
+                                <h3 className="font-semibold text-sm text-slate-900 dark:text-white">Product Catalog</h3>
+                                <button onClick={() => setShowCatalog(false)} className="w-7 h-7 flex items-center justify-center rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-lg">×</button>
+                            </div>
+                            {/* Tab Toggle */}
+                            <div className="flex border-b border-slate-200 dark:border-slate-800 shrink-0">
+                                <button
+                                    onClick={() => setCatalogTab('kits')}
+                                    className={cn("flex-1 py-2 text-xs font-semibold transition-colors", catalogTab === 'kits' ? "text-primary border-b-2 border-primary bg-primary/5" : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300")}
+                                >
+                                    ✦ Starter Kits
+                                </button>
+                                <button
+                                    onClick={() => setCatalogTab('products')}
+                                    className={cn("flex-1 py-2 text-xs font-semibold transition-colors", catalogTab === 'products' ? "text-primary border-b-2 border-primary bg-primary/5" : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300")}
+                                >
+                                    All Products
+                                </button>
+                            </div>
+
+                            {/* ── KITS TAB ── */}
+                            {catalogTab === 'kits' && (
+                                <>
+                                    {/* Size filter */}
+                                    <div className="flex gap-1.5 px-3 py-2 overflow-x-auto shrink-0 border-b border-slate-100 dark:border-slate-800">
+                                        {['all', ...KIT_SIZES].map(size => (
+                                            <button
+                                                key={size}
+                                                onClick={() => setCatalogKitSize(size)}
+                                                className={cn("shrink-0 px-2.5 py-1 rounded-full text-xs font-medium transition-colors whitespace-nowrap", catalogKitSize === size ? "bg-primary text-white" : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700")}
+                                            >
+                                                {size === 'all' ? 'All Sizes' : size}
+                                            </button>
+                                        ))}
+                                    </div>
+                                    {/* Kits list */}
+                                    <div className="flex-1 overflow-y-auto p-3 space-y-3">
+                                        {filteredKits.map(kit => (
+                                            <CatalogKitCard
+                                                key={kit.id}
+                                                kit={kit}
+                                                onLoad={() => kit.products.forEach(item => handleAddProductFromChat(item.sku))}
+                                            />
+                                        ))}
+                                    </div>
+                                </>
+                            )}
+
+                            {/* ── PRODUCTS TAB ── */}
+                            {catalogTab === 'products' && (
+                                <>
+                                    {/* Search */}
+                                    <div className="px-3 py-2 shrink-0 border-b border-slate-100 dark:border-slate-800">
+                                        <Input
+                                            value={catalogSearch}
+                                            onChange={e => setCatalogSearch(e.target.value)}
+                                            placeholder="Search products..."
+                                            className="h-8 text-xs"
+                                        />
+                                    </div>
+                                    {/* Category Chips */}
+                                    <div className="flex gap-1.5 px-3 py-2 overflow-x-auto shrink-0 border-b border-slate-100 dark:border-slate-800">
+                                        {categories.map(cat => (
+                                            <button
+                                                key={cat}
+                                                onClick={() => setCatalogCategory(cat)}
+                                                className={cn("shrink-0 px-2.5 py-1 rounded-full text-xs font-medium transition-colors whitespace-nowrap", catalogCategory === cat ? "bg-primary text-white" : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700")}
+                                            >
+                                                {cat}
+                                            </button>
+                                        ))}
+                                    </div>
+                                    {/* Product Grid */}
+                                    <div className="flex-1 overflow-y-auto p-3">
+                                        {catalogLoading ? (
+                                            <div className="flex items-center justify-center h-32 text-slate-400 text-sm gap-2">
+                                                <Loader2 className="w-4 h-4 animate-spin" /> Loading...
+                                            </div>
+                                        ) : filtered.length === 0 ? (
+                                            <div className="flex items-center justify-center h-32 text-slate-400 text-sm">No products found</div>
+                                        ) : (
+                                            <div className="grid grid-cols-2 gap-2">
+                                                {filtered.map(p => (
+                                                    <button
+                                                        key={p.id || p.sku}
+                                                        onClick={() => handleAddProductFromChat(p.sku || p.name)}
+                                                        className="group text-left bg-slate-50 dark:bg-slate-800 hover:bg-primary/5 dark:hover:bg-primary/10 border border-slate-200 dark:border-slate-700 hover:border-primary/40 rounded-xl p-2 transition-all"
+                                                    >
+                                                        <div className="aspect-square bg-white dark:bg-slate-700 rounded-lg mb-1.5 overflow-hidden flex items-center justify-center border border-slate-100 dark:border-slate-600">
+                                                            {(p.image_cached_url || p.image_url) ? (
+                                                                <img src={p.image_cached_url || p.image_url} alt={p.name} className="w-full h-full object-contain" />
+                                                            ) : (
+                                                                <span className="text-slate-300 text-2xl">📦</span>
+                                                            )}
+                                                        </div>
+                                                        <p className="text-[10px] font-semibold text-slate-800 dark:text-slate-200 leading-tight line-clamp-2 group-hover:text-primary transition-colors">{p.name}</p>
+                                                        {p.sku && <p className="text-[9px] text-slate-400 mt-0.5">{p.sku}</p>}
+                                                        <div className="mt-1.5 text-[10px] font-semibold text-primary opacity-0 group-hover:opacity-100 transition-opacity">+ Add to Booth</div>
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                    );
+                })()}
 
                 {/* Bottom Products Strip */}
                 <div className="h-48 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 p-4 overflow-y-auto">
@@ -1003,6 +1156,65 @@ export default function BoothDesigner() {
             </div>
 
 
+        </div>
+    );
+}
+
+function CatalogKitCard({ kit, onLoad }) {
+    const [expanded, setExpanded] = useState(false);
+    return (
+        <div
+            className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+            style={{ borderLeft: `4px solid ${kit.accentColor}` }}
+        >
+            <div className="p-3">
+                <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                        <span className="text-lg">{kit.icon}</span>
+                        <div>
+                            <h4 className="font-semibold text-xs text-slate-900 dark:text-white">{kit.name}</h4>
+                            <p className="text-[10px] text-slate-500">{kit.tagline}</p>
+                        </div>
+                    </div>
+                    <div className="flex flex-col items-end gap-1 shrink-0">
+                        <span className="text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">{kit.tier}</span>
+                        <span className="text-[9px] text-slate-400 font-medium">{kit.size}</span>
+                    </div>
+                </div>
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-2 leading-relaxed line-clamp-2">{kit.description}</p>
+                <div className="flex items-center gap-1.5 mt-2">
+                    <span className="text-[9px] bg-slate-100 dark:bg-slate-700 text-slate-500 px-1.5 py-0.5 rounded-full">{kit.products.length} products</span>
+                    <span className="text-[9px] bg-slate-100 dark:bg-slate-700 text-slate-500 px-1.5 py-0.5 rounded-full">{kit.style}</span>
+                </div>
+            </div>
+            {expanded && (
+                <div className="border-t border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 px-3 py-2 space-y-1.5">
+                    {kit.products.map((item, i) => (
+                        <div key={i} className="flex items-start gap-2">
+                            <span className="text-[9px] font-bold text-slate-400 w-3 shrink-0 mt-0.5">{i + 1}</span>
+                            <div className="min-w-0">
+                                <p className="text-[10px] font-medium text-slate-700 dark:text-slate-300 truncate">{item.role}</p>
+                                <p className="text-[9px] text-slate-400 leading-snug">{item.sku} — {item.note}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+            <div className="flex gap-2 px-3 pb-3 pt-1">
+                <button
+                    onClick={onLoad}
+                    className="flex-1 py-1.5 rounded-lg text-xs font-semibold text-white transition-opacity hover:opacity-90"
+                    style={{ backgroundColor: kit.accentColor }}
+                >
+                    Load Kit
+                </button>
+                <button
+                    onClick={() => setExpanded(!expanded)}
+                    className="px-3 py-1.5 border border-slate-200 dark:border-slate-700 rounded-lg text-xs text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                >
+                    {expanded ? '▲' : '▼'}
+                </button>
+            </div>
         </div>
     );
 }

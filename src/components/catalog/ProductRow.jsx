@@ -45,12 +45,16 @@ export default function ProductRow({ product, projectId }) {
       {/* Thumbnail */}
       <div className="w-16 h-16 md:w-20 md:h-20 rounded-lg bg-slate-100 dark:bg-slate-800 flex-shrink-0 overflow-hidden relative">
         {product.image_cached_url || product.image_url ? (
-          <img src={product.image_cached_url || product.image_url} alt={product.name} className="w-full h-full object-contain" />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-slate-300 text-2xl">
-            📦
-          </div>
-        )}
+          <img
+            src={product.image_cached_url || product.image_url}
+            alt={product.name}
+            className="w-full h-full object-contain"
+            onError={e => { e.currentTarget.style.display = 'none'; e.currentTarget.nextSibling.style.display = 'flex'; }}
+          />
+        ) : null}
+        <div className="w-full h-full flex items-center justify-center text-slate-300 text-2xl" style={{ display: product.image_cached_url || product.image_url ? 'none' : 'flex' }}>
+          📦
+        </div>
       </div>
 
       {/* Info */}

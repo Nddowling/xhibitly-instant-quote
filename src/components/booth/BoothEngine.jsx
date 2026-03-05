@@ -44,6 +44,7 @@ export const BoothEngine = {
     },
 
     addItem: (scene, sku, name, imageUrl, w = 3, d = 1, near = 'center', isFlooring = false, modelUrl = null, extra = {}) => {
+        const mountType = extra.mountType || 'floor';
         const item = {
             id: Math.random().toString(36).substring(2, 9),
             sku,
@@ -56,14 +57,24 @@ export const BoothEngine = {
             w,
             d,
             isFlooring,
+            // Mount point — 'floor' | 'wall_back' | 'wall_left' | 'wall_right' | 'ceiling'
+            mountType,
+            // For wall items: height from floor (ft) and position along wall (ft from left/front)
+            mountHeight: extra.mountHeight ?? 3,
+            wallOffset: extra.wallOffset ?? (scene.booth.w_ft / 2),
             // Branding metadata — used by the 3D renderer
             category: extra.category || '',
             brandingConfig: extra.brandingConfig || null,
         };
 
+        // Wall-mounted and ceiling items don't compete for floor space
+        if (mountType !== 'floor') {
+            return { success: true, scene: { ...scene, items: [...scene.items, item] }, item };
+        }
+
         const step = 0.5; // 6 inch snap
         let placed = false;
-        
+
         let startX = scene.booth.w_ft / 2;
         let startY = scene.booth.d_ft / 2;
 

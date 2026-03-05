@@ -98,10 +98,11 @@ async function loadGLBFromUrl(url) {
   const tmpPath = path.join(TEMP, `_tmp_${Date.now()}.glb`);
   writeFileSync(tmpPath, buffer);
 
+  // Use loader.parse() with the raw ArrayBuffer — avoids fetch/file:// issues in Node
   return new Promise((resolve, reject) => {
     const loader = new GLTFLoader();
-    loader.load(`file://${tmpPath}`, gltf => resolve({ scene: gltf.scene, tmpPath }),
-      undefined, reject);
+    const ab = buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength);
+    loader.parse(ab, '', gltf => resolve({ scene: gltf.scene, tmpPath }), reject);
   });
 }
 
