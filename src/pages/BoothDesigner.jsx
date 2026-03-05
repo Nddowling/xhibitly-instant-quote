@@ -320,7 +320,7 @@ export default function BoothDesigner() {
             
             await base44.agents.addMessage(conv, {
                 role: 'user',
-                content: `Hi! Let's design my ${boothSize} booth. The BoothDesign entity ID is ${design.id}. I am looking for ideas and products from the catalog to add to my booth.`
+                content: `Hi! Let's design my ${boothSize} booth. The BoothDesign entity ID is ${design.id}. I am looking for ideas and products from the catalog to add to my booth.${brandUrl ? ` My brand website is ${brandUrl.trim()}.` : ''}`
             });
 
             setStep('designing');
