@@ -1581,7 +1581,7 @@ export default function BoothSnapshotRenderer({
   }, [sceneJson, brandIdentity, boothSize, boothType, width, height, interactive, autoSnapshot]);
 
   return (
-    <div className="relative w-full h-full flex items-center justify-center bg-slate-100 dark:bg-slate-900 rounded-lg overflow-hidden">
+    <div className="relative w-full h-full flex items-center justify-center bg-slate-100 dark:bg-slate-900 rounded-lg overflow-hidden" style={{ touchAction: 'none' }}>
       {status === 'error' ? (
         <div className="text-red-500 dark:text-red-400 p-6 text-center text-sm">
           <p className="font-semibold mb-1">Render Error</p>
