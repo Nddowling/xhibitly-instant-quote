@@ -215,21 +215,120 @@ function makeBackwallTex(brand, bW) {
   return new THREE.CanvasTexture(c);
 }
 
-function makeDrapeTex(sz = 256) {
+function makeDrapeTex(sz = 512) {
+  const c = document.createElement('canvas');
+  c.width = sz; c.height = sz * 3; // Tall canvas for vertical fold pattern
+  const ctx = c.getContext('2d');
+  const h = sz * 3;
+  ctx.fillStyle = '#181818';
+  ctx.fillRect(0, 0, sz, h);
+
+  // Vertical fabric folds — each fold is dark→highlight→dark
+  const foldCount = 16;
+  const foldW = sz / foldCount;
+  for (let i = 0; i < foldCount; i++) {
+    const x = i * foldW;
+    const g = ctx.createLinearGradient(x, 0, x + foldW, 0);
+    g.addColorStop(0,   'rgba(0,0,0,0.35)');
+    g.addColorStop(0.25, 'rgba(255,255,255,0.07)');
+    g.addColorStop(0.5,  'rgba(255,255,255,0.10)');
+    g.addColorStop(0.75, 'rgba(255,255,255,0.05)');
+    g.addColorStop(1,   'rgba(0,0,0,0.28)');
+    ctx.fillStyle = g;
+    ctx.fillRect(x, 0, foldW, h);
+  }
+  // Subtle weave grain (horizontal)
+  for (let y = 0; y < h; y += 3) {
+    ctx.fillStyle = `rgba(255,255,255,${Math.random() * 0.012})`;
+    ctx.fillRect(0, y, sz, 1);
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  return t;
+}
+
+function makeConcreteFloorTex(sz = 512) {
   const c = document.createElement('canvas');
   c.width = sz; c.height = sz;
   const ctx = c.getContext('2d');
-  ctx.fillStyle = '#1a1a1a';
+  ctx.fillStyle = '#c4c6c4';
   ctx.fillRect(0, 0, sz, sz);
-  for (let x = 0; x < sz; x += sz / 12) {
-    const fw = sz / 24;
-    const g = ctx.createLinearGradient(x, 0, x + fw * 2, 0);
-    g.addColorStop(0, 'rgba(255,255,255,0.02)');
-    g.addColorStop(0.5, 'rgba(255,255,255,0.07)');
-    g.addColorStop(1, 'rgba(0,0,0,0.04)');
-    ctx.fillStyle = g;
-    ctx.fillRect(x, 0, fw * 2, sz);
+  const id = ctx.getImageData(0, 0, sz, sz);
+  for (let i = 0; i < id.data.length; i += 4) {
+    const n = (Math.random() - 0.5) * 20;
+    id.data[i]   = Math.max(175, Math.min(215, id.data[i]   + n));
+    id.data[i+1] = Math.max(175, Math.min(213, id.data[i+1] + n));
+    id.data[i+2] = Math.max(172, Math.min(210, id.data[i+2] + n));
   }
+  ctx.putImageData(id, 0, 0);
+  // Concrete slab joints (every ~4ft equiv)
+  ctx.strokeStyle = 'rgba(0,0,0,0.13)';
+  ctx.lineWidth = 2;
+  for (let x = 0; x <= sz; x += sz / 4) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, sz); ctx.stroke(); }
+  for (let y = 0; y <= sz; y += sz / 4) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(sz, y); ctx.stroke(); }
+  // Subtle specular highlight streak
+  const sheen = ctx.createLinearGradient(0, 0, sz, sz);
+  sheen.addColorStop(0,   'rgba(255,255,255,0)');
+  sheen.addColorStop(0.45, 'rgba(255,255,255,0.06)');
+  sheen.addColorStop(0.55, 'rgba(255,255,255,0.06)');
+  sheen.addColorStop(1,   'rgba(255,255,255,0)');
+  ctx.fillStyle = sheen;
+  ctx.fillRect(0, 0, sz, sz);
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  return t;
+}
+
+function makeHallCeilingTex(sz = 512) {
+  const c = document.createElement('canvas');
+  c.width = sz; c.height = sz;
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = '#d8d8d2';
+  ctx.fillRect(0, 0, sz, sz);
+  // Ceiling tile grid
+  ctx.strokeStyle = 'rgba(0,0,0,0.15)';
+  ctx.lineWidth = 2;
+  const ts = sz / 4;
+  for (let x = 0; x <= sz; x += ts) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, sz); ctx.stroke(); }
+  for (let y = 0; y <= sz; y += ts) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(sz, y); ctx.stroke(); }
+  // Light panels (bright tiles at intervals)
+  ctx.fillStyle = 'rgba(245,248,255,0.65)';
+  [[1, 1], [3, 1], [1, 3], [3, 3]].forEach(([col, row]) => {
+    ctx.fillRect(col * ts + ts * 0.08, row * ts + ts * 0.08, ts * 0.84, ts * 0.84);
+  });
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  return t;
+}
+
+function makeHallWallTex(sz = 512) {
+  const c = document.createElement('canvas');
+  c.width = sz; c.height = sz;
+  const ctx = c.getContext('2d');
+  // Convention center block/drywall — slightly warm white
+  ctx.fillStyle = '#dcdcd5';
+  ctx.fillRect(0, 0, sz, sz);
+  // Horizontal bands (panels)
+  for (let y = 0; y < sz; y += sz / 6) {
+    ctx.strokeStyle = 'rgba(0,0,0,0.07)';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(sz, y); ctx.stroke();
+  }
+  // Vertical seams
+  for (let x = 0; x < sz; x += sz / 4) {
+    ctx.strokeStyle = 'rgba(0,0,0,0.05)';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, sz); ctx.stroke();
+  }
+  // Slight noise
+  const id = ctx.getImageData(0, 0, sz, sz);
+  for (let i = 0; i < id.data.length; i += 4) {
+    const n = (Math.random() - 0.5) * 8;
+    id.data[i]   = Math.max(190, Math.min(240, id.data[i]   + n));
+    id.data[i+1] = Math.max(190, Math.min(240, id.data[i+1] + n));
+    id.data[i+2] = Math.max(185, Math.min(235, id.data[i+2] + n));
+  }
+  ctx.putImageData(id, 0, 0);
   const t = new THREE.CanvasTexture(c);
   t.wrapS = t.wrapT = THREE.RepeatWrapping;
   return t;
@@ -480,8 +579,14 @@ export default function BoothSnapshotRenderer({
     const scene = new THREE.Scene();
     sceneRef.current = scene;
     boothDimsRef.current = { w: bW, d: bD };
-    scene.background = new THREE.Color(0xf0f0f0); // Lighter, cleaner background (like your reference)
-    scene.fog = new THREE.Fog(0xf0f0f0, 80, 250); // Subtle depth fog
+    scene.background = new THREE.Color(0xcecece); // Convention center hall grey
+    scene.fog = new THREE.Fog(0xcecece, 70, 200); // Depth haze like a large hall
+
+    // ── Booth type flags (needed for camera + structure) ──
+    const isIsland = boothType === 'island';
+    const isPeninsula = boothType === 'peninsula';
+    const isCorner = boothType === 'corner';
+    const isInline = !isIsland && !isPeninsula && !isCorner;
 
     // ── CAMERA — Adaptive for booth size & type ──
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 500);
@@ -662,10 +767,15 @@ export default function BoothSnapshotRenderer({
       return rail;
     };
 
-    // ── Ground Plane (convention hall floor) ──
-    const groundGeo = new THREE.PlaneGeometry(200, 200);
-    const groundMat = new THREE.MeshStandardMaterial({ color: 0xd5d5d5, roughness: 1, metalness: 0 });
-    const groundMesh = new THREE.Mesh(groundGeo, groundMat);
+    // ── Ground Plane (convention hall concrete floor) ──
+    const concreteTex = makeConcreteFloorTex();
+    concreteTex.repeat.set(50, 50);
+    const groundMat = new THREE.MeshStandardMaterial({
+      map: concreteTex,
+      roughness: 0.82,
+      metalness: 0.08, // polished concrete has a slight sheen
+    });
+    const groundMesh = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), groundMat);
     groundMesh.rotation.x = -Math.PI / 2;
     groundMesh.position.y = -0.02;
     groundMesh.receiveShadow = true;
@@ -779,14 +889,81 @@ export default function BoothSnapshotRenderer({
       scene.add(rightAisle);
     }
 
+    // ══════════════════════════════════════════════════════════
+    // CONVENTION CENTER HALL — walls, ceiling, atmosphere
+    // Creates the sense of being inside a large exhibition hall
+    // ══════════════════════════════════════════════════════════
+    const HALL_W = 120;
+    const HALL_D = 120;
+    const HALL_H = 24;
+
+    const hallWallTex = makeHallWallTex();
+    hallWallTex.repeat.set(10, 3);
+    const hallWallMat = new THREE.MeshStandardMaterial({ map: hallWallTex, roughness: 0.92, side: THREE.FrontSide });
+
+    // Back hall wall
+    const backHallWall = new THREE.Mesh(new THREE.PlaneGeometry(HALL_W, HALL_H), hallWallMat);
+    backHallWall.position.set(0, HALL_H / 2, -HALL_D / 2);
+    scene.add(backHallWall);
+
+    // Left hall wall
+    const leftHallWall = new THREE.Mesh(new THREE.PlaneGeometry(HALL_D, HALL_H), hallWallMat.clone());
+    leftHallWall.rotation.y = Math.PI / 2;
+    leftHallWall.position.set(-HALL_W / 2, HALL_H / 2, 0);
+    scene.add(leftHallWall);
+
+    // Right hall wall
+    const rightHallWall = new THREE.Mesh(new THREE.PlaneGeometry(HALL_D, HALL_H), hallWallMat.clone());
+    rightHallWall.rotation.y = -Math.PI / 2;
+    rightHallWall.position.set(HALL_W / 2, HALL_H / 2, 0);
+    scene.add(rightHallWall);
+
+    // Ceiling
+    const ceilingTex = makeHallCeilingTex();
+    ceilingTex.repeat.set(8, 8);
+    const ceilingMesh = new THREE.Mesh(
+      new THREE.PlaneGeometry(HALL_W, HALL_D),
+      new THREE.MeshStandardMaterial({ map: ceilingTex, roughness: 1 })
+    );
+    ceilingMesh.rotation.x = Math.PI / 2;
+    ceilingMesh.position.set(0, HALL_H, 0);
+    scene.add(ceilingMesh);
+
+    // Ceiling spotlights over booth (PointLights simulating can lights)
+    const spotPositions = [
+      [-bW * 0.25, HALL_H - 0.5, -bD * 0.2],
+      [ bW * 0.25, HALL_H - 0.5, -bD * 0.2],
+      [0,          HALL_H - 0.5,  bD * 0.1],
+    ];
+    spotPositions.forEach(([sx, sy, sz]) => {
+      const spot = new THREE.PointLight(0xfff8e8, 0.6, 30, 1.5);
+      spot.position.set(sx, sy, sz);
+      scene.add(spot);
+      // Visual fixture disc
+      const fix = new THREE.Mesh(
+        new THREE.CircleGeometry(0.18, 12),
+        new THREE.MeshBasicMaterial({ color: 0xfff0c0 })
+      );
+      fix.rotation.x = Math.PI / 2;
+      fix.position.set(sx, HALL_H - 0.05, sz);
+      scene.add(fix);
+    });
+
     // ── Drape texture (shared) ──
     const dTex = makeDrapeTex();
     dTex.repeat.set(1, 2);
 
     const makeDrape = (length, posX, posZ, rotY) => {
+      const dt = dTex.clone();
+      dt.repeat.set(length / 4, 1.2); // Scale folds relative to drape width
       const m = new THREE.Mesh(
         new THREE.PlaneGeometry(length, DRAPE_H),
-        new THREE.MeshStandardMaterial({ map: dTex.clone(), roughness: 0.9, side: THREE.DoubleSide })
+        new THREE.MeshStandardMaterial({
+          map: dt,
+          roughness: 0.95,
+          metalness: 0,
+          side: THREE.DoubleSide,
+        })
       );
       m.rotation.y = rotY;
       m.position.set(posX, DRAPE_H / 2, posZ);
@@ -800,7 +977,12 @@ export default function BoothSnapshotRenderer({
       const bwTex = makeBackwallTex(brand, bW);
       const bwMesh = new THREE.Mesh(
         new THREE.PlaneGeometry(bW, WALL_H),
-        new THREE.MeshStandardMaterial({ map: bwTex, roughness: 0.4, side: THREE.DoubleSide })
+        new THREE.MeshStandardMaterial({
+          map: bwTex,
+          roughness: 0.75,   // fabric backwall is matte/satin, not glossy
+          metalness: 0,
+          side: THREE.DoubleSide
+        })
       );
       bwMesh.position.set(0, WALL_H / 2, -bD / 2);
       bwMesh.receiveShadow = true;
