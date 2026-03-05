@@ -1160,6 +1160,21 @@ export default function BoothDesigner() {
     );
 }
 
+function CatalogProductImage({ src, alt }) {
+    const [error, setError] = useState(false);
+    if (!src || error) {
+        return <span className="text-slate-300 text-2xl">📦</span>;
+    }
+    return (
+        <img 
+            src={src} 
+            alt={alt} 
+            className="w-full h-full object-contain"
+            onError={() => setError(true)}
+        />
+    );
+}
+
 function CatalogKitCard({ kit, onLoad }) {
     const [expanded, setExpanded] = useState(false);
     return (
