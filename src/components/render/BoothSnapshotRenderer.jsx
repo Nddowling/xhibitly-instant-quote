@@ -1512,31 +1512,12 @@ export default function BoothSnapshotRenderer({
         }
       };
 
-      // Mouse events
-      el.addEventListener('mousedown', onDown);
-      el.addEventListener('mousemove', onMove);
-      el.addEventListener('mouseup', onUp);
-      el.addEventListener('mouseleave', onUp);
-
-      // Touch events (mobile/tablet)
-      el.addEventListener('touchstart', (e) => {
-        if (e.touches.length === 1) {
-          const ndc = getNDC(e);
-          const obj = findInteractable(ndc);
-          if (obj) {
-            e.preventDefault(); // Prevent OrbitControls from taking over
-            onDown(e);
-          }
-        }
-      }, { passive: false });
-      el.addEventListener('touchmove', (e) => {
-        if (draggedObject && e.touches.length === 1) {
-          e.preventDefault();
-          onMove(e);
-        }
-      }, { passive: false });
-      el.addEventListener('touchend', onUp);
-      el.addEventListener('touchcancel', onUp);
+      // Pointer events (handles both mouse and touch)
+      el.addEventListener('pointerdown', onDown);
+      el.addEventListener('pointermove', onMove);
+      el.addEventListener('pointerup', onUp);
+      el.addEventListener('pointercancel', onUp);
+      el.addEventListener('pointerleave', onUp);
 
       // ── WASD WALKTHROUGH CONTROLS ──
       const keysDown = new Set();
