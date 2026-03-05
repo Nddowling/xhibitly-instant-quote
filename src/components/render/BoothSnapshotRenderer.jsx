@@ -490,6 +490,11 @@ export default function BoothSnapshotRenderer({
     // Distance scales with booth size — bigger booths need to be further away
     const baseDist = maxDim * 1.3 + 8;
 
+    const isIsland = boothType === 'island';
+    const isPeninsula = boothType === 'peninsula';
+    const isCorner = boothType === 'corner';
+    const isInline = !isIsland && !isPeninsula && !isCorner;
+
     if (isIsland) {
       // Island: elevated corner view showing all 4 open sides
       camera.position.set(-maxDim * 0.7, maxDim * 0.9, maxDim * 0.7 + AISLE_DEPTH);
