@@ -51,6 +51,7 @@ import BoothDesigner from './pages/BoothDesigner';
 import BoothEditorPage from './pages/BoothEditorPage';
 import BrandVerification from './pages/BrandVerification';
 import CatalogImport from './pages/CatalogImport';
+import CatalogQuote from './pages/CatalogQuote';
 import Confirmation from './pages/Confirmation';
 import ContactDetail from './pages/ContactDetail';
 import Contacts from './pages/Contacts';
@@ -66,12 +67,11 @@ import Product3DManager from './pages/Product3DManager';
 import ProductDetail from './pages/ProductDetail';
 import QuoteRequest from './pages/QuoteRequest';
 import Results from './pages/Results';
+import SalesDashboard from './pages/SalesDashboard';
 import SalesQuoteStart from './pages/SalesQuoteStart';
 import Settings from './pages/Settings';
 import StudentHome from './pages/StudentHome';
 import UserTypeSelection from './pages/UserTypeSelection';
-import CatalogQuote from './pages/CatalogQuote';
-import SalesDashboard from './pages/SalesDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -80,6 +80,7 @@ export const PAGES = {
     "BoothEditorPage": BoothEditorPage,
     "BrandVerification": BrandVerification,
     "CatalogImport": CatalogImport,
+    "CatalogQuote": CatalogQuote,
     "Confirmation": Confirmation,
     "ContactDetail": ContactDetail,
     "Contacts": Contacts,
@@ -95,12 +96,11 @@ export const PAGES = {
     "ProductDetail": ProductDetail,
     "QuoteRequest": QuoteRequest,
     "Results": Results,
+    "SalesDashboard": SalesDashboard,
     "SalesQuoteStart": SalesQuoteStart,
     "Settings": Settings,
     "StudentHome": StudentHome,
     "UserTypeSelection": UserTypeSelection,
-    "CatalogQuote": CatalogQuote,
-    "SalesDashboard": SalesDashboard,
 }
 
 export const pagesConfig = {
