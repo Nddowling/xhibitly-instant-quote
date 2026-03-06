@@ -509,11 +509,11 @@ export default function CatalogQuote() {
         </div>
 
         {/* ══ RIGHT: Order Items ════════════════════════════════════════════ */}
-        <div className="w-56 flex-shrink-0 bg-white border-l border-slate-200 flex flex-col overflow-hidden">
-          <div className="p-4 border-b border-slate-100">
+        <div className="w-72 flex-shrink-0 bg-white border-l border-slate-200 flex flex-col overflow-hidden">
+          <div className="p-4 border-b border-slate-100 bg-slate-50">
             <div className="flex items-center gap-2">
               <ShoppingCart className="w-4 h-4 text-[#e2231a]" />
-              <span className="text-xs font-bold text-slate-700 uppercase tracking-wide">Order</span>
+              <span className="text-xs font-bold text-slate-700 uppercase tracking-wide">Added to Order</span>
               {itemCount > 0 && (
                 <Badge className="ml-auto bg-[#e2231a] text-white text-[10px] px-1.5 py-0 h-4">
                   {itemCount}
@@ -527,7 +527,7 @@ export default function CatalogQuote() {
               <div className="text-center py-10">
                 <ShoppingCart className="w-7 h-7 text-slate-200 mx-auto mb-2" />
                 <p className="text-[11px] text-slate-400">Order is empty</p>
-                <p className="text-[10px] text-slate-300 mt-1">Navigate catalog pages and click products to add</p>
+                <p className="text-[10px] text-slate-300 mt-1">Click products below the catalog to add</p>
               </div>
             ) : (
               orderItems.map(item => (
@@ -540,29 +540,6 @@ export default function CatalogQuote() {
               ))
             )}
           </div>
-
-          {orderItems.length > 0 && (
-            <div className="p-3 border-t border-slate-100">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs text-slate-500 font-medium">Subtotal</span>
-                <span className="text-sm font-black text-slate-900">
-                  {subtotal > 0 ? fmt(subtotal) : 'Quote'}
-                </span>
-              </div>
-              {hasQuoteItems && (
-                <p className="text-[10px] text-amber-600 mb-2">
-                  *Some items need pricing from Orbus
-                </p>
-              )}
-              <Button
-                size="sm"
-                className="w-full bg-[#e2231a] hover:bg-[#b01b13] text-white text-xs h-8"
-                onClick={() => alert('Quote generation coming soon!')}
-              >
-                Generate Quote
-              </Button>
-            </div>
-          )}
         </div>
       </div>
     </div>
