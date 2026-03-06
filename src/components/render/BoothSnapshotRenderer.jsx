@@ -1182,6 +1182,7 @@ export default function BoothSnapshotRenderer({
           const localCenter = modelMesh.worldToLocal(targetMeshCenter.clone());
 
           // Accent stripe across the top of the main panel
+          const brandAccent = brand.accent_color_1 || brand.primary_color || '#3b82f6';
           const stripeW = target.size.x * 0.9;
           const stripeH = target.size.y * 0.06;
           const stripe = new THREE.Mesh(
