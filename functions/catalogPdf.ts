@@ -1,5 +1,5 @@
 import { PDFDocument } from 'npm:pdf-lib@1.17.1';
-import { createClient } from 'npm:@supabase/supabase-js@2.39.0';
+import { encodeBase64 } from "jsr:@std/encoding/base64";
 
 const PDF_URLS = [
   "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/96f439ea9_exhibitors-handbook_p001-005.pdf",
@@ -44,24 +44,13 @@ const PDF_URLS = [
   "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/5b3814230_exhibitors-handbook_p211-215.pdf"
 ];
 
-let cachedPdfUrl = null;
+let cachedBase64 = null;
 
 Deno.serve(async (req) => {
     try {
-        if (cachedPdfUrl) {
-            return Response.json({ url: cachedPdfUrl });
+        if (cachedBase64) {
+            return Response.json({ base64: cachedBase64 });
         }
-
-        const supabaseUrl = Deno.env.get('SUPABASE_URL');
-        const supabaseKey = Deno.env.get('SUPABASE_SERVICE_KEY');
-        
-        if (!supabaseUrl || !supabaseKey) {
-            throw new Error("Missing Supabase credentials");
-        }
-
-        const supabase = createClient(supabaseUrl, supabaseKey);
-        const appId = Deno.env.get("BASE44_APP_ID") || "69834d9e0d7220d671bfd124";
-        const filePath = `public/${appId}/merged-catalog.pdf`;
 
         const mergedPdf = await PDFDocument.create();
 
@@ -76,26 +65,11 @@ Deno.serve(async (req) => {
         }
 
         const pdfBytes = await mergedPdf.save();
+        
+        // Use standard library for efficient base64 encoding
+        cachedBase64 = encodeBase64(pdfBytes);
 
-        const { data, error } = await supabase.storage
-            .from('base44-prod')
-            .upload(filePath, pdfBytes, {
-                contentType: 'application/pdf',
-                upsert: true
-            });
-
-        if (error) {
-            console.error("Upload error:", error);
-            throw error;
-        }
-
-        const { data: urlData } = supabase.storage
-            .from('base44-prod')
-            .getPublicUrl(filePath);
-
-        cachedPdfUrl = urlData.publicUrl;
-
-        return Response.json({ url: cachedPdfUrl });
+        return Response.json({ base64: cachedBase64 });
     } catch (error) {
         return Response.json({ error: error.message }, { status: 500 });
     }
