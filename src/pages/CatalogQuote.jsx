@@ -243,6 +243,7 @@ export default function CatalogQuote() {
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.mjs';
         
         // Merge PDFs in the frontend to avoid backend memory limits
+        const { PDFDocument } = await import(/* @vite-ignore */ 'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/+esm');
         const mergedPdf = await PDFDocument.create();
         
         // Fetch all PDFs in parallel
