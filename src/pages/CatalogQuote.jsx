@@ -542,6 +542,32 @@ export default function CatalogQuote() {
           </div>
         </div>
       </div>
+
+      {/* Generated Image Modal */}
+      {generatedImage && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-8">
+          <div className="bg-white rounded-2xl overflow-hidden max-w-5xl w-full flex flex-col shadow-2xl">
+            <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+              <h2 className="text-lg font-bold text-slate-800">Generated Booth Concept</h2>
+              <button onClick={() => setGeneratedImage(null)} className="p-2 hover:bg-slate-200 rounded-full transition-colors">
+                <X className="w-5 h-5 text-slate-500" />
+              </button>
+            </div>
+            <div className="p-6 bg-slate-100 flex items-center justify-center">
+              <img src={generatedImage} alt="Generated Booth" className="max-w-full max-h-[70vh] rounded-lg shadow-md object-contain" />
+            </div>
+            <div className="p-4 border-t border-slate-200 bg-white flex justify-end gap-3">
+              <Button variant="outline" onClick={() => setGeneratedImage(null)}>Close</Button>
+              <Button className="bg-[#e2231a] hover:bg-[#b01b13] text-white" onClick={() => {
+                const a = document.createElement('a');
+                a.href = generatedImage;
+                a.download = 'booth-concept.png';
+                a.click();
+              }}>Download Image</Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
