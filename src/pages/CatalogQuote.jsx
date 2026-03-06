@@ -9,10 +9,8 @@ import {
   DollarSign, FileText, Search, X, ZoomIn, ZoomOut, Loader2
 } from 'lucide-react';
 
-// The catalog PDF — upload to Supabase storage at this path:
-// orbus-assets bucket → catalog/exhibitors-handbook.pdf
-const CATALOG_PDF_URL =
-  'https://xpgvpzbzmkubahyxwipk.supabase.co/storage/v1/object/public/orbus-assets/catalog/exhibitors-handbook.pdf';
+// The catalog PDF is generated dynamically by merging the uploaded chunks
+const CATALOG_PDF_URL = '/api/functions/catalogPdf';
 
 // ─── Helper: format currency ────────────────────────────────────────────────
 function fmt(n) {
