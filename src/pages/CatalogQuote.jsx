@@ -192,12 +192,24 @@ export default function CatalogQuote() {
 
   // Load PDF on mount
   useEffect(() => {
-    setPdfLoading(true);
-    setPdfError(false);
-    pdfjsLib.getDocument({ url: CATALOG_PDF_URL, withCredentials: false })
-      .promise
-      .then(doc => { setPdfDoc(doc); setPdfLoading(false); })
-      .catch(() => { setPdfLoading(false); setPdfError(true); });
+    const loadPdf = async () => {
+      setPdfLoading(true);
+      setPdfError(false);
+      try {
+        const moduleUrl = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.mjs';
+        const pdfjsLib = await import(/* @vite-ignore */ moduleUrl);
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.mjs';
+        
+        const doc = await pdfjsLib.getDocument({ url: CATALOG_PDF_URL, withCredentials: false }).promise;
+        setPdfDoc(doc);
+        setPdfLoading(false);
+      } catch (err) {
+        console.error('Failed to load PDF:', err);
+        setPdfLoading(false);
+        setPdfError(true);
+      }
+    };
+    loadPdf();
   }, []);
 
   // Pre-fetch product details for current page products
