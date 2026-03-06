@@ -187,7 +187,8 @@ export default function CatalogQuote() {
   const [orderItems, setOrderItems] = useState([]);
   const [searchSku, setSearchSku] = useState('');
   const [customerName, setCustomerName] = useState('');
-  const [showPdfSetup, setShowPdfSetup] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generatedImage, setGeneratedImage] = useState(null);
   const { cache: productCache, fetch: fetchProduct } = useProductCache();
 
   // Load PDF on mount
