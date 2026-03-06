@@ -6,8 +6,9 @@ import { Badge } from '@/components/ui/badge';
 import { PAGE_PRODUCTS, MAX_PAGE, MIN_PAGE, SKU_TO_PAGE } from '@/data/catalogPageMapping';
 import {
   ChevronLeft, ChevronRight, Plus, Minus, Trash2, ShoppingCart,
-  DollarSign, FileText, Search, X, ZoomIn, ZoomOut, Loader2
+  DollarSign, FileText, Search, X, ZoomIn, ZoomOut, Loader2, BookOpen
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // The catalog PDF is generated dynamically by merging the uploaded chunks
 const CATALOG_PDF_URL = '/api/functions/catalogPdf';
@@ -43,17 +44,16 @@ function useProductCache() {
 }
 
 // ─── PDF Page Renderer ───────────────────────────────────────────────────────
-function PdfPageView({ pdfDoc, pageNum, scale = 1.0 }) {
+function PdfPageView({ pdfDoc, pageNum, scale = 1.0, className = "" }) {
   const canvasRef = useRef(null);
   const renderTask = useRef(null);
 
   useEffect(() => {
-    if (!pdfDoc || !canvasRef.current) return;
+    if (!pdfDoc || !canvasRef.current || !pageNum) return;
     let cancelled = false;
 
     const render = async () => {
       try {
-        // Cancel any in-flight render
         if (renderTask.current) {
           renderTask.current.cancel();
           renderTask.current = null;
@@ -83,10 +83,12 @@ function PdfPageView({ pdfDoc, pageNum, scale = 1.0 }) {
     };
   }, [pdfDoc, pageNum, scale]);
 
+  if (!pageNum) return null;
+
   return (
     <canvas
       ref={canvasRef}
-      className="w-full h-auto rounded-lg shadow-lg"
+      className={`w-full h-auto ${className}`}
       style={{ display: 'block' }}
     />
   );
@@ -178,6 +180,7 @@ function OrderItem({ item, onQtyChange, onRemove }) {
 export default function CatalogQuote() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageInput, setPageInput] = useState('1');
+  const [direction, setDirection] = useState(1);
   const [pdfDoc, setPdfDoc] = useState(null);
   const [pdfLoading, setPdfLoading] = useState(false);
   const [pdfError, setPdfError] = useState(false);
@@ -217,17 +220,29 @@ export default function CatalogQuote() {
   }, []);
 
   // Pre-fetch product details for current page products
-  const pageProducts = PAGE_PRODUCTS[currentPage] || [];
+  const displayProducts = React.useMemo(() => {
+    return currentPage === 1 
+      ? (PAGE_PRODUCTS[1] || [])
+      : [
+          ...(PAGE_PRODUCTS[currentPage] || []),
+          ...(currentPage + 1 <= MAX_PAGE ? (PAGE_PRODUCTS[currentPage + 1] || []) : [])
+        ];
+  }, [currentPage]);
+
   useEffect(() => {
-    pageProducts.forEach(p => fetchProduct(p.sku));
-  }, [currentPage, fetchProduct]);
+    displayProducts.forEach(p => fetchProduct(p.sku));
+  }, [displayProducts, fetchProduct]);
 
   // Navigation
   const goToPage = useCallback((n) => {
-    const p = Math.max(1, Math.min(n, MAX_PAGE));
+    let p = Math.max(1, Math.min(n, MAX_PAGE));
+    if (p > 1 && p % 2 !== 0) {
+      p = p - 1;
+    }
+    setDirection(p > currentPage ? 1 : -1);
     setCurrentPage(p);
     setPageInput(String(p));
-  }, []);
+  }, [currentPage]);
 
   const handlePageInput = (e) => {
     setPageInput(e.target.value);
@@ -392,7 +407,7 @@ export default function CatalogQuote() {
           {/* Page navigation bar */}
           <div className="bg-white border-b border-slate-200 px-4 py-2 flex items-center gap-3 flex-shrink-0">
             <button
-              onClick={() => goToPage(currentPage - 1)}
+              onClick={() => goToPage(currentPage === 1 ? 1 : currentPage - 2)}
               disabled={currentPage <= 1}
               className="p-1.5 rounded-lg hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed text-slate-600 transition-colors"
             >
@@ -413,8 +428,8 @@ export default function CatalogQuote() {
             </div>
 
             <button
-              onClick={() => goToPage(currentPage + 1)}
-              disabled={currentPage >= MAX_PAGE}
+              onClick={() => goToPage(currentPage === 1 ? 2 : currentPage + 2)}
+              disabled={currentPage >= MAX_PAGE - (currentPage === 1 ? 0 : 1)}
               className="p-1.5 rounded-lg hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed text-slate-600 transition-colors"
             >
               <ChevronRight className="w-4 h-4" />
@@ -423,9 +438,9 @@ export default function CatalogQuote() {
             <div className="flex-1" />
 
             {/* Products on this page badge */}
-            {pageProducts.length > 0 && (
+            {displayProducts.length > 0 && (
               <Badge className="bg-slate-100 text-slate-600 text-[10px]">
-                {pageProducts.length} product{pageProducts.length !== 1 ? 's' : ''} on this page
+                {displayProducts.length} product{displayProducts.length !== 1 ? 's' : ''} on this page
               </Badge>
             )}
 
@@ -471,22 +486,51 @@ export default function CatalogQuote() {
             )}
 
             {pdfDoc && !pdfLoading && (
-              <div className="shadow-2xl rounded-lg overflow-hidden max-w-full">
-                <PdfPageView pdfDoc={pdfDoc} pageNum={currentPage} scale={pdfScale} />
+              <div className="relative w-full flex-1 flex items-center justify-center overflow-hidden" style={{ perspective: 1200 }}>
+                <AnimatePresence mode="wait" custom={direction}>
+                  <motion.div
+                    key={currentPage}
+                    custom={direction}
+                    initial={{ opacity: 0, rotateY: direction > 0 ? 30 : -30, scale: 0.95 }}
+                    animate={{ opacity: 1, rotateY: 0, scale: 1 }}
+                    exit={{ opacity: 0, rotateY: direction > 0 ? -30 : 30, scale: 0.95 }}
+                    transition={{ duration: 0.4, ease: "easeInOut" }}
+                    className="flex justify-center items-center max-w-full drop-shadow-2xl"
+                  >
+                    {currentPage === 1 ? (
+                      <div className="w-1/2 max-w-2xl bg-white rounded-r-lg overflow-hidden">
+                        <PdfPageView pdfDoc={pdfDoc} pageNum={1} scale={pdfScale} />
+                      </div>
+                    ) : (
+                      <div className="flex w-full max-w-5xl bg-white rounded-lg overflow-hidden">
+                        <div className="w-1/2 border-r border-slate-300 relative">
+                          <div className="absolute top-0 right-0 bottom-0 w-12 bg-gradient-to-l from-black/10 to-transparent pointer-events-none z-10" />
+                          <PdfPageView pdfDoc={pdfDoc} pageNum={currentPage} scale={pdfScale} />
+                        </div>
+                        <div className="w-1/2 relative">
+                          <div className="absolute top-0 left-0 bottom-0 w-12 bg-gradient-to-r from-black/10 to-transparent pointer-events-none z-10" />
+                          {currentPage + 1 <= MAX_PAGE && (
+                            <PdfPageView pdfDoc={pdfDoc} pageNum={currentPage + 1} scale={pdfScale} />
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </motion.div>
+                </AnimatePresence>
               </div>
             )}
 
             {/* Products on this page — always shown, PDF or not */}
-            {pageProducts.length > 0 && (
-              <div className="w-full max-w-2xl bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            {displayProducts.length > 0 && (
+              <div className="w-full max-w-3xl bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden shrink-0 mt-4">
                 <div className="px-4 py-2.5 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
                   <p className="text-xs font-bold text-slate-700">
-                    Products on page {currentPage}
+                    Products on {currentPage === 1 ? 'page 1' : `pages ${currentPage}-${currentPage + 1}`}
                   </p>
                   <p className="text-[10px] text-slate-400">Click to add to quote</p>
                 </div>
-                <div className="p-3 grid grid-cols-2 gap-2">
-                  {pageProducts.map(p => (
+                <div className="p-3 grid grid-cols-2 md:grid-cols-3 gap-2 max-h-64 overflow-y-auto">
+                  {displayProducts.map(p => (
                     <PageProductCard
                       key={p.sku}
                       sku={p.sku}
@@ -502,9 +546,9 @@ export default function CatalogQuote() {
               </div>
             )}
 
-            {pageProducts.length === 0 && !pdfLoading && (
-              <div className="text-center py-4">
-                <p className="text-sm text-slate-400">No products mapped to page {currentPage}</p>
+            {displayProducts.length === 0 && !pdfLoading && (
+              <div className="text-center py-4 shrink-0 mt-4">
+                <p className="text-sm text-slate-400">No products mapped to {currentPage === 1 ? 'page 1' : `pages ${currentPage}-${currentPage + 1}`}</p>
                 <p className="text-xs text-slate-300 mt-1">Navigate to a page with products (e.g., page 9, 31–35)</p>
               </div>
             )}
