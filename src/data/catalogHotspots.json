@@ -1,0 +1,1058 @@
+{
+  "2": [
+    {
+      "sku": "TBL-ODC-FITTED",
+      "name": "Outdoor Table Throw",
+      "x": 0,
+      "y": 0,
+      "width": 1,
+      "height": 1,
+      "groupedSkus": [
+        "TBL-ODC-FITTED"
+      ]
+    }
+  ],
+  "9": [
+    {
+      "sku": "BLD-LT-400",
+      "name": "Blade Lite 400 Retractable Banner Stand",
+      "x": 0.04,
+      "y": 0.12,
+      "width": 0.2,
+      "height": 0.6,
+      "groupedSkus": [
+        "BLD-LT-400",
+        "BLD-LT-600",
+        "BLD-LT-800",
+        "BLD-LT-850",
+        "BLD-LT-920",
+        "BLD-LT-1000",
+        "BLD-LT-1200"
+      ]
+    },
+    {
+      "sku": "LUM-LED3-ORL-B",
+      "name": "Slimline LED Spot Display Light",
+      "x": 0.7,
+      "y": 0.85,
+      "width": 0.25,
+      "height": 0.1,
+      "groupedSkus": [
+        "LUM-LED3-ORL-B"
+      ]
+    }
+  ],
+  "10": [
+    {
+      "sku": "ONT-800/S-84",
+      "name": "Orient 1 Retractable Banner Stand",
+      "x": 0.03,
+      "y": 0.12,
+      "width": 0.3,
+      "height": 0.78,
+      "groupedSkus": [
+        "ONT-800/S-84",
+        "ONT-850/S-84",
+        "ONT-920/S-84",
+        "ONT-1000/S-84"
+      ]
+    },
+    {
+      "sku": "ONT-800-DBL-S-4",
+      "name": "Orient 2 Double Sided Retractable Banner Stand",
+      "x": 0.37,
+      "y": 0.12,
+      "width": 0.3,
+      "height": 0.78,
+      "groupedSkus": [
+        "ONT-800-DBL-S-4",
+        "ONT-920-DBL-S-4"
+      ]
+    },
+    {
+      "sku": "ONT-850-DW",
+      "name": "Orient Organic Retractable Banner Stand",
+      "x": 0.67,
+      "y": 0.12,
+      "width": 0.3,
+      "height": 0.78,
+      "groupedSkus": [
+        "ONT-850-DW"
+      ]
+    }
+  ],
+  "11": [
+    {
+      "sku": "RU-S1-4",
+      "name": "Rollup Retractable Banner Stand",
+      "x": 0.042,
+      "y": 0.065,
+      "width": 0.212,
+      "height": 0.612,
+      "groupedSkus": [
+        "RU-S1-4"
+      ]
+    },
+    {
+      "sku": "PAC-1000-S-2",
+      "name": "Pacific",
+      "x": 0.286,
+      "y": 0.07,
+      "width": 0.208,
+      "height": 0.612,
+      "groupedSkus": [
+        "PAC-800-S-2",
+        "PAC-920-S-2",
+        "PAC-1000-S-2"
+      ]
+    },
+    {
+      "sku": "CN-484-B",
+      "name": "Contender",
+      "x": 0.532,
+      "y": 0.065,
+      "width": 0.207,
+      "height": 0.612,
+      "groupedSkus": [
+        "CN-24-S-8",
+        "CN-30-S-8",
+        "CN-36-S-8",
+        "CN-484-S",
+        "CN-484-B"
+      ]
+    },
+    {
+      "sku": "MRLN-850-2",
+      "name": "Merlin",
+      "x": 0.776,
+      "y": 0.065,
+      "width": 0.208,
+      "height": 0.612,
+      "groupedSkus": [
+        "MRLN-850-2"
+      ]
+    }
+  ],
+  "12": [
+    {
+      "sku": "ILLUM-800-1",
+      "name": "Illumistand Double Sided Light Up Retractable Banner Stand",
+      "x": 0.05,
+      "y": 0.1,
+      "width": 0.4,
+      "height": 0.4,
+      "groupedSkus": [
+        "ILLUM-800-1"
+      ]
+    },
+    {
+      "sku": "BCD-800-S",
+      "name": "Barracuda 800 Retractable Banner Stand",
+      "x": 0.55,
+      "y": 0.1,
+      "width": 0.4,
+      "height": 0.4,
+      "groupedSkus": [
+        "BCD-600-S1",
+        "BCD-800-S1",
+        "BCD-850-S1",
+        "BCD-920-S1",
+        "BCD-1200-S1"
+      ]
+    },
+    {
+      "sku": "ADV-800-S",
+      "name": "Advance Retractable Banner Stand",
+      "x": 0.05,
+      "y": 0.55,
+      "width": 0.4,
+      "height": 0.4,
+      "groupedSkus": [
+        "ADV-800-S"
+      ]
+    },
+    {
+      "sku": "IMG-800-S",
+      "name": "Imagine 800 Retractable Banner Stand",
+      "x": 0.55,
+      "y": 0.55,
+      "width": 0.4,
+      "height": 0.4,
+      "groupedSkus": [
+        "IMG-800-S",
+        "IMG-850-S"
+      ]
+    }
+  ],
+  "14": [
+    {
+      "sku": "MSQT-GIANT-920-S",
+      "name": "Giant Mosquito",
+      "x": 0.06,
+      "y": 0.07,
+      "width": 0.37,
+      "height": 0.76,
+      "groupedSkus": [
+        "MSQT-GIANT-920-S"
+      ]
+    },
+    {
+      "sku": "MSQT-LT-800",
+      "name": "Mosquito Lite",
+      "x": 0.53,
+      "y": 0.09,
+      "width": 0.39,
+      "height": 0.73,
+      "groupedSkus": [
+        "MSQT-LT-800"
+      ]
+    },
+    {
+      "sku": "DRAGON-FLY-X1",
+      "name": "Dragon Fly",
+      "x": 0.06,
+      "y": 0.51,
+      "width": 0.37,
+      "height": 0.79,
+      "groupedSkus": [
+        "DRAGON-FLY-X1"
+      ]
+    },
+    {
+      "sku": "SYNERGY-800",
+      "name": "Synergy 800",
+      "x": 0.53,
+      "y": 0.51,
+      "width": 0.39,
+      "height": 0.79,
+      "groupedSkus": [
+        "SYNERGY-800"
+      ]
+    }
+  ],
+  "15": [
+    {
+      "sku": "BREZ-2-S",
+      "name": "Breeze 2 Tabletop Retractable Banner Stand",
+      "x": 0.042,
+      "y": 0.607,
+      "width": 0.252,
+      "height": 0.29,
+      "groupedSkus": [
+        "BREZ-2-S"
+      ]
+    },
+    {
+      "sku": "CL-TBLTP-LB-01",
+      "name": "Catchlight Tabletop Light Box",
+      "x": 0.035,
+      "y": 0.805,
+      "width": 0.272,
+      "height": 0.16,
+      "groupedSkus": [
+        "CL-TBLTP-LB-01"
+      ]
+    }
+  ],
+  "16": [
+    {
+      "sku": "PGSUS3",
+      "name": "Pegasus Supreme Telescopic Banner Stand",
+      "x": 0.63,
+      "y": 0.08,
+      "width": 0.31,
+      "height": 0.46,
+      "groupedSkus": [
+        "PGSUS3",
+        "PGSUS3-EXT"
+      ]
+    },
+    {
+      "sku": "PGSUS2",
+      "name": "Pegasus Standard Telescopic Banner Stand",
+      "x": 0.63,
+      "y": 0.55,
+      "width": 0.31,
+      "height": 0.46,
+      "groupedSkus": [
+        "PGSUS2",
+        "PGSUS2-EXT"
+      ]
+    },
+    {
+      "sku": "TAURUS1-B",
+      "name": "Taurus Telescopic Banner Stand",
+      "x": 0.08,
+      "y": 0.54,
+      "width": 0.51,
+      "height": 0.46,
+      "groupedSkus": [
+        "TAURUS1-B"
+      ]
+    }
+  ],
+  "17": [
+    {
+      "sku": "LTNG",
+      "name": "Lightning Spring Back Banner Stand",
+      "x": 0.05,
+      "y": 0.05,
+      "width": 0.38,
+      "height": 0.7,
+      "groupedSkus": [
+        "LTNG"
+      ]
+    },
+    {
+      "sku": "L-MINI",
+      "name": "L-Mini Spring Back Banner Stand",
+      "x": 0.48,
+      "y": 0.05,
+      "width": 0.45,
+      "height": 0.45,
+      "groupedSkus": [
+        "L-MINI"
+      ]
+    },
+    {
+      "sku": "X-TEND-5",
+      "name": "X-TEND 5 Spring Back Banner Stand",
+      "x": 0.05,
+      "y": 0.55,
+      "width": 0.9,
+      "height": 0.35,
+      "groupedSkus": [
+        "X-TEND-1",
+        "X-TEND-2",
+        "X-TEND-3",
+        "X-TEND-4",
+        "X-TEND-5"
+      ]
+    }
+  ],
+  "18": [
+    {
+      "sku": "FMLT-E-S-600-2",
+      "name": "Formulate Essential Banners",
+      "x": 0.028,
+      "y": 0.068,
+      "width": 0.791,
+      "height": 0.409,
+      "groupedSkus": [
+        "FMLT-E-S-600-2",
+        "FMLT-E-S-800-2",
+        "FMLT-E-S-850-2",
+        "FMLT-E-S-920-2",
+        "FMLT-E-S-1000-2",
+        "FMLT-E-S-1200-2",
+        "FMLT-E-S-1500-2"
+      ]
+    },
+    {
+      "sku": "FMLT-E-BL-1100",
+      "name": "Formulate Essential Backlit Banner",
+      "x": 0.028,
+      "y": 0.563,
+      "width": 0.242,
+      "height": 0.371,
+      "groupedSkus": [
+        "FMLT-E-BL-1100"
+      ]
+    }
+  ],
+  "19": [
+    {
+      "sku": "FMLT-BL-WS3-01",
+      "name": "Formulate Master Backlit Backwalls",
+      "x": 0.05,
+      "y": 0.08,
+      "width": 0.42,
+      "height": 0.6,
+      "groupedSkus": [
+        "FMLT-BL-WS3-01",
+        "FMLT-BL-WS5-01",
+        "FMLT-BL-WS8-01"
+      ]
+    },
+    {
+      "sku": "MOD-FRM-01-MTL",
+      "name": "Modulate Magnetic Mix & Match Banners",
+      "x": 0.53,
+      "y": 0.4,
+      "width": 0.4,
+      "height": 0.5,
+      "groupedSkus": [
+        "MOD-FRM-01-MTL",
+        "MOD-FRM-02-MTL",
+        "MOD-FRM-03-MTL",
+        "MOD-FRM-04-MTL",
+        "MOD-FRM-05-MTL",
+        "MOD-FRM-06-MTL",
+        "MOD-FRM-07-MTL",
+        "MOD-FRM-08-MTL",
+        "MOD-FRM-09-MTL",
+        "MOD-FRM-10-MTL",
+        "MOD-FRM-11-MTL",
+        "MOD-FRM-12-MTL",
+        "MOD-FRM-13-MTL",
+        "MOD-FRM-14-MTL"
+      ]
+    }
+  ],
+  "23": [
+    {
+      "sku": "BLZ-0406",
+      "name": "Blaze Light Box 0406 - Freestanding",
+      "x": 0.05,
+      "y": 0.15,
+      "width": 0.45,
+      "height": 0.55,
+      "groupedSkus": [
+        "BLZ-0406",
+        "BLZ-0608",
+        "BLZ-0808",
+        "BLZ-0306",
+        "BLZ-0308",
+        "BLZ-0408",
+        "BLZ-1010",
+        "BLZ-1008"
+      ]
+    }
+  ],
+  "25": [
+    {
+      "sku": "BLZ-W-0603",
+      "name": "Blaze Light Box 0603 - Wall",
+      "x": 0.06,
+      "y": 0.19,
+      "width": 0.88,
+      "height": 0.28,
+      "groupedSkus": [
+        "BLZ-W-0603",
+        "BLZ-W-0604",
+        "BLZ-W-0606",
+        "BLZ-W-0803",
+        "BLZ-W-0804",
+        "BLZ-W-0806",
+        "BLZ-W-0808",
+        "BLZ-W-1008",
+        "BLZ-W-1010",
+        "BLZ-W-2008",
+        "BLZ-W-2010",
+        "BLZ-W-3008",
+        "BLZ-W-3010"
+      ]
+    }
+  ],
+  "27": [
+    {
+      "sku": "BLZ-W-2010",
+      "name": "Blaze Light Box 2010 - Wall",
+      "x": 0.05,
+      "y": 0.1,
+      "width": 0.9,
+      "height": 0.5,
+      "groupedSkus": [
+        "BLZ-W-2010",
+        "BLZ-W-3008"
+      ]
+    }
+  ],
+  "31": [
+    {
+      "sku": "VF-ESS-LB-S-01",
+      "name": "Vector Frame Essential Light Box 0808",
+      "x": 0.469,
+      "y": 0.353,
+      "width": 0.36,
+      "height": 0.43,
+      "groupedSkus": [
+        "VF-ESS-LB-S-01",
+        "VF-ESS-LB-R-01",
+        "VF-ESS-LB-R-02",
+        "VF-ESS-LB-R-03",
+        "VF-ESS-LB-R-04",
+        "VF-ESS-LB-R-05",
+        "VF-ESS-LB-R-06"
+      ]
+    },
+    {
+      "sku": "VF-ESS-LB-R-01",
+      "name": "Vector Frame Essential Light Box 0306",
+      "x": 0.088,
+      "y": 0.753,
+      "width": 0.329,
+      "height": 0.051,
+      "groupedSkus": [
+        "VF-ESS-LB-R-01"
+      ]
+    },
+    {
+      "sku": "VF-ESS-LB-R-02",
+      "name": "Vector Frame Essential Light Box 0308",
+      "x": 0.088,
+      "y": 0.809,
+      "width": 0.329,
+      "height": 0.051,
+      "groupedSkus": [
+        "VF-ESS-LB-R-02"
+      ]
+    },
+    {
+      "sku": "VF-ESS-LB-R-03",
+      "name": "Vector Frame Essential Light Box 0406",
+      "x": 0.088,
+      "y": 0.865,
+      "width": 0.329,
+      "height": 0.051,
+      "groupedSkus": [
+        "VF-ESS-LB-R-03"
+      ]
+    },
+    {
+      "sku": "VF-ESS-LB-R-04",
+      "name": "Vector Frame Essential Light Box 0408",
+      "x": 0.088,
+      "y": 0.921,
+      "width": 0.329,
+      "height": 0.051,
+      "groupedSkus": [
+        "VF-ESS-LB-R-04"
+      ]
+    },
+    {
+      "sku": "VF-ESS-LB-R-05",
+      "name": "Vector Frame Essential Light Box 1008",
+      "x": 0.088,
+      "y": 0.977,
+      "width": 0.329,
+      "height": 0.051,
+      "groupedSkus": [
+        "VF-ESS-LB-R-05"
+      ]
+    },
+    {
+      "sku": "VF-ESS-LB-R-06",
+      "name": "Vector Frame Essential Light Box 2008",
+      "x": 0.088,
+      "y": 1,
+      "width": 0.329,
+      "height": 0.051,
+      "groupedSkus": [
+        "VF-ESS-LB-R-06"
+      ]
+    }
+  ],
+  "32": [
+    {
+      "sku": "VFF-02-F",
+      "name": "Vector Fast Frame Banners",
+      "x": 0.57,
+      "y": 0.05,
+      "width": 0.35,
+      "height": 0.83,
+      "groupedSkus": [
+        "VFF-02-F",
+        "VFF-01-F"
+      ]
+    },
+    {
+      "sku": "VFF-03-F",
+      "name": "Vector Fast Frame Banner 0508",
+      "x": 0.02,
+      "y": 0.57,
+      "width": 0.5,
+      "height": 0.4,
+      "groupedSkus": [
+        "VFF-03-F"
+      ]
+    }
+  ],
+  "33": [
+    {
+      "sku": "VFF-LB-01-F",
+      "name": "Vector Fast Frame Light Box",
+      "x": 0.535,
+      "y": 0.07,
+      "width": 0.44,
+      "height": 0.66,
+      "groupedSkus": [
+        "VFF-LB-02-F",
+        "VFF-LB-01-F"
+      ]
+    },
+    {
+      "sku": "VFF-CT-BL",
+      "name": "Vector Fast Frame Backlit Counter",
+      "x": 0.3,
+      "y": 0.57,
+      "width": 0.24,
+      "height": 0.39,
+      "groupedSkus": [
+        "VFF-CT-BL"
+      ]
+    }
+  ],
+  "35": [
+    {
+      "sku": "13OZ_VINYL_SINGLE",
+      "name": "13 OZ. VINYL SINGLE-SIDED",
+      "x": 0.05,
+      "y": 0.15,
+      "width": 0.41,
+      "height": 0.27,
+      "groupedSkus": [
+        "13OZ_VINYL_SINGLE"
+      ]
+    },
+    {
+      "sku": "FABRIC_SINGLE",
+      "name": "FABRIC SINGLE-SIDED",
+      "x": 0.05,
+      "y": 0.5,
+      "width": 0.41,
+      "height": 0.27,
+      "groupedSkus": [
+        "FABRIC_SINGLE"
+      ]
+    },
+    {
+      "sku": "8OZ_MESH_VINYL",
+      "name": "8 OZ. MESH VINYL SINGLE-SIDED",
+      "x": 0.54,
+      "y": 0.15,
+      "width": 0.41,
+      "height": 0.27,
+      "groupedSkus": [
+        "8OZ_MESH_VINYL"
+      ]
+    },
+    {
+      "sku": "SCRIM_VINYL",
+      "name": "13 OZ. SCRIM VINYL SINGLE-SIDED & 18 OZ. SCRIM VINYL SINGLE & DOUBLE-SIDED",
+      "x": 0.54,
+      "y": 0.5,
+      "width": 0.41,
+      "height": 0.27,
+      "groupedSkus": [
+        "SCRIM_VINYL"
+      ]
+    },
+    {
+      "sku": "OUTDOOR_CANVAS",
+      "name": "6.5 OZ. OUTDOOR CANVAS SINGLE-SIDED",
+      "x": 0.3,
+      "y": 0.75,
+      "width": 0.41,
+      "height": 0.27,
+      "groupedSkus": [
+        "OUTDOOR_CANVAS"
+      ]
+    }
+  ],
+  "40": [
+    {
+      "sku": "ZOOM-FLX-TNT",
+      "name": "Zoom™ Flex Tent",
+      "x": 0.03,
+      "y": 0.05,
+      "width": 0.45,
+      "height": 0.5,
+      "groupedSkus": [
+        "ZOOM-FLX-TNT"
+      ]
+    },
+    {
+      "sku": "CP-B3",
+      "name": "Campaign",
+      "x": 0.05,
+      "y": 0.55,
+      "width": 0.35,
+      "height": 0.4,
+      "groupedSkus": [
+        "CP-B3"
+      ]
+    }
+  ],
+  "41": [
+    {
+      "sku": "PBFM902-B",
+      "name": "popup bar mini",
+      "x": 0.525,
+      "y": 0.15,
+      "width": 0.125,
+      "height": 0.3,
+      "groupedSkus": [
+        "PBFM902-B"
+      ]
+    },
+    {
+      "sku": "PBFL301-B",
+      "name": "popup bar large",
+      "x": 0.65,
+      "y": 0.15,
+      "width": 0.125,
+      "height": 0.3,
+      "groupedSkus": [
+        "PBFL301-B"
+      ]
+    }
+  ],
+  "42": [
+    {
+      "sku": "CP-B3",
+      "name": "Campaign Counter",
+      "x": 0,
+      "y": 0,
+      "width": 0.5,
+      "height": 0.5,
+      "groupedSkus": [
+        "CP-B3"
+      ]
+    },
+    {
+      "sku": "ZOOM-FLX-TNT",
+      "name": "Zoom Flex Tent",
+      "x": 0.055,
+      "y": 0.25,
+      "width": 0.9,
+      "height": 0.45,
+      "groupedSkus": [
+        "ZOOM-FLX-SM",
+        "ZOOM-FLX-M",
+        "ZOOM-FLX-LG",
+        "ZOOM-FLX-XL",
+        "ZOOM-FLX-SM-E",
+        "ZOOM-FLX-M-E",
+        "ZOOM-FLX-LG-E",
+        "ZOOM-FLX-XL-E"
+      ]
+    }
+  ],
+  "43": [
+    {
+      "sku": "ZM-FLX-CB",
+      "name": "cross base",
+      "x": 0.02,
+      "y": 0.07,
+      "width": 0.15,
+      "height": 0.12,
+      "groupedSkus": [
+        "ZM-FLX-CB"
+      ]
+    },
+    {
+      "sku": "ZM-FLX-SQ",
+      "name": "square steel base",
+      "x": 0.17,
+      "y": 0.07,
+      "width": 0.15,
+      "height": 0.12,
+      "groupedSkus": [
+        "ZM-FLX-SQ"
+      ]
+    },
+    {
+      "sku": "ZM-FLX-FB",
+      "name": "fillable ground base",
+      "x": 0.32,
+      "y": 0.07,
+      "width": 0.15,
+      "height": 0.12,
+      "groupedSkus": [
+        "ZM-FLX-FB"
+      ]
+    },
+    {
+      "sku": "ZM-FLX-FOLDABLE",
+      "name": "collapsible flagpole stand",
+      "x": 0.47,
+      "y": 0.07,
+      "width": 0.15,
+      "height": 0.12,
+      "groupedSkus": [
+        "ZM-FLX-FOLDABLE"
+      ]
+    },
+    {
+      "sku": "ZM-FLX-STICK-BASE",
+      "name": "stackable base",
+      "x": 0.63,
+      "y": 0.07,
+      "width": 0.15,
+      "height": 0.12,
+      "groupedSkus": [
+        "ZM-FLX-STICK-BASE"
+      ]
+    },
+    {
+      "sku": "ZM-FLX-AGR",
+      "name": "auger base",
+      "x": 0.02,
+      "y": 0.2,
+      "width": 0.15,
+      "height": 0.12,
+      "groupedSkus": [
+        "ZM-FLX-AGR"
+      ]
+    },
+    {
+      "sku": "ZM-FLX-STK",
+      "name": "ground stake (included)",
+      "x": 0.17,
+      "y": 0.2,
+      "width": 0.15,
+      "height": 0.12,
+      "groupedSkus": [
+        "ZM-FLX-STK"
+      ]
+    },
+    {
+      "sku": "ZM-FLX-DO",
+      "name": "drive-over base",
+      "x": 0.32,
+      "y": 0.2,
+      "width": 0.15,
+      "height": 0.12,
+      "groupedSkus": [
+        "ZM-FLX-DO"
+      ]
+    },
+    {
+      "sku": "ZM-FLX-WR",
+      "name": "water ring base support",
+      "x": 0.47,
+      "y": 0.2,
+      "width": 0.15,
+      "height": 0.12,
+      "groupedSkus": [
+        "ZM-FLX-WR"
+      ]
+    }
+  ],
+  "44": [
+    {
+      "sku": "ZOOM-FLX-LG",
+      "name": "Zoom Flex - Large Flag",
+      "x": 0.6,
+      "y": 0.18,
+      "width": 0.35,
+      "height": 0.65,
+      "groupedSkus": [
+        "ZOOM-FLX-SM",
+        "ZOOM-FLX-M",
+        "ZOOM-FLX-LG"
+      ]
+    }
+  ],
+  "45": [
+    {
+      "sku": "ZOOM-FLX-LNTRN",
+      "name": "Zoom Flex Lantern",
+      "x": 0.04,
+      "y": 0.12,
+      "width": 0.29,
+      "height": 0.58,
+      "groupedSkus": [
+        "ZOOM-FLX-LNTRN"
+      ]
+    },
+    {
+      "sku": "CBRC-97X36-PS-GW",
+      "name": "Barricade Covers",
+      "x": 0.56,
+      "y": 0.15,
+      "width": 0.4,
+      "height": 0.33,
+      "groupedSkus": [
+        "CBRC-97X36-PS-GW",
+        "CBRC-97X36-DD-GDBL",
+        "CBRC-72X36-PS-GW",
+        "CBRC-72X36-DD-GDBL"
+      ]
+    },
+    {
+      "sku": "BRKAWY-POLES",
+      "name": "Breakaway Banners",
+      "x": 0.06,
+      "y": 0.68,
+      "width": 0.81,
+      "height": 0.24,
+      "groupedSkus": [
+        "BRKAWY-POLES",
+        "BRKAWAY-SM-G",
+        "BRKAWAY-MD-G",
+        "BRKAWAY-LG-G"
+      ]
+    }
+  ],
+  "46": [
+    {
+      "sku": "WIND-MIN",
+      "name": "Wind Dancer Mini",
+      "x": 0.032,
+      "y": 0.145,
+      "width": 0.185,
+      "height": 0.525,
+      "groupedSkus": [
+        "WIND-MIN"
+      ]
+    },
+    {
+      "sku": "WIND-LT",
+      "name": "Wind Dancer LT",
+      "x": 0.217,
+      "y": 0.133,
+      "width": 0.249,
+      "height": 0.618,
+      "groupedSkus": [
+        "WIND-LT"
+      ]
+    },
+    {
+      "sku": "WIND-MX",
+      "name": "Wind Dancer",
+      "x": 0.466,
+      "y": 0.124,
+      "width": 0.254,
+      "height": 0.656,
+      "groupedSkus": [
+        "WIND-MX"
+      ]
+    },
+    {
+      "sku": "SWING-SGN",
+      "name": "Swing Sign",
+      "x": 0.034,
+      "y": 0.703,
+      "width": 0.223,
+      "height": 0.263,
+      "groupedSkus": [
+        "SWING-SGN"
+      ]
+    },
+    {
+      "sku": "WHIRL-WND-2",
+      "name": "Whirlwind",
+      "x": 0.27,
+      "y": 0.703,
+      "width": 0.238,
+      "height": 0.292,
+      "groupedSkus": [
+        "WHIRL-WND-2"
+      ]
+    },
+    {
+      "sku": "PYRA-FR-AM-G",
+      "name": "Pyramid",
+      "x": 0.538,
+      "y": 0.719,
+      "width": 0.224,
+      "height": 0.271,
+      "groupedSkus": [
+        "PYRA-FR-AM-G"
+      ]
+    }
+  ],
+  "47": [
+    {
+      "sku": "CONTOUR-01-G",
+      "name": "Arrow Up",
+      "x": 0.05,
+      "y": 0.05,
+      "width": 0.22,
+      "height": 0.3,
+      "groupedSkus": [
+        "CONTOUR-01-G"
+      ]
+    },
+    {
+      "sku": "CONTOUR-02-G",
+      "name": "Arrow Side",
+      "x": 0.28,
+      "y": 0.05,
+      "width": 0.22,
+      "height": 0.3,
+      "groupedSkus": [
+        "CONTOUR-02-G"
+      ]
+    },
+    {
+      "sku": "CONTOUR-03-G",
+      "name": "Wave 1",
+      "x": 0.52,
+      "y": 0.05,
+      "width": 0.16,
+      "height": 0.3,
+      "groupedSkus": [
+        "CONTOUR-03-G"
+      ]
+    },
+    {
+      "sku": "CONTOUR-04-G",
+      "name": "Bottle",
+      "x": 0.7,
+      "y": 0.05,
+      "width": 0.16,
+      "height": 0.3,
+      "groupedSkus": [
+        "CONTOUR-04-G"
+      ]
+    },
+    {
+      "sku": "CONTOUR-05-G",
+      "name": "Circle",
+      "x": 0.02,
+      "y": 0.4,
+      "width": 0.22,
+      "height": 0.35,
+      "groupedSkus": [
+        "CONTOUR-05-G"
+      ]
+    },
+    {
+      "sku": "CONTOUR-06-G",
+      "name": "Wave 2",
+      "x": 0.26,
+      "y": 0.4,
+      "width": 0.22,
+      "height": 0.35,
+      "groupedSkus": [
+        "CONTOUR-06-G"
+      ]
+    },
+    {
+      "sku": "APEX",
+      "name": "Apex",
+      "x": 0.5,
+      "y": 0.45,
+      "width": 0.22,
+      "height": 0.35,
+      "groupedSkus": [
+        "APEX"
+      ]
+    },
+    {
+      "sku": "ACE-2",
+      "name": "ACE-2",
+      "x": 0.75,
+      "y": 0.45,
+      "width": 0.22,
+      "height": 0.35,
+      "groupedSkus": [
+        "ACE-2"
+      ]
+    },
+    {
+      "sku": "ACE-ECO",
+      "name": "ACE ECO",
+      "x": 0.6,
+      "y": 0.85,
+      "width": 0.22,
+      "height": 0.35,
+      "groupedSkus": [
+        "ACE-ECO"
+      ]
+    }
+  ]
+}

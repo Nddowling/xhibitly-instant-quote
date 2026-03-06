@@ -19,9 +19,13 @@
     "products:import": "node scripts/importOrbusToBase44.js",
     "products:resume": "node scripts/resumeImport.js",
     "scrape:resources": "node scripts/scrapeDownloadableResources.js",
-    "scrape:match": "node scripts/matchFilesToProducts.js"
+    "scrape:match": "node scripts/matchFilesToProducts.js",
+    "catalog:pages": "node scripts/convertPagesToImages.js",
+    "catalog:hotspots": "node scripts/generatePageHotspots.js",
+    "catalog:build": "npm run catalog:pages && npm run catalog:hotspots"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.78.0",
     "@babel/core": "^7.24.0",
     "@base44/sdk": "^0.8.18",
     "@base44/vite-plugin": "^0.2.16",

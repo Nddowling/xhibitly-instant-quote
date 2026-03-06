@@ -1,179 +1,214 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { PAGE_PRODUCTS, MAX_PAGE, MIN_PAGE, SKU_TO_PAGE } from '@/data/catalogPageMapping';
 import {
-  ChevronLeft, ChevronRight, Plus, Minus, Trash2, ShoppingCart,
-  DollarSign, FileText, Search, X, ZoomIn, ZoomOut, Loader2, BookOpen
+  ChevronLeft, ChevronRight, Plus, Minus, X, ShoppingCart,
+  DollarSign, FileText, Search, Loader2, ImageOff, Package
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const PDF_URLS = [
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/96f439ea9_exhibitors-handbook_p001-005.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/fa2d96f04_exhibitors-handbook_p006-010.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/44e40bba6_exhibitors-handbook_p011-015.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/8f60bf7fc_exhibitors-handbook_p016-020.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/f1f8ef1c8_exhibitors-handbook_p021-025.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/b63e7ed26_exhibitors-handbook_p026-030.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/8c0c5ec5d_exhibitors-handbook_p031-035.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/854305152_exhibitors-handbook_p036-040.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/ed1455046_exhibitors-handbook_p041-045.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/a731186ff_exhibitors-handbook_p046-050.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/a713f27cb_exhibitors-handbook_p051-055.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/8f79a785c_exhibitors-handbook_p061-065.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/4a399cd76_exhibitors-handbook_p066-070.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/f82e19db9_exhibitors-handbook_p071-075.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/7ae81ab2f_exhibitors-handbook_p076-080.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/022a60eca_exhibitors-handbook_p081-085.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/acf440a1f_exhibitors-handbook_p086-090.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/510464716_exhibitors-handbook_p091-095.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/ab3ab9e5a_exhibitors-handbook_p096-100.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/b91a3e4cb_exhibitors-handbook_p101-105.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/4818a9bc5_exhibitors-handbook_p106-110.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/455b00486_exhibitors-handbook_p111-115.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/8477ffd86_exhibitors-handbook_p116-120.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/04f6dca26_exhibitors-handbook_p121-125.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/6096b205b_exhibitors-handbook_p126-130.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/4cbbc4149_exhibitors-handbook_p131-135.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/63bee2b79_exhibitors-handbook_p136-140.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/ede072fe2_exhibitors-handbook_p146-150.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/7bfcbade4_exhibitors-handbook_p151-155.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/76940cac3_exhibitors-handbook_p156-160.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/7404245ec_exhibitors-handbook_p161-165.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/0e395ee7b_exhibitors-handbook_p166-170.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/09ae679a1_exhibitors-handbook_p176-180.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/20026656c_exhibitors-handbook_p181-185.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/e8f158557_exhibitors-handbook_p186-190.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/510d7b8aa_exhibitors-handbook_p191-195.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/75326516f_exhibitors-handbook_p196-200.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/4302dc6c2_exhibitors-handbook_p201-205.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/7484fc06b_exhibitors-handbook_p206-210.pdf",
-  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/5b3814230_exhibitors-handbook_p211-215.pdf"
-];
+// ─── Config ─────────────────────────────────────────────────────────────────
+const SUPABASE_URL = 'https://xpgvpzbzmkubahyxwipk.supabase.co/storage/v1/object/public/orbus-assets';
 
-// ─── Helper: format currency ────────────────────────────────────────────────
+function pageImageUrl(pageNum) {
+  return `${SUPABASE_URL}/catalog/pages/page-${String(pageNum).padStart(3, '0')}.jpg`;
+}
+
 function fmt(n) {
-  if (!n && n !== 0) return 'Quote';
+  if (!n && n !== 0) return null;
   return '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
-// ─── Hook: load + cache product details from Base44 ─────────────────────────
+// ─── Load hotspot data lazily ────────────────────────────────────────────────
+let _hotspots = null;
+async function getHotspots() {
+  if (_hotspots) return _hotspots;
+  try {
+    const mod = await import('@/data/catalogHotspots.json');
+    _hotspots = mod.default;
+  } catch {
+    _hotspots = {};
+  }
+  return _hotspots;
+}
+
+// ─── Hook: product detail cache ──────────────────────────────────────────────
 function useProductCache() {
   const cache = useRef({});
-  const [, forceUpdate] = useState(0);
+  const [tick, setTick] = useState(0);
 
   const fetch = useCallback(async (sku) => {
-    if (cache.current[sku]) return;
-    cache.current[sku] = { loading: true };
+    if (cache.current[sku] !== undefined) return;
+    cache.current[sku] = null; // mark loading
     try {
       const res = await base44.entities.Product.filter({ sku });
-      if (res.length > 0) {
-        cache.current[sku] = res[0];
-      } else {
-        cache.current[sku] = { sku, name: sku, loading: false };
-      }
+      cache.current[sku] = res[0] || { sku, name: sku };
     } catch {
-      cache.current[sku] = { sku, name: sku, loading: false };
+      cache.current[sku] = { sku, name: sku };
     }
-    forceUpdate(n => n + 1);
+    setTick(t => t + 1);
   }, []);
 
   return { cache: cache.current, fetch };
 }
 
-// ─── PDF Page Renderer ───────────────────────────────────────────────────────
-function PdfPageView({ pdfDoc, pageNum, scale = 1.0, className = "" }) {
-  const canvasRef = useRef(null);
-  const renderTask = useRef(null);
+// ─── Catalog Page Image with hotspot overlays ────────────────────────────────
+function CatalogPageView({ pageNum, hotspots, onHotspotClick, selectedHotspot }) {
+  const [imgLoaded, setImgLoaded] = useState(false);
+  const [imgError, setImgError] = useState(false);
+  const imgRef = useRef(null);
 
   useEffect(() => {
-    if (!pdfDoc || !canvasRef.current || !pageNum) return;
-    let cancelled = false;
+    setImgLoaded(false);
+    setImgError(false);
+  }, [pageNum]);
 
-    const render = async () => {
-      try {
-        if (renderTask.current) {
-          renderTask.current.cancel();
-          renderTask.current = null;
-        }
-        const page = await pdfDoc.getPage(pageNum);
-        if (cancelled) return;
+  const onLoad = () => {
+    setImgLoaded(true);
+  };
 
-        const viewport = page.getViewport({ scale });
-        const canvas = canvasRef.current;
-        canvas.width = viewport.width;
-        canvas.height = viewport.height;
-        const ctx = canvas.getContext('2d');
-
-        renderTask.current = page.render({ canvasContext: ctx, viewport });
-        await renderTask.current.promise;
-      } catch (err) {
-        if (err?.name !== 'RenderingCancelledException') {
-          console.warn('[PDF render]', err);
-        }
-      }
-    };
-
-    render();
-    return () => {
-      cancelled = true;
-      if (renderTask.current) renderTask.current.cancel();
-    };
-  }, [pdfDoc, pageNum, scale]);
+  const spots = hotspots || [];
 
   if (!pageNum) return null;
 
   return (
-    <canvas
-      ref={canvasRef}
-      className={`w-full h-auto ${className}`}
-      style={{ display: 'block' }}
-    />
+    <div className="relative inline-block w-full">
+      {/* Page image */}
+      <img
+        ref={imgRef}
+        src={pageImageUrl(pageNum)}
+        alt={`Catalog page ${pageNum}`}
+        className="w-full h-auto rounded-lg shadow-2xl block"
+        onLoad={onLoad}
+        onError={() => setImgError(true)}
+      />
+
+      {/* Loading state */}
+      {!imgLoaded && !imgError && (
+        <div className="absolute inset-0 flex items-center justify-center bg-slate-100 rounded-lg">
+          <Loader2 className="w-8 h-8 text-slate-300 animate-spin" />
+        </div>
+      )}
+
+      {/* Error state */}
+      {imgError && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-50 rounded-lg gap-3">
+          <ImageOff className="w-10 h-10 text-slate-300" />
+          <div className="text-center">
+            <p className="text-sm font-medium text-slate-500">Page {pageNum} not yet uploaded</p>
+            <p className="text-xs text-slate-400 mt-1">
+              Run: <code className="bg-slate-100 px-1 rounded">npm run catalog:pages</code>
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Hotspot overlays — only when image is loaded */}
+      {imgLoaded && spots.map((spot, i) => {
+        const isSelected = selectedHotspot?.sku === spot.sku;
+        return (
+          <div
+            key={`${spot.sku}-${i}`}
+            onClick={() => onHotspotClick(spot)}
+            style={{
+              position: 'absolute',
+              left: `${spot.x * 100}%`,
+              top: `${spot.y * 100}%`,
+              width: `${spot.width * 100}%`,
+              height: `${spot.height * 100}%`,
+              cursor: 'pointer',
+            }}
+            className={`group border-2 rounded transition-all duration-150
+              ${isSelected
+                ? 'border-[#e2231a] bg-[#e2231a]/20'
+                : 'border-transparent hover:border-[#e2231a]/60 hover:bg-[#e2231a]/10'
+              }`}
+            title={spot.name}
+          >
+            {/* Add badge — appears on hover */}
+            <div className={`absolute top-1 right-1 transition-opacity
+              ${isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+              <div className="bg-[#e2231a] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-lg flex items-center gap-1">
+                <Plus className="w-2.5 h-2.5" />
+                Add
+              </div>
+            </div>
+            {/* Product name tooltip on hover */}
+            <div className={`absolute bottom-1 left-1 right-1 transition-opacity
+              ${isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+              <div className="bg-black/75 text-white text-[10px] px-1.5 py-1 rounded shadow-lg leading-tight line-clamp-2">
+                {spot.name}
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
   );
 }
 
-// ─── Product Card (on the page) ──────────────────────────────────────────────
-function PageProductCard({ sku, name, category, isPrimary, productData, onFetch, onAdd }) {
-  useEffect(() => { onFetch(sku); }, [sku, onFetch]);
-
-  const price = productData?.base_price || productData?.price_min || null;
-  const imgUrl = productData?.image_cached_url || productData?.image_url || null;
-  const sizes = productData?.sizes?.length > 0 ? productData.sizes : productData?.booth_sizes?.length > 0 ? productData.booth_sizes : [];
+// ─── Variant picker popup (shown when hotspot groups multiple SKUs) ───────────
+function VariantPicker({ spot, products, onAdd, onClose }) {
+  const skus = spot.groupedSkus || [spot.sku];
+  if (skus.length === 1) {
+    // Auto-add if only one SKU
+    useEffect(() => {
+      const p = products[skus[0]];
+      onAdd({ sku: skus[0], name: p?.name || spot.name, price: p?.base_price, imageUrl: p?.image_cached_url || p?.image_url });
+      onClose();
+    }, []);
+    return null;
+  }
 
   return (
-    <button
-      onClick={() => onAdd({ sku, name: productData?.name || name, category, price, imageUrl: imgUrl, sizes })}
-      className={`group flex items-center gap-3 p-2.5 rounded-xl border transition-all text-left w-full
-        ${isPrimary
-          ? 'border-[#e2231a]/30 bg-[#e2231a]/5 hover:bg-[#e2231a]/10 hover:border-[#e2231a]/50'
-          : 'border-slate-200 bg-white hover:bg-slate-50 hover:border-slate-300'}`}
-    >
-      {/* Thumbnail */}
-      <div className="w-14 h-14 flex-shrink-0 rounded-lg bg-slate-100 overflow-hidden flex items-center justify-center border border-slate-200">
-        {imgUrl ? (
-          <img src={imgUrl} alt={name} className="w-full h-full object-contain" />
-        ) : (
-          <span className="text-slate-300 text-xl">📦</span>
-        )}
+    <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/40 rounded-lg">
+      <div className="bg-white rounded-2xl shadow-2xl w-80 max-h-[80%] flex flex-col overflow-hidden">
+        <div className="flex items-center justify-between p-4 border-b border-slate-100">
+          <div>
+            <p className="text-sm font-bold text-slate-900">{spot.name}</p>
+            <p className="text-xs text-slate-500">Choose a size or variant</p>
+          </div>
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-600">
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+        <div className="overflow-y-auto p-3 space-y-1.5">
+          {skus.map(sku => {
+            const p = products[sku];
+            const price = p?.base_price || null;
+            return (
+              <button
+                key={sku}
+                onClick={() => {
+                  onAdd({ sku, name: p?.name || sku, price, imageUrl: p?.image_cached_url || p?.image_url });
+                  onClose();
+                }}
+                className="w-full flex items-center gap-3 p-2.5 rounded-xl border border-slate-200 hover:border-[#e2231a]/40 hover:bg-[#e2231a]/5 transition-all text-left group"
+              >
+                <div className="w-12 h-12 flex-shrink-0 rounded-lg bg-slate-100 overflow-hidden flex items-center justify-center border border-slate-100">
+                  {p?.image_cached_url || p?.image_url
+                    ? <img src={p.image_cached_url || p.image_url} alt={sku} className="w-full h-full object-contain" />
+                    : <Package className="w-5 h-5 text-slate-300" />
+                  }
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-semibold text-slate-800 leading-tight">{p?.name || sku}</p>
+                  <p className="text-[10px] text-slate-400 mt-0.5">{sku}</p>
+                  {price && <p className="text-xs font-bold text-[#e2231a]">{fmt(price)}</p>}
+                </div>
+                <Plus className="w-4 h-4 text-[#e2231a] opacity-0 group-hover:opacity-100 flex-shrink-0" />
+              </button>
+            );
+          })}
+        </div>
       </div>
-
-      {/* Info */}
-      <div className="flex-1 min-w-0">
-        <p className="text-xs font-semibold text-slate-800 leading-tight line-clamp-2">{name}</p>
-        <p className="text-[10px] text-slate-400 mt-0.5">{sku}</p>
-      </div>
-
-      {/* Add button */}
-      <div className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
-        <Plus className="w-4 h-4 text-[#e2231a]" />
-      </div>
-    </button>
+    </div>
   );
 }
 
-// ─── Order Item Row ──────────────────────────────────────────────────────────
+// ─── Order Item ──────────────────────────────────────────────────────────────
 function OrderItem({ item, onQtyChange, onRemove, onSizeChange }) {
   const total = item.price ? item.price * item.qty : null;
   const sizes = item.sizes?.length > 0 ? item.sizes : null;
@@ -185,15 +220,15 @@ function OrderItem({ item, onQtyChange, onRemove, onSizeChange }) {
         <div className="w-12 h-12 flex-shrink-0 rounded-lg bg-slate-50 overflow-hidden flex items-center justify-center border border-slate-100">
           {item.imageUrl
             ? <img src={item.imageUrl} alt={item.name} className="w-full h-full object-contain p-1" />
-            : <span className="text-slate-300 text-sm">📦</span>
+            : <Package className="w-5 h-5 text-slate-300" />
           }
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-xs font-bold text-slate-800 leading-tight line-clamp-2">{item.name}</p>
           <p className="text-[10px] text-slate-400 mt-0.5">{item.sku}</p>
-          
+
           {sizes && (
-            <select 
+            <select
               className="mt-2 w-full text-xs border border-slate-200 rounded-md p-1.5 bg-slate-50 text-slate-700 focus:outline-none focus:ring-1 focus:ring-[#e2231a]"
               value={item.selectedSize || ''}
               onChange={(e) => onSizeChange(item.id, e.target.value)}
@@ -213,7 +248,7 @@ function OrderItem({ item, onQtyChange, onRemove, onSizeChange }) {
           }
         </div>
       </div>
-      
+
       {/* Qty controls */}
       <div className="flex items-center justify-between mt-1 pt-2 border-t border-slate-100">
         <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Quantity</span>
@@ -233,68 +268,35 @@ function OrderItem({ item, onQtyChange, onRemove, onSizeChange }) {
 
 // ─── Main Page ───────────────────────────────────────────────────────────────
 export default function CatalogQuote() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageInput, setPageInput] = useState('1');
+  const [currentPage, setCurrentPage] = useState(9); // default to a page with products
+  const [pageInput, setPageInput] = useState('9');
   const [direction, setDirection] = useState(1);
-  const [pdfDoc, setPdfDoc] = useState(null);
-  const [pdfLoading, setPdfLoading] = useState(false);
-  const [pdfError, setPdfError] = useState(false);
-  const [pdfScale, setPdfScale] = useState(1.3);
+  const [hotspotData, setHotspotData] = useState({});
   const [orderItems, setOrderItems] = useState([]);
-  const [searchSku, setSearchSku] = useState('');
   const [customerName, setCustomerName] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedImage, setGeneratedImage] = useState(null);
+  const [searchSku, setSearchSku] = useState('');
+  const [selectedHotspot, setSelectedHotspot] = useState(null);
+  const [showVariants, setShowVariants] = useState(false);
   const { cache: productCache, fetch: fetchProduct } = useProductCache();
 
-  // Load PDF on mount
+  // Load hotspot data
   useEffect(() => {
-    const loadPdf = async () => {
-      setPdfLoading(true);
-      setPdfError(false);
-      try {
-        const moduleUrl = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.mjs';
-        const pdfjsLib = await import(/* @vite-ignore */ moduleUrl);
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.mjs';
-        
-        // Merge PDFs in the frontend to avoid backend memory limits
-        const { PDFDocument } = await import(/* @vite-ignore */ 'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/+esm');
-        const mergedPdf = await PDFDocument.create();
-        
-        // Fetch all PDFs in parallel
-        const fetchPromises = PDF_URLS.map(url => fetch(url).then(res => res.arrayBuffer()));
-        const buffers = await Promise.all(fetchPromises);
-
-        for (const buffer of buffers) {
-            const pdf = await PDFDocument.load(buffer);
-            const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
-            copiedPages.forEach((page) => mergedPdf.addPage(page));
-        }
-
-        const pdfBytes = await mergedPdf.save();
-        const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-        const objectUrl = URL.createObjectURL(blob);
-        
-        const doc = await pdfjsLib.getDocument({ url: objectUrl, withCredentials: false }).promise;
-        setPdfDoc(doc);
-        setPdfLoading(false);
-      } catch (err) {
-        console.error('Failed to load PDF:', err);
-        setPdfLoading(false);
-        setPdfError(true);
-      }
-    };
-    loadPdf();
+    getHotspots().then(setHotspotData);
   }, []);
 
-  // Pre-fetch product details for current page products
-  const displayProducts = React.useMemo(() => {
-    return PAGE_PRODUCTS[currentPage] || [];
-  }, [currentPage]);
+  // Pre-fetch product details for all SKUs on current page
+  const pageProducts = PAGE_PRODUCTS[currentPage] || [];
+  const currentHotspots = hotspotData[currentPage] || [];
 
   useEffect(() => {
-    displayProducts.forEach(p => fetchProduct(p.sku));
-  }, [displayProducts, fetchProduct]);
+    const skus = new Set([
+      ...pageProducts.map(p => p.sku),
+      ...currentHotspots.flatMap(h => h.groupedSkus || [h.sku]),
+    ]);
+    skus.forEach(sku => fetchProduct(sku));
+  }, [currentPage, currentHotspots, fetchProduct]);
 
   // Navigation
   const goToPage = useCallback((n) => {
@@ -302,132 +304,155 @@ export default function CatalogQuote() {
     setDirection(p > currentPage ? 1 : -1);
     setCurrentPage(p);
     setPageInput(String(p));
+    setSelectedHotspot(null);
+    setShowVariants(false);
   }, [currentPage]);
 
   const handlePageInput = (e) => {
     setPageInput(e.target.value);
     const n = parseInt(e.target.value);
-    if (!isNaN(n)) goToPage(n);
+    if (!isNaN(n) && n >= 1) goToPage(n);
   };
 
-  // SKU search: jump to that product's primary page
+  // SKU search → jump to product's page
   const handleSkuSearch = () => {
     const sku = searchSku.trim().toUpperCase();
     const page = SKU_TO_PAGE[sku];
-    if (page) {
-      goToPage(page);
-      setSearchSku('');
+    if (page) { goToPage(page); setSearchSku(''); }
+  };
+
+  // Hotspot clicked
+  const handleHotspotClick = (spot) => {
+    setSelectedHotspot(spot);
+    const skus = spot.groupedSkus || [spot.sku];
+    if (skus.length === 1) {
+      const p = productCache[skus[0]];
+      addToOrder({ sku: skus[0], name: p?.name || spot.name, price: p?.base_price, imageUrl: p?.image_cached_url || p?.image_url });
+      setSelectedHotspot(null);
+    } else {
+      setShowVariants(true);
     }
   };
 
-  // Add product to order
-  const handleAdd = useCallback((product) => {
+  // Add to order
+  const addToOrder = useCallback((product) => {
     setOrderItems(prev => {
       const existing = prev.find(i => i.sku === product.sku);
-      if (existing) {
-        return prev.map(i => i.sku === product.sku ? { ...i, qty: i.qty + 1 } : i);
-      }
-      return [...prev, { ...product, id: Date.now() + Math.random(), qty: 1 }];
+      if (existing) return prev.map(i => i.sku === product.sku ? { ...i, qty: i.qty + 1 } : i);
+      return [...prev, { ...product, id: `${product.sku}-${Date.now()}`, qty: 1 }];
     });
   }, []);
 
-  const handleQtyChange = useCallback((id, delta) => {
-    setOrderItems(prev => prev
-      .map(i => i.id === id ? { ...i, qty: Math.max(1, i.qty + delta) } : i)
-    );
-  }, []);
-
-  const handleRemove = useCallback((id) => {
-    setOrderItems(prev => prev.filter(i => i.id !== id));
-  }, []);
-
+  const handleQtyChange = (id, delta) => {
+    setOrderItems(prev => prev.map(i => i.id === id ? { ...i, qty: Math.max(1, i.qty + delta) } : i));
+  };
+  const handleRemove = (id) => setOrderItems(prev => prev.filter(i => i.id !== id));
   const handleSizeChange = useCallback((id, size) => {
     setOrderItems(prev => prev.map(i => i.id === id ? { ...i, selectedSize: size } : i));
   }, []);
 
   // Totals
-  const subtotal = orderItems.reduce((sum, i) => sum + (i.price ? i.price * i.qty : 0), 0);
+  const subtotal = orderItems.reduce((s, i) => s + (i.price ? i.price * i.qty : 0), 0);
   const hasQuoteItems = orderItems.some(i => !i.price);
   const itemCount = orderItems.reduce((s, i) => s + i.qty, 0);
+  const hasHotspots = currentHotspots.length > 0;
 
-  // Handle PDF scale
-  const zoomIn = () => setPdfScale(s => Math.min(s + 0.2, 2.5));
-  const zoomOut = () => setPdfScale(s => Math.max(s - 0.2, 0.5));
-
+  // Generate booth concept image
   const handleGenerateImage = async () => {
     setIsGenerating(true);
     try {
       const imageUrls = orderItems.map(i => i.imageUrl).filter(Boolean);
       const productNames = orderItems.map(i => i.name).join(', ');
-      
+
       const prompt = `A professional, high-quality 3D render of a trade show booth featuring the following products: ${productNames}. The booth should be set in a modern, brightly lit exhibition hall with a clean, neutral carpet. The products should be arranged logically to create an inviting space. Photorealistic, 8k resolution, architectural visualization.`;
-      
+
       const res = await base44.integrations.Core.GenerateImage({
         prompt,
         existing_image_urls: imageUrls.length > 0 ? imageUrls : undefined
       });
-      
+
       if (res && res.url) {
         setGeneratedImage(res.url);
       }
     } catch (err) {
-      console.error("Failed to generate image", err);
-      alert("Failed to generate image. Please try again.");
+      console.error('Failed to generate image', err);
+      alert('Failed to generate image. Please try again.');
     } finally {
       setIsGenerating(false);
     }
   };
 
   return (
-    <div className="h-screen flex flex-col bg-slate-50 overflow-hidden">
-      {/* Top bar */}
-      <div className="bg-white border-b border-slate-200 px-4 py-2.5 flex items-center gap-4 flex-shrink-0">
-        <div className="flex items-center gap-2">
+    <div className="h-screen flex flex-col bg-slate-100 overflow-hidden">
+      {/* ── Top bar ── */}
+      <div className="bg-white border-b border-slate-200 px-4 py-2.5 flex items-center gap-3 flex-shrink-0 shadow-sm">
+        <div className="flex items-center gap-2 flex-shrink-0">
           <div className="w-7 h-7 bg-[#e2231a] rounded-lg flex items-center justify-center">
             <FileText className="w-4 h-4 text-white" />
           </div>
-          <h1 className="text-sm font-bold text-slate-900">Catalog Quote</h1>
+          <h1 className="text-sm font-bold text-slate-900 hidden sm:block">Catalog Quote</h1>
         </div>
 
-        {/* Customer name */}
         <input
           type="text"
           placeholder="Customer name..."
           value={customerName}
           onChange={e => setCustomerName(e.target.value)}
-          className="text-sm border border-slate-200 rounded-lg px-3 py-1.5 w-44 focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30"
+          className="text-sm border border-slate-200 rounded-lg px-3 py-1.5 w-40 focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30"
         />
 
-        {/* SKU search */}
         <div className="flex items-center gap-1">
           <input
             type="text"
-            placeholder="Jump to SKU..."
+            placeholder="Find SKU..."
             value={searchSku}
             onChange={e => setSearchSku(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && handleSkuSearch()}
-            className="text-sm border border-slate-200 rounded-lg px-3 py-1.5 w-36 focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30"
+            className="text-sm border border-slate-200 rounded-lg px-3 py-1.5 w-32 focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30"
           />
           <button onClick={handleSkuSearch} className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-500">
             <Search className="w-4 h-4" />
           </button>
         </div>
 
-        <div className="flex-1" />
+        {/* Page nav — centered in top bar */}
+        <div className="flex-1 flex items-center justify-center gap-2">
+          <button onClick={() => goToPage(currentPage - 1)} disabled={currentPage <= 1}
+            className="p-1.5 rounded-lg hover:bg-slate-100 disabled:opacity-30 text-slate-600">
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5">
+            <span className="text-xs text-slate-500">Page</span>
+            <input
+              type="number" min={1} max={MAX_PAGE} value={pageInput}
+              onChange={handlePageInput}
+              className="w-14 text-center text-sm font-bold bg-transparent focus:outline-none"
+            />
+            <span className="text-xs text-slate-400">/ {MAX_PAGE}</span>
+          </div>
+          <button onClick={() => goToPage(currentPage + 1)} disabled={currentPage >= MAX_PAGE}
+            className="p-1.5 rounded-lg hover:bg-slate-100 disabled:opacity-30 text-slate-600">
+            <ChevronRight className="w-5 h-5" />
+          </button>
+          {hasHotspots && (
+            <Badge className="bg-[#e2231a]/10 text-[#e2231a] text-[10px] ml-1">
+              {currentHotspots.length} clickable
+            </Badge>
+          )}
+        </div>
 
-        {/* Item count badge */}
         {itemCount > 0 && (
-          <div className="flex items-center gap-1.5 bg-[#e2231a]/10 text-[#e2231a] px-3 py-1 rounded-full text-sm font-semibold">
+          <div className="flex items-center gap-1.5 bg-[#e2231a] text-white px-3 py-1 rounded-full text-xs font-bold flex-shrink-0">
             <ShoppingCart className="w-3.5 h-3.5" />
-            {itemCount} item{itemCount !== 1 ? 's' : ''}
+            {itemCount}
           </div>
         )}
       </div>
 
-      {/* 3-column body */}
+      {/* ── 3-column body ── */}
       <div className="flex-1 flex overflow-hidden">
 
-        {/* ══ LEFT: Live Quote Totaler ══════════════════════════════════════ */}
+        {/* LEFT: Live Quote Totaler */}
         <div className="w-64 flex-shrink-0 bg-white border-r border-slate-200 flex flex-col items-center justify-center p-6 relative">
           <div className="absolute top-0 left-0 right-0 p-4 border-b border-slate-100 bg-slate-50">
             <h2 className="text-xs font-bold text-slate-500 uppercase tracking-wide text-center">Order Total</h2>
@@ -435,13 +460,30 @@ export default function CatalogQuote() {
               <p className="text-[11px] text-slate-500 mt-0.5 truncate text-center">{customerName}</p>
             )}
           </div>
-          
+
           <div className="mt-12 text-center w-full">
             <div className="text-4xl font-black text-slate-900 mb-2">
               {subtotal > 0 ? fmt(subtotal) : hasQuoteItems ? 'TBD' : '$0.00'}
             </div>
-            <p className="text-sm text-slate-500 mb-12">{itemCount} item{itemCount !== 1 ? 's' : ''}</p>
-            
+            <p className="text-sm text-slate-500 mb-6">{itemCount} item{itemCount !== 1 ? 's' : ''}</p>
+
+            {/* Line item summary */}
+            {orderItems.length > 0 && (
+              <div className="text-left space-y-1 mb-6 max-h-40 overflow-y-auto">
+                {orderItems.map(item => (
+                  <div key={item.id} className="flex items-center gap-1.5 py-1 border-b border-slate-50 last:border-0">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[10px] font-medium text-slate-700 truncate">{item.name}</p>
+                      <p className="text-[9px] text-slate-400">{item.sku} x{item.qty}</p>
+                    </div>
+                    <p className="text-[10px] font-bold text-slate-800 flex-shrink-0">
+                      {item.price ? fmt(item.price * item.qty) : '—'}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+
             <Button
               size="lg"
               className="w-full bg-[#e2231a] hover:bg-[#b01b13] text-white py-6 text-base font-bold shadow-lg"
@@ -466,156 +508,75 @@ export default function CatalogQuote() {
           </div>
         </div>
 
-        {/* ══ CENTER: Digital Catalog Viewer ═══════════════════════════════ */}
-        <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-          {/* Page navigation bar */}
-          <div className="bg-white border-b border-slate-200 px-4 py-2 flex items-center gap-3 flex-shrink-0">
-            <button
-              onClick={() => goToPage(currentPage - 1)}
-              disabled={currentPage <= 1}
-              className="p-1.5 rounded-lg hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed text-slate-600 transition-colors"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
+        {/* CENTER: Shoppable Catalog Page */}
+        <div className="flex-1 overflow-auto p-4 flex justify-center">
+          <div className="relative w-full max-w-2xl">
+            <AnimatePresence mode="wait" custom={direction}>
+              <motion.div
+                key={currentPage}
+                custom={direction}
+                initial={{ opacity: 0, x: direction > 0 ? 40 : -40 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: direction > 0 ? -40 : 40 }}
+                transition={{ duration: 0.2, ease: 'easeInOut' }}
+              >
+                <CatalogPageView
+                  pageNum={currentPage}
+                  hotspots={currentHotspots}
+                  onHotspotClick={handleHotspotClick}
+                  selectedHotspot={selectedHotspot}
+                />
+              </motion.div>
+            </AnimatePresence>
 
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-slate-500">Page</span>
-              <input
-                type="number"
-                min={1}
-                max={MAX_PAGE}
-                value={pageInput}
-                onChange={handlePageInput}
-                className="w-16 text-center text-sm font-bold border border-slate-200 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30"
+            {/* Variant picker popup */}
+            {showVariants && selectedHotspot && (
+              <VariantPicker
+                spot={selectedHotspot}
+                products={productCache}
+                onAdd={addToOrder}
+                onClose={() => { setShowVariants(false); setSelectedHotspot(null); }}
               />
-              <span className="text-xs text-slate-400">of {MAX_PAGE}</span>
-            </div>
-
-            <button
-              onClick={() => goToPage(currentPage + 1)}
-              disabled={currentPage >= MAX_PAGE}
-              className="p-1.5 rounded-lg hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed text-slate-600 transition-colors"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
-
-            <div className="flex-1" />
-
-            {/* Products on this page badge */}
-            {displayProducts.length > 0 && (
-              <Badge className="bg-slate-100 text-slate-600 text-[10px]">
-                {displayProducts.length} product{displayProducts.length !== 1 ? 's' : ''} on this page
-              </Badge>
             )}
 
-            {/* Zoom controls */}
-            <div className="flex items-center gap-1">
-              <button onClick={zoomOut} className="p-1.5 rounded hover:bg-slate-100 text-slate-500">
-                <ZoomOut className="w-3.5 h-3.5" />
-              </button>
-              <span className="text-[10px] text-slate-400 w-8 text-center">{Math.round(pdfScale * 100)}%</span>
-              <button onClick={zoomIn} className="p-1.5 rounded hover:bg-slate-100 text-slate-500">
-                <ZoomIn className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          </div>
-
-          {/* PDF Viewer area */}
-          <div className="flex-1 relative bg-slate-100 flex overflow-hidden">
-            <div className="flex-1 overflow-auto p-4 flex flex-col items-center gap-4">
-              {pdfLoading && (
-                <div className="flex flex-col items-center justify-center h-full gap-3 mt-20">
-                  <Loader2 className="w-8 h-8 text-[#e2231a] animate-spin" />
-                  <p className="text-sm text-slate-500">Loading catalog...</p>
-                </div>
-              )}
-
-              {pdfError && (
-                <div className="flex flex-col items-center justify-center h-full max-w-sm text-center gap-4 mt-20">
-                  <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center">
-                    <FileText className="w-6 h-6 text-amber-500" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-slate-700 mb-1">Catalog PDF not yet uploaded</p>
-                    <p className="text-xs text-slate-500 leading-relaxed">
-                      Upload the Orbus Exhibitor's Handbook to Supabase storage at:<br />
-                      <code className="text-[10px] bg-slate-100 px-1.5 py-0.5 rounded mt-1 inline-block break-all">
-                        orbus-assets → catalog/exhibitors-handbook.pdf
-                      </code>
-                    </p>
-                  </div>
-                  <p className="text-xs text-slate-400">
-                    Products are still shown below — you can take orders without the PDF.
+            {/* No hotspots yet — show product chips below image */}
+            {!hasHotspots && pageProducts.length > 0 && (
+              <div className="mt-3 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                <div className="px-4 py-2 bg-amber-50 border-b border-amber-100">
+                  <p className="text-xs text-amber-700 font-medium">
+                    Hotspots not yet generated for this page — click below to add products
                   </p>
                 </div>
-              )}
-
-              {pdfDoc && !pdfLoading && (
-                <div className="relative w-full flex-1 flex items-center justify-center overflow-hidden" style={{ perspective: 1200 }}>
-                  <AnimatePresence mode="wait" custom={direction}>
-                    <motion.div
-                      key={currentPage}
-                      custom={direction}
-                      initial={{ opacity: 0, x: direction > 0 ? 50 : -50 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: direction > 0 ? -50 : 50 }}
-                      transition={{ duration: 0.3, ease: "easeInOut" }}
-                      className="flex justify-center items-center max-w-full drop-shadow-2xl relative cursor-pointer"
-                      onClick={(e) => {
-                        const rect = e.currentTarget.getBoundingClientRect();
-                        const x = e.clientX - rect.left;
-                        if (x > rect.width / 2) {
-                           goToPage(currentPage + 1);
-                        } else {
-                           goToPage(currentPage - 1);
-                        }
-                      }}
-                    >
-                      <div className="w-full max-w-3xl bg-white rounded-lg overflow-hidden">
-                        <PdfPageView pdfDoc={pdfDoc} pageNum={currentPage} scale={pdfScale} />
-                      </div>
-                    </motion.div>
-                  </AnimatePresence>
-                </div>
-              )}
-              
-              {/* Products on this page — always shown, PDF or not */}
-              {displayProducts.length > 0 && (
-                <div className="w-full max-w-3xl bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden shrink-0 mt-4 mb-8">
-                  <div className="px-4 py-2.5 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
-                    <p className="text-xs font-bold text-slate-700">
-                      Products on page {currentPage}
-                    </p>
-                    <p className="text-[10px] text-slate-400">Click to add to quote</p>
-                  </div>
-                  <div className="p-3 grid grid-cols-2 md:grid-cols-4 gap-2 max-h-64 overflow-y-auto">
-                    {displayProducts.map(p => (
-                      <PageProductCard
+                <div className="p-3 grid grid-cols-2 gap-2">
+                  {pageProducts.map(p => {
+                    const pd = productCache[p.sku];
+                    return (
+                      <button
                         key={p.sku}
-                        sku={p.sku}
-                        name={p.name}
-                        category={p.category}
-                        isPrimary={p.isPrimary}
-                        productData={productCache[p.sku]}
-                        onFetch={fetchProduct}
-                        onAdd={handleAdd}
-                      />
-                    ))}
-                  </div>
+                        onClick={() => addToOrder({ sku: p.sku, name: pd?.name || p.name, price: pd?.base_price, imageUrl: pd?.image_cached_url || pd?.image_url })}
+                        className="flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-200 hover:border-[#e2231a]/40 hover:bg-[#e2231a]/5 text-left transition-all group"
+                      >
+                        <div className="w-12 h-12 flex-shrink-0 rounded-lg bg-slate-100 overflow-hidden flex items-center justify-center">
+                          {pd?.image_cached_url || pd?.image_url
+                            ? <img src={pd.image_cached_url || pd.image_url} alt={p.name} className="w-full h-full object-contain" />
+                            : <Package className="w-4 h-4 text-slate-300" />}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-semibold text-slate-800 leading-tight line-clamp-2">{p.name}</p>
+                          <p className="text-[9px] text-slate-400">{p.sku}</p>
+                          {pd?.base_price && <p className="text-xs font-bold text-[#e2231a]">{fmt(pd.base_price)}</p>}
+                        </div>
+                        <Plus className="w-4 h-4 text-[#e2231a] opacity-0 group-hover:opacity-100 flex-shrink-0" />
+                      </button>
+                    );
+                  })}
                 </div>
-              )}
-
-              {displayProducts.length === 0 && !pdfLoading && (
-                <div className="text-center py-4 shrink-0 mt-4 mb-8">
-                  <p className="text-sm text-slate-400">No products mapped to page {currentPage}</p>
-                  <p className="text-xs text-slate-300 mt-1">Navigate to a page with products (e.g., page 9, 31–35)</p>
-                </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* ══ RIGHT: Order Items ════════════════════════════════════════════ */}
+        {/* RIGHT: Order Items */}
         <div className="w-72 flex-shrink-0 bg-white border-l border-slate-200 flex flex-col overflow-hidden">
           <div className="p-4 border-b border-slate-100 bg-slate-50">
             <div className="flex items-center gap-2">
@@ -629,7 +590,7 @@ export default function CatalogQuote() {
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-3 space-y-2">
+          <div className="flex-1 overflow-y-auto p-2.5 space-y-2">
             {orderItems.length === 0 ? (
               <div className="text-center py-10">
                 <ShoppingCart className="w-7 h-7 text-slate-200 mx-auto mb-2" />
@@ -648,6 +609,15 @@ export default function CatalogQuote() {
               ))
             )}
           </div>
+
+          {orderItems.length > 0 && (
+            <div className="p-3 border-t border-slate-100">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs text-slate-500">Subtotal</span>
+                <span className="text-sm font-black text-slate-900">{subtotal > 0 ? fmt(subtotal) : 'Quote'}</span>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
