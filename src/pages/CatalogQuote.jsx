@@ -346,69 +346,39 @@ export default function CatalogQuote() {
       <div className="flex-1 flex overflow-hidden">
 
         {/* ══ LEFT: Live Quote Totaler ══════════════════════════════════════ */}
-        <div className="w-52 flex-shrink-0 bg-white border-r border-slate-200 flex flex-col overflow-hidden">
-          <div className="p-4 border-b border-slate-100">
-            <div className="flex items-center gap-2">
-              <DollarSign className="w-4 h-4 text-[#e2231a]" />
-              <span className="text-xs font-bold text-slate-700 uppercase tracking-wide">Live Total</span>
-            </div>
+        <div className="w-64 flex-shrink-0 bg-white border-r border-slate-200 flex flex-col items-center justify-center p-6 relative">
+          <div className="absolute top-0 left-0 right-0 p-4 border-b border-slate-100 bg-slate-50">
+            <h2 className="text-xs font-bold text-slate-500 uppercase tracking-wide text-center">Order Total</h2>
             {customerName && (
-              <p className="text-[11px] text-slate-500 mt-0.5 truncate">{customerName}</p>
+              <p className="text-[11px] text-slate-500 mt-0.5 truncate text-center">{customerName}</p>
             )}
           </div>
-
-          {/* Running total */}
-          <div className="p-4 border-b border-slate-100">
-            <div className="text-2xl font-black text-slate-900">
-              {subtotal > 0 ? fmt(subtotal) : hasQuoteItems ? 'TBD' : '—'}
+          
+          <div className="mt-12 text-center w-full">
+            <div className="text-4xl font-black text-slate-900 mb-2">
+              {subtotal > 0 ? fmt(subtotal) : hasQuoteItems ? 'TBD' : '$0.00'}
             </div>
-            {hasQuoteItems && (
-              <p className="text-[10px] text-amber-600 mt-0.5">Some items require quotes</p>
-            )}
-            {subtotal > 0 && (
-              <p className="text-[10px] text-slate-400 mt-0.5">{itemCount} item{itemCount !== 1 ? 's' : ''}</p>
-            )}
-          </div>
-
-          {/* Line items */}
-          <div className="flex-1 overflow-y-auto p-3 space-y-1.5">
-            {orderItems.length === 0 ? (
-              <div className="text-center py-8">
-                <ShoppingCart className="w-6 h-6 text-slate-200 mx-auto mb-2" />
-                <p className="text-[11px] text-slate-400">No items yet</p>
-                <p className="text-[10px] text-slate-300 mt-1">Click products to add</p>
-              </div>
-            ) : (
-              orderItems.map(item => (
-                <div key={item.id} className="flex items-center gap-1.5 py-1.5 border-b border-slate-50 last:border-0">
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[10px] font-medium text-slate-700 leading-tight truncate">{item.name}</p>
-                    <p className="text-[9px] text-slate-400">{item.sku} × {item.qty}</p>
-                  </div>
-                  <p className="text-[10px] font-bold text-slate-800 flex-shrink-0">
-                    {item.price ? fmt(item.price * item.qty) : 'Quote'}
-                  </p>
-                </div>
-              ))
-            )}
-          </div>
-
-          {/* Actions */}
-          <div className="p-3 border-t border-slate-100 space-y-2">
+            <p className="text-sm text-slate-500 mb-12">{itemCount} item{itemCount !== 1 ? 's' : ''}</p>
+            
             <Button
-              size="sm"
-              className="w-full bg-[#e2231a] hover:bg-[#b01b13] text-white text-xs h-8"
-              disabled={orderItems.length === 0}
-              onClick={() => alert('Quote generation coming soon!')}
+              size="lg"
+              className="w-full bg-[#e2231a] hover:bg-[#b01b13] text-white py-6 text-base font-bold shadow-lg"
+              disabled={orderItems.length === 0 || isGenerating}
+              onClick={handleGenerateImage}
             >
-              Generate Quote
+              {isGenerating ? (
+                <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> Generating...</>
+              ) : (
+                'Generate Booth Concept'
+              )}
             </Button>
+
             {orderItems.length > 0 && (
               <button
                 onClick={() => setOrderItems([])}
-                className="w-full text-[10px] text-slate-400 hover:text-red-500 transition-colors py-0.5"
+                className="w-full text-xs text-slate-400 hover:text-red-500 transition-colors mt-4 py-2"
               >
-                Clear all
+                Clear all items
               </button>
             )}
           </div>
