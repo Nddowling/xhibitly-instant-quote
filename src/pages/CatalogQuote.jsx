@@ -272,6 +272,30 @@ export default function CatalogQuote() {
   const zoomIn = () => setPdfScale(s => Math.min(s + 0.2, 2.5));
   const zoomOut = () => setPdfScale(s => Math.max(s - 0.2, 0.5));
 
+  const handleGenerateImage = async () => {
+    setIsGenerating(true);
+    try {
+      const imageUrls = orderItems.map(i => i.imageUrl).filter(Boolean);
+      const productNames = orderItems.map(i => i.name).join(', ');
+      
+      const prompt = `A professional, high-quality 3D render of a trade show booth featuring the following products: ${productNames}. The booth should be set in a modern, brightly lit exhibition hall with a clean, neutral carpet. The products should be arranged logically to create an inviting space. Photorealistic, 8k resolution, architectural visualization.`;
+      
+      const res = await base44.integrations.Core.GenerateImage({
+        prompt,
+        existing_image_urls: imageUrls.length > 0 ? imageUrls : undefined
+      });
+      
+      if (res && res.url) {
+        setGeneratedImage(res.url);
+      }
+    } catch (err) {
+      console.error("Failed to generate image", err);
+      alert("Failed to generate image. Please try again.");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   return (
     <div className="h-screen flex flex-col bg-slate-50 overflow-hidden">
       {/* Top bar */}
