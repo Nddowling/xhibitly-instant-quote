@@ -202,9 +202,8 @@ export default function CatalogQuote() {
         const pdfjsLib = await import(/* @vite-ignore */ moduleUrl);
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.mjs';
         
-        const res = await fetch(CATALOG_PDF_URL);
-        if (!res.ok) throw new Error(`Failed to fetch PDF: ${res.status} ${res.statusText}`);
-        const blob = await res.blob();
+        const { data } = await base44.functions.invoke('catalogPdf');
+        const blob = new Blob([data], { type: 'application/pdf' });
         const objectUrl = URL.createObjectURL(blob);
         
         const doc = await pdfjsLib.getDocument({ url: objectUrl, withCredentials: false }).promise;
