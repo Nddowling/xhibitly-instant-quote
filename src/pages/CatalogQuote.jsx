@@ -143,34 +143,28 @@ function PageProductCard({ sku, name, category, isPrimary, productData, onFetch,
   const sizes = productData?.sizes?.length > 0 ? productData.sizes : productData?.booth_sizes?.length > 0 ? productData.booth_sizes : [];
 
   return (
-    <div className={`group flex flex-col gap-2 p-3 rounded-xl border transition-all text-left w-full bg-white/95 backdrop-blur-sm hover:shadow-md
-        ${isPrimary ? 'border-[#e2231a]/40 shadow-sm' : 'border-slate-200'}`}>
-      <div className="flex items-center gap-3">
-        {/* Thumbnail */}
-        <div className="w-12 h-12 flex-shrink-0 rounded-lg bg-white overflow-hidden flex items-center justify-center border border-slate-100 shadow-sm">
-          {imgUrl ? (
-            <img src={imgUrl} alt={name} className="w-full h-full object-contain p-1" />
-          ) : (
-            <span className="text-slate-200 text-xl">📦</span>
-          )}
-        </div>
-
-        {/* Info */}
-        <div className="flex-1 min-w-0">
-          <p className="text-xs font-bold text-slate-800 leading-tight line-clamp-2">{name}</p>
-          <p className="text-[10px] text-slate-500 mt-0.5">{sku}</p>
+    <button 
+      onClick={() => onAdd({ sku, name: productData?.name || name, category, price, imageUrl: imgUrl, sizes })}
+      className={`group relative flex flex-col items-center gap-2 p-2 rounded-xl border bg-white hover:border-[#e2231a] hover:shadow-md transition-all text-left w-full overflow-hidden
+        ${isPrimary ? 'border-[#e2231a]/40 shadow-sm' : 'border-slate-200'}`}
+    >
+      <div className="w-full aspect-square bg-slate-50 rounded-lg flex items-center justify-center p-2">
+        {imgUrl ? (
+          <img src={imgUrl} alt={name} className="w-full h-full object-contain group-hover:scale-105 transition-transform" />
+        ) : (
+          <span className="text-slate-200 text-3xl">📦</span>
+        )}
+      </div>
+      <div className="w-full px-1 pb-1">
+        <p className="text-[11px] font-bold text-slate-800 leading-tight line-clamp-2 text-center">{name}</p>
+        <p className="text-[9px] text-slate-400 text-center mt-0.5">{sku}</p>
+      </div>
+      <div className="absolute inset-0 bg-[#e2231a]/0 group-hover:bg-[#e2231a]/5 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+        <div className="bg-[#e2231a] text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1 transform translate-y-4 group-hover:translate-y-0 transition-all">
+          <Plus className="w-3 h-3" /> Add
         </div>
       </div>
-      
-      <Button 
-        size="sm" 
-        variant="default" 
-        className="w-full h-8 text-xs bg-slate-900 hover:bg-slate-800 text-white mt-1 shadow-sm"
-        onClick={() => onAdd({ sku, name: productData?.name || name, category, price, imageUrl: imgUrl, sizes })}
-      >
-        <Plus className="w-3 h-3 mr-1.5" /> Add to Quote
-      </Button>
-    </div>
+    </button>
   );
 }
 
@@ -602,17 +596,17 @@ export default function CatalogQuote() {
               )}
             </div>
 
-            {/* Floating Products Panel Overlay */}
+            {/* Static Products Panel */}
             {displayProducts.length > 0 && !pdfLoading && (
-              <div className="absolute right-6 top-6 bottom-6 w-72 bg-white/80 backdrop-blur-xl rounded-2xl border border-white/40 shadow-2xl overflow-hidden flex flex-col z-20 pointer-events-auto">
-                <div className="px-4 py-3 bg-slate-900/90 backdrop-blur-md text-white flex items-center justify-between shrink-0">
+              <div className="w-64 bg-white border-l border-slate-200 flex flex-col shrink-0 shadow-[-4px_0_15px_-3px_rgba(0,0,0,0.05)] z-20">
+                <div className="px-4 py-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between shrink-0">
                   <div className="flex items-center gap-2">
-                    <BookOpen className="w-4 h-4 text-[#e2231a]" />
-                    <p className="text-sm font-bold">On This Page</p>
+                    <BookOpen className="w-4 h-4 text-slate-400" />
+                    <p className="text-xs font-bold text-slate-700 uppercase tracking-wide">Page Products</p>
                   </div>
-                  <Badge className="bg-white/20 text-white hover:bg-white/30 border-none">{displayProducts.length}</Badge>
+                  <Badge className="bg-slate-200 text-slate-600 hover:bg-slate-300 border-none">{displayProducts.length}</Badge>
                 </div>
-                <div className="flex-1 overflow-y-auto p-3 space-y-3">
+                <div className="flex-1 overflow-y-auto p-3 grid grid-cols-2 gap-2 content-start">
                   {displayProducts.map(p => (
                     <PageProductCard
                       key={p.sku}
