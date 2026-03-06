@@ -71,13 +71,15 @@ Deno.serve(async (req) => {
 
         cachedPdfBytes = await mergedPdf.save();
 
-        return new Response(cachedPdfBytes, {
-            status: 200,
-            headers: {
-                'Content-Type': 'application/pdf',
-                'Access-Control-Allow-Origin': '*'
-            }
-        });
+        // Convert to base64
+        let binary = '';
+        const len = cachedPdfBytes.byteLength;
+        for (let i = 0; i < len; i++) {
+            binary += String.fromCharCode(cachedPdfBytes[i]);
+        }
+        const base64 = btoa(binary);
+
+        return Response.json({ base64 });
     } catch (error) {
         return Response.json({ error: error.message }, { status: 500 });
     }
