@@ -1267,6 +1267,19 @@ export default function BoothSnapshotRenderer({
         //   5. Geometry heuristics → detect structural vs graphic meshes
         // ══════════════════════════════════════════════════════════
 
+        // ── Step 0: Detect and correct Z-up model orientation ──
+        // GLBs converted from OBJ/CAD (AutoCAD/Z-up sources) have their height along
+        // the Z axis. In Three.js (Y-up) these models appear flat on the floor, and
+        // wall-mounted items stick out perpendicular because Z (height) becomes depth.
+        // Fix: rotate -90° around X so Z (height) maps to Y (up).
+        {
+          const preBox = new THREE.Box3().setFromObject(modelMesh);
+          const preSize = preBox.getSize(new THREE.Vector3());
+          if (preSize.z > preSize.y * 1.1) {
+            modelMesh.rotation.x = -Math.PI / 2;
+          }
+        }
+
         // ── Step 1: Scale & Position ──
         const origBox = new THREE.Box3().setFromObject(modelMesh);
         const origSize = origBox.getSize(new THREE.Vector3());

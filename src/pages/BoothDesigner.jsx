@@ -530,8 +530,13 @@ export default function BoothDesigner() {
         }
 
         // Apply width, depth, and smart placement hint based on type
+        // Inline/fabric exhibit display categories — all go at back wall
+        const isInlineExhibit = cat.includes('inline') || cat.includes('master') ||
+            cat.includes('designer') || cat.includes('essential lite') ||
+            cat.includes('hopup') || cat.includes('hop-up') || cat.includes('embrace') ||
+            cat.includes('formulate') || cat.includes('modulate') || cat.includes('vector fast');
         let near = 'center';
-        if (cat.includes('backwall') || cat.includes('display') || name.includes('backwall')) {
+        if (cat.includes('backwall') || cat.includes('display') || name.includes('backwall') || isInlineExhibit) {
             w = extractedW || 10;
             d = 2;
             near = 'back_wall';
