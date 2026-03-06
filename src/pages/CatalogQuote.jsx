@@ -143,26 +143,31 @@ function PageProductCard({ sku, name, category, isPrimary, productData, onFetch,
   const sizes = productData?.sizes?.length > 0 ? productData.sizes : productData?.booth_sizes?.length > 0 ? productData.booth_sizes : [];
 
   return (
-    <button 
+    <button
       onClick={() => onAdd({ sku, name: productData?.name || name, category, price, imageUrl: imgUrl, sizes })}
-      className={`group relative flex flex-col items-center gap-2 p-2 rounded-xl border bg-white hover:border-[#e2231a] hover:shadow-md transition-all text-left w-full overflow-hidden
-        ${isPrimary ? 'border-[#e2231a]/40 shadow-sm' : 'border-slate-200'}`}
+      className={`group flex items-center gap-3 p-2.5 rounded-xl border transition-all text-left w-full
+        ${isPrimary
+          ? 'border-[#e2231a]/30 bg-[#e2231a]/5 hover:bg-[#e2231a]/10 hover:border-[#e2231a]/50'
+          : 'border-slate-200 bg-white hover:bg-slate-50 hover:border-slate-300'}`}
     >
-      <div className="w-full aspect-square bg-slate-50 rounded-lg flex items-center justify-center p-2">
+      {/* Thumbnail */}
+      <div className="w-14 h-14 flex-shrink-0 rounded-lg bg-slate-100 overflow-hidden flex items-center justify-center border border-slate-200">
         {imgUrl ? (
-          <img src={imgUrl} alt={name} className="w-full h-full object-contain group-hover:scale-105 transition-transform" />
+          <img src={imgUrl} alt={name} className="w-full h-full object-contain" />
         ) : (
-          <span className="text-slate-200 text-3xl">📦</span>
+          <span className="text-slate-300 text-xl">📦</span>
         )}
       </div>
-      <div className="w-full px-1 pb-1">
-        <p className="text-[11px] font-bold text-slate-800 leading-tight line-clamp-2 text-center">{name}</p>
-        <p className="text-[9px] text-slate-400 text-center mt-0.5">{sku}</p>
+
+      {/* Info */}
+      <div className="flex-1 min-w-0">
+        <p className="text-xs font-semibold text-slate-800 leading-tight line-clamp-2">{name}</p>
+        <p className="text-[10px] text-slate-400 mt-0.5">{sku}</p>
       </div>
-      <div className="absolute inset-0 bg-[#e2231a]/0 group-hover:bg-[#e2231a]/5 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
-        <div className="bg-[#e2231a] text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1 transform translate-y-4 group-hover:translate-y-0 transition-all">
-          <Plus className="w-3 h-3" /> Add
-        </div>
+
+      {/* Add button */}
+      <div className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+        <Plus className="w-4 h-4 text-[#e2231a]" />
       </div>
     </button>
   );
@@ -284,12 +289,7 @@ export default function CatalogQuote() {
 
   // Pre-fetch product details for current page products
   const displayProducts = React.useMemo(() => {
-    return currentPage === 1 
-      ? (PAGE_PRODUCTS[1] || [])
-      : [
-          ...(PAGE_PRODUCTS[currentPage] || []),
-          ...(currentPage + 1 <= MAX_PAGE ? (PAGE_PRODUCTS[currentPage + 1] || []) : [])
-        ];
+    return PAGE_PRODUCTS[currentPage] || [];
   }, [currentPage]);
 
   useEffect(() => {
@@ -299,9 +299,6 @@ export default function CatalogQuote() {
   // Navigation
   const goToPage = useCallback((n) => {
     let p = Math.max(1, Math.min(n, MAX_PAGE));
-    if (p > 1 && p % 2 !== 0) {
-      p = p - 1;
-    }
     setDirection(p > currentPage ? 1 : -1);
     setCurrentPage(p);
     setPageInput(String(p));
@@ -474,7 +471,7 @@ export default function CatalogQuote() {
           {/* Page navigation bar */}
           <div className="bg-white border-b border-slate-200 px-4 py-2 flex items-center gap-3 flex-shrink-0">
             <button
-              onClick={() => goToPage(currentPage === 1 ? 1 : currentPage - 2)}
+              onClick={() => goToPage(currentPage - 1)}
               disabled={currentPage <= 1}
               className="p-1.5 rounded-lg hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed text-slate-600 transition-colors"
             >
@@ -495,8 +492,8 @@ export default function CatalogQuote() {
             </div>
 
             <button
-              onClick={() => goToPage(currentPage === 1 ? 2 : currentPage + 2)}
-              disabled={currentPage >= MAX_PAGE - (currentPage === 1 ? 0 : 1)}
+              onClick={() => goToPage(currentPage + 1)}
+              disabled={currentPage >= MAX_PAGE}
               className="p-1.5 rounded-lg hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed text-slate-600 transition-colors"
             >
               <ChevronRight className="w-4 h-4" />
@@ -559,69 +556,62 @@ export default function CatalogQuote() {
                     <motion.div
                       key={currentPage}
                       custom={direction}
-                      initial={{ opacity: 0, rotateY: direction > 0 ? 30 : -30, scale: 0.95 }}
-                      animate={{ opacity: 1, rotateY: 0, scale: 1 }}
-                      exit={{ opacity: 0, rotateY: direction > 0 ? -30 : 30, scale: 0.95 }}
-                      transition={{ duration: 0.4, ease: "easeInOut" }}
-                      className="flex justify-center items-center max-w-full drop-shadow-2xl"
+                      initial={{ opacity: 0, x: direction > 0 ? 50 : -50 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: direction > 0 ? -50 : 50 }}
+                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                      className="flex justify-center items-center max-w-full drop-shadow-2xl relative cursor-pointer"
+                      onClick={(e) => {
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        const x = e.clientX - rect.left;
+                        if (x > rect.width / 2) {
+                           goToPage(currentPage + 1);
+                        } else {
+                           goToPage(currentPage - 1);
+                        }
+                      }}
                     >
-                      {currentPage === 1 ? (
-                        <div className="w-1/2 max-w-2xl bg-white rounded-r-lg overflow-hidden">
-                          <PdfPageView pdfDoc={pdfDoc} pageNum={1} scale={pdfScale} />
-                        </div>
-                      ) : (
-                        <div className="flex w-full max-w-5xl bg-white rounded-lg overflow-hidden">
-                          <div className="w-1/2 border-r border-slate-300 relative">
-                            <div className="absolute top-0 right-0 bottom-0 w-12 bg-gradient-to-l from-black/10 to-transparent pointer-events-none z-10" />
-                            <PdfPageView pdfDoc={pdfDoc} pageNum={currentPage} scale={pdfScale} />
-                          </div>
-                          <div className="w-1/2 relative">
-                            <div className="absolute top-0 left-0 bottom-0 w-12 bg-gradient-to-r from-black/10 to-transparent pointer-events-none z-10" />
-                            {currentPage + 1 <= MAX_PAGE && (
-                              <PdfPageView pdfDoc={pdfDoc} pageNum={currentPage + 1} scale={pdfScale} />
-                            )}
-                          </div>
-                        </div>
-                      )}
+                      <div className="w-full max-w-3xl bg-white rounded-lg overflow-hidden">
+                        <PdfPageView pdfDoc={pdfDoc} pageNum={currentPage} scale={pdfScale} />
+                      </div>
                     </motion.div>
                   </AnimatePresence>
                 </div>
               )}
               
+              {/* Products on this page — always shown, PDF or not */}
+              {displayProducts.length > 0 && (
+                <div className="w-full max-w-3xl bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden shrink-0 mt-4 mb-8">
+                  <div className="px-4 py-2.5 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+                    <p className="text-xs font-bold text-slate-700">
+                      Products on page {currentPage}
+                    </p>
+                    <p className="text-[10px] text-slate-400">Click to add to quote</p>
+                  </div>
+                  <div className="p-3 grid grid-cols-2 md:grid-cols-4 gap-2 max-h-64 overflow-y-auto">
+                    {displayProducts.map(p => (
+                      <PageProductCard
+                        key={p.sku}
+                        sku={p.sku}
+                        name={p.name}
+                        category={p.category}
+                        isPrimary={p.isPrimary}
+                        productData={productCache[p.sku]}
+                        onFetch={fetchProduct}
+                        onAdd={handleAdd}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {displayProducts.length === 0 && !pdfLoading && (
-                <div className="text-center py-4 shrink-0 mt-4">
-                  <p className="text-sm text-slate-400">No products mapped to {currentPage === 1 ? 'page 1' : `pages ${currentPage}-${currentPage + 1}`}</p>
+                <div className="text-center py-4 shrink-0 mt-4 mb-8">
+                  <p className="text-sm text-slate-400">No products mapped to page {currentPage}</p>
                   <p className="text-xs text-slate-300 mt-1">Navigate to a page with products (e.g., page 9, 31–35)</p>
                 </div>
               )}
             </div>
-
-            {/* Static Products Panel */}
-            {displayProducts.length > 0 && !pdfLoading && (
-              <div className="w-64 bg-white border-l border-slate-200 flex flex-col shrink-0 shadow-[-4px_0_15px_-3px_rgba(0,0,0,0.05)] z-20">
-                <div className="px-4 py-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between shrink-0">
-                  <div className="flex items-center gap-2">
-                    <BookOpen className="w-4 h-4 text-slate-400" />
-                    <p className="text-xs font-bold text-slate-700 uppercase tracking-wide">Page Products</p>
-                  </div>
-                  <Badge className="bg-slate-200 text-slate-600 hover:bg-slate-300 border-none">{displayProducts.length}</Badge>
-                </div>
-                <div className="flex-1 overflow-y-auto p-3 grid grid-cols-2 gap-2 content-start">
-                  {displayProducts.map(p => (
-                    <PageProductCard
-                      key={p.sku}
-                      sku={p.sku}
-                      name={p.name}
-                      category={p.category}
-                      isPrimary={p.isPrimary}
-                      productData={productCache[p.sku]}
-                      onFetch={fetchProduct}
-                      onAdd={handleAdd}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
         </div>
 
