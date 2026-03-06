@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import * as pdfjsLib from 'pdfjs-dist/build/pdf.min.mjs';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,12 +8,6 @@ import {
   ChevronLeft, ChevronRight, Plus, Minus, Trash2, ShoppingCart,
   DollarSign, FileText, Search, X, ZoomIn, ZoomOut, Loader2
 } from 'lucide-react';
-
-// Configure PDF.js worker
-pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.mjs',
-  import.meta.url
-).href;
 
 // The catalog PDF — upload to Supabase storage at this path:
 // orbus-assets bucket → catalog/exhibitors-handbook.pdf
