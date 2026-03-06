@@ -597,13 +597,13 @@ export default function Layout({ children, currentPageName }) {
                         Contacts
                       </Button>
                     </Link>
-                    <Link to={createPageUrl('BoothDesigner')}>
+                    <Link to={createPageUrl('CatalogQuote')}>
                       <Button 
                         variant="ghost"
-                        className={`text-white hover:bg-white/20 ${currentPageName === 'BoothDesigner' ? 'border border-white/30' : ''}`}
+                        className={`text-white hover:bg-white/20 ${currentPageName === 'CatalogQuote' ? 'border border-white/30' : ''}`}
                       >
-                        <Box className="w-4 h-4 mr-2" />
-                        Designer
+                        <FileText className="w-4 h-4 mr-2" />
+                        Catalog Quote
                       </Button>
                     </Link>
                     <Link to={createPageUrl('SalesQuoteStart')}>
@@ -737,10 +737,10 @@ export default function Layout({ children, currentPageName }) {
                         <span className="text-white font-medium">Contacts</span>
                       </div>
                     </Link>
-                    <Link to={createPageUrl('BoothDesigner')} onClick={() => setMobileMenuOpen(false)}>
-                      <div className={`flex items-center gap-3 px-3 py-3 rounded-lg ${currentPageName === 'BoothDesigner' ? 'bg-white/15' : 'hover:bg-white/10'}`}>
-                        <Box className="w-5 h-5 text-white/80" />
-                        <span className="text-white font-medium">Booth Designer</span>
+                    <Link to={createPageUrl('CatalogQuote')} onClick={() => setMobileMenuOpen(false)}>
+                      <div className={`flex items-center gap-3 px-3 py-3 rounded-lg ${currentPageName === 'CatalogQuote' ? 'bg-white/15' : 'hover:bg-white/10'}`}>
+                        <FileText className="w-5 h-5 text-white/80" />
+                        <span className="text-white font-medium">Catalog Quote</span>
                       </div>
                     </Link>
                     <Link to={createPageUrl('SalesQuoteStart')} onClick={() => setMobileMenuOpen(false)}>
