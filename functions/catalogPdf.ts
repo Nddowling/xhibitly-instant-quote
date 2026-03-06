@@ -1,4 +1,5 @@
 import { PDFDocument } from 'npm:pdf-lib@1.17.1';
+import { createClient } from 'npm:@supabase/supabase-js@2.39.0';
 
 const PDF_URLS = [
   "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/96f439ea9_exhibitors-handbook_p001-005.pdf",
@@ -43,19 +44,24 @@ const PDF_URLS = [
   "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/5b3814230_exhibitors-handbook_p211-215.pdf"
 ];
 
-let cachedPdfBytes = null;
+let cachedPdfUrl = null;
 
 Deno.serve(async (req) => {
     try {
-        if (cachedPdfBytes) {
-            return new Response(cachedPdfBytes, {
-                status: 200,
-                headers: {
-                    'Content-Type': 'application/pdf',
-                    'Access-Control-Allow-Origin': '*'
-                }
-            });
+        if (cachedPdfUrl) {
+            return Response.json({ url: cachedPdfUrl });
         }
+
+        const supabaseUrl = Deno.env.get('SUPABASE_URL');
+        const supabaseKey = Deno.env.get('SUPABASE_SERVICE_KEY');
+        
+        if (!supabaseUrl || !supabaseKey) {
+            throw new Error("Missing Supabase credentials");
+        }
+
+        const supabase = createClient(supabaseUrl, supabaseKey);
+        const appId = Deno.env.get("BASE44_APP_ID") || "69834d9e0d7220d671bfd124";
+        const filePath = `public/${appId}/merged-catalog.pdf`;
 
         const mergedPdf = await PDFDocument.create();
 
@@ -69,17 +75,27 @@ Deno.serve(async (req) => {
             copiedPages.forEach((page) => mergedPdf.addPage(page));
         }
 
-        cachedPdfBytes = await mergedPdf.save();
+        const pdfBytes = await mergedPdf.save();
 
-        // Convert to base64
-        let binary = '';
-        const len = cachedPdfBytes.byteLength;
-        for (let i = 0; i < len; i++) {
-            binary += String.fromCharCode(cachedPdfBytes[i]);
+        const { data, error } = await supabase.storage
+            .from('base44-prod')
+            .upload(filePath, pdfBytes, {
+                contentType: 'application/pdf',
+                upsert: true
+            });
+
+        if (error) {
+            console.error("Upload error:", error);
+            throw error;
         }
-        const base64 = btoa(binary);
 
-        return Response.json({ base64 });
+        const { data: urlData } = supabase.storage
+            .from('base44-prod')
+            .getPublicUrl(filePath);
+
+        cachedPdfUrl = urlData.publicUrl;
+
+        return Response.json({ url: cachedPdfUrl });
     } catch (error) {
         return Response.json({ error: error.message }, { status: 500 });
     }
