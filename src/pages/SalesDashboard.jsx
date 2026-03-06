@@ -302,14 +302,24 @@ export default function SalesDashboard() {
                     <CardTitle className="text-xl">Today's Follow-ups</CardTitle>
                     <CardDescription>Prospects requiring attention today</CardDescription>
                   </div>
-                  <Button 
-                    onClick={() => navigate(createPageUrl('SalesQuoteStart'))}
-                    className="bg-[#e2231a] hover:bg-[#b01b13] text-xs md:text-sm shrink-0"
-                  >
-                    <Plus className="w-4 h-4 mr-1 md:mr-2" />
-                    <span className="hidden sm:inline">New Quote</span>
-                    <span className="sm:hidden">New</span>
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      onClick={() => navigate(createPageUrl('CatalogQuote'))}
+                      variant="outline"
+                      className="border-[#e2231a] text-[#e2231a] hover:bg-[#e2231a]/5 text-xs md:text-sm shrink-0"
+                    >
+                      <span className="hidden sm:inline">Catalog Quote</span>
+                      <span className="sm:hidden">Catalog</span>
+                    </Button>
+                    <Button
+                      onClick={() => navigate(createPageUrl('SalesQuoteStart'))}
+                      className="bg-[#e2231a] hover:bg-[#b01b13] text-xs md:text-sm shrink-0"
+                    >
+                      <Plus className="w-4 h-4 mr-1 md:mr-2" />
+                      <span className="hidden sm:inline">New Quote</span>
+                      <span className="sm:hidden">New</span>
+                    </Button>
+                  </div>
                 </div>
               </CardHeader>
               <CardContent>

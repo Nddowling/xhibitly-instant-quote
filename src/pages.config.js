@@ -51,6 +51,7 @@ import BoothDesigner from './pages/BoothDesigner';
 import BoothEditorPage from './pages/BoothEditorPage';
 import BrandVerification from './pages/BrandVerification';
 import CatalogImport from './pages/CatalogImport';
+import CatalogQuote from './pages/CatalogQuote';
 import Confirmation from './pages/Confirmation';
 import ContactDetail from './pages/ContactDetail';
 import Contacts from './pages/Contacts';
@@ -79,6 +80,7 @@ export const PAGES = {
     "BoothEditorPage": BoothEditorPage,
     "BrandVerification": BrandVerification,
     "CatalogImport": CatalogImport,
+    "CatalogQuote": CatalogQuote,
     "Confirmation": Confirmation,
     "ContactDetail": ContactDetail,
     "Contacts": Contacts,
