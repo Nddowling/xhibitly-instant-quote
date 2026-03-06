@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,6 +9,8 @@ import {
   DollarSign, FileText, Search, X, ZoomIn, ZoomOut, Loader2, BookOpen
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+
+import { PDFDocument } from 'pdf-lib';
 
 const PDF_URLS = [
   "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/96f439ea9_exhibitors-handbook_p001-005.pdf",
