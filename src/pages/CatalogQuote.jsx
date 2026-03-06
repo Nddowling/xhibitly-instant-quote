@@ -10,8 +10,6 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-import { PDFDocument } from 'pdf-lib';
-
 const PDF_URLS = [
   "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/96f439ea9_exhibitors-handbook_p001-005.pdf",
   "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69834d9e0d7220d671bfd124/fa2d96f04_exhibitors-handbook_p006-010.pdf",
