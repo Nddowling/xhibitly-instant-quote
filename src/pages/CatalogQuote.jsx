@@ -121,14 +121,15 @@ function useProductCache() {
     if (cache.current[sku] !== undefined) return;
     cache.current[sku] = null;
     try {
+      let prod = null;
       const res = await base44.entities.Product.filter({ sku });
       if (res && res.length > 0) {
-        cache.current[sku] = res[0];
+        prod = res[0];
       } else {
         const variantRes = await base44.entities.ProductVariant.filter({ manufacturer_sku: sku });
         if (variantRes && variantRes.length > 0) {
           const v = variantRes[0];
-          cache.current[sku] = {
+          prod = {
             ...v,
             sku: v.manufacturer_sku,
             name: v.display_name,
@@ -136,9 +137,23 @@ function useProductCache() {
             base_price: v.base_price
           };
         } else {
-          cache.current[sku] = { sku, name: sku };
+          prod = { sku, name: sku };
         }
       }
+
+      // If no image URL on the entity, look it up from Supabase storage —
+      // same pattern as ProductDetail.jsx which has working thumbnails.
+      if (prod && !prod.image_cached_url && !prod.image_url) {
+        try {
+          const imgRes = await base44.functions.invoke('listSupabaseAssets', { path: `products/${sku}/image` });
+          if (imgRes.data?.files?.length > 0) {
+            const imgFile = imgRes.data.files.find(f => f.name.match(/\.(png|jpe?g|gif|webp)$/i));
+            if (imgFile) prod.image_url = imgFile.publicUrl;
+          }
+        } catch { /* no image in storage, fallback to icon */ }
+      }
+
+      cache.current[sku] = prod;
     } catch {
       cache.current[sku] = { sku, name: sku };
     }
