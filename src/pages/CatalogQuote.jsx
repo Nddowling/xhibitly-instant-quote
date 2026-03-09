@@ -338,13 +338,22 @@ function HotspotEditor({ pageNum, spots, onChange, pageProducts, productCache, a
     onChange(newSpots);
   };
 
-  const onMouseUp = (e) => {
+  const onMouseUp = async (e) => {
     if (!drag) return;
     if (drag.type === 'create') {
       const w = drag.curW || 0;
       const h = drag.curH || 0;
       if (w > 0.02 && h > 0.02) {
-        setNewSkuPrompt({ x: drag.curX, y: drag.curY, width: w, height: h });
+        const box = { x: drag.curX, y: drag.curY, width: w, height: h };
+        setNewSkuPrompt(box);
+        setAutoDetected(null);
+        // Auto-detect product in this box region
+        setAutoDetecting(true);
+        try {
+          const result = await detectProductInBox(pageNum, box, SUPABASE_URL);
+          setAutoDetected(result);
+        } catch { /* fallback to manual entry */ }
+        finally { setAutoDetecting(false); }
       }
       setAdding(false);
     }
