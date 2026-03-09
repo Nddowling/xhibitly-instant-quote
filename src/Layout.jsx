@@ -798,14 +798,7 @@ export default function Layout({ children, currentPageName }) {
                     <span className="text-[10px] font-medium">Home</span>
                   </button>
                 </Link>
-                <Link to={createPageUrl('SalesQuoteStart')} className="flex-1">
-                  <button className="w-full h-full flex flex-col items-center justify-center gap-0.5">
-                    <div className="w-10 h-10 rounded-full bg-[#e2231a] flex items-center justify-center -mt-4 shadow-lg">
-                      <Plus className="w-5 h-5 text-white" />
-                    </div>
-                    <span className="text-[10px] font-medium text-slate-500 -mt-0.5">Quote</span>
-                  </button>
-                </Link>
+
                 <Link to={createPageUrl('Contacts')} className="flex-1">
                   <button
                     className={`w-full h-full flex flex-col items-center justify-center gap-0.5 ${
