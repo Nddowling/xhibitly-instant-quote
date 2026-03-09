@@ -455,8 +455,10 @@ function HotspotEditor({ pageNum, spots, onChange, pageProducts, productCache, a
         <NewHotspotForm
           pageProducts={pageProducts}
           productCache={productCache}
-          onConfirm={commitNewSpot}
-          onCancel={() => setNewSkuPrompt(null)}
+          autoDetecting={autoDetecting}
+          autoDetected={autoDetected}
+          onConfirm={(sku, name, groupedSkus) => { commitNewSpot(sku, name, groupedSkus); setAutoDetected(null); }}
+          onCancel={() => { setNewSkuPrompt(null); setAutoDetected(null); }}
         />
       )}
     </div>
