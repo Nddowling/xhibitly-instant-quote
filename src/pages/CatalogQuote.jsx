@@ -462,7 +462,7 @@ function VariantPicker({ spot, products, onAdd, onClose }) {
   useEffect(() => {
     if (skus.length === 1) {
       const p = products[skus[0]];
-      onAdd({ sku: skus[0], name: p?.name || spot.name, price: p?.base_price, imageUrl: p?.image_cached_url || p?.image_url });
+      onAdd({ sku: skus[0], name: p?.name || spot.name, price: p?.base_price, imageUrl: getImageUrl(p) });
       onClose();
     }
   }, []);
@@ -485,12 +485,12 @@ function VariantPicker({ spot, products, onAdd, onClose }) {
             return (
               <button
                 key={sku}
-                onClick={() => { onAdd({ sku, name: p?.name || sku, price: p?.base_price, imageUrl: p?.image_cached_url || p?.image_url }); onClose(); }}
+                onClick={() => { onAdd({ sku, name: p?.name || sku, price: p?.base_price, imageUrl: getImageUrl(p) }); onClose(); }}
                 className="w-full flex items-center gap-3 p-2.5 rounded-xl border border-slate-200 hover:border-[#e2231a]/40 hover:bg-[#e2231a]/5 transition-all text-left group"
               >
                 <div className="w-12 h-12 flex-shrink-0 rounded-lg bg-slate-100 overflow-hidden flex items-center justify-center border border-slate-100">
-                  {p?.image_cached_url || p?.image_url
-                    ? <img src={p.image_cached_url || p.image_url} alt={sku} className="w-full h-full object-contain" />
+                  {getImageUrl(p)
+                    ? <img src={getImageUrl(p)} alt={sku} className="w-full h-full object-contain" />
                     : <Package className="w-5 h-5 text-slate-300" />}
                 </div>
                 <div className="flex-1 min-w-0">
