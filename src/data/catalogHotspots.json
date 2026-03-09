@@ -184,6 +184,36 @@
       ]
     }
   ],
+  "13": [
+    {
+      "sku": "BLD-LT-400",
+      "name": "Mosquito Retractable Banner Stand - All Sizes Group Shot",
+      "x": 0.05,
+      "y": 0.08,
+      "width": 0.57,
+      "height": 0.35,
+      "groupedSkus": [
+        "BLD-LT-400",
+        "BLD-LT-600",
+        "BLD-LT-800",
+        "BLD-LT-850",
+        "BLD-LT-920",
+        "BLD-LT-1200",
+        "BLD-LT-1500"
+      ]
+    },
+    {
+      "sku": "BLD-LT-800",
+      "name": "Mosquito 800 Retractable Banner Stand - Hero Shot",
+      "x": 0.62,
+      "y": 0.04,
+      "width": 0.38,
+      "height": 0.62,
+      "groupedSkus": [
+        "BLD-LT-800"
+      ]
+    }
+  ],
   "14": [
     {
       "sku": "MSQT-GIANT-920-S",
