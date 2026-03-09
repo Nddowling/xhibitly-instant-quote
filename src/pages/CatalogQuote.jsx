@@ -687,10 +687,6 @@ export default function CatalogQuote() {
   };
 
   const rerunWithClaude = async () => {
-    if (pageProducts.length === 0) {
-      alert('No products mapped to this page — nothing to detect.');
-      return;
-    }
     setIsRerunning(true);
     try {
       const spots = await detectHotspotsWithClaude(currentPage, pageProducts, SUPABASE_URL);
