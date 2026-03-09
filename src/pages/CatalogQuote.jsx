@@ -840,7 +840,7 @@ export default function CatalogQuote() {
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-blue-600 text-white hover:bg-blue-700 transition-all"
               >
                 <Save className="w-3.5 h-3.5" />
-                Done Editing
+                Save & Close
               </button>
             </>
           ) : (
