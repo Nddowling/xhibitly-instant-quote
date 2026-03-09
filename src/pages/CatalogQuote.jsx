@@ -100,6 +100,12 @@ function getImageUrl(p) {
   return url;
 }
 
+function ProductImage({ src, alt, className = "w-full h-full object-contain", fallbackClassName = "w-5 h-5 text-slate-300" }) {
+  const [error, setError] = useState(false);
+  if (!src || error) return <Package className={fallbackClassName} />;
+  return <img src={src} alt={alt} className={className} onError={() => setError(true)} />;
+}
+
 // ─── Load hotspot data lazily ────────────────────────────────────────────────
 let _hotspots = null;
 async function getHotspots() {
