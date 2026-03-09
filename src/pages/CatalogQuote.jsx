@@ -714,6 +714,30 @@ export default function CatalogQuote() {
     a.click();
   };
 
+  const saveToDb = async () => {
+    try {
+      const existing = await base44.entities.CatalogHotspot.filter({ page_number: currentPage });
+      if (existing.length > 0) {
+        await base44.entities.CatalogHotspot.update(existing[0].id, { hotspots: currentHotspots });
+      } else {
+        await base44.entities.CatalogHotspot.create({ page_number: currentPage, hotspots: currentHotspots });
+      }
+      
+      setDbHotspots(prev => ({ ...prev, [currentPage]: currentHotspots }));
+      
+      // Clear from editedHotspots since it's now in DB
+      const updated = { ...editedHotspots };
+      delete updated[currentPage];
+      setEditedHotspots(updated);
+      localStorage.setItem(LS_KEY, JSON.stringify(updated));
+      
+      alert('Saved to database successfully!');
+    } catch (e) {
+      console.error("Failed to save to DB", e);
+      alert('Failed to save to database');
+    }
+  };
+
   // Order management
   const addToOrder = useCallback((product) => {
     setOrderItems(prev => {
