@@ -86,6 +86,17 @@ function fmt(n) {
 
 function clamp(v, lo = 0, hi = 1) { return Math.max(lo, Math.min(hi, v)); }
 
+function getImageUrl(p) {
+  if (!p) return null;
+  if (p.image_cached_url) {
+    if (p.image_cached_url.startsWith('/')) {
+      return `${SUPABASE_URL}${p.image_cached_url}`;
+    }
+    return p.image_cached_url;
+  }
+  return p.image_url || p.thumbnail_url;
+}
+
 // ─── Load hotspot data lazily ────────────────────────────────────────────────
 let _hotspots = null;
 async function getHotspots() {
