@@ -465,28 +465,58 @@ function HotspotEditor({ pageNum, spots, onChange, pageProducts, productCache, a
   );
 }
 
-function NewHotspotForm({ pageProducts, productCache, onConfirm, onCancel }) {
+function NewHotspotForm({ pageProducts, productCache, autoDetecting, autoDetected, onConfirm, onCancel }) {
   const [sku, setSku] = useState('');
   const [name, setName] = useState('');
+  const [groupedSkus, setGroupedSkus] = useState([]);
+
+  // When auto-detection completes, pre-fill the form
+  useEffect(() => {
+    if (autoDetected && autoDetected.sku) {
+      setSku(autoDetected.sku);
+      setName(autoDetected.name || autoDetected.sku);
+      setGroupedSkus(autoDetected.groupedSkus || [autoDetected.sku]);
+    }
+  }, [autoDetected]);
 
   const selectProduct = (p) => {
     const pd = productCache[p.sku];
     setSku(p.sku);
     setName(pd?.name || p.name);
+    setGroupedSkus([p.sku]);
   };
 
   const submit = () => {
     if (!sku.trim()) return;
-    onConfirm(sku.trim().toUpperCase(), name.trim() || sku.trim());
+    onConfirm(sku.trim().toUpperCase(), name.trim() || sku.trim(), groupedSkus.length > 0 ? groupedSkus : [sku.trim().toUpperCase()]);
   };
 
   return (
     <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/50 rounded-lg">
       <div className="bg-white rounded-2xl shadow-2xl w-80 p-4 space-y-3">
-        <p className="text-sm font-bold text-slate-900">Assign Product to Hotspot</p>
+        <div className="flex items-center gap-2">
+          <p className="text-sm font-bold text-slate-900 flex-1">Assign Product to Hotspot</p>
+          {autoDetecting && (
+            <div className="flex items-center gap-1.5 text-purple-600 text-[10px] font-medium">
+              <Loader2 className="w-3 h-3 animate-spin" />
+              AI detecting...
+            </div>
+          )}
+          {!autoDetecting && autoDetected?.sku && (
+            <div className="flex items-center gap-1 text-green-600 text-[10px] font-medium">
+              <span>✓ AI detected</span>
+            </div>
+          )}
+        </div>
 
-        {pageProducts.length > 0 && (
-          <div className="space-y-1 max-h-40 overflow-y-auto">
+        {autoDetecting && (
+          <div className="bg-purple-50 border border-purple-100 rounded-lg px-3 py-2.5 text-xs text-purple-700">
+            Reading SKU from the selected area…
+          </div>
+        )}
+
+        {!autoDetecting && pageProducts.length > 0 && (
+          <div className="space-y-1 max-h-32 overflow-y-auto">
             {pageProducts.map(p => (
               <button
                 key={p.sku}
@@ -505,7 +535,7 @@ function NewHotspotForm({ pageProducts, productCache, onConfirm, onCancel }) {
           <input
             placeholder="SKU (e.g. ONT-800/S-84)"
             value={sku}
-            onChange={e => setSku(e.target.value)}
+            onChange={e => { setSku(e.target.value); setGroupedSkus(e.target.value ? [e.target.value] : []); }}
             className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30"
           />
           <input
@@ -514,10 +544,15 @@ function NewHotspotForm({ pageProducts, productCache, onConfirm, onCancel }) {
             onChange={e => setName(e.target.value)}
             className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30"
           />
+          {groupedSkus.length > 1 && (
+            <div className="text-[10px] text-slate-500 bg-slate-50 rounded px-2 py-1">
+              Grouped SKUs: {groupedSkus.join(', ')}
+            </div>
+          )}
         </div>
 
         <div className="flex gap-2">
-          <Button size="sm" onClick={submit} className="flex-1 bg-[#e2231a] hover:bg-[#b01b13] text-white">
+          <Button size="sm" onClick={submit} disabled={autoDetecting || !sku.trim()} className="flex-1 bg-[#e2231a] hover:bg-[#b01b13] text-white disabled:opacity-50">
             Add Hotspot
           </Button>
           <Button size="sm" variant="outline" onClick={onCancel} className="flex-1">
