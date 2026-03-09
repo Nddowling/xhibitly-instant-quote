@@ -581,6 +581,7 @@ export default function CatalogQuote() {
   const [pageInput, setPageInput] = useState('9');
   const [direction, setDirection] = useState(1);
   const [hotspotData, setHotspotData] = useState({});
+  const [dbHotspots, setDbHotspots] = useState({});
   const [editedHotspots, setEditedHotspots] = useState({}); // localStorage overrides
   const [orderItems, setOrderItems] = useState([]);
   const [customerName, setCustomerName] = useState('');
