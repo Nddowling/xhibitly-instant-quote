@@ -1,16 +1,18 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { PAGE_PRODUCTS, MAX_PAGE, MIN_PAGE, SKU_TO_PAGE } from '@/data/catalogPageMapping';
+import { PAGE_PRODUCTS, MAX_PAGE, SKU_TO_PAGE } from '@/data/catalogPageMapping';
 import {
   ChevronLeft, ChevronRight, Plus, Minus, X, ShoppingCart,
-  DollarSign, FileText, Search, Loader2, ImageOff, Package
+  FileText, Search, Loader2, ImageOff, Package, Edit2, Save,
+  Download, Trash2, Move
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // ─── Config ─────────────────────────────────────────────────────────────────
 const SUPABASE_URL = 'https://xpgvpzbzmkubahyxwipk.supabase.co/storage/v1/object/public/orbus-assets';
+const LS_KEY = 'catalog-hotspot-edits';
 
 function pageImageUrl(pageNum) {
   return `${SUPABASE_URL}/catalog/pages/page-${String(pageNum).padStart(3, '0')}.jpg`;
@@ -21,6 +23,8 @@ function fmt(n) {
   return '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
+function clamp(v, lo = 0, hi = 1) { return Math.max(lo, Math.min(hi, v)); }
+
 // ─── Load hotspot data lazily ────────────────────────────────────────────────
 let _hotspots = null;
 async function getHotspots() {
@@ -28,20 +32,18 @@ async function getHotspots() {
   try {
     const mod = await import('@/data/catalogHotspots.json');
     _hotspots = mod.default;
-  } catch {
-    _hotspots = {};
-  }
+  } catch { _hotspots = {}; }
   return _hotspots;
 }
 
 // ─── Hook: product detail cache ──────────────────────────────────────────────
 function useProductCache() {
   const cache = useRef({});
-  const [tick, setTick] = useState(0);
+  const [, setTick] = useState(0);
 
-  const fetch = useCallback(async (sku) => {
+  const fetchProduct = useCallback(async (sku) => {
     if (cache.current[sku] !== undefined) return;
-    cache.current[sku] = null; // mark loading
+    cache.current[sku] = null;
     try {
       const res = await base44.entities.Product.filter({ sku });
       cache.current[sku] = res[0] || { sku, name: sku };
@@ -51,61 +53,39 @@ function useProductCache() {
     setTick(t => t + 1);
   }, []);
 
-  return { cache: cache.current, fetch };
+  return { cache: cache.current, fetchProduct };
 }
 
-// ─── Catalog Page Image with hotspot overlays ────────────────────────────────
+// ─── Normal catalog page view (read-only hotspot overlays) ───────────────────
 function CatalogPageView({ pageNum, hotspots, onHotspotClick, selectedHotspot }) {
   const [imgLoaded, setImgLoaded] = useState(false);
   const [imgError, setImgError] = useState(false);
-  const imgRef = useRef(null);
 
-  useEffect(() => {
-    setImgLoaded(false);
-    setImgError(false);
-  }, [pageNum]);
-
-  const onLoad = () => {
-    setImgLoaded(true);
-  };
+  useEffect(() => { setImgLoaded(false); setImgError(false); }, [pageNum]);
 
   const spots = hotspots || [];
 
-  if (!pageNum) return null;
-
   return (
     <div className="relative inline-block w-full">
-      {/* Page image */}
       <img
-        ref={imgRef}
         src={pageImageUrl(pageNum)}
         alt={`Catalog page ${pageNum}`}
         className="w-full h-auto rounded-lg shadow-2xl block"
-        onLoad={onLoad}
+        onLoad={() => setImgLoaded(true)}
         onError={() => setImgError(true)}
       />
-
-      {/* Loading state */}
       {!imgLoaded && !imgError && (
         <div className="absolute inset-0 flex items-center justify-center bg-slate-100 rounded-lg">
           <Loader2 className="w-8 h-8 text-slate-300 animate-spin" />
         </div>
       )}
-
-      {/* Error state */}
       {imgError && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-50 rounded-lg gap-3">
           <ImageOff className="w-10 h-10 text-slate-300" />
-          <div className="text-center">
-            <p className="text-sm font-medium text-slate-500">Page {pageNum} not yet uploaded</p>
-            <p className="text-xs text-slate-400 mt-1">
-              Run: <code className="bg-slate-100 px-1 rounded">npm run catalog:pages</code>
-            </p>
-          </div>
+          <p className="text-sm text-slate-500">Page {pageNum} image not available</p>
+          <p className="text-xs text-slate-400">Run: <code className="bg-slate-100 px-1 rounded">npm run catalog:pages</code></p>
         </div>
       )}
-
-      {/* Hotspot overlays — only when image is loaded */}
       {imgLoaded && spots.map((spot, i) => {
         const isSelected = selectedHotspot?.sku === spot.sku;
         return (
@@ -121,23 +101,15 @@ function CatalogPageView({ pageNum, hotspots, onHotspotClick, selectedHotspot })
               cursor: 'pointer',
             }}
             className={`group border-2 rounded transition-all duration-150
-              ${isSelected
-                ? 'border-[#e2231a] bg-[#e2231a]/20'
-                : 'border-transparent hover:border-[#e2231a]/60 hover:bg-[#e2231a]/10'
-              }`}
+              ${isSelected ? 'border-[#e2231a] bg-[#e2231a]/20' : 'border-transparent hover:border-[#e2231a]/60 hover:bg-[#e2231a]/10'}`}
             title={spot.name}
           >
-            {/* Add badge — appears on hover */}
-            <div className={`absolute top-1 right-1 transition-opacity
-              ${isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+            <div className={`absolute top-1 right-1 transition-opacity ${isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
               <div className="bg-[#e2231a] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-lg flex items-center gap-1">
-                <Plus className="w-2.5 h-2.5" />
-                Add
+                <Plus className="w-2.5 h-2.5" />Add
               </div>
             </div>
-            {/* Product name tooltip on hover */}
-            <div className={`absolute bottom-1 left-1 right-1 transition-opacity
-              ${isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+            <div className={`absolute bottom-1 left-1 right-1 transition-opacity ${isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
               <div className="bg-black/75 text-white text-[10px] px-1.5 py-1 rounded shadow-lg leading-tight line-clamp-2">
                 {spot.name}
               </div>
@@ -149,18 +121,265 @@ function CatalogPageView({ pageNum, hotspots, onHotspotClick, selectedHotspot })
   );
 }
 
-// ─── Variant picker popup (shown when hotspot groups multiple SKUs) ───────────
+// ─── Hotspot Editor (drag to move/resize, add, delete) ───────────────────────
+function HotspotEditor({ pageNum, spots, onChange, pageProducts, productCache }) {
+  const containerRef = useRef(null);
+  const [imgLoaded, setImgLoaded] = useState(false);
+  const [drag, setDrag] = useState(null);
+  // drag = { type: 'move'|'resize'|'create', idx, startNX, startNY, origSpot, curSpot }
+  const [adding, setAdding] = useState(false); // draw-new-box mode
+  const [newSkuPrompt, setNewSkuPrompt] = useState(null); // { x, y, width, height }
+
+  useEffect(() => { setImgLoaded(false); }, [pageNum]);
+
+  const toNorm = (clientX, clientY) => {
+    const rect = containerRef.current?.getBoundingClientRect();
+    if (!rect) return { nx: 0, ny: 0 };
+    return {
+      nx: clamp((clientX - rect.left) / rect.width),
+      ny: clamp((clientY - rect.top) / rect.height),
+    };
+  };
+
+  const onMouseDown = (e, type, idx) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const { nx, ny } = toNorm(e.clientX, e.clientY);
+    setDrag({ type, idx, startNX: nx, startNY: ny, origSpot: { ...spots[idx] } });
+  };
+
+  const onContainerMouseDown = (e) => {
+    if (!adding) return;
+    e.preventDefault();
+    const { nx, ny } = toNorm(e.clientX, e.clientY);
+    setDrag({ type: 'create', startNX: nx, startNY: ny, curX: nx, curY: ny, curW: 0, curH: 0 });
+  };
+
+  const onMouseMove = (e) => {
+    if (!drag) return;
+    const { nx, ny } = toNorm(e.clientX, e.clientY);
+    const dx = nx - drag.startNX;
+    const dy = ny - drag.startNY;
+
+    if (drag.type === 'create') {
+      const x = drag.startNX < nx ? drag.startNX : nx;
+      const y = drag.startNY < ny ? drag.startNY : ny;
+      setDrag(d => ({ ...d, curX: x, curY: y, curW: Math.abs(nx - d.startNX), curH: Math.abs(ny - d.startNY) }));
+      return;
+    }
+
+    const orig = drag.origSpot;
+    let updated;
+    if (drag.type === 'move') {
+      updated = {
+        ...orig,
+        x: clamp(orig.x + dx, 0, 1 - orig.width),
+        y: clamp(orig.y + dy, 0, 1 - orig.height),
+      };
+    } else { // resize
+      updated = {
+        ...orig,
+        width: clamp(orig.width + dx, 0.02, 1 - orig.x),
+        height: clamp(orig.height + dy, 0.02, 1 - orig.y),
+      };
+    }
+    const newSpots = spots.map((s, i) => i === drag.idx ? updated : s);
+    onChange(newSpots);
+  };
+
+  const onMouseUp = (e) => {
+    if (!drag) return;
+    if (drag.type === 'create') {
+      const w = drag.curW || 0;
+      const h = drag.curH || 0;
+      if (w > 0.02 && h > 0.02) {
+        setNewSkuPrompt({ x: drag.curX, y: drag.curY, width: w, height: h });
+      }
+      setAdding(false);
+    }
+    setDrag(null);
+  };
+
+  const deleteSpot = (idx) => onChange(spots.filter((_, i) => i !== idx));
+
+  const commitNewSpot = (sku, name) => {
+    if (!newSkuPrompt) return;
+    const spot = { sku, name, ...newSkuPrompt, groupedSkus: [sku] };
+    onChange([...spots, spot]);
+    setNewSkuPrompt(null);
+  };
+
+  return (
+    <div
+      ref={containerRef}
+      className={`relative inline-block w-full select-none ${adding ? 'cursor-crosshair' : 'cursor-default'}`}
+      onMouseMove={onMouseMove}
+      onMouseUp={onMouseUp}
+      onMouseLeave={onMouseUp}
+      onMouseDown={onContainerMouseDown}
+    >
+      <img
+        src={pageImageUrl(pageNum)}
+        alt={`Page ${pageNum}`}
+        className="w-full h-auto rounded-lg shadow-2xl block"
+        onLoad={() => setImgLoaded(true)}
+        draggable={false}
+      />
+
+      {imgLoaded && spots.map((spot, i) => (
+        <div
+          key={i}
+          style={{
+            position: 'absolute',
+            left: `${spot.x * 100}%`,
+            top: `${spot.y * 100}%`,
+            width: `${spot.width * 100}%`,
+            height: `${spot.height * 100}%`,
+          }}
+          className="border-2 border-blue-500 bg-blue-500/10 rounded group"
+        >
+          {/* Move handle — drag the whole box */}
+          <div
+            className="absolute inset-0 cursor-move"
+            onMouseDown={(e) => onMouseDown(e, 'move', i)}
+          />
+
+          {/* Label */}
+          <div className="absolute top-0 left-0 right-0 bg-blue-600/90 text-white text-[9px] px-1 py-0.5 leading-tight truncate pointer-events-none rounded-t">
+            {spot.name || spot.sku}
+          </div>
+
+          {/* Delete button */}
+          <button
+            className="absolute top-0.5 right-0.5 w-4 h-4 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center z-10 shadow"
+            onMouseDown={(e) => { e.stopPropagation(); deleteSpot(i); }}
+          >
+            <X className="w-2.5 h-2.5" />
+          </button>
+
+          {/* Resize handle — bottom-right corner */}
+          <div
+            className="absolute bottom-0 right-0 w-4 h-4 bg-blue-600 rounded-tl cursor-se-resize z-10 flex items-center justify-center"
+            onMouseDown={(e) => onMouseDown(e, 'resize', i)}
+          >
+            <div className="w-2 h-2 border-b-2 border-r-2 border-white" />
+          </div>
+        </div>
+      ))}
+
+      {/* Draw preview box while creating */}
+      {drag?.type === 'create' && drag.curW > 0 && (
+        <div
+          style={{
+            position: 'absolute',
+            left: `${drag.curX * 100}%`,
+            top: `${drag.curY * 100}%`,
+            width: `${drag.curW * 100}%`,
+            height: `${drag.curH * 100}%`,
+          }}
+          className="border-2 border-dashed border-green-500 bg-green-500/10 rounded pointer-events-none"
+        />
+      )}
+
+      {/* Add instruction overlay */}
+      {adding && !drag && (
+        <div className="absolute top-2 left-0 right-0 flex justify-center pointer-events-none">
+          <div className="bg-green-600 text-white text-xs px-3 py-1.5 rounded-full shadow-lg">
+            Click and drag to draw a hotspot box
+          </div>
+        </div>
+      )}
+
+      {/* SKU/Name prompt after drawing */}
+      {newSkuPrompt && (
+        <NewHotspotForm
+          pageProducts={pageProducts}
+          productCache={productCache}
+          onConfirm={commitNewSpot}
+          onCancel={() => setNewSkuPrompt(null)}
+        />
+      )}
+    </div>
+  );
+}
+
+function NewHotspotForm({ pageProducts, productCache, onConfirm, onCancel }) {
+  const [sku, setSku] = useState('');
+  const [name, setName] = useState('');
+
+  const selectProduct = (p) => {
+    const pd = productCache[p.sku];
+    setSku(p.sku);
+    setName(pd?.name || p.name);
+  };
+
+  const submit = () => {
+    if (!sku.trim()) return;
+    onConfirm(sku.trim().toUpperCase(), name.trim() || sku.trim());
+  };
+
+  return (
+    <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/50 rounded-lg">
+      <div className="bg-white rounded-2xl shadow-2xl w-80 p-4 space-y-3">
+        <p className="text-sm font-bold text-slate-900">Assign Product to Hotspot</p>
+
+        {pageProducts.length > 0 && (
+          <div className="space-y-1 max-h-40 overflow-y-auto">
+            {pageProducts.map(p => (
+              <button
+                key={p.sku}
+                onClick={() => selectProduct(p)}
+                className={`w-full text-left px-3 py-2 rounded-lg text-xs border transition-all
+                  ${sku === p.sku ? 'border-[#e2231a] bg-[#e2231a]/10 font-bold' : 'border-slate-200 hover:border-[#e2231a]/40'}`}
+              >
+                <span className="text-slate-400 mr-2">{p.sku}</span>
+                {productCache[p.sku]?.name || p.name}
+              </button>
+            ))}
+          </div>
+        )}
+
+        <div className="space-y-2">
+          <input
+            placeholder="SKU (e.g. ONT-800/S-84)"
+            value={sku}
+            onChange={e => setSku(e.target.value)}
+            className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30"
+          />
+          <input
+            placeholder="Display name"
+            value={name}
+            onChange={e => setName(e.target.value)}
+            className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30"
+          />
+        </div>
+
+        <div className="flex gap-2">
+          <Button size="sm" onClick={submit} className="flex-1 bg-[#e2231a] hover:bg-[#b01b13] text-white">
+            Add Hotspot
+          </Button>
+          <Button size="sm" variant="outline" onClick={onCancel} className="flex-1">
+            Cancel
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Variant picker popup ─────────────────────────────────────────────────────
 function VariantPicker({ spot, products, onAdd, onClose }) {
   const skus = spot.groupedSkus || [spot.sku];
-  if (skus.length === 1) {
-    // Auto-add if only one SKU
-    useEffect(() => {
+
+  useEffect(() => {
+    if (skus.length === 1) {
       const p = products[skus[0]];
       onAdd({ sku: skus[0], name: p?.name || spot.name, price: p?.base_price, imageUrl: p?.image_cached_url || p?.image_url });
       onClose();
-    }, []);
-    return null;
-  }
+    }
+  }, []);
+
+  if (skus.length === 1) return null;
 
   return (
     <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/40 rounded-lg">
@@ -170,33 +389,26 @@ function VariantPicker({ spot, products, onAdd, onClose }) {
             <p className="text-sm font-bold text-slate-900">{spot.name}</p>
             <p className="text-xs text-slate-500">Choose a size or variant</p>
           </div>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-600">
-            <X className="w-4 h-4" />
-          </button>
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-600"><X className="w-4 h-4" /></button>
         </div>
         <div className="overflow-y-auto p-3 space-y-1.5">
           {skus.map(sku => {
             const p = products[sku];
-            const price = p?.base_price || null;
             return (
               <button
                 key={sku}
-                onClick={() => {
-                  onAdd({ sku, name: p?.name || sku, price, imageUrl: p?.image_cached_url || p?.image_url });
-                  onClose();
-                }}
+                onClick={() => { onAdd({ sku, name: p?.name || sku, price: p?.base_price, imageUrl: p?.image_cached_url || p?.image_url }); onClose(); }}
                 className="w-full flex items-center gap-3 p-2.5 rounded-xl border border-slate-200 hover:border-[#e2231a]/40 hover:bg-[#e2231a]/5 transition-all text-left group"
               >
                 <div className="w-12 h-12 flex-shrink-0 rounded-lg bg-slate-100 overflow-hidden flex items-center justify-center border border-slate-100">
                   {p?.image_cached_url || p?.image_url
                     ? <img src={p.image_cached_url || p.image_url} alt={sku} className="w-full h-full object-contain" />
-                    : <Package className="w-5 h-5 text-slate-300" />
-                  }
+                    : <Package className="w-5 h-5 text-slate-300" />}
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-semibold text-slate-800 leading-tight">{p?.name || sku}</p>
                   <p className="text-[10px] text-slate-400 mt-0.5">{sku}</p>
-                  {price && <p className="text-xs font-bold text-[#e2231a]">{fmt(price)}</p>}
+                  {p?.base_price && <p className="text-xs font-bold text-[#e2231a]">{fmt(p.base_price)}</p>}
                 </div>
                 <Plus className="w-4 h-4 text-[#e2231a] opacity-0 group-hover:opacity-100 flex-shrink-0" />
               </button>
@@ -208,7 +420,7 @@ function VariantPicker({ spot, products, onAdd, onClose }) {
   );
 }
 
-// ─── Order Item ──────────────────────────────────────────────────────────────
+// ─── Order Item ───────────────────────────────────────────────────────────────
 function OrderItem({ item, onQtyChange, onRemove, onSizeChange }) {
   const total = item.price ? item.price * item.qty : null;
   const sizes = item.sizes?.length > 0 ? item.sizes : null;
@@ -216,17 +428,14 @@ function OrderItem({ item, onQtyChange, onRemove, onSizeChange }) {
   return (
     <div className="flex flex-col gap-2 p-3 bg-white rounded-xl border border-slate-200 shadow-sm">
       <div className="flex items-start gap-3">
-        {/* Thumb */}
         <div className="w-12 h-12 flex-shrink-0 rounded-lg bg-slate-50 overflow-hidden flex items-center justify-center border border-slate-100">
           {item.imageUrl
             ? <img src={item.imageUrl} alt={item.name} className="w-full h-full object-contain p-1" />
-            : <Package className="w-5 h-5 text-slate-300" />
-          }
+            : <Package className="w-5 h-5 text-slate-300" />}
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-xs font-bold text-slate-800 leading-tight line-clamp-2">{item.name}</p>
-          <p className="text-[10px] text-slate-400 mt-0.5">{item.sku}</p>
-
+          <p className="text-[10px] text-slate-500 mt-0.5 font-mono">{item.sku}</p>
           {sizes && (
             <select
               className="mt-2 w-full text-xs border border-slate-200 rounded-md p-1.5 bg-slate-50 text-slate-700 focus:outline-none focus:ring-1 focus:ring-[#e2231a]"
@@ -244,14 +453,11 @@ function OrderItem({ item, onQtyChange, onRemove, onSizeChange }) {
           </button>
           {total != null
             ? <p className="text-xs font-bold text-slate-800 mt-1">{fmt(total)}</p>
-            : <p className="text-[10px] text-slate-400 italic mt-1">Quote</p>
-          }
+            : <p className="text-[10px] text-slate-400 italic mt-1">Quote</p>}
         </div>
       </div>
-
-      {/* Qty controls */}
       <div className="flex items-center justify-between mt-1 pt-2 border-t border-slate-100">
-        <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Quantity</span>
+        <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Qty</span>
         <div className="flex items-center gap-1">
           <button onClick={() => onQtyChange(item.id, -1)} className="w-6 h-6 rounded bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition-colors">
             <Minus className="w-3 h-3" />
@@ -266,12 +472,13 @@ function OrderItem({ item, onQtyChange, onRemove, onSizeChange }) {
   );
 }
 
-// ─── Main Page ───────────────────────────────────────────────────────────────
+// ─── Main Page ────────────────────────────────────────────────────────────────
 export default function CatalogQuote() {
-  const [currentPage, setCurrentPage] = useState(9); // default to a page with products
+  const [currentPage, setCurrentPage] = useState(9);
   const [pageInput, setPageInput] = useState('9');
   const [direction, setDirection] = useState(1);
   const [hotspotData, setHotspotData] = useState({});
+  const [editedHotspots, setEditedHotspots] = useState({}); // localStorage overrides
   const [orderItems, setOrderItems] = useState([]);
   const [customerName, setCustomerName] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
@@ -279,17 +486,27 @@ export default function CatalogQuote() {
   const [searchSku, setSearchSku] = useState('');
   const [selectedHotspot, setSelectedHotspot] = useState(null);
   const [showVariants, setShowVariants] = useState(false);
-  const { cache: productCache, fetch: fetchProduct } = useProductCache();
+  const [editMode, setEditMode] = useState(false);
+  const [addingHotspot, setAddingHotspot] = useState(false);
+  const { cache: productCache, fetchProduct } = useProductCache();
 
-  // Load hotspot data
+  // Load hotspot data + localStorage overrides
   useEffect(() => {
     getHotspots().then(setHotspotData);
+    try {
+      const saved = localStorage.getItem(LS_KEY);
+      if (saved) setEditedHotspots(JSON.parse(saved));
+    } catch {}
   }, []);
 
-  // Pre-fetch product details for all SKUs on current page
   const pageProducts = PAGE_PRODUCTS[currentPage] || [];
-  const currentHotspots = hotspotData[currentPage] || [];
 
+  // Effective hotspots: localStorage edits take priority over AI-generated
+  const baseHotspots = hotspotData[currentPage] || [];
+  const currentHotspots = editedHotspots[currentPage] ?? baseHotspots;
+  const hasHotspots = currentHotspots.length > 0;
+
+  // Pre-fetch product details for all SKUs on current page
   useEffect(() => {
     const skus = new Set([
       ...pageProducts.map(p => p.sku),
@@ -300,12 +517,13 @@ export default function CatalogQuote() {
 
   // Navigation
   const goToPage = useCallback((n) => {
-    let p = Math.max(1, Math.min(n, MAX_PAGE));
+    const p = Math.max(1, Math.min(n, MAX_PAGE));
     setDirection(p > currentPage ? 1 : -1);
     setCurrentPage(p);
     setPageInput(String(p));
     setSelectedHotspot(null);
     setShowVariants(false);
+    setAddingHotspot(false);
   }, [currentPage]);
 
   const handlePageInput = (e) => {
@@ -314,14 +532,13 @@ export default function CatalogQuote() {
     if (!isNaN(n) && n >= 1) goToPage(n);
   };
 
-  // SKU search → jump to product's page
   const handleSkuSearch = () => {
     const sku = searchSku.trim().toUpperCase();
     const page = SKU_TO_PAGE[sku];
     if (page) { goToPage(page); setSearchSku(''); }
   };
 
-  // Hotspot clicked
+  // Hotspot clicked (read mode)
   const handleHotspotClick = (spot) => {
     setSelectedHotspot(spot);
     const skus = spot.groupedSkus || [spot.sku];
@@ -334,7 +551,32 @@ export default function CatalogQuote() {
     }
   };
 
-  // Add to order
+  // Hotspot edits (edit mode)
+  const handleHotspotsChange = (newSpots) => {
+    const updated = { ...editedHotspots, [currentPage]: newSpots };
+    setEditedHotspots(updated);
+    localStorage.setItem(LS_KEY, JSON.stringify(updated));
+  };
+
+  const resetPageHotspots = () => {
+    const updated = { ...editedHotspots };
+    delete updated[currentPage];
+    setEditedHotspots(updated);
+    localStorage.setItem(LS_KEY, JSON.stringify(updated));
+  };
+
+  const exportHotspots = () => {
+    // Merge edits over base data
+    const merged = { ...hotspotData, ...editedHotspots };
+    const json = JSON.stringify(merged, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'catalogHotspots.json';
+    a.click();
+  };
+
+  // Order management
   const addToOrder = useCallback((product) => {
     setOrderItems(prev => {
       const existing = prev.find(i => i.sku === product.sku);
@@ -343,37 +585,30 @@ export default function CatalogQuote() {
     });
   }, []);
 
-  const handleQtyChange = (id, delta) => {
+  const handleQtyChange = (id, delta) =>
     setOrderItems(prev => prev.map(i => i.id === id ? { ...i, qty: Math.max(1, i.qty + delta) } : i));
-  };
   const handleRemove = (id) => setOrderItems(prev => prev.filter(i => i.id !== id));
-  const handleSizeChange = useCallback((id, size) => {
-    setOrderItems(prev => prev.map(i => i.id === id ? { ...i, selectedSize: size } : i));
-  }, []);
+  const handleSizeChange = useCallback((id, size) =>
+    setOrderItems(prev => prev.map(i => i.id === id ? { ...i, selectedSize: size } : i)), []);
 
   // Totals
   const subtotal = orderItems.reduce((s, i) => s + (i.price ? i.price * i.qty : 0), 0);
   const hasQuoteItems = orderItems.some(i => !i.price);
   const itemCount = orderItems.reduce((s, i) => s + i.qty, 0);
-  const hasHotspots = currentHotspots.length > 0;
+  const isEdited = !!editedHotspots[currentPage];
 
-  // Generate booth concept image
+  // Generate booth concept
   const handleGenerateImage = async () => {
     setIsGenerating(true);
     try {
       const imageUrls = orderItems.map(i => i.imageUrl).filter(Boolean);
       const productNames = orderItems.map(i => i.name).join(', ');
-
       const prompt = `A professional, high-quality 3D render of a trade show booth featuring the following products: ${productNames}. The booth should be set in a modern, brightly lit exhibition hall with a clean, neutral carpet. The products should be arranged logically to create an inviting space. Photorealistic, 8k resolution, architectural visualization.`;
-
       const res = await base44.integrations.Core.GenerateImage({
         prompt,
-        existing_image_urls: imageUrls.length > 0 ? imageUrls : undefined
+        existing_image_urls: imageUrls.length > 0 ? imageUrls : undefined,
       });
-
-      if (res && res.url) {
-        setGeneratedImage(res.url);
-      }
+      if (res?.url) setGeneratedImage(res.url);
     } catch (err) {
       console.error('Failed to generate image', err);
       alert('Failed to generate image. Please try again.');
@@ -415,7 +650,7 @@ export default function CatalogQuote() {
           </button>
         </div>
 
-        {/* Page nav — centered in top bar */}
+        {/* Page nav */}
         <div className="flex-1 flex items-center justify-center gap-2">
           <button onClick={() => goToPage(currentPage - 1)} disabled={currentPage <= 1}
             className="p-1.5 rounded-lg hover:bg-slate-100 disabled:opacity-30 text-slate-600">
@@ -434,10 +669,52 @@ export default function CatalogQuote() {
             className="p-1.5 rounded-lg hover:bg-slate-100 disabled:opacity-30 text-slate-600">
             <ChevronRight className="w-5 h-5" />
           </button>
-          {hasHotspots && (
+          {hasHotspots && !editMode && (
             <Badge className="bg-[#e2231a]/10 text-[#e2231a] text-[10px] ml-1">
               {currentHotspots.length} clickable
             </Badge>
+          )}
+          {isEdited && <Badge className="bg-amber-100 text-amber-700 text-[10px] ml-1">edited</Badge>}
+        </div>
+
+        {/* Edit mode controls */}
+        <div className="flex items-center gap-2 flex-shrink-0">
+          {editMode ? (
+            <>
+              <button
+                onClick={() => setAddingHotspot(a => !a)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all
+                  ${addingHotspot ? 'bg-green-500 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
+              >
+                <Plus className="w-3.5 h-3.5" />
+                {addingHotspot ? 'Drawing...' : 'Add Box'}
+              </button>
+              {isEdited && (
+                <button onClick={resetPageHotspots} className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs text-slate-500 hover:text-red-500 hover:bg-red-50 transition-all">
+                  <Trash2 className="w-3.5 h-3.5" />
+                  Reset Page
+                </button>
+              )}
+              <button onClick={exportHotspots} className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs text-slate-500 hover:bg-slate-100 transition-all">
+                <Download className="w-3.5 h-3.5" />
+                Export JSON
+              </button>
+              <button
+                onClick={() => { setEditMode(false); setAddingHotspot(false); }}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-blue-600 text-white hover:bg-blue-700 transition-all"
+              >
+                <Save className="w-3.5 h-3.5" />
+                Done Editing
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={() => setEditMode(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all"
+            >
+              <Edit2 className="w-3.5 h-3.5" />
+              Edit Hotspots
+            </button>
           )}
         </div>
 
@@ -456,9 +733,7 @@ export default function CatalogQuote() {
         <div className="w-64 flex-shrink-0 bg-white border-r border-slate-200 flex flex-col items-center justify-center p-6 relative">
           <div className="absolute top-0 left-0 right-0 p-4 border-b border-slate-100 bg-slate-50">
             <h2 className="text-xs font-bold text-slate-500 uppercase tracking-wide text-center">Order Total</h2>
-            {customerName && (
-              <p className="text-[11px] text-slate-500 mt-0.5 truncate text-center">{customerName}</p>
-            )}
+            {customerName && <p className="text-[11px] text-slate-500 mt-0.5 truncate text-center">{customerName}</p>}
           </div>
 
           <div className="mt-12 text-center w-full">
@@ -467,14 +742,13 @@ export default function CatalogQuote() {
             </div>
             <p className="text-sm text-slate-500 mb-6">{itemCount} item{itemCount !== 1 ? 's' : ''}</p>
 
-            {/* Line item summary */}
             {orderItems.length > 0 && (
               <div className="text-left space-y-1 mb-6 max-h-40 overflow-y-auto">
                 {orderItems.map(item => (
                   <div key={item.id} className="flex items-center gap-1.5 py-1 border-b border-slate-50 last:border-0">
                     <div className="flex-1 min-w-0">
                       <p className="text-[10px] font-medium text-slate-700 truncate">{item.name}</p>
-                      <p className="text-[9px] text-slate-400">{item.sku} x{item.qty}</p>
+                      <p className="text-[9px] text-slate-400 font-mono">{item.sku} x{item.qty}</p>
                     </div>
                     <p className="text-[10px] font-bold text-slate-800 flex-shrink-0">
                       {item.price ? fmt(item.price * item.qty) : '—'}
@@ -490,47 +764,56 @@ export default function CatalogQuote() {
               disabled={orderItems.length === 0 || isGenerating}
               onClick={handleGenerateImage}
             >
-              {isGenerating ? (
-                <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> Generating...</>
-              ) : (
-                'Generate Booth Concept'
-              )}
+              {isGenerating
+                ? <><Loader2 className="w-5 h-5 mr-2 animate-spin" />Generating...</>
+                : 'Generate Booth Concept'}
             </Button>
 
             {orderItems.length > 0 && (
-              <button
-                onClick={() => setOrderItems([])}
-                className="w-full text-xs text-slate-400 hover:text-red-500 transition-colors mt-4 py-2"
-              >
+              <button onClick={() => setOrderItems([])} className="w-full text-xs text-slate-400 hover:text-red-500 transition-colors mt-4 py-2">
                 Clear all items
               </button>
             )}
           </div>
         </div>
 
-        {/* CENTER: Shoppable Catalog Page */}
+        {/* CENTER: Catalog Page */}
         <div className="flex-1 overflow-auto p-4 flex justify-center">
           <div className="relative w-full max-w-2xl">
-            <AnimatePresence mode="wait" custom={direction}>
-              <motion.div
-                key={currentPage}
-                custom={direction}
-                initial={{ opacity: 0, x: direction > 0 ? 40 : -40 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: direction > 0 ? -40 : 40 }}
-                transition={{ duration: 0.2, ease: 'easeInOut' }}
-              >
-                <CatalogPageView
-                  pageNum={currentPage}
-                  hotspots={currentHotspots}
-                  onHotspotClick={handleHotspotClick}
-                  selectedHotspot={selectedHotspot}
-                />
-              </motion.div>
-            </AnimatePresence>
+            {editMode ? (
+              // ── Edit mode: draggable hotspot editor ──
+              <HotspotEditor
+                pageNum={currentPage}
+                spots={currentHotspots}
+                onChange={handleHotspotsChange}
+                pageProducts={pageProducts}
+                productCache={productCache}
+                adding={addingHotspot}
+                onAddingChange={setAddingHotspot}
+              />
+            ) : (
+              // ── Normal mode: clickable hotspot overlays ──
+              <AnimatePresence mode="wait" custom={direction}>
+                <motion.div
+                  key={currentPage}
+                  custom={direction}
+                  initial={{ opacity: 0, x: direction > 0 ? 40 : -40 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: direction > 0 ? -40 : 40 }}
+                  transition={{ duration: 0.2, ease: 'easeInOut' }}
+                >
+                  <CatalogPageView
+                    pageNum={currentPage}
+                    hotspots={currentHotspots}
+                    onHotspotClick={handleHotspotClick}
+                    selectedHotspot={selectedHotspot}
+                  />
+                </motion.div>
+              </AnimatePresence>
+            )}
 
             {/* Variant picker popup */}
-            {showVariants && selectedHotspot && (
+            {!editMode && showVariants && selectedHotspot && (
               <VariantPicker
                 spot={selectedHotspot}
                 products={productCache}
@@ -539,12 +822,12 @@ export default function CatalogQuote() {
               />
             )}
 
-            {/* No hotspots yet — show product chips below image */}
-            {!hasHotspots && pageProducts.length > 0 && (
+            {/* Fallback product chips when no hotspots */}
+            {!editMode && !hasHotspots && pageProducts.length > 0 && (
               <div className="mt-3 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                 <div className="px-4 py-2 bg-amber-50 border-b border-amber-100">
                   <p className="text-xs text-amber-700 font-medium">
-                    Hotspots not yet generated for this page — click below to add products
+                    No hotspots for this page — click a product to add it
                   </p>
                 </div>
                 <div className="p-3 grid grid-cols-2 gap-2">
@@ -562,8 +845,8 @@ export default function CatalogQuote() {
                             : <Package className="w-4 h-4 text-slate-300" />}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-xs font-semibold text-slate-800 leading-tight line-clamp-2">{p.name}</p>
-                          <p className="text-[9px] text-slate-400">{p.sku}</p>
+                          <p className="text-xs font-semibold text-slate-800 leading-tight line-clamp-2">{pd?.name || p.name}</p>
+                          <p className="text-[9px] text-slate-400 font-mono">{p.sku}</p>
                           {pd?.base_price && <p className="text-xs font-bold text-[#e2231a]">{fmt(pd.base_price)}</p>}
                         </div>
                         <Plus className="w-4 h-4 text-[#e2231a] opacity-0 group-hover:opacity-100 flex-shrink-0" />
@@ -583,9 +866,7 @@ export default function CatalogQuote() {
               <ShoppingCart className="w-4 h-4 text-[#e2231a]" />
               <span className="text-xs font-bold text-slate-700 uppercase tracking-wide">Added to Order</span>
               {itemCount > 0 && (
-                <Badge className="ml-auto bg-[#e2231a] text-white text-[10px] px-1.5 py-0 h-4">
-                  {itemCount}
-                </Badge>
+                <Badge className="ml-auto bg-[#e2231a] text-white text-[10px] px-1.5 py-0 h-4">{itemCount}</Badge>
               )}
             </div>
           </div>
@@ -597,22 +878,20 @@ export default function CatalogQuote() {
                 <p className="text-[11px] text-slate-400">Order is empty</p>
                 <p className="text-[10px] text-slate-300 mt-1">Click products on the catalog pages to add</p>
               </div>
-            ) : (
-              orderItems.map(item => (
-                <OrderItem
-                  key={item.id}
-                  item={item}
-                  onQtyChange={handleQtyChange}
-                  onRemove={handleRemove}
-                  onSizeChange={handleSizeChange}
-                />
-              ))
-            )}
+            ) : orderItems.map(item => (
+              <OrderItem
+                key={item.id}
+                item={item}
+                onQtyChange={handleQtyChange}
+                onRemove={handleRemove}
+                onSizeChange={handleSizeChange}
+              />
+            ))}
           </div>
 
           {orderItems.length > 0 && (
             <div className="p-3 border-t border-slate-100">
-              <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center justify-between">
                 <span className="text-xs text-slate-500">Subtotal</span>
                 <span className="text-sm font-black text-slate-900">{subtotal > 0 ? fmt(subtotal) : 'Quote'}</span>
               </div>
