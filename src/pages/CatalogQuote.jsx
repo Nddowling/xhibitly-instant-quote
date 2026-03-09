@@ -665,7 +665,7 @@ export default function CatalogQuote() {
     const skus = spot.groupedSkus || [spot.sku];
     if (skus.length === 1) {
       const p = productCache[skus[0]];
-      addToOrder({ sku: skus[0], name: p?.name || spot.name, price: p?.base_price, imageUrl: p?.image_cached_url || p?.image_url });
+      addToOrder({ sku: skus[0], name: p?.name || spot.name, price: p?.base_price, imageUrl: getImageUrl(p) });
       setSelectedHotspot(null);
     } else {
       setShowVariants(true);
