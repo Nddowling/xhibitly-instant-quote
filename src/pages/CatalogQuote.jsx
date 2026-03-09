@@ -11,6 +11,47 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+// ─── Claude Vision: detect product within a specific bounding box ─────────────
+async function detectProductInBox(pageNum, box, supabaseUrl) {
+  const imageUrl = `${supabaseUrl}/catalog/pages/page-${String(pageNum).padStart(3, '0')}.jpg`;
+
+  const prompt = `This is page ${pageNum} of the Orbus Exhibitor's Handbook trade show display catalog.
+
+I've selected a region of the page at approximately:
+- Left: ${(box.x * 100).toFixed(0)}% from left
+- Top: ${(box.y * 100).toFixed(0)}% from top
+- Width: ${(box.width * 100).toFixed(0)}% of page width
+- Height: ${(box.height * 100).toFixed(0)}% of page height
+
+Look at that specific region of the catalog page and identify the product(s) shown there.
+Return the primary SKU code(s) exactly as printed (e.g. "FX-2700", "HPN-3020/S"), and the product name.
+If multiple size variants share one image, list all SKUs in groupedSkus.
+If you cannot identify a SKU, return an empty string for sku.`;
+
+  const response = await base44.integrations.Core.InvokeLLM({
+    prompt,
+    file_urls: [imageUrl],
+    model: "claude_sonnet_4_6",
+    response_json_schema: {
+      type: "object",
+      properties: {
+        sku: { type: "string" },
+        name: { type: "string" },
+        groupedSkus: { type: "array", items: { type: "string" } }
+      },
+      required: ["sku", "name", "groupedSkus"]
+    }
+  });
+
+  return {
+    sku: response.sku || '',
+    name: response.name || '',
+    groupedSkus: Array.isArray(response.groupedSkus) && response.groupedSkus.length > 0
+      ? response.groupedSkus
+      : response.sku ? [response.sku] : [],
+  };
+}
+
 // ─── Claude Vision hotspot detection (runs via backend integration) ───────────────────────
 async function detectHotspotsWithClaude(pageNum, products, supabaseUrl) {
   const imageUrl = `${supabaseUrl}/catalog/pages/page-${String(pageNum).padStart(3, '0')}.jpg`;
