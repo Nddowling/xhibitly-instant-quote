@@ -278,6 +278,8 @@ function HotspotEditor({ pageNum, spots, onChange, pageProducts, productCache, a
   // drag = { type: 'move'|'resize'|'create', idx, startNX, startNY, origSpot, curSpot }
   const setAdding = (val) => onAddingChange?.(typeof val === 'function' ? val(adding) : val);
   const [newSkuPrompt, setNewSkuPrompt] = useState(null); // { x, y, width, height }
+  const [autoDetecting, setAutoDetecting] = useState(false);
+  const [autoDetected, setAutoDetected] = useState(null); // { sku, name, groupedSkus }
 
   useEffect(() => { setImgLoaded(false); }, [pageNum]);
 
