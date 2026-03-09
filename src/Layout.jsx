@@ -727,12 +727,7 @@ export default function Layout({ children, currentPageName }) {
                         <span className="text-white font-medium">Catalog Quote</span>
                       </div>
                     </Link>
-                    <Link to={createPageUrl('SalesQuoteStart')} onClick={() => setMobileMenuOpen(false)}>
-                      <div className="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-white/10">
-                        <Plus className="w-5 h-5 text-white/80" />
-                        <span className="text-white font-medium">New Quote</span>
-                      </div>
-                    </Link>
+
                   </>
                 ) : user?.user_type === 'student' ? (
                   <Link to={createPageUrl('StudentHome')} onClick={() => setMobileMenuOpen(false)}>
