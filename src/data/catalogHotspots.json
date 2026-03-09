@@ -5,8 +5,8 @@
       "name": "Outdoor Table Throw",
       "x": 0,
       "y": 0,
-      "width": 1,
-      "height": 1,
+      "width": 0.5,
+      "height": 0.5,
       "groupedSkus": [
         "TBL-ODC-FITTED"
       ]
@@ -1685,135 +1685,47 @@
   ],
   "92": [
     {
-      "sku": "MOD-FRM-06",
-      "name": "Modulate Frame Banner 06",
-      "x": 0,
-      "y": 0,
-      "width": 1,
-      "height": 0.08333333333333333,
+      "sku": "MOD-30-02-M-TL",
+      "name": "Convert a 30' Inline",
+      "x": 0.22,
+      "y": 0.18,
+      "width": 0.56,
+      "height": 0.16,
       "groupedSkus": [
-        "MOD-FRM-06"
+        "MOD-30-02-M-TL"
       ]
     },
     {
-      "sku": "MOD-FRM-05",
-      "name": "Modulate Frame Banner 05",
-      "x": 0,
-      "y": 0.08333333333333333,
-      "width": 1,
-      "height": 0.08333333333333333,
+      "sku": "MOD-20-02-M-TL",
+      "name": "Into a 20' Inline",
+      "x": 0.22,
+      "y": 0.42,
+      "width": 0.46,
+      "height": 0.16,
       "groupedSkus": [
-        "MOD-FRM-05"
+        "MOD-20-02-M-TL"
       ]
     },
     {
-      "sku": "MOD-FRM-09",
-      "name": "Modulate Frame Banner 09",
-      "x": 0,
-      "y": 0.16666666666666666,
-      "width": 1,
-      "height": 0.08333333333333333,
+      "sku": "MOD-10-03-M-TL",
+      "name": "10' Inline Display Left",
+      "x": 0.22,
+      "y": 0.66,
+      "width": 0.22,
+      "height": 0.15,
       "groupedSkus": [
-        "MOD-FRM-09"
+        "MOD-10-03-M-TL"
       ]
     },
     {
-      "sku": "MOD-FRM-03",
-      "name": "Modulate Frame Banner 03",
-      "x": 0,
-      "y": 0.25,
-      "width": 1,
-      "height": 0.08333333333333333,
+      "sku": "MOD-10-04-M-TL",
+      "name": "10' Inline Display Right",
+      "x": 0.54,
+      "y": 0.66,
+      "width": 0.22,
+      "height": 0.15,
       "groupedSkus": [
-        "MOD-FRM-03"
-      ]
-    },
-    {
-      "sku": "MOD-FRM-04",
-      "name": "Modulate Frame Banner 04",
-      "x": 0,
-      "y": 0.3333333333333333,
-      "width": 1,
-      "height": 0.08333333333333333,
-      "groupedSkus": [
-        "MOD-FRM-04"
-      ]
-    },
-    {
-      "sku": "MOD-FRM-02",
-      "name": "Modulate Frame Banner 02",
-      "x": 0,
-      "y": 0.4166666666666667,
-      "width": 1,
-      "height": 0.08333333333333333,
-      "groupedSkus": [
-        "MOD-FRM-02"
-      ]
-    },
-    {
-      "sku": "MOD-FRM-01",
-      "name": "Modulate Frame Banner 01",
-      "x": 0,
-      "y": 0.5,
-      "width": 1,
-      "height": 0.08333333333333333,
-      "groupedSkus": [
-        "MOD-FRM-01"
-      ]
-    },
-    {
-      "sku": "MOD-FRM-12",
-      "name": "Modulate Frame Banner 12",
-      "x": 0,
-      "y": 0.5833333333333334,
-      "width": 1,
-      "height": 0.08333333333333333,
-      "groupedSkus": [
-        "MOD-FRM-12"
-      ]
-    },
-    {
-      "sku": "MOD-FRM-07",
-      "name": "Modulate Frame Banner 07",
-      "x": 0,
-      "y": 0.6666666666666666,
-      "width": 1,
-      "height": 0.08333333333333333,
-      "groupedSkus": [
-        "MOD-FRM-07"
-      ]
-    },
-    {
-      "sku": "MOD-FRM-11",
-      "name": "Modulate Frame Banner 11",
-      "x": 0,
-      "y": 0.75,
-      "width": 1,
-      "height": 0.08333333333333333,
-      "groupedSkus": [
-        "MOD-FRM-11"
-      ]
-    },
-    {
-      "sku": "MOD-FRM-08",
-      "name": "Modulate Frame Banner 08",
-      "x": 0,
-      "y": 0.8333333333333334,
-      "width": 1,
-      "height": 0.08333333333333333,
-      "groupedSkus": [
-        "MOD-FRM-08"
-      ]
-    },
-    {
-      "sku": "MOD-FRM-10",
-      "name": "Modulate Frame Banner 10",
-      "x": 0,
-      "y": 0.9166666666666666,
-      "width": 1,
-      "height": 0.08333333333333333,
-      "groupedSkus": [
-        "MOD-FRM-10"
+        "MOD-10-04-M-TL"
       ]
     }
   ],
@@ -2239,7 +2151,7 @@
       "sku": "CFAB-K-10",
       "name": "Formulate Fusion 20x20 Island Kit 10",
       "x": 0,
-      "y": 0.18,
+      "y": 0.13,
       "width": 1,
       "height": 0.72,
       "groupedSkus": [
@@ -2249,7 +2161,28 @@
       ]
     }
   ],
-  "120": [],
+  "120": [
+    {
+      "sku": "W-06-C-02",
+      "name": "Formulate Bar Counter 02",
+      "x": 0,
+      "y": 0,
+      "width": 1,
+      "height": 1,
+      "groupedSkus": [
+        "W-06-C-02",
+        "W-06-C-03",
+        "W-06-C-06",
+        "W-05-C",
+        "W-06-C-05",
+        "W-04-C",
+        "W-01-C",
+        "W-03-C",
+        "W-02-C",
+        "W-06-C-04"
+      ]
+    }
+  ],
   "129": [
     {
       "sku": "COL-01",
@@ -2364,7 +2297,23 @@
       ]
     }
   ],
-  "136": [],
+  "136": [
+    {
+      "sku": "ARCH-07",
+      "name": "Formulate 10ft Arch 07 Tension Fabric Structure",
+      "x": 0.05,
+      "y": 0.02,
+      "width": 0.9,
+      "height": 0.85,
+      "groupedSkus": [
+        "ARCH-07",
+        "ARCH-02",
+        "ARCH-03",
+        "ARCH-01",
+        "ARCH-06"
+      ]
+    }
+  ],
   "137": [
     {
       "sku": "C-WALL",
@@ -2922,7 +2871,19 @@
       ]
     }
   ],
-  "175": [],
+  "175": [
+    {
+      "sku": "OR-K-HC13",
+      "name": "Hercules 13 Orbital Express Truss 20ft Modular Backwall",
+      "x": 0,
+      "y": 0,
+      "width": 1,
+      "height": 1,
+      "groupedSkus": [
+        "OR-K-HC13"
+      ]
+    }
+  ],
   "181": [
     {
       "sku": "VF-MK-01-SS",
@@ -3220,21 +3181,90 @@
     {
       "sku": "LED-COOL-WHT-BLAST",
       "name": "LED Color Blast Accent Light - Cool White",
+      "x": 0.05,
+      "y": 0.02,
+      "width": 0.22,
+      "height": 0.18,
+      "groupedSkus": [
+        "LED-COOL-WHT-BLAST",
+        "LED-RGB-BLAST",
+        "LED-WRM-WHT-BLAST"
+      ]
+    },
+    {
+      "sku": "LED-10W-FLOOD-W",
+      "name": "LED Mini Flood Accent Light - White",
+      "x": 0.42,
+      "y": 0.04,
+      "width": 0.18,
+      "height": 0.14,
+      "groupedSkus": [
+        "LED-10W-FLOOD-W",
+        "LED-10W-FLOOD-RGB"
+      ]
+    },
+    {
+      "sku": "LED-FLOOD",
+      "name": "LED Flood Accent Light",
+      "x": 0.72,
+      "y": 0.02,
+      "width": 0.22,
+      "height": 0.18,
+      "groupedSkus": [
+        "LED-FLOOD"
+      ]
+    },
+    {
+      "sku": "TNT-HWL-LED-01",
+      "name": "Zoom Tent Light Kit",
       "x": 0,
-      "y": 0,
-      "width": 1,
-      "height": 0.14285714285714285,
+      "y": 0.33,
+      "width": 0.1,
+      "height": 0.18,
+      "groupedSkus": [
+        "TNT-HWL-LED-01"
+      ]
+    },
+    {
+      "sku": "LED-COOL-WHT-BLAST",
+      "name": "LED Color Blast Accent Light - Cool White (variant row)",
+      "x": 0.27,
+      "y": 0.33,
+      "width": 0.15,
+      "height": 0.2,
       "groupedSkus": [
         "LED-COOL-WHT-BLAST"
       ]
     },
     {
+      "sku": "LED-10W-FLOOD-W",
+      "name": "LED Mini Flood Accent Light - White (variant row)",
+      "x": 0.57,
+      "y": 0.35,
+      "width": 0.15,
+      "height": 0.15,
+      "groupedSkus": [
+        "LED-10W-FLOOD-W"
+      ]
+    },
+    {
+      "sku": "LED-10W-FLOOD-RGB",
+      "name": "LED Mini Flood Accent Light - RGB (variant row)",
+      "x": 0.83,
+      "y": 0.35,
+      "width": 0.16,
+      "height": 0.18,
+      "groupedSkus": [
+        "LED-10W-FLOOD-RGB"
+      ]
+    },
+    {
       "sku": "LED-RGB-BLAST",
       "name": "LED Color Blast Accent Light - RGB",
-      "x": 0,
-      "y": 0.14285714285714285,
-      "width": 1,
-      "height": 0.14285714285714285,
+      "x": 0.06,
+      "y": 0.57,
+      "width": 0.22,
+      "height": 0.18,
       "groupedSkus": [
         "LED-RGB-BLAST"
       ]
@@ -3242,56 +3272,67 @@
     {
       "sku": "LED-WRM-WHT-BLAST",
       "name": "LED Color Blast Accent Light - Warm White",
-      "x": 0,
-      "y": 0.2857142857142857,
-      "width": 1,
-      "height": 0.14285714285714285,
+      "x": 0.42,
+      "y": 0.59,
+      "width": 0.16,
+      "height": 0.15,
       "groupedSkus": [
         "LED-WRM-WHT-BLAST"
       ]
     },
     {
-      "sku": "LED-10W-FLOOD-W",
-      "name": "LED Mini Flood Accent Light - White",
-      "x": 0,
-      "y": 0.42857142857142855,
-      "width": 1,
-      "height": 0.14285714285714285,
-      "groupedSkus": [
-        "LED-10W-FLOOD-W"
-      ]
-    },
-    {
       "sku": "LED-FLOOD",
-      "name": "LED Flood Accent Light",
-      "x": 0,
-      "y": 0.5714285714285714,
-      "width": 1,
-      "height": 0.14285714285714285,
+      "name": "LED Flood Accent Light (lower)",
+      "x": 0.72,
+      "y": 0.57,
+      "width": 0.22,
+      "height": 0.18,
       "groupedSkus": [
         "LED-FLOOD"
       ]
     },
     {
-      "sku": "LED-10W-FLOOD-RGB",
-      "name": "LED Mini Flood Accent Light - RGB",
+      "sku": "TNT-HWL-LED-01",
+      "name": "Zoom Tent Light Kit (lower)",
       "x": 0,
-      "y": 0.7142857142857143,
-      "width": 1,
-      "height": 0.14285714285714285,
+      "y": 0.8,
+      "width": 0.1,
+      "height": 0.15,
       "groupedSkus": [
-        "LED-10W-FLOOD-RGB"
+        "TNT-HWL-LED-01"
       ]
     },
     {
-      "sku": "TNT-HWL-LED-01",
-      "name": "Zoom Tent Light Kit",
-      "x": 0,
-      "y": 0.8571428571428571,
-      "width": 1,
-      "height": 0.14285714285714285,
+      "sku": "LED-COOL-WHT-BLAST",
+      "name": "LED Color Blast Accent Light - Cool White (bottom row)",
+      "x": 0.27,
+      "y": 0.8,
+      "width": 0.15,
+      "height": 0.17,
       "groupedSkus": [
-        "TNT-HWL-LED-01"
+        "LED-COOL-WHT-BLAST"
+      ]
+    },
+    {
+      "sku": "LED-10W-FLOOD-W",
+      "name": "LED Mini Flood Accent Light - White (bottom row)",
+      "x": 0.57,
+      "y": 0.82,
+      "width": 0.14,
+      "height": 0.13,
+      "groupedSkus": [
+        "LED-10W-FLOOD-W"
+      ]
+    },
+    {
+      "sku": "LED-10W-FLOOD-RGB",
+      "name": "LED Mini Flood Accent Light - RGB (bottom row)",
+      "x": 0.83,
+      "y": 0.82,
+      "width": 0.15,
+      "height": 0.15,
+      "groupedSkus": [
+        "LED-10W-FLOOD-RGB"
       ]
     }
   ],
@@ -3308,7 +3349,43 @@
       ]
     }
   ],
-  "192": [],
-  "193": [],
-  "214": []
+  "192": [
+    {
+      "sku": "TROLLEY",
+      "name": "Trolley Roller",
+      "x": 0.03,
+      "y": 0.02,
+      "width": 0.94,
+      "height": 0.62,
+      "groupedSkus": [
+        "TROLLEY"
+      ]
+    }
+  ],
+  "193": [
+    {
+      "sku": "TROLLEY",
+      "name": "Trolley Roller",
+      "x": 0.08,
+      "y": 0.72,
+      "width": 0.84,
+      "height": 0.25,
+      "groupedSkus": [
+        "TROLLEY"
+      ]
+    }
+  ],
+  "214": [
+    {
+      "sku": "MFY-RSR-02",
+      "name": "MODify Riser 02",
+      "x": 0,
+      "y": 0,
+      "width": 1,
+      "height": 1,
+      "groupedSkus": [
+        "MFY-RSR-02"
+      ]
+    }
+  ]
 }
