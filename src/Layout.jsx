@@ -855,12 +855,7 @@ export default function Layout({ children, currentPageName }) {
                     <span className="text-[10px] font-medium">Home</span>
                   </button>
                 </Link>
-                <Link to={createPageUrl('QuoteRequest')} className="flex-1">
-                  <button className="w-full h-full flex flex-col items-center justify-center gap-0.5 text-slate-500">
-                    <Plus className="w-5 h-5" />
-                    <span className="text-[10px] font-medium">New Quote</span>
-                  </button>
-                </Link>
+
                 <Link to={createPageUrl('OrderHistory')} className="flex-1">
                   <button
                     className={`w-full h-full flex flex-col items-center justify-center gap-0.5 ${
