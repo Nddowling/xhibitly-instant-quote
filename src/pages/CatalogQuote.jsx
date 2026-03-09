@@ -107,7 +107,23 @@ function useProductCache() {
     cache.current[sku] = null;
     try {
       const res = await base44.entities.Product.filter({ sku });
-      cache.current[sku] = res[0] || { sku, name: sku };
+      if (res && res.length > 0) {
+        cache.current[sku] = res[0];
+      } else {
+        const variantRes = await base44.entities.ProductVariant.filter({ manufacturer_sku: sku });
+        if (variantRes && variantRes.length > 0) {
+          const v = variantRes[0];
+          cache.current[sku] = {
+            ...v,
+            sku: v.manufacturer_sku,
+            name: v.display_name,
+            image_url: v.thumbnail_url || v.image_url,
+            base_price: v.base_price
+          };
+        } else {
+          cache.current[sku] = { sku, name: sku };
+        }
+      }
     } catch {
       cache.current[sku] = { sku, name: sku };
     }
