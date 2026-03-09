@@ -952,12 +952,12 @@ export default function CatalogQuote() {
                     return (
                       <button
                         key={p.sku}
-                        onClick={() => addToOrder({ sku: p.sku, name: pd?.name || p.name, price: pd?.base_price, imageUrl: pd?.image_cached_url || pd?.image_url })}
+                        onClick={() => addToOrder({ sku: p.sku, name: pd?.name || p.name, price: pd?.base_price, imageUrl: getImageUrl(pd) })}
                         className="flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-200 hover:border-[#e2231a]/40 hover:bg-[#e2231a]/5 text-left transition-all group"
                       >
                         <div className="w-12 h-12 flex-shrink-0 rounded-lg bg-slate-100 overflow-hidden flex items-center justify-center">
-                          {pd?.image_cached_url || pd?.image_url
-                            ? <img src={pd.image_cached_url || pd.image_url} alt={p.name} className="w-full h-full object-contain" />
+                          {getImageUrl(pd)
+                            ? <img src={getImageUrl(pd)} alt={p.name} className="w-full h-full object-contain" />
                             : <Package className="w-4 h-4 text-slate-300" />}
                         </div>
                         <div className="flex-1 min-w-0">
