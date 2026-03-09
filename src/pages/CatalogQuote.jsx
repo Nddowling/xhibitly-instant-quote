@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import Anthropic from '@anthropic-ai/sdk';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -6,9 +7,69 @@ import { PAGE_PRODUCTS, MAX_PAGE, SKU_TO_PAGE } from '@/data/catalogPageMapping'
 import {
   ChevronLeft, ChevronRight, Plus, Minus, X, ShoppingCart,
   FileText, Search, Loader2, ImageOff, Package, Edit2, Save,
-  Download, Trash2, Move
+  Download, Trash2, RefreshCw
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+
+// ─── Claude Vision hotspot detection (runs in-browser) ───────────────────────
+async function detectHotspotsWithClaude(pageNum, products, supabaseUrl) {
+  const anthropic = new Anthropic({
+    apiKey: import.meta.env.VITE_ANTHROPIC_API_KEY,
+    dangerouslyAllowBrowser: true,
+  });
+
+  const imageUrl = `${supabaseUrl}/catalog/pages/page-${String(pageNum).padStart(3, '0')}.jpg`;
+  const imgResp = await fetch(imageUrl);
+  if (!imgResp.ok) throw new Error(`Failed to fetch page image: ${imgResp.status}`);
+  const imgBlob = await imgResp.arrayBuffer();
+  const base64 = btoa(String.fromCharCode(...new Uint8Array(imgBlob)));
+
+  const productList = products
+    .map(p => `- ${p.sku}: "${p.name}" (${p.category})${p.isPrimary ? ' [FEATURED]' : ''}`)
+    .join('\n');
+
+  const prompt = `This is page ${pageNum} of the Orbus Exhibitor's Handbook trade show display catalog.
+
+Products on this page:
+${productList}
+
+Return a JSON array of bounding boxes for each product's primary visual/photo area (NOT spec tables or text). Rules:
+- Size variants sharing ONE image → ONE box, list all SKUs in groupedSkus
+- Separate product images → separate boxes
+- x, y = top-left corner, normalized 0–1 (0,0 = top-left)
+- width, height = normalized 0–1
+- Tight boxes around product photos only
+
+Return ONLY valid JSON array, no markdown:
+[{"sku":"SKU","name":"Name","x":0.0,"y":0.0,"width":1.0,"height":1.0,"groupedSkus":["SKU"]}]`;
+
+  const response = await anthropic.messages.create({
+    model: 'claude-sonnet-4-6',
+    max_tokens: 1500,
+    messages: [{
+      role: 'user',
+      content: [
+        { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: base64 } },
+        { type: 'text', text: prompt },
+      ],
+    }],
+  });
+
+  const raw = response.content[0].text.trim();
+  const jsonMatch = raw.match(/\[[\s\S]*\]/);
+  if (!jsonMatch) throw new Error('No JSON array in response');
+
+  const parsed = JSON.parse(jsonMatch[0]);
+  return parsed.map(item => ({
+    sku: item.sku || products[0]?.sku,
+    name: item.name || '',
+    x: Math.max(0, Math.min(1, Number(item.x) || 0)),
+    y: Math.max(0, Math.min(1, Number(item.y) || 0)),
+    width: Math.max(0.05, Math.min(1, Number(item.width) || 0.5)),
+    height: Math.max(0.05, Math.min(1, Number(item.height) || 0.5)),
+    groupedSkus: Array.isArray(item.groupedSkus) ? item.groupedSkus : [item.sku],
+  }));
+}
 
 // ─── Config ─────────────────────────────────────────────────────────────────
 const SUPABASE_URL = 'https://xpgvpzbzmkubahyxwipk.supabase.co/storage/v1/object/public/orbus-assets';
@@ -488,6 +549,7 @@ export default function CatalogQuote() {
   const [showVariants, setShowVariants] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [addingHotspot, setAddingHotspot] = useState(false);
+  const [isRerunning, setIsRerunning] = useState(false);
   const { cache: productCache, fetchProduct } = useProductCache();
 
   // Load hotspot data + localStorage overrides
@@ -563,6 +625,24 @@ export default function CatalogQuote() {
     delete updated[currentPage];
     setEditedHotspots(updated);
     localStorage.setItem(LS_KEY, JSON.stringify(updated));
+  };
+
+  const rerunWithClaude = async () => {
+    if (pageProducts.length === 0) {
+      alert('No products mapped to this page — nothing to detect.');
+      return;
+    }
+    setIsRerunning(true);
+    try {
+      const spots = await detectHotspotsWithClaude(currentPage, pageProducts, SUPABASE_URL);
+      handleHotspotsChange(spots);
+      console.log(`Claude detected ${spots.length} hotspots on page ${currentPage}`);
+    } catch (err) {
+      console.error('Claude Vision failed:', err);
+      alert(`AI detection failed: ${err.message}`);
+    } finally {
+      setIsRerunning(false);
+    }
   };
 
   const exportHotspots = () => {
@@ -695,6 +775,15 @@ export default function CatalogQuote() {
                   Reset Page
                 </button>
               )}
+              <button
+                onClick={rerunWithClaude}
+                disabled={isRerunning || pageProducts.length === 0}
+                className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs font-semibold text-purple-600 bg-purple-50 hover:bg-purple-100 disabled:opacity-40 transition-all"
+              >
+                {isRerunning
+                  ? <><Loader2 className="w-3.5 h-3.5 animate-spin" />Detecting...</>
+                  : <><RefreshCw className="w-3.5 h-3.5" />Re-run AI</>}
+              </button>
               <button onClick={exportHotspots} className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs text-slate-500 hover:bg-slate-100 transition-all">
                 <Download className="w-3.5 h-3.5" />
                 Export JSON

@@ -1,23 +1,24 @@
 #!/usr/bin/env node
 /**
- * Generate clickable product hotspots for each catalog page using GPT-4o Vision.
+ * Generate clickable product hotspots for each catalog page using Claude Vision.
  *
- * For each of the 87 product pages, sends the page JPEG + known product list to
- * GPT-4o Vision and asks it to return bounding boxes for each product area.
+ * For each product page, sends the page JPEG + known product list to Claude
+ * and asks it to return bounding boxes for each product area.
  *
  * Output: src/data/catalogHotspots.json
  * Format: { "31": [{ sku, name, x, y, width, height }], "32": [...], ... }
  *   where x, y, width, height are all normalized 0–1 relative to the page image.
  *
  * Usage:
- *   node scripts/generatePageHotspots.js
- *   node scripts/generatePageHotspots.js --test        # 3 pages only
- *   node scripts/generatePageHotspots.js --page 31     # single page
+ *   node scripts/generatePageHotspots.js              # all product pages (resume)
+ *   node scripts/generatePageHotspots.js --test       # 3 pages only
+ *   node scripts/generatePageHotspots.js --page 31    # single page (force re-run)
+ *   node scripts/generatePageHotspots.js --rerun-failed  # only pages with 0 hotspots
  */
 
 import { execSync } from 'child_process';
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
-import OpenAI from 'openai';
+import Anthropic from '@anthropic-ai/sdk';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
@@ -25,7 +26,7 @@ import dotenv from 'dotenv';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.join(__dirname, '../.env.local') });
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 const PDF_PATH = '/Users/nicholasdowling/Downloads/Exhibitors_Handbook_Catalog.pdf';
 const MAPPING_PATH = path.join(__dirname, '../orbus_catalog/product_catalog_page_mapping.json');
@@ -33,6 +34,7 @@ const OUTPUT_PATH = path.join(__dirname, '../src/data/catalogHotspots.json');
 const TEMP_DIR = '/tmp/catalog_hotspot_pages';
 
 const TEST_MODE = process.argv.includes('--test');
+const RERUN_FAILED = process.argv.includes('--rerun-failed');
 const SINGLE_PAGE = (() => {
   const idx = process.argv.indexOf('--page');
   return idx >= 0 ? parseInt(process.argv[idx + 1]) : null;
@@ -66,8 +68,18 @@ if (SINGLE_PAGE) {
 } else if (TEST_MODE) {
   pagesToProcess = pagesToProcess.slice(0, 3);
   console.log('TEST MODE: 3 pages');
+} else if (RERUN_FAILED) {
+  // Re-run pages that have 0 hotspots or fallback (full-height) hotspots
+  pagesToProcess = pagesToProcess.filter(p => {
+    const existing = hotspots[p];
+    if (!existing || existing.length === 0) return true;
+    // Fallback hotspots have height = 1/N (evenly divided strips)
+    const isFallback = existing.every(h => h.x === 0 && h.width === 1);
+    return isFallback;
+  });
+  console.log(`RERUN-FAILED mode: ${pagesToProcess.length} pages to retry`);
 } else {
-  // Skip already processed (unless single page)
+  // Skip already processed (unless single page or rerun-failed)
   pagesToProcess = pagesToProcess.filter(p => !hotspots[p]);
 }
 
@@ -102,17 +114,17 @@ async function detectHotspots(pageNum, products) {
 The following products appear on this page:
 ${productList}
 
-Your task: Identify the clickable bounding box for each product's primary visual display area (the product photo/render, not the spec table or text descriptions).
+Your task: Return a JSON array of bounding boxes for each product's primary visual area (the product photo/render — NOT spec tables or text blocks).
 
 Rules:
-- If multiple SKUs represent size variants of the SAME product shown in ONE image, group them under the largest/featured SKU and return ONE bounding box covering that shared image
-- If products are shown as SEPARATE distinct images on the page, return individual bounding boxes for each
-- x, y = top-left corner of the bounding box (normalized 0-1 where 0,0 is top-left of page)
-- width, height = size of bounding box (normalized 0-1)
-- If a product has NO distinct visual (only listed in a spec table), still include it but set the box to cover the spec table row area
-- Aim for tight boxes around the product image, not the entire page section
+- If multiple SKUs are size variants of the SAME product shown in ONE image, return ONE box covering that image and list all variant SKUs in groupedSkus
+- If products appear as SEPARATE distinct images, return a separate box for each
+- x, y = top-left corner (normalized 0.0–1.0, where 0,0 is top-left of page)
+- width, height = box dimensions (normalized 0.0–1.0)
+- Aim for tight boxes around the product image itself, not the whole page section
+- If a product is only in a spec table with no photo, set its box to cover that table row
 
-Return ONLY a valid JSON array, no explanation:
+Return ONLY a valid JSON array, no explanation, no markdown fences:
 [
   {
     "sku": "SKU-CODE",
@@ -125,20 +137,21 @@ Return ONLY a valid JSON array, no explanation:
   }
 ]
 
-Where groupedSkus lists all SKUs that share this visual area (include the primary sku in the array too).`;
+Where groupedSkus lists all SKUs sharing this visual (include the primary sku too).`;
 
-  const response = await openai.chat.completions.create({
-    model: 'gpt-4o',
+  const response = await anthropic.messages.create({
+    model: 'claude-sonnet-4-6',
     max_tokens: 1500,
     messages: [
       {
         role: 'user',
         content: [
           {
-            type: 'image_url',
-            image_url: {
-              url: `data:image/jpeg;base64,${imageBase64}`,
-              detail: 'high',
+            type: 'image',
+            source: {
+              type: 'base64',
+              media_type: 'image/jpeg',
+              data: imageBase64,
             },
           },
           {
@@ -150,9 +163,9 @@ Where groupedSkus lists all SKUs that share this visual area (include the primar
     ],
   });
 
-  const raw = response.choices[0].message.content.trim();
+  const raw = response.content[0].text.trim();
 
-  // Extract JSON from response (sometimes wrapped in ```json ... ```)
+  // Extract JSON array from response
   const jsonMatch = raw.match(/\[[\s\S]*\]/);
   if (!jsonMatch) throw new Error(`No JSON array found in response: ${raw.slice(0, 200)}`);
 
@@ -186,7 +199,6 @@ async function main() {
       done++;
     } catch (err) {
       console.error(`❌ ${err.message}`);
-      // On error, create fallback hotspots (full-page clickable area per product)
       hotspots[pageNum] = products.map((p, i) => ({
         sku: p.sku,
         name: p.name,
@@ -200,14 +212,13 @@ async function main() {
       failed++;
     }
 
-    // Rate limiting: 1 request/second to stay within OpenAI limits
-    await new Promise(r => setTimeout(r, 1200));
+    // Brief pause to stay within API rate limits
+    await new Promise(r => setTimeout(r, 500));
   }
 
   console.log(`\n✅ Done! ${done} pages processed, ${failed} used fallback hotspots`);
   console.log(`📄 Hotspots saved: ${OUTPUT_PATH}`);
   console.log(`Total pages with hotspots: ${Object.keys(hotspots).length}`);
-  console.log('\nNext step: update the CatalogQuote page then commit');
 }
 
 main().catch(e => { console.error(e); process.exit(1); });
