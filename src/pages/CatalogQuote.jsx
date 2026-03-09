@@ -362,9 +362,9 @@ function HotspotEditor({ pageNum, spots, onChange, pageProducts, productCache, a
 
   const deleteSpot = (idx) => onChange(spots.filter((_, i) => i !== idx));
 
-  const commitNewSpot = (sku, name) => {
+  const commitNewSpot = (sku, name, groupedSkus) => {
     if (!newSkuPrompt) return;
-    const spot = { sku, name, ...newSkuPrompt, groupedSkus: [sku] };
+    const spot = { sku, name, ...newSkuPrompt, groupedSkus: groupedSkus?.length > 0 ? groupedSkus : [sku] };
     onChange([...spots, spot]);
     setNewSkuPrompt(null);
   };
