@@ -15,9 +15,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 async function detectHotspotsWithClaude(pageNum, products, supabaseUrl) {
   const imageUrl = `${supabaseUrl}/catalog/pages/page-${String(pageNum).padStart(3, '0')}.jpg`;
 
-  const productList = products
-    .map(p => `- ${p.sku}: "${p.name}" (${p.category})${p.isPrimary ? ' [FEATURED]' : ''}`)
-    .join('\n');
+  const productList = products && products.length > 0
+    ? products.map(p => `- ${p.sku}: "${p.name}" (${p.category})${p.isPrimary ? ' [FEATURED]' : ''}`).join('\n')
+    : "Extract all product SKUs and names visible on the page (especially from tables).";
 
   const prompt = `This is page ${pageNum} of the Orbus Exhibitor's Handbook trade show display catalog.
 
