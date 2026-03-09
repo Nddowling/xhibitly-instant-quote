@@ -871,11 +871,18 @@ export default function CatalogQuote() {
                 Export JSON
               </button>
               <button
+                onClick={saveToDb}
+                className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs font-semibold text-green-600 bg-green-50 hover:bg-green-100 transition-all"
+              >
+                <Save className="w-3.5 h-3.5" />
+                Save to DB
+              </button>
+              <button
                 onClick={() => { setEditMode(false); setAddingHotspot(false); }}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-blue-600 text-white hover:bg-blue-700 transition-all"
               >
-                <Save className="w-3.5 h-3.5" />
-                Save & Close
+                <X className="w-3.5 h-3.5" />
+                Close
               </button>
             </>
           ) : (
