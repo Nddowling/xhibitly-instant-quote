@@ -24,12 +24,13 @@ async function detectHotspotsWithClaude(pageNum, products, supabaseUrl) {
 Products on this page:
 ${productList}
 
-Return a JSON array of bounding boxes for each product's primary visual/photo area (NOT spec tables or text). Rules:
+Return a JSON array of bounding boxes for each product's primary visual/photo area. Rules:
 - Size variants sharing ONE image → ONE box, list all SKUs in groupedSkus
 - Separate product images → separate boxes
+- If products are only listed in a table, draw ONE box around the table (or relevant section) and list all those SKUs in groupedSkus
 - x, y = top-left corner, normalized 0–1 (0,0 = top-left)
 - width, height = normalized 0–1
-- Tight boxes around product photos only`;
+- Tight boxes around product photos or tables`;
 
   const response = await base44.integrations.Core.InvokeLLM({
     prompt: prompt,
