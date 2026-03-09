@@ -11,18 +11,9 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// ─── Claude Vision hotspot detection (runs in-browser) ───────────────────────
+// ─── Claude Vision hotspot detection (runs via backend integration) ───────────────────────
 async function detectHotspotsWithClaude(pageNum, products, supabaseUrl) {
-  const anthropic = new Anthropic({
-    apiKey: import.meta.env.VITE_ANTHROPIC_API_KEY,
-    dangerouslyAllowBrowser: true,
-  });
-
   const imageUrl = `${supabaseUrl}/catalog/pages/page-${String(pageNum).padStart(3, '0')}.jpg`;
-  const imgResp = await fetch(imageUrl);
-  if (!imgResp.ok) throw new Error(`Failed to fetch page image: ${imgResp.status}`);
-  const imgBlob = await imgResp.arrayBuffer();
-  const base64 = btoa(String.fromCharCode(...new Uint8Array(imgBlob)));
 
   const productList = products
     .map(p => `- ${p.sku}: "${p.name}" (${p.category})${p.isPrimary ? ' [FEATURED]' : ''}`)
@@ -38,29 +29,37 @@ Return a JSON array of bounding boxes for each product's primary visual/photo ar
 - Separate product images → separate boxes
 - x, y = top-left corner, normalized 0–1 (0,0 = top-left)
 - width, height = normalized 0–1
-- Tight boxes around product photos only
+- Tight boxes around product photos only`;
 
-Return ONLY valid JSON array, no markdown:
-[{"sku":"SKU","name":"Name","x":0.0,"y":0.0,"width":1.0,"height":1.0,"groupedSkus":["SKU"]}]`;
-
-  const response = await anthropic.messages.create({
-    model: 'claude-sonnet-4-6',
-    max_tokens: 1500,
-    messages: [{
-      role: 'user',
-      content: [
-        { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: base64 } },
-        { type: 'text', text: prompt },
-      ],
-    }],
+  const response = await base44.integrations.Core.InvokeLLM({
+    prompt: prompt,
+    file_urls: [imageUrl],
+    model: "claude_sonnet_4_6",
+    response_json_schema: {
+      type: "object",
+      properties: {
+        hotspots: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              sku: { type: "string" },
+              name: { type: "string" },
+              x: { type: "number" },
+              y: { type: "number" },
+              width: { type: "number" },
+              height: { type: "number" },
+              groupedSkus: { type: "array", items: { type: "string" } }
+            },
+            required: ["sku", "name", "x", "y", "width", "height", "groupedSkus"]
+          }
+        }
+      },
+      required: ["hotspots"]
+    }
   });
 
-  const raw = response.content[0].text.trim();
-  const jsonMatch = raw.match(/\[[\s\S]*\]/);
-  if (!jsonMatch) throw new Error('No JSON array in response');
-
-  const parsed = JSON.parse(jsonMatch[0]);
-  return parsed.map(item => ({
+  return response.hotspots.map(item => ({
     sku: item.sku || products[0]?.sku,
     name: item.name || '',
     x: Math.max(0, Math.min(1, Number(item.x) || 0)),
