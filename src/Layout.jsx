@@ -619,15 +619,7 @@ export default function Layout({ children, currentPageName }) {
                   </Link>
                 ) : (
                   <>
-                    <Link to={createPageUrl('QuoteRequest')}>
-                      <Button 
-                        variant="ghost"
-                        className="text-white hover:bg-white/20 border border-white/30"
-                      >
-                        <Plus className="w-4 h-4 mr-2" />
-                        New Quote
-                      </Button>
-                    </Link>
+
                     <Link to={createPageUrl('OrderHistory')}>
                       <Button 
                         variant="ghost"
