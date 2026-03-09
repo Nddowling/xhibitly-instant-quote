@@ -230,12 +230,12 @@ function CatalogPageView({ pageNum, hotspots, onHotspotClick, selectedHotspot })
 }
 
 // ─── Hotspot Editor (drag to move/resize, add, delete) ───────────────────────
-function HotspotEditor({ pageNum, spots, onChange, pageProducts, productCache }) {
+function HotspotEditor({ pageNum, spots, onChange, pageProducts, productCache, adding = false, onAddingChange }) {
   const containerRef = useRef(null);
   const [imgLoaded, setImgLoaded] = useState(false);
   const [drag, setDrag] = useState(null);
   // drag = { type: 'move'|'resize'|'create', idx, startNX, startNY, origSpot, curSpot }
-  const [adding, setAdding] = useState(false); // draw-new-box mode
+  const setAdding = (val) => onAddingChange?.(typeof val === 'function' ? val(adding) : val);
   const [newSkuPrompt, setNewSkuPrompt] = useState(null); // { x, y, width, height }
 
   useEffect(() => { setImgLoaded(false); }, [pageNum]);
@@ -687,14 +687,18 @@ export default function CatalogQuote() {
   };
 
   const rerunWithClaude = async () => {
+    console.log('[Re-run AI] Starting for page', currentPage, 'products:', pageProducts.length);
     setIsRerunning(true);
     try {
       const spots = await detectHotspotsWithClaude(currentPage, pageProducts, SUPABASE_URL);
+      console.log('[Re-run AI] Got', spots.length, 'hotspots');
+      if (spots.length === 0) {
+        alert('AI returned 0 hotspots for this page. Check console for details.');
+      }
       handleHotspotsChange(spots);
-      console.log(`Claude detected ${spots.length} hotspots on page ${currentPage}`);
     } catch (err) {
-      console.error('Claude Vision failed:', err);
-      alert(`AI detection failed: ${err.message}`);
+      console.error('[Re-run AI] Failed:', err);
+      alert(`AI detection failed: ${err?.message || String(err)}`);
     } finally {
       setIsRerunning(false);
     }
