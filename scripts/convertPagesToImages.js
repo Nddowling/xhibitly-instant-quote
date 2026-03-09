@@ -47,21 +47,29 @@ if (existsSync(MANIFEST_PATH)) {
   console.log(`Resuming — ${Object.keys(manifest).length} pages already uploaded`);
 }
 
-// Get pages that have products
-const mapping = JSON.parse(readFileSync(MAPPING_PATH, 'utf-8'));
-const allProductPages = new Set();
-for (const product of mapping.product_page_mapping) {
-  for (const page of product.pages) {
-    allProductPages.add(page);
-  }
-}
+// Support --all flag to convert every page in the PDF (not just product pages)
+const ALL_PAGES = process.argv.includes('--all');
+const TOTAL_PAGES = 214; // full catalog page count
 
-let pagesToProcess = Array.from(allProductPages).sort((a, b) => a - b);
+let pagesToProcess;
 if (SINGLE_PAGE) {
   pagesToProcess = [SINGLE_PAGE];
+} else if (ALL_PAGES) {
+  pagesToProcess = Array.from({ length: TOTAL_PAGES }, (_, i) => i + 1);
+  console.log(`ALL mode: ${TOTAL_PAGES} pages`);
 } else if (TEST_MODE) {
-  pagesToProcess = pagesToProcess.slice(0, 3);
+  pagesToProcess = [1, 2, 3];
   console.log('TEST MODE: processing first 3 pages');
+} else {
+  // Default: only product pages
+  const mapping = JSON.parse(readFileSync(MAPPING_PATH, 'utf-8'));
+  const allProductPages = new Set();
+  for (const product of mapping.product_page_mapping) {
+    for (const page of product.pages) {
+      allProductPages.add(page);
+    }
+  }
+  pagesToProcess = Array.from(allProductPages).sort((a, b) => a - b);
 }
 
 // Skip already-uploaded pages

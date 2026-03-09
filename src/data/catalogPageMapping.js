@@ -32,8 +32,9 @@ for (const page of Object.keys(PAGE_PRODUCTS)) {
 }
 
 const CATALOG_PAGES = Object.keys(PAGE_PRODUCTS).map(Number).sort((a, b) => a - b);
-const MAX_PAGE = Math.max(...CATALOG_PAGES);
-const MIN_PAGE = Math.min(...CATALOG_PAGES);
+// Full catalog is 214 pages — navigation covers all pages, not just product pages
+const MAX_PAGE = 214;
+const MIN_PAGE = 1;
 
 // SKU → primary page lookup (for "where is this product?" feature)
 const SKU_TO_PAGE = {};
