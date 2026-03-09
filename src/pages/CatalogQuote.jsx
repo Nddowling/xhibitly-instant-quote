@@ -856,7 +856,7 @@ export default function CatalogQuote() {
               )}
               <button
                 onClick={rerunWithClaude}
-                disabled={isRerunning || pageProducts.length === 0}
+                disabled={isRerunning}
                 className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs font-semibold text-purple-600 bg-purple-50 hover:bg-purple-100 disabled:opacity-40 transition-all"
               >
                 {isRerunning
