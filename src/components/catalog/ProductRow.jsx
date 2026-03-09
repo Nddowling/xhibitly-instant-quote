@@ -55,15 +55,15 @@ export default function ProductRow({ product, projectId }) {
     <Link to={`${createPageUrl('ProductDetail')}?id=${product.id}${projectId ? `&projectId=${projectId}` : ''}`} className="flex items-center gap-4 p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 hover:shadow-md transition-shadow cursor-pointer">
       {/* Thumbnail */}
       <div className="w-16 h-16 md:w-20 md:h-20 rounded-lg bg-slate-100 dark:bg-slate-800 flex-shrink-0 overflow-hidden relative">
-        {product.image_cached_url || product.image_url ? (
+        {getImageUrl(product) ? (
           <img
-            src={product.image_cached_url || product.image_url}
+            src={getImageUrl(product)}
             alt={product.name}
             className="w-full h-full object-contain"
             onError={e => { e.currentTarget.style.display = 'none'; e.currentTarget.nextSibling.style.display = 'flex'; }}
           />
         ) : null}
-        <div className="w-full h-full flex items-center justify-center text-slate-300 text-2xl" style={{ display: product.image_cached_url || product.image_url ? 'none' : 'flex' }}>
+        <div className="w-full h-full flex items-center justify-center text-slate-300 text-2xl" style={{ display: getImageUrl(product) ? 'none' : 'flex' }}>
           📦
         </div>
       </div>
