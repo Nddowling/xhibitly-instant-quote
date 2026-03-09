@@ -606,15 +606,7 @@ export default function Layout({ children, currentPageName }) {
                         Catalog Quote
                       </Button>
                     </Link>
-                    <Link to={createPageUrl('SalesQuoteStart')}>
-                      <Button 
-                        variant="ghost"
-                        className="text-white hover:bg-white/20 border border-white/30"
-                      >
-                        <Plus className="w-4 h-4 mr-2" />
-                        New Quote
-                      </Button>
-                    </Link>
+
                   </>
                 ) : user?.user_type === 'student' ? (
                   <Link to={createPageUrl('StudentHome')}>
