@@ -94,7 +94,11 @@ function getImageUrl(p) {
     }
     return p.image_cached_url;
   }
-  return p.image_url || p.thumbnail_url;
+  const url = p.image_url || p.thumbnail_url;
+  if (url && url.startsWith('/')) {
+    return `${SUPABASE_URL}${url}`;
+  }
+  return url;
 }
 
 // ─── Load hotspot data lazily ────────────────────────────────────────────────
@@ -490,7 +494,7 @@ function VariantPicker({ spot, products, onAdd, onClose }) {
               >
                 <div className="w-12 h-12 flex-shrink-0 rounded-lg bg-slate-100 overflow-hidden flex items-center justify-center border border-slate-100">
                   {getImageUrl(p)
-                    ? <img src={getImageUrl(p)} alt={sku} className="w-full h-full object-contain" />
+                    ? <><img src={getImageUrl(p)} alt={sku} className="w-full h-full object-contain" onError={e => { e.currentTarget.style.display = 'none'; e.currentTarget.nextSibling.style.display = 'block'; }} /><Package className="w-5 h-5 text-slate-300" style={{ display: 'none' }} /></>
                     : <Package className="w-5 h-5 text-slate-300" />}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -518,7 +522,7 @@ function OrderItem({ item, onQtyChange, onRemove, onSizeChange }) {
       <div className="flex items-start gap-3">
         <div className="w-12 h-12 flex-shrink-0 rounded-lg bg-slate-50 overflow-hidden flex items-center justify-center border border-slate-100">
           {item.imageUrl
-            ? <img src={item.imageUrl} alt={item.name} className="w-full h-full object-contain p-1" />
+            ? <><img src={item.imageUrl} alt={item.name} className="w-full h-full object-contain p-1" onError={e => { e.currentTarget.style.display = 'none'; e.currentTarget.nextSibling.style.display = 'block'; }} /><Package className="w-5 h-5 text-slate-300" style={{ display: 'none' }} /></>
             : <Package className="w-5 h-5 text-slate-300" />}
         </div>
         <div className="flex-1 min-w-0">
@@ -957,7 +961,7 @@ export default function CatalogQuote() {
                       >
                         <div className="w-12 h-12 flex-shrink-0 rounded-lg bg-slate-100 overflow-hidden flex items-center justify-center">
                           {getImageUrl(pd)
-                            ? <img src={getImageUrl(pd)} alt={p.name} className="w-full h-full object-contain" />
+                            ? <><img src={getImageUrl(pd)} alt={p.name} className="w-full h-full object-contain" onError={e => { e.currentTarget.style.display = 'none'; e.currentTarget.nextSibling.style.display = 'block'; }} /><Package className="w-4 h-4 text-slate-300" style={{ display: 'none' }} /></>
                             : <Package className="w-4 h-4 text-slate-300" />}
                         </div>
                         <div className="flex-1 min-w-0">

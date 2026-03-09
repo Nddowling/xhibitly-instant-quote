@@ -23,7 +23,11 @@ export default function ProductRow({ product, projectId }) {
       }
       return p.image_cached_url;
     }
-    return p.image_url || p.thumbnail_url;
+    const url = p.image_url || p.thumbnail_url;
+    if (url && url.startsWith('/')) {
+      return `https://xpgvpzbzmkubahyxwipk.supabase.co/storage/v1/object/public/orbus-assets${url}`;
+    }
+    return url;
   };
 
   const handleAddToProject = async (e) => {
