@@ -15,6 +15,17 @@ export default function ProductRow({ product, projectId }) {
   const [added, setAdded] = useState(false);
   const [quantity, setQuantity] = useState(1);
 
+  const getImageUrl = (p) => {
+    if (!p) return null;
+    if (p.image_cached_url) {
+      if (p.image_cached_url.startsWith('/')) {
+        return `https://xpgvpzbzmkubahyxwipk.supabase.co/storage/v1/object/public/orbus-assets${p.image_cached_url}`;
+      }
+      return p.image_cached_url;
+    }
+    return p.image_url || p.thumbnail_url;
+  };
+
   const handleAddToProject = async (e) => {
     e.preventDefault(); // prevent navigation
     if (!projectId) {
