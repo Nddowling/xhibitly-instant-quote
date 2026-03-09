@@ -602,13 +602,28 @@ export default function CatalogQuote() {
       const saved = localStorage.getItem(LS_KEY);
       if (saved) setEditedHotspots(JSON.parse(saved));
     } catch {}
+    
+    // Load from DB
+    const loadDbHotspots = async () => {
+      try {
+        const res = await base44.entities.CatalogHotspot.list();
+        const map = {};
+        res.forEach(item => {
+          map[item.page_number] = item.hotspots;
+        });
+        setDbHotspots(map);
+      } catch (e) {
+        console.error("Failed to load hotspots from DB", e);
+      }
+    };
+    loadDbHotspots();
   }, []);
 
   const pageProducts = PAGE_PRODUCTS[currentPage] || [];
 
-  // Effective hotspots: localStorage edits take priority over AI-generated
+  // Effective hotspots: localStorage edits take priority over DB, then AI-generated
   const baseHotspots = hotspotData[currentPage] || [];
-  const currentHotspots = editedHotspots[currentPage] ?? baseHotspots;
+  const currentHotspots = editedHotspots[currentPage] ?? dbHotspots[currentPage] ?? baseHotspots;
   const hasHotspots = currentHotspots.length > 0;
 
   // Pre-fetch product details for all SKUs on current page
