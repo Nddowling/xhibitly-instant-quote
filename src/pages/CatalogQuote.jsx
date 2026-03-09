@@ -87,17 +87,12 @@ function clamp(v, lo = 0, hi = 1) { return Math.max(lo, Math.min(hi, v)); }
 
 function getImageUrl(p) {
   if (!p) return null;
-  if (p.image_cached_url) {
-    if (p.image_cached_url.startsWith('/')) {
-      return `${SUPABASE_URL}${p.image_cached_url}`;
-    }
-    return p.image_cached_url;
-  }
-  const url = p.image_url || p.thumbnail_url;
-  if (url && url.startsWith('/')) {
-    return `${SUPABASE_URL}${url}`;
-  }
-  return url;
+  let url = p.image_cached_url || p.image_url || p.thumbnail_url;
+  if (!url) return null;
+  
+  if (url.startsWith('http') || url.startsWith('data:')) return url;
+  if (url.startsWith('/')) return `${SUPABASE_URL}${url}`;
+  return `${SUPABASE_URL}/${url}`;
 }
 
 function ProductImage({ src, alt, className = "w-full h-full object-contain", fallbackClassName = "w-5 h-5 text-slate-300" }) {
