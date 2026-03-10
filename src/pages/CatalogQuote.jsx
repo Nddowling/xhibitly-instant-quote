@@ -763,18 +763,37 @@ function NewHotspotForm({ pageProducts, productCache, autoDetecting, autoDetecte
 }
 
 // ─── Variant picker popup ─────────────────────────────────────────────────────
-function VariantPicker({ spot, products, onAdd, onClose }) {
+function VariantPicker({ spot, products, fetchProduct, onAdd, onClose }) {
   const skus = spot.groupedSkus || [spot.sku];
+
+  // Ensure all variant SKUs are fetched
+  useEffect(() => {
+    skus.forEach(sku => fetchProduct(sku));
+  }, [spot]);
 
   useEffect(() => {
     if (skus.length === 1) {
       const p = products[skus[0]];
-      onAdd({ sku: skus[0], name: p?.name || spot.name, price: p?.base_price, imageUrl: getImageUrl(p) });
-      onClose();
+      // Wait until product is loaded (not null placeholder)
+      if (p !== null && p !== undefined) {
+        onAdd({ sku: skus[0], name: p?.name || spot.name, price: p?.base_price, imageUrl: getImageUrl(p) });
+        onClose();
+      }
     }
-  }, []);
+  }, [products[skus[0]]]);
 
-  if (skus.length === 1) return null;
+  if (skus.length === 1) {
+    const p = products[skus[0]];
+    if (!p) return (
+      <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/40 rounded-lg">
+        <div className="bg-white rounded-2xl p-6 flex items-center gap-3 shadow-xl">
+          <Loader2 className="w-5 h-5 animate-spin text-[#e2231a]" />
+          <span className="text-sm text-slate-600">Loading product...</span>
+        </div>
+      </div>
+    );
+    return null;
+  }
 
   return (
     <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/40 rounded-lg">
@@ -789,19 +808,24 @@ function VariantPicker({ spot, products, onAdd, onClose }) {
         <div className="overflow-y-auto p-3 space-y-1.5">
           {skus.map(sku => {
             const p = products[sku];
+            const imgSrc = getImageUrl(p);
             return (
               <button
                 key={sku}
-                onClick={() => { onAdd({ sku, name: p?.name || sku, price: p?.base_price, imageUrl: getImageUrl(p) }); onClose(); }}
+                onClick={() => { onAdd({ sku, name: p?.name || sku, price: p?.base_price, imageUrl: imgSrc }); onClose(); }}
                 className="w-full flex items-center gap-3 p-2.5 rounded-xl border border-slate-200 hover:border-[#e2231a]/40 hover:bg-[#e2231a]/5 transition-all text-left group"
               >
-                <div className="w-12 h-12 flex-shrink-0 rounded-lg bg-slate-100 overflow-hidden flex items-center justify-center border border-slate-100">
-                  <ProductImage src={getImageUrl(p)} alt={sku} />
+                <div className="w-14 h-14 flex-shrink-0 rounded-lg bg-slate-100 overflow-hidden flex items-center justify-center border border-slate-100">
+                  {p === null ? (
+                    <Loader2 className="w-4 h-4 text-slate-300 animate-spin" />
+                  ) : (
+                    <ProductImage src={imgSrc} alt={sku} className="w-full h-full object-contain p-1" fallbackClassName="w-6 h-6 text-slate-300" />
+                  )}
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-semibold text-slate-800 leading-tight">{p?.name || sku}</p>
-                  <p className="text-[10px] text-slate-400 mt-0.5">{sku}</p>
-                  {p?.base_price && <p className="text-xs font-bold text-[#e2231a]">{fmt(p.base_price)}</p>}
+                  <p className="text-[10px] text-slate-400 mt-0.5 font-mono">{sku}</p>
+                  {p?.base_price && <p className="text-xs font-bold text-[#e2231a] mt-0.5">{fmt(p.base_price)}</p>}
                 </div>
                 <Plus className="w-4 h-4 text-[#e2231a] opacity-0 group-hover:opacity-100 flex-shrink-0" />
               </button>
