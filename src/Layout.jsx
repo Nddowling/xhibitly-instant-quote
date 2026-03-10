@@ -6,6 +6,7 @@ import { LogOut, FileText, Users, Menu, X, LayoutDashboard, Settings as Settings
 import { Button } from '@/components/ui/button';
 import ErrorBoundary from './components/ErrorBoundary';
 
+
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
