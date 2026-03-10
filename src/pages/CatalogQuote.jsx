@@ -921,6 +921,14 @@ export default function CatalogQuote() {
     } catch {}
   }, []);
 
+  const refreshFromDb = async () => {
+    const dbData = await loadAllDbHotspots();
+    setDbHotspots(dbData);
+    // Clear local edits so DB data shows fresh
+    setEditedHotspots({});
+    localStorage.removeItem(LS_KEY);
+  };
+
   const pageProducts = PAGE_PRODUCTS[currentPage] || [];
 
   // Effective hotspots: localStorage edits > DB > JSON fallback
