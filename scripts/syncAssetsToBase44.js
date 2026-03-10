@@ -31,7 +31,9 @@ const base44 = createClient({
   requiresAuth: false
 });
 
-const PRODUCTS_FILE = path.join(__dirname, '../orbus_catalog/products_transformed.json');
+// products_with_all_files.json has the populated supabase_url fields in images/downloads arrays
+// products_transformed.json has empty images[] arrays — do NOT use that for asset sync
+const PRODUCTS_FILE = path.join(__dirname, '../orbus_catalog/products_with_all_files.json');
 
 /**
  * Prepare product data for Base44 with Supabase assets
