@@ -101,7 +101,8 @@ Return a JSON array of bounding boxes for each product's primary visual/photo ar
     }
   });
 
-  const hotspots = response?.hotspots ?? response ?? [];
+  // Handle LLM sometimes wrapping result in an extra "response" key
+  const hotspots = response?.hotspots ?? response?.response?.hotspots ?? [];
   if (!Array.isArray(hotspots)) {
     console.warn('[Re-run AI] Unexpected response shape:', response);
     return [];
