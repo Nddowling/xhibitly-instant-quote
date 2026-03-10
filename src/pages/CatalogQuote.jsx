@@ -101,7 +101,12 @@ Return a JSON array of bounding boxes for each product's primary visual/photo ar
     }
   });
 
-  return response.hotspots.map(item => ({
+  const hotspots = response?.hotspots ?? response ?? [];
+  if (!Array.isArray(hotspots)) {
+    console.warn('[Re-run AI] Unexpected response shape:', response);
+    return [];
+  }
+  return hotspots.map(item => ({
     sku: item.sku || products[0]?.sku,
     name: item.name || '',
     x: Math.max(0, Math.min(1, Number(item.x) || 0)),
