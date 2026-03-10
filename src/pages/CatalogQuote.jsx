@@ -297,7 +297,107 @@ function CatalogPageView({ pageNum, hotspots, onHotspotClick, selectedHotspot })
   );
 }
 
-// ─── Hotspot Editor (drag to move/resize, add, delete) ───────────────────────
+// ─── Edit Hotspot Dialog (double-click to fix SKU/name) ──────────────────────
+function EditHotspotDialog({ spot, pageProducts, productCache, onSave, onCancel }) {
+  const [displayName, setDisplayName] = useState(spot.name || '');
+  const [groupedSkus, setGroupedSkus] = useState(spot.groupedSkus?.length > 0 ? [...spot.groupedSkus] : [spot.sku]);
+  const [skuInput, setSkuInput] = useState('');
+
+  const togglePageProduct = (p) => {
+    const s = p.sku;
+    if (groupedSkus.includes(s)) {
+      setGroupedSkus(prev => prev.filter(x => x !== s));
+    } else {
+      setGroupedSkus(prev => [...prev, s]);
+      if (!displayName) setDisplayName(productCache[s]?.name || p.name);
+    }
+  };
+
+  const addManualSku = () => {
+    const s = skuInput.trim().toUpperCase();
+    if (!s || groupedSkus.includes(s)) { setSkuInput(''); return; }
+    setGroupedSkus(prev => [...prev, s]);
+    if (!displayName) setDisplayName(s);
+    setSkuInput('');
+  };
+
+  const removeSku = (s) => setGroupedSkus(prev => prev.filter(x => x !== s));
+
+  const submit = () => {
+    if (groupedSkus.length === 0) return;
+    onSave({ ...spot, sku: groupedSkus[0], name: displayName.trim() || groupedSkus[0], groupedSkus });
+  };
+
+  return (
+    <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/50 rounded-lg">
+      <div className="bg-white rounded-2xl shadow-2xl w-96 p-4 space-y-3 max-h-[90%] overflow-y-auto">
+        <p className="text-sm font-bold text-slate-900">Edit Hotspot</p>
+
+        {pageProducts.length > 0 && (
+          <div>
+            <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide mb-1.5">Page Products</p>
+            <div className="space-y-1 max-h-36 overflow-y-auto">
+              {pageProducts.map(p => {
+                const checked = groupedSkus.includes(p.sku);
+                return (
+                  <button key={p.sku} onClick={() => togglePageProduct(p)}
+                    className={`w-full text-left px-3 py-2 rounded-lg text-xs border transition-all flex items-center gap-2
+                      ${checked ? 'border-[#e2231a] bg-[#e2231a]/10 font-bold' : 'border-slate-200 hover:border-[#e2231a]/40'}`}>
+                    <div className={`w-3.5 h-3.5 rounded border flex-shrink-0 flex items-center justify-center ${checked ? 'bg-[#e2231a] border-[#e2231a]' : 'border-slate-300'}`}>
+                      {checked && <span className="text-white text-[8px] font-bold">✓</span>}
+                    </div>
+                    <span className="text-slate-400 font-mono mr-1">{p.sku}</span>
+                    <span className="truncate">{productCache[p.sku]?.name || p.name}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        <div>
+          <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide mb-1.5">Add / Fix SKU</p>
+          <div className="flex gap-1.5">
+            <input placeholder="e.g. FX-2700" value={skuInput}
+              onChange={e => setSkuInput(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && addManualSku()}
+              className="flex-1 text-sm border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30" />
+            <Button size="sm" onClick={addManualSku} className="bg-slate-100 text-slate-700 hover:bg-slate-200 px-3">
+              <Plus className="w-3.5 h-3.5" />
+            </Button>
+          </div>
+        </div>
+
+        {groupedSkus.length > 0 && (
+          <div>
+            <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide mb-1.5">SKUs ({groupedSkus.length})</p>
+            <div className="flex flex-wrap gap-1.5">
+              {groupedSkus.map(s => (
+                <div key={s} className="flex items-center gap-1 bg-[#e2231a]/10 border border-[#e2231a]/30 text-[#e2231a] rounded-full px-2.5 py-1 text-[10px] font-bold">
+                  {s}
+                  <button onClick={() => removeSku(s)} className="hover:text-red-700 ml-0.5"><X className="w-2.5 h-2.5" /></button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <input placeholder="Display name" value={displayName} onChange={e => setDisplayName(e.target.value)}
+          className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30" />
+
+        <div className="flex gap-2">
+          <Button size="sm" onClick={submit} disabled={groupedSkus.length === 0}
+            className="flex-1 bg-[#e2231a] hover:bg-[#b01b13] text-white disabled:opacity-50">
+            Save Changes
+          </Button>
+          <Button size="sm" variant="outline" onClick={onCancel} className="flex-1">Cancel</Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Hotspot Editor (drag to move/resize, add, delete, double-click to edit) ──
 function HotspotEditor({ pageNum, spots, onChange, pageProducts, productCache, adding = false, onAddingChange }) {
   const containerRef = useRef(null);
   const [imgLoaded, setImgLoaded] = useState(false);
@@ -307,6 +407,7 @@ function HotspotEditor({ pageNum, spots, onChange, pageProducts, productCache, a
   const [newSkuPrompt, setNewSkuPrompt] = useState(null); // { x, y, width, height }
   const [autoDetecting, setAutoDetecting] = useState(false);
   const [autoDetected, setAutoDetected] = useState(null); // { sku, name, groupedSkus }
+  const [editingSpot, setEditingSpot] = useState(null); // { idx, spot }
 
   useEffect(() => { setImgLoaded(false); }, [pageNum]);
 
