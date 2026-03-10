@@ -2,11 +2,11 @@
   "7": [
     {
       "sku": "BLD-LT-400-1",
-      "name": "Blade Lite 400",
-      "x": 0.02,
-      "y": 0.1,
-      "width": 0.55,
-      "height": 0.32,
+      "name": "Blade Lite Retractable Banner Stand Sizes",
+      "x": 0.04,
+      "y": 0.555,
+      "width": 0.42,
+      "height": 0.28,
       "groupedSkus": [
         "BLD-LT-400-1",
         "BLD-LT-600-1",
@@ -19,21 +19,12 @@
       ]
     },
     {
-      "sku": "BLD-LT-800-1",
-      "name": "Blade Lite 800 - Featured Display",
-      "x": 0.55,
-      "y": 0.05,
-      "width": 0.45,
-      "height": 0.72,
-      "groupedSkus": []
-    },
-    {
       "sku": "LUM-LED3-ORL-B",
-      "name": "Optional LED lighting for Blade Lite",
+      "name": "Slimline LED Spot Display Light",
       "x": 0.67,
-      "y": 0.78,
+      "y": 0.91,
       "width": 0.28,
-      "height": 0.18,
+      "height": 0.06,
       "groupedSkus": []
     }
   ],
@@ -41,11 +32,12 @@
     {
       "sku": "ONT-800-S/B-4",
       "name": "Orient 1 - 31.5\" width banner stand",
-      "x": 0.45,
-      "y": 0.02,
-      "width": 0.55,
-      "height": 0.42,
+      "x": 0.03,
+      "y": 0.24,
+      "width": 0.45,
+      "height": 0.15,
       "groupedSkus": [
+        "ONT-800-S/B-4",
         "ONT-850-S/B-4",
         "ONT-920-S/B-4",
         "ONT-1000-S/B-4"
@@ -54,54 +46,57 @@
     {
       "sku": "ONT-800-DBL-S-4",
       "name": "Orient 2 - 31.5\" width double-sided banner stand",
-      "x": 0,
-      "y": 0.53,
+      "x": 0.03,
+      "y": 0.9,
       "width": 0.45,
-      "height": 0.32,
+      "height": 0.07,
       "groupedSkus": [
+        "ONT-800-DBL-S-4",
         "ONT-920-DBL-S-4"
       ]
     },
     {
       "sku": "ONT-850-DW",
       "name": "Orient Organic - 33.5\" width maple woodgrain base banner stand",
-      "x": 0.5,
-      "y": 0.53,
+      "x": 0.53,
+      "y": 0.9,
       "width": 0.45,
-      "height": 0.32,
+      "height": 0.05,
       "groupedSkus": []
     }
   ],
   "9": [
     {
       "sku": "RU-S1-4",
-      "name": "Rollup Banner Stand 34.5\" wide",
-      "x": 0.02,
-      "y": 0.02,
-      "width": 0.44,
-      "height": 0.32,
+      "name": "Rollup Retractable Banner Stand",
+      "x": 0.04,
+      "y": 0.48,
+      "width": 0.42,
+      "height": 0.05,
       "groupedSkus": []
     },
     {
       "sku": "PAC-800-S-2",
-      "name": "Pacific Banner Stand 31.5\" wide",
-      "x": 0.5,
-      "y": 0.02,
+      "name": "Pacific Banner Stand",
+      "x": 0.52,
+      "y": 0.48,
       "width": 0.46,
-      "height": 0.32,
+      "height": 0.1,
       "groupedSkus": [
+        "PAC-800-S-2",
         "PAC-920-S-2",
         "PAC-1000-S-2"
       ]
     },
     {
       "sku": "CN-24-S/B",
-      "name": "Contender Banner Stand 23.5\" wide",
-      "x": 0.02,
-      "y": 0.5,
-      "width": 0.44,
-      "height": 0.32,
+      "name": "Contender Banner Stand",
+      "x": 0.04,
+      "y": 0.9,
+      "width": 0.42,
+      "height": 0.1,
       "groupedSkus": [
+        "CN-24-S/B",
         "CN-30-S/B",
         "CN-36-S/B",
         "CN-48-B"
@@ -110,30 +105,30 @@
     {
       "sku": "MRLN-850-2",
       "name": "Merlin Banner Stand 33.5\" wide",
-      "x": 0.5,
-      "y": 0.5,
+      "x": 0.52,
+      "y": 0.92,
       "width": 0.46,
-      "height": 0.32,
+      "height": 0.04,
       "groupedSkus": []
     }
   ],
   "10": [
     {
       "sku": "ILLUM-800-1",
-      "name": "Illumistand 31\" wide x 78\" height banner stand with illuminated base",
+      "name": "Illumistand Double Sided Light Up Retractable Banner Stand",
       "x": 0.03,
-      "y": 0.02,
-      "width": 0.42,
-      "height": 0.3,
+      "y": 0.5,
+      "width": 0.44,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "BCD-600-S-1",
-      "name": "Barracuda banner stand",
+      "name": "Barracuda 23.5\" wide x 66.5\"-83\" height banner stand",
       "x": 0.52,
-      "y": 0.02,
-      "width": 0.35,
-      "height": 0.3,
+      "y": 0.46,
+      "width": 0.46,
+      "height": 0.15,
       "groupedSkus": [
         "BCD-600-S-1",
         "BCD-800-S-1",
@@ -146,18 +141,18 @@
       "sku": "ADV-800-S",
       "name": "Advance 31.5\" wide x 29.5\"-83.35\" height double-sided banner stand",
       "x": 0.03,
-      "y": 0.52,
-      "width": 0.38,
-      "height": 0.3,
+      "y": 0.93,
+      "width": 0.44,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "IMG-800-S",
-      "name": "Imagine banner stand",
-      "x": 0.42,
-      "y": 0.52,
-      "width": 0.3,
-      "height": 0.3,
+      "name": "Imagine 800 Retractable Banner Stand",
+      "x": 0.52,
+      "y": 0.92,
+      "width": 0.46,
+      "height": 0.06,
       "groupedSkus": [
         "IMG-800-S",
         "IMG-850-S"
@@ -168,129 +163,113 @@
     {
       "sku": "MSQT-400",
       "name": "Mosquito 400 - 15.75\" wide retractable banner stand",
-      "x": 0.02,
-      "y": 0.08,
-      "width": 0.08,
-      "height": 0.28,
-      "groupedSkus": []
-    },
-    {
-      "sku": "MSQT-600",
-      "name": "Mosquito 600 - 23.5\" wide retractable banner stand",
-      "x": 0.1,
-      "y": 0.08,
-      "width": 0.09,
-      "height": 0.28,
-      "groupedSkus": []
-    },
-    {
-      "sku": "MSQT-800",
-      "name": "Mosquito 800 - 31.5\" wide retractable banner stand (silver base)",
-      "x": 0.19,
-      "y": 0.08,
-      "width": 0.1,
-      "height": 0.28,
+      "x": 0.04,
+      "y": 0.545,
+      "width": 0.42,
+      "height": 0.29,
       "groupedSkus": [
-        "MSQT-800-B"
+        "MSQT-400",
+        "MSQT-600",
+        "MSQT-800",
+        "MSQT-800-B",
+        "MSQT-850",
+        "MSQT-920",
+        "MSQT-1200",
+        "MSQT-1500"
       ]
-    },
-    {
-      "sku": "MSQT-850",
-      "name": "Mosquito 850 - 33.5\" wide retractable banner stand",
-      "x": 0.29,
-      "y": 0.08,
-      "width": 0.1,
-      "height": 0.28,
-      "groupedSkus": []
-    },
-    {
-      "sku": "MSQT-920",
-      "name": "Mosquito 920 - 36\" wide retractable banner stand",
-      "x": 0.39,
-      "y": 0.08,
-      "width": 0.11,
-      "height": 0.28,
-      "groupedSkus": []
-    },
-    {
-      "sku": "MSQT-1200",
-      "name": "Mosquito 1200 - 47.25\" wide retractable banner stand",
-      "x": 0.5,
-      "y": 0.08,
-      "width": 0.12,
-      "height": 0.28,
-      "groupedSkus": []
-    },
-    {
-      "sku": "MSQT-1500",
-      "name": "Mosquito 1500 - 59\" wide retractable banner stand",
-      "x": 0.62,
-      "y": 0.08,
-      "width": 0.13,
-      "height": 0.28,
-      "groupedSkus": []
-    },
-    {
-      "sku": "MSQT-800-B",
-      "name": "Mosquito 800 - 31.5\" wide retractable banner stand (black base)",
-      "x": 0.62,
-      "y": 0.03,
-      "width": 0.37,
-      "height": 0.65,
-      "groupedSkus": []
     }
   ],
   "12": [
     {
       "sku": "MSQT-GIANT-920-S",
       "name": "Giant Mosquito",
-      "x": 0.02,
-      "y": 0.03,
-      "width": 0.45,
-      "height": 0.32
+      "x": 0.03,
+      "y": 0.015,
+      "width": 0.28,
+      "height": 0.04,
+      "groupedSkus": []
+    },
+    {
+      "sku": "MSQT-GIANT-920-S",
+      "name": "Giant Mosquito",
+      "x": 0.04,
+      "y": 0.555,
+      "width": 0.42,
+      "height": 0.035,
+      "groupedSkus": []
     },
     {
       "sku": "MSQT-LT-800",
       "name": "Mosquito Lite",
       "x": 0.52,
-      "y": 0.03,
-      "width": 0.45,
-      "height": 0.32
+      "y": 0.015,
+      "width": 0.28,
+      "height": 0.04,
+      "groupedSkus": []
+    },
+    {
+      "sku": "MSQT-LT-800",
+      "name": "Mosquito Lite",
+      "x": 0.53,
+      "y": 0.555,
+      "width": 0.42,
+      "height": 0.035,
+      "groupedSkus": []
     },
     {
       "sku": "DRAGON-FLY-1",
       "name": "Dragon Fly",
-      "x": 0.02,
-      "y": 0.52,
-      "width": 0.45,
-      "height": 0.32
+      "x": 0.03,
+      "y": 0.595,
+      "width": 0.22,
+      "height": 0.04,
+      "groupedSkus": []
+    },
+    {
+      "sku": "DRAGON-FLY-1",
+      "name": "Dragon Fly",
+      "x": 0.04,
+      "y": 0.955,
+      "width": 0.42,
+      "height": 0.035,
+      "groupedSkus": []
     },
     {
       "sku": "SYNERGY-800",
       "name": "Synergy",
       "x": 0.52,
-      "y": 0.52,
-      "width": 0.45,
-      "height": 0.32
+      "y": 0.595,
+      "width": 0.18,
+      "height": 0.04,
+      "groupedSkus": []
+    },
+    {
+      "sku": "SYNERGY-800",
+      "name": "Synergy",
+      "x": 0.53,
+      "y": 0.955,
+      "width": 0.42,
+      "height": 0.035,
+      "groupedSkus": []
     }
   ],
   "13": [
     {
       "sku": "PHX-850-S",
       "name": "Phoenix banner stand",
-      "x": 0.04,
-      "y": 0.05,
-      "width": 0.3,
-      "height": 0.35,
+      "x": 0.03,
+      "y": 0.53,
+      "width": 0.42,
+      "height": 0.05,
       "groupedSkus": []
     },
     {
       "sku": "PHX-400-S",
       "name": "Phoenix Mini banner stand",
-      "x": 0.5,
-      "y": 0.02,
-      "width": 0.35,
-      "height": 0.38,
+      "x": 0.53,
+      "y": 0.53,
+      "width": 0.45,
+      "height": 0.07,
       "groupedSkus": [
         "PHX-400-S",
         "PHX-400-S-2P"
@@ -299,10 +278,10 @@
     {
       "sku": "BREZ-1-S",
       "name": "Breeze retractable tabletop banner stand",
-      "x": 0.3,
-      "y": 0.56,
-      "width": 0.15,
-      "height": 0.18,
+      "x": 0.03,
+      "y": 0.79,
+      "width": 0.42,
+      "height": 0.07,
       "groupedSkus": [
         "BREZ-1-S",
         "BREZ-2-S"
@@ -311,10 +290,10 @@
     {
       "sku": "STLLR-LTR",
       "name": "Stellar retractable tabletop banner stand",
-      "x": 0.82,
-      "y": 0.56,
-      "width": 0.14,
-      "height": 0.18,
+      "x": 0.53,
+      "y": 0.79,
+      "width": 0.45,
+      "height": 0.07,
       "groupedSkus": [
         "STLLR-LTR",
         "STLLR-TBLD"
@@ -322,11 +301,11 @@
     },
     {
       "sku": "CL-TBLTP-LB-01",
-      "name": "Catchlight illuminated tabletop banner",
-      "x": 0.3,
-      "y": 0.82,
-      "width": 0.55,
-      "height": 0.15,
+      "name": "Catchlight Tabletop Light Box",
+      "x": 0.03,
+      "y": 0.95,
+      "width": 0.42,
+      "height": 0.05,
       "groupedSkus": []
     }
   ],
@@ -334,83 +313,91 @@
     {
       "sku": "PGSUS3-S/B",
       "name": "Pegasus Supreme",
-      "x": 0.45,
-      "y": 0.02,
-      "width": 0.52,
-      "height": 0.28,
+      "x": 0.03,
+      "y": 0.21,
+      "width": 0.55,
+      "height": 0.05,
       "groupedSkus": []
     },
     {
       "sku": "PGSUS2-S/B",
       "name": "Pegasus Standard",
-      "x": 0.45,
-      "y": 0.32,
-      "width": 0.52,
-      "height": 0.28,
+      "x": 0.03,
+      "y": 0.53,
+      "width": 0.55,
+      "height": 0.05,
       "groupedSkus": []
     },
     {
       "sku": "PGSUS3-EXT-S/B",
       "name": "Pegasus Linking Kit",
       "x": 0.03,
-      "y": 0.6,
-      "width": 0.42,
-      "height": 0.25,
+      "y": 0.95,
+      "width": 0.5,
+      "height": 0.07,
       "groupedSkus": [
+        "PGSUS3-EXT-S/B",
         "PGSUS2-EXT-S/B"
       ]
     },
     {
       "sku": "TAURUS1-B",
-      "name": "Taurus",
-      "x": 0.5,
-      "y": 0.6,
-      "width": 0.3,
-      "height": 0.25,
+      "name": "Taurus Telescopic Banner Stand",
+      "x": 0.55,
+      "y": 0.95,
+      "width": 0.43,
+      "height": 0.05,
       "groupedSkus": []
     }
   ],
   "15": [
     {
       "sku": "LTNG",
-      "name": "Lightning banner stand 31\" x 77\"",
+      "name": "Lightning Spring Back Banner Stand",
       "x": 0.03,
-      "y": 0.04,
-      "width": 0.35,
-      "height": 0.38,
-      "groupedSkus": []
+      "y": 0.02,
+      "width": 0.18,
+      "height": 0.04
+    },
+    {
+      "sku": "LTNG",
+      "name": "Lightning Spring Back Banner Stand",
+      "x": 0.03,
+      "y": 0.53,
+      "width": 0.38,
+      "height": 0.04
     },
     {
       "sku": "L-MINI",
-      "name": "L-Mini tabletop tension banner stand 14.5\" x 26.88\"",
-      "x": 0.48,
+      "name": "L-Mini Spring Back Banner Stand",
+      "x": 0.5,
       "y": 0.02,
+      "width": 0.1,
+      "height": 0.04
+    },
+    {
+      "sku": "L-MINI",
+      "name": "L-Mini Spring Back Banner Stand",
+      "x": 0.5,
+      "y": 0.53,
       "width": 0.48,
-      "height": 0.38,
-      "groupedSkus": []
+      "height": 0.04
     },
     {
       "sku": "X-TEND-1",
-      "name": "X-Tend x frame banner stand",
-      "x": 0.35,
-      "y": 0.58,
-      "width": 0.42,
-      "height": 0.33,
-      "groupedSkus": [
-        "X-TEND-1",
-        "X-TEND-2",
-        "X-TEND-3",
-        "X-TEND-4",
-        "X-TEND-5"
-      ]
+      "name": "X-TEND 1 Spring Back Banner Stand",
+      "x": 0.03,
+      "y": 0.62,
+      "width": 0.14,
+      "height": 0.04
     },
     {
-      "sku": "X-TEND-BACK",
-      "name": "X-Tend x frame banner stand back view",
-      "x": 0.75,
-      "y": 0.6,
-      "width": 0.22,
-      "height": 0.28,
+      "sku": "X-TEND-1",
+      "name": "X-TEND Spring Back Banner Stand",
+      "x": 0.03,
+      "y": 0.84,
+      "width": 0.42,
+      "height": 0.14,
       "groupedSkus": [
         "X-TEND-1",
         "X-TEND-2",
@@ -423,11 +410,11 @@
   "16": [
     {
       "sku": "FMLT-E-S-600-2",
-      "name": "Formulate Essential Banner 23.5\" wide",
-      "x": 0.02,
-      "y": 0.12,
-      "width": 0.38,
-      "height": 0.35,
+      "name": "Formulate Essential Banner - Straight",
+      "x": 0.5,
+      "y": 0.44,
+      "width": 0.47,
+      "height": 0.27,
       "groupedSkus": [
         "FMLT-E-S-600-2",
         "FMLT-E-S-800-2",
@@ -440,35 +427,37 @@
     },
     {
       "sku": "FMLT-E-BL-1100",
-      "name": "Formulate Essential Backlit 50.75\" wide",
-      "x": 0.02,
-      "y": 0.6,
-      "width": 0.42,
-      "height": 0.35,
+      "name": "Formulate Essential Backlit Banner",
+      "x": 0.5,
+      "y": 0.9,
+      "width": 0.47,
+      "height": 0.05,
       "groupedSkus": []
     }
   ],
   "17": [
     {
       "sku": "FMLT-BL-WS3-01",
-      "name": "3' Backlit kit",
-      "x": 0.03,
-      "y": 0.1,
-      "width": 0.42,
-      "height": 0.38,
+      "name": "Formulate Master Backlit Backwalls",
+      "x": 0.47,
+      "y": 0.3,
+      "width": 0.48,
+      "height": 0.12,
       "groupedSkus": [
+        "FMLT-BL-WS3-01",
         "FMLT-BL-WS5-01",
         "FMLT-BL-WS8-01"
       ]
     },
     {
       "sku": "MOD-FRM-01-M-TL",
-      "name": "Banner 1",
-      "x": 0.03,
-      "y": 0.5,
-      "width": 0.42,
-      "height": 0.38,
+      "name": "Modulate Magnetic Mix & Match Banners",
+      "x": 0.47,
+      "y": 0.67,
+      "width": 0.5,
+      "height": 0.3,
       "groupedSkus": [
+        "MOD-FRM-01-M-TL",
         "MOD-FRM-02-M-TL",
         "MOD-FRM-03-M-TL",
         "MOD-FRM-04-M-TL",
@@ -489,10 +478,10 @@
     {
       "sku": "BLZ-0306-S/B/W",
       "name": "Blaze 0306",
-      "x": 0.02,
-      "y": 0.08,
+      "x": 0.5,
+      "y": 0.73,
       "width": 0.48,
-      "height": 0.62,
+      "height": 0.27,
       "groupedSkus": [
         "BLZ-0306-S/B/W",
         "BLZ-0308-S/B/W",
@@ -510,11 +499,11 @@
   "23": [
     {
       "sku": "BLZ-W-0603-S/B/W-F",
-      "name": "Blaze Wall Mounted Light Box",
-      "x": 0.02,
-      "y": 0.08,
-      "width": 0.96,
-      "height": 0.45,
+      "name": "Blaze Wall 0603",
+      "x": 0.47,
+      "y": 0.685,
+      "width": 0.51,
+      "height": 0.285,
       "groupedSkus": [
         "BLZ-W-0603-S/B/W-F",
         "BLZ-W-0604-S/B/W-F",
@@ -535,11 +524,11 @@
   "25": [
     {
       "sku": "BLZ-H-0603",
-      "name": "Blaze Hanging Light Box",
-      "x": 0.02,
-      "y": 0.08,
-      "width": 0.72,
-      "height": 0.57,
+      "name": "Blaze Hanging 0603",
+      "x": 0.44,
+      "y": 0.685,
+      "width": 0.53,
+      "height": 0.275,
       "groupedSkus": [
         "BLZ-H-0603",
         "BLZ-H-0604",
@@ -555,44 +544,18 @@
         "BLZ-W-3008",
         "BLZ-W-3010"
       ]
-    },
-    {
-      "sku": "BLZ-H-0603",
-      "name": "Blaze Hanging Light Box - Frame",
-      "x": 0.74,
-      "y": 0.1,
-      "width": 0.2,
-      "height": 0.15,
-      "groupedSkus": []
-    },
-    {
-      "sku": "BLZ-H-0603",
-      "name": "Blaze Hanging Light Box - Lights",
-      "x": 0.74,
-      "y": 0.3,
-      "width": 0.2,
-      "height": 0.15,
-      "groupedSkus": []
-    },
-    {
-      "sku": "BLZ-H-0603",
-      "name": "Blaze Hanging Light Box - Fabric",
-      "x": 0.74,
-      "y": 0.5,
-      "width": 0.2,
-      "height": 0.15,
-      "groupedSkus": []
     }
   ],
   "27": [
     {
       "sku": "BLZ-SQ-0802",
       "name": "Blaze Hanging Square 0802",
-      "x": 0,
-      "y": 0.09,
-      "width": 1,
-      "height": 0.52,
+      "x": 0.44,
+      "y": 0.67,
+      "width": 0.53,
+      "height": 0.285,
       "groupedSkus": [
+        "BLZ-SQ-0802",
         "BLZ-SQ-0803",
         "BLZ-SQ-0804",
         "BLZ-SQ-1002",
@@ -609,12 +572,12 @@
   ],
   "28": [
     {
-      "sku": "VF-R-03",
-      "name": "Rectangle 03",
-      "x": 0.55,
-      "y": 0.28,
-      "width": 0.42,
-      "height": 0.52,
+      "sku": "VF-R-01",
+      "name": "Rectangle 01",
+      "x": 0.05,
+      "y": 0.365,
+      "width": 0.52,
+      "height": 0.57,
       "groupedSkus": [
         "VF-R-01",
         "VF-LB-R-01",
@@ -645,44 +608,45 @@
     {
       "sku": "VF-CR-01",
       "name": "01 Curved Rectangle",
-      "x": 0.03,
-      "y": 0.78,
-      "width": 0.28,
-      "height": 0.15,
+      "x": 0.04,
+      "y": 0.9,
+      "width": 0.2,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "VF-CR-02",
       "name": "02 Curved Rectangle",
-      "x": 0.35,
-      "y": 0.78,
-      "width": 0.28,
-      "height": 0.15,
+      "x": 0.37,
+      "y": 0.9,
+      "width": 0.22,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "VF-CR-03",
       "name": "03 Curved Rectangle",
-      "x": 0.67,
-      "y": 0.78,
-      "width": 0.28,
-      "height": 0.15,
+      "x": 0.7,
+      "y": 0.9,
+      "width": 0.22,
+      "height": 0.04,
       "groupedSkus": []
     }
   ],
   "29": [
     {
-      "sku": "VF-ESS-LB-S-01",
-      "name": "Square 01",
-      "x": 0.32,
-      "y": 0.27,
-      "width": 0.52,
-      "height": 0.48,
+      "sku": "VF-ESS-LB-R-01",
+      "name": "Vector Frame Essential Light Box 0306",
+      "x": 0.5,
+      "y": 0.81,
+      "width": 0.48,
+      "height": 0.19,
       "groupedSkus": [
         "VF-ESS-LB-R-01",
         "VF-ESS-LB-R-02",
         "VF-ESS-LB-R-03",
         "VF-ESS-LB-R-04",
+        "VF-ESS-LB-S-01",
         "VF-ESS-LB-R-05",
         "VF-ESS-LB-R-06"
       ]
@@ -691,11 +655,11 @@
   "30": [
     {
       "sku": "VFF-01-F",
-      "name": "Banner 01",
-      "x": 0.03,
-      "y": 0.15,
-      "width": 0.58,
-      "height": 0.5,
+      "name": "Vector Fast Frame Banner 01",
+      "x": 0.04,
+      "y": 0.88,
+      "width": 0.55,
+      "height": 0.11,
       "groupedSkus": [
         "VFF-01-F",
         "VFF-02-F",
@@ -706,46 +670,43 @@
   "31": [
     {
       "sku": "VFF-LB-01-F",
-      "name": "Light Box 01",
-      "x": 0.42,
-      "y": 0.1,
-      "width": 0.55,
-      "height": 0.42
-    },
-    {
-      "sku": "VFF-LB-02-F",
-      "name": "Light Box 02",
-      "x": 0.03,
+      "name": "Vector Fast Frame Light Box",
+      "x": 0.04,
       "y": 0.48,
-      "width": 0.45,
-      "height": 0.22
+      "width": 0.52,
+      "height": 0.08,
+      "groupedSkus": [
+        "VFF-LB-01-F",
+        "VFF-LB-02-F"
+      ]
     },
     {
       "sku": "VFF-CT-BL",
-      "name": "Backlit Counter",
-      "x": 0.45,
-      "y": 0.68,
-      "width": 0.5,
-      "height": 0.28
+      "name": "Vector Fast Frame Backlit Counter",
+      "x": 0.04,
+      "y": 0.9,
+      "width": 0.52,
+      "height": 0.05,
+      "groupedSkus": []
     }
   ],
   "32": [
     {
       "sku": "VFF-LB-BAT-1-ASM",
       "name": "Rechargeable Light Box",
-      "x": 0.02,
-      "y": 0.13,
-      "width": 0.32,
-      "height": 0.42,
+      "x": 0.33,
+      "y": 0.47,
+      "width": 0.55,
+      "height": 0.06,
       "groupedSkus": []
     },
     {
       "sku": "VFF-LB-BAT-1-ASM",
       "name": "Rechargeable Backlit Counter",
-      "x": 0.02,
-      "y": 0.6,
-      "width": 0.32,
-      "height": 0.35,
+      "x": 0.33,
+      "y": 0.89,
+      "width": 0.55,
+      "height": 0.06,
       "groupedSkus": []
     }
   ],
@@ -753,32 +714,37 @@
     {
       "sku": "VFF-01-3-F",
       "name": "10' Backwall Kit",
-      "x": 0.35,
-      "y": 0.18,
-      "width": 0.62,
-      "height": 0.42,
-      "groupedSkus": []
+      "x": 0.04,
+      "y": 0.47,
+      "width": 0.49,
+      "height": 0.04,
+      "groupedSkus": [
+        "VFF-01-3-F"
+      ]
     },
     {
       "sku": "VFF-LB-01-MINI-F",
       "name": "Mini Light Box",
-      "x": 0.3,
-      "y": 0.62,
-      "width": 0.68,
-      "height": 0.32,
-      "groupedSkus": []
+      "x": 0.04,
+      "y": 0.9,
+      "width": 0.49,
+      "height": 0.04,
+      "groupedSkus": [
+        "VFF-LB-01-MINI-F"
+      ]
     }
   ],
   "38": [
     {
-      "sku": "TNT-E-3X3-SQ-2-G",
-      "name": "10' Economy (Steel) Zoom Popup Tent",
-      "x": 0.03,
-      "y": 0.12,
-      "width": 0.42,
-      "height": 0.35,
+      "sku": "TNT-E-3X3-SQ-3",
+      "name": "10' Economy (Steel) SKU Bank",
+      "x": 0.04,
+      "y": 0.68,
+      "width": 0.44,
+      "height": 0.2,
       "groupedSkus": [
         "TNT-E-3X3-SQ-3",
+        "TNT-E-3X3-SQ-2-G",
         "ZM-TNT-3MX3M-CAN-(COLOR)",
         "TNT-3X3-CAN-G",
         "TNT-3X3-FWL-G",
@@ -786,57 +752,32 @@
       ]
     },
     {
-      "sku": "TNT-S-3X3-HEX-G",
-      "name": "10' Standard (Aluminum) Zoom Popup Tent",
-      "x": 0.48,
-      "y": 0.12,
-      "width": 0.48,
-      "height": 0.35,
+      "sku": "TNT-S-3X3-HEX-FRM",
+      "name": "10' Standard (Aluminum) SKU Bank",
+      "x": 0.5,
+      "y": 0.68,
+      "width": 0.47,
+      "height": 0.2,
       "groupedSkus": [
         "TNT-S-3X3-HEX-FRM",
+        "TNT-S-3X3-HEX-G",
         "ZM-TNT-3MX3M-CAN-(COLOR)",
         "TNT-3X3-CAN-G",
         "TNT-3X3-FWL-G",
         "TNT-3X3-HLF-K-G"
       ]
-    },
-    {
-      "sku": "TNT-3X3-FWL-G",
-      "name": "10' Full wall kit",
-      "x": 0.04,
-      "y": 0.76,
-      "width": 0.2,
-      "height": 0.15,
-      "groupedSkus": []
-    },
-    {
-      "sku": "ZOOM-LIGHT-KIT",
-      "name": "Zoom Light Kit",
-      "x": 0.33,
-      "y": 0.76,
-      "width": 0.2,
-      "height": 0.15,
-      "groupedSkus": []
-    },
-    {
-      "sku": "ROLLER-BAG",
-      "name": "Roller Bag for 10' & 20' tents",
-      "x": 0.7,
-      "y": 0.76,
-      "width": 0.18,
-      "height": 0.15,
-      "groupedSkus": []
     }
   ],
   "39": [
     {
       "sku": "TNT-S-3X6-HEX",
-      "name": "20' Standard (Aluminum) Hardware only kit",
-      "x": 0.02,
-      "y": 0.1,
-      "width": 0.48,
-      "height": 0.35,
+      "name": "20' Standard (Aluminum) SKU Bank",
+      "x": 0.04,
+      "y": 0.6,
+      "width": 0.42,
+      "height": 0.18,
       "groupedSkus": [
+        "TNT-S-3X6-HEX",
         "TNT-S-3X6-HEX-G",
         "ZM-TNT-3MX6M-CAN-(COLOR)-3",
         "ZM-TNT-3MX6M-CAN-G",
@@ -846,53 +787,36 @@
     },
     {
       "sku": "TNT-E-1.5-FRM-SQ-3",
-      "name": "5' Economy (Steel) Hardware only kit",
-      "x": 0.52,
-      "y": 0.1,
-      "width": 0.46,
-      "height": 0.35,
+      "name": "5' Economy (Steel) SKU Bank",
+      "x": 0.55,
+      "y": 0.64,
+      "width": 0.42,
+      "height": 0.14,
       "groupedSkus": [
+        "TNT-E-1.5-FRM-SQ-3",
         "TNT-E-1.5-SQ-2-G",
         "TNT-1.5-CAN-G",
         "TNT-1.5-FWL-G"
       ]
-    },
-    {
-      "sku": "TNT-S-3X6-FWL-G",
-      "name": "Stock Half & Full Walls",
-      "x": 0.02,
-      "y": 0.78,
-      "width": 0.45,
-      "height": 0.15,
-      "groupedSkus": []
-    },
-    {
-      "sku": "FLAG_ACCESSORY",
-      "name": "Optional flag accessory",
-      "x": 0.7,
-      "y": 0.8,
-      "width": 0.2,
-      "height": 0.13,
-      "groupedSkus": []
     }
   ],
   "40": [
     {
       "sku": "ZOOM-FLX-TNT",
       "name": "Zoom Flex Tent",
-      "x": 0.04,
-      "y": 0.09,
+      "x": 0.47,
+      "y": 0.385,
       "width": 0.45,
-      "height": 0.45,
+      "height": 0.045,
       "groupedSkus": []
     },
     {
       "sku": "CP-B3",
       "name": "Campaign Counter",
-      "x": 0.04,
-      "y": 0.58,
+      "x": 0.49,
+      "y": 0.855,
       "width": 0.42,
-      "height": 0.38,
+      "height": 0.05,
       "groupedSkus": []
     }
   ],
@@ -900,156 +824,34 @@
     {
       "sku": "PBFM902-B",
       "name": "popup bar mini",
-      "x": 0.25,
-      "y": 0.42,
-      "width": 0.28,
-      "height": 0.28,
+      "x": 0.29,
+      "y": 0.88,
+      "width": 0.65,
+      "height": 0.12,
       "groupedSkus": [
-        "PBFL301-B"
-      ]
-    },
-    {
-      "sku": "PBFM902-B-HDR",
-      "name": "popup bar mini header",
-      "x": 0.05,
-      "y": 0.82,
-      "width": 0.2,
-      "height": 0.15,
-      "groupedSkus": [
+        "PBFM902-B",
+        "PBFL301-B",
+        "PBFM902-B-HDR",
         "PBFL301-B-HDR"
       ]
-    },
-    {
-      "sku": "PBFL301-B",
-      "name": "popup bar large",
-      "x": 0.52,
-      "y": 0.42,
-      "width": 0.35,
-      "height": 0.28,
-      "groupedSkus": []
-    },
-    {
-      "sku": "PBFM902-B",
-      "name": "popup bar mini - frame assembly",
-      "x": 0.05,
-      "y": 0.25,
-      "width": 0.18,
-      "height": 0.13,
-      "groupedSkus": []
-    },
-    {
-      "sku": "PBFM902-B",
-      "name": "popup bar mini - storage",
-      "x": 0.02,
-      "y": 0.44,
-      "width": 0.18,
-      "height": 0.14,
-      "groupedSkus": []
-    },
-    {
-      "sku": "PBFM902-B",
-      "name": "popup bar mini - cart use",
-      "x": 0.02,
-      "y": 0.65,
-      "width": 0.18,
-      "height": 0.14,
-      "groupedSkus": []
     }
   ],
   "42": [
     {
       "sku": "ZOOM-FLX-SM",
-      "name": "small flag - teardrop, feather, straight",
-      "x": 0.55,
-      "y": 0.05,
-      "width": 0.12,
-      "height": 0.45,
+      "name": "Zoom Flex Flags - All Sizes",
+      "x": 0.05,
+      "y": 0.3,
+      "width": 0.52,
+      "height": 0.28,
       "groupedSkus": [
         "ZOOM-FLX-SM",
-        "ZOOM-FLX-SM-E"
-      ]
-    },
-    {
-      "sku": "ZOOM-FLX-M",
-      "name": "medium flag - teardrop, feather, straight",
-      "x": 0.67,
-      "y": 0.05,
-      "width": 0.12,
-      "height": 0.45,
-      "groupedSkus": [
         "ZOOM-FLX-M",
-        "ZOOM-FLX-M-E"
-      ]
-    },
-    {
-      "sku": "ZOOM-FLX-LG",
-      "name": "large flag - teardrop, feather, straight",
-      "x": 0.79,
-      "y": 0.03,
-      "width": 0.1,
-      "height": 0.48,
-      "groupedSkus": [
         "ZOOM-FLX-LG",
-        "ZOOM-FLX-LG-E"
-      ]
-    },
-    {
-      "sku": "ZOOM-FLX-XL-2",
-      "name": "extra large flag - feather, straight",
-      "x": 0.89,
-      "y": 0.02,
-      "width": 0.1,
-      "height": 0.5,
-      "groupedSkus": [
         "ZOOM-FLX-XL-2",
-        "ZOOM-FLX-XL-E"
-      ]
-    },
-    {
-      "sku": "ZOOM-FLX-SM",
-      "name": "small flag teardrop shape diagram",
-      "x": 0.04,
-      "y": 0.54,
-      "width": 0.15,
-      "height": 0.42,
-      "groupedSkus": [
-        "ZOOM-FLX-SM",
-        "ZOOM-FLX-SM-E"
-      ]
-    },
-    {
-      "sku": "ZOOM-FLX-M",
-      "name": "medium flag teardrop shape diagram",
-      "x": 0.19,
-      "y": 0.54,
-      "width": 0.16,
-      "height": 0.42,
-      "groupedSkus": [
-        "ZOOM-FLX-M",
-        "ZOOM-FLX-M-E"
-      ]
-    },
-    {
-      "sku": "ZOOM-FLX-LG",
-      "name": "large flag feather shape diagram",
-      "x": 0.44,
-      "y": 0.54,
-      "width": 0.16,
-      "height": 0.42,
-      "groupedSkus": [
-        "ZOOM-FLX-LG",
-        "ZOOM-FLX-LG-E"
-      ]
-    },
-    {
-      "sku": "ZOOM-FLX-XL-2",
-      "name": "extra large flag feather shape diagram",
-      "x": 0.68,
-      "y": 0.5,
-      "width": 0.22,
-      "height": 0.46,
-      "groupedSkus": [
-        "ZOOM-FLX-XL-2",
+        "ZOOM-FLX-SM-E",
+        "ZOOM-FLX-M-E",
+        "ZOOM-FLX-LG-E",
         "ZOOM-FLX-XL-E"
       ]
     }
@@ -1058,93 +860,122 @@
     {
       "sku": "ZM-FLX-CB",
       "name": "cross base",
-      "x": 0.04,
-      "y": 0.14,
-      "width": 0.15,
-      "height": 0.15,
+      "x": 0.05,
+      "y": 0.49,
+      "width": 0.45,
+      "height": 0.18,
+      "groupedSkus": [
+        "ZM-FLX-CB",
+        "ZM-FLX-SQ",
+        "ZM-FLX-FB",
+        "ZM-FLX-FOLDABLE",
+        "ZM-FLX-STCK-BASE"
+      ]
+    },
+    {
+      "sku": "ZM-FLX-AGR",
+      "name": "auger base",
+      "x": 0.5,
+      "y": 0.49,
+      "width": 0.45,
+      "height": 0.14,
+      "groupedSkus": [
+        "ZM-FLX-AGR",
+        "ZM-FLX-STK",
+        "ZM-FLX-DO",
+        "ZM-FLX-WR"
+      ]
+    },
+    {
+      "sku": "ZM-FLX-CB",
+      "name": "cross base",
+      "x": 0.05,
+      "y": 0.2,
+      "width": 0.13,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "ZM-FLX-SQ",
       "name": "square steel base",
       "x": 0.22,
-      "y": 0.14,
+      "y": 0.2,
       "width": 0.15,
-      "height": 0.15,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "ZM-FLX-FB",
       "name": "fillable ground base",
-      "x": 0.4,
-      "y": 0.14,
-      "width": 0.15,
-      "height": 0.15,
+      "x": 0.41,
+      "y": 0.2,
+      "width": 0.13,
+      "height": 0.05,
       "groupedSkus": []
     },
     {
       "sku": "ZM-FLX-FOLDABLE",
       "name": "collapsible flagpole stand",
-      "x": 0.58,
-      "y": 0.14,
+      "x": 0.57,
+      "y": 0.2,
       "width": 0.15,
-      "height": 0.15,
+      "height": 0.05,
       "groupedSkus": []
     },
     {
       "sku": "ZM-FLX-STCK-BASE",
       "name": "stackable base",
       "x": 0.78,
-      "y": 0.14,
-      "width": 0.15,
-      "height": 0.15,
+      "y": 0.2,
+      "width": 0.14,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "ZM-FLX-AGR",
       "name": "auger base",
-      "x": 0.04,
-      "y": 0.3,
-      "width": 0.18,
-      "height": 0.17,
+      "x": 0.05,
+      "y": 0.42,
+      "width": 0.12,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "ZM-FLX-STK",
       "name": "ground stake (included)",
-      "x": 0.27,
-      "y": 0.3,
-      "width": 0.12,
-      "height": 0.17,
+      "x": 0.22,
+      "y": 0.42,
+      "width": 0.15,
+      "height": 0.05,
       "groupedSkus": []
     },
     {
       "sku": "ZM-FLX-DO",
       "name": "drive-over base",
-      "x": 0.45,
-      "y": 0.3,
-      "width": 0.25,
-      "height": 0.17,
+      "x": 0.52,
+      "y": 0.42,
+      "width": 0.22,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "ZM-FLX-WR",
       "name": "water ring base support",
       "x": 0.78,
-      "y": 0.3,
-      "width": 0.16,
-      "height": 0.17,
+      "y": 0.42,
+      "width": 0.15,
+      "height": 0.05,
       "groupedSkus": []
     }
   ],
   "44": [
     {
       "sku": "ZOOM-FLX-D-SM",
-      "name": "small flag - d-shaped",
-      "x": 0.35,
-      "y": 0.12,
-      "width": 0.6,
-      "height": 0.48,
+      "name": "Zoom Flex D-Shaped Flag Small",
+      "x": 0.055,
+      "y": 0.33,
+      "width": 0.48,
+      "height": 0.12,
       "groupedSkus": [
         "ZOOM-FLX-D-SM",
         "ZOOM-FLX-D-M",
@@ -1156,20 +987,21 @@
     {
       "sku": "ZOOM-FLX-LNTRN",
       "name": "Zoom Flex Lantern",
-      "x": 0.05,
-      "y": 0.15,
-      "width": 0.3,
-      "height": 0.35,
+      "x": 0.03,
+      "y": 0.68,
+      "width": 0.42,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "C-BRC-72X36-PS-G-W",
-      "name": "Barricade Cover 72\"w x 36\"h Power Stretch",
-      "x": 0.5,
-      "y": 0.12,
-      "width": 0.48,
-      "height": 0.32,
+      "name": "Barricade Cover",
+      "x": 0.52,
+      "y": 0.61,
+      "width": 0.46,
+      "height": 0.1,
       "groupedSkus": [
+        "C-BRC-72X36-PS-G-W",
         "C-BRC-72X36-OD-GDBL",
         "C-BRC-97X36-PS-G-W",
         "C-BRC-97X36-OD-GDBL"
@@ -1177,12 +1009,13 @@
     },
     {
       "sku": "BRKAWAY-POLES",
-      "name": "Breakaway Banner Poles",
-      "x": 0.5,
-      "y": 0.6,
-      "width": 0.48,
-      "height": 0.28,
+      "name": "Breakaway Banner",
+      "x": 0.03,
+      "y": 0.88,
+      "width": 0.44,
+      "height": 0.12,
       "groupedSkus": [
+        "BRKAWAY-POLES",
         "BREAKAWAY-SM-G",
         "BREAKAWAY-M-G",
         "BREAKAWAY-LG-G"
@@ -1193,55 +1026,55 @@
     {
       "sku": "WIND-MIN",
       "name": "Wind Dancer Mini",
-      "x": 0.03,
-      "y": 0.15,
-      "width": 0.18,
-      "height": 0.28,
+      "x": 0.02,
+      "y": 0.545,
+      "width": 0.3,
+      "height": 0.045,
       "groupedSkus": []
     },
     {
       "sku": "WIND-LT",
       "name": "Wind Dancer LT",
-      "x": 0.3,
-      "y": 0.12,
-      "width": 0.2,
-      "height": 0.32,
+      "x": 0.34,
+      "y": 0.505,
+      "width": 0.3,
+      "height": 0.045,
       "groupedSkus": []
     },
     {
       "sku": "WIND-MX",
       "name": "Wind Dancer",
-      "x": 0.68,
-      "y": 0.05,
-      "width": 0.28,
-      "height": 0.4,
+      "x": 0.67,
+      "y": 0.505,
+      "width": 0.3,
+      "height": 0.045,
       "groupedSkus": []
     },
     {
       "sku": "SWING-SIGN",
       "name": "Swing Sign",
-      "x": 0.03,
-      "y": 0.56,
-      "width": 0.22,
-      "height": 0.25,
+      "x": 0.02,
+      "y": 0.93,
+      "width": 0.3,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "WHRL-WND-2",
       "name": "Whirlwind",
-      "x": 0.33,
-      "y": 0.56,
-      "width": 0.25,
-      "height": 0.22,
+      "x": 0.34,
+      "y": 0.93,
+      "width": 0.32,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "PYR-A-FRM-G",
       "name": "Pyramid",
-      "x": 0.68,
-      "y": 0.56,
-      "width": 0.25,
-      "height": 0.22,
+      "x": 0.67,
+      "y": 0.93,
+      "width": 0.31,
+      "height": 0.04,
       "groupedSkus": []
     }
   ],
@@ -1249,82 +1082,44 @@
     {
       "sku": "CONTOUR-01-G",
       "name": "Contour Arrow Up",
-      "x": 0.02,
-      "y": 0.1,
-      "width": 0.12,
-      "height": 0.25,
-      "groupedSkus": []
-    },
-    {
-      "sku": "CONTOUR-02-G",
-      "name": "Contour Arrow Side",
-      "x": 0.15,
-      "y": 0.1,
-      "width": 0.13,
-      "height": 0.25,
-      "groupedSkus": []
-    },
-    {
-      "sku": "CONTOUR-03-G",
-      "name": "Contour Wave 1",
-      "x": 0.29,
-      "y": 0.1,
-      "width": 0.13,
-      "height": 0.25,
-      "groupedSkus": []
-    },
-    {
-      "sku": "CONTOUR-04-G",
-      "name": "Contour Bottle",
-      "x": 0.43,
-      "y": 0.1,
-      "width": 0.13,
-      "height": 0.25,
-      "groupedSkus": []
-    },
-    {
-      "sku": "CONTOUR-05-G",
-      "name": "Contour Circle",
-      "x": 0.57,
-      "y": 0.1,
-      "width": 0.13,
-      "height": 0.25,
-      "groupedSkus": []
-    },
-    {
-      "sku": "CONTOUR-06-G",
-      "name": "Contour Wave 2",
-      "x": 0.72,
-      "y": 0.1,
-      "width": 0.13,
-      "height": 0.25,
-      "groupedSkus": []
+      "x": 0.04,
+      "y": 0.53,
+      "width": 0.52,
+      "height": 0.2,
+      "groupedSkus": [
+        "CONTOUR-01-G",
+        "CONTOUR-02-G",
+        "CONTOUR-03-G",
+        "CONTOUR-04-G",
+        "CONTOUR-05-G",
+        "CONTOUR-06-G"
+      ]
     },
     {
       "sku": "APEX",
       "name": "Apex double-sided plastic A-frame",
-      "x": 0.02,
-      "y": 0.64,
-      "width": 0.25,
-      "height": 0.2,
+      "x": 0.04,
+      "y": 0.83,
+      "width": 0.27,
+      "height": 0.12,
       "groupedSkus": []
     },
     {
       "sku": "ACE-2",
       "name": "ACE-2 double-sided aluminum A-frame sign holder",
-      "x": 0.32,
-      "y": 0.64,
-      "width": 0.25,
-      "height": 0.2,
+      "x": 0.34,
+      "y": 0.83,
+      "width": 0.3,
+      "height": 0.14,
       "groupedSkus": []
     },
     {
       "sku": "ACE-ECO",
-      "name": "ACE ECO foldable economy aluminum A-frame sign",
-      "x": 0.65,
-      "y": 0.64,
-      "width": 0.25,
-      "height": 0.2,
+      "name": "Ace Eco Outdoor Sign",
+      "x": 0.66,
+      "y": 0.83,
+      "width": 0.3,
+      "height": 0.12,
       "groupedSkus": []
     }
   ],
@@ -1332,83 +1127,88 @@
     {
       "sku": "THUNDER-1",
       "name": "Thunder double-sided outdoor retractable banner stand",
-      "x": 0.04,
-      "y": 0.17,
+      "x": 0.08,
+      "y": 0.37,
       "width": 0.35,
-      "height": 0.32
+      "height": 0.04,
+      "groupedSkus": []
     },
     {
       "sku": "BLZD",
       "name": "Blizzard outdoor display with hollow base",
-      "x": 0.52,
-      "y": 0.28,
+      "x": 0.53,
+      "y": 0.34,
       "width": 0.35,
-      "height": 0.22
+      "height": 0.04,
+      "groupedSkus": []
     },
     {
       "sku": "MONSN-2",
-      "name": "Monsoon semi-portable single or double-sided billboard",
-      "x": 0.04,
-      "y": 0.53,
-      "width": 0.35,
-      "height": 0.25
+      "name": "Monsoon Outdoor Sign Stand",
+      "x": 0.08,
+      "y": 0.72,
+      "width": 0.38,
+      "height": 0.04,
+      "groupedSkus": []
     },
     {
       "sku": "STOW-3-S",
       "name": "Stowaway lightweight display stand",
-      "x": 0.52,
-      "y": 0.53,
-      "width": 0.3,
-      "height": 0.25,
+      "x": 0.62,
+      "y": 0.69,
+      "width": 0.35,
+      "height": 0.09,
       "groupedSkus": [
+        "STOW-3-S",
         "STOW-3-L",
         "STOW-3-XL"
       ]
     },
     {
       "sku": "ZOOM-AFRAME-01",
-      "name": "Zoom Flex A-Frame Banner",
-      "x": 0.04,
-      "y": 0.83,
-      "width": 0.35,
-      "height": 0.15
+      "name": "Zoom A-Frame Banner",
+      "x": 0.42,
+      "y": 0.92,
+      "width": 0.38,
+      "height": 0.04,
+      "groupedSkus": []
     }
   ],
   "49": [
     {
       "sku": "ZOOM-FLX-OD-BB",
       "name": "Zoom Flex Outdoor Billboard",
-      "x": 0.03,
-      "y": 0.22,
-      "width": 0.42,
-      "height": 0.28,
+      "x": 0.04,
+      "y": 0.595,
+      "width": 0.38,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "ZOOM-FLX-ARCH",
       "name": "Zoom Flex Arch",
-      "x": 0.5,
-      "y": 0.17,
-      "width": 0.48,
-      "height": 0.38,
+      "x": 0.52,
+      "y": 0.595,
+      "width": 0.42,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "TWIRL",
-      "name": "Twirl",
-      "x": 0.03,
-      "y": 0.62,
-      "width": 0.42,
-      "height": 0.25,
+      "name": "Twirl Outdoor Sign",
+      "x": 0.04,
+      "y": 0.9,
+      "width": 0.35,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "PKWY-S-SPN-3",
       "name": "Parkway Single Span Street Pole Banner",
-      "x": 0.5,
-      "y": 0.63,
-      "width": 0.48,
-      "height": 0.22,
+      "x": 0.52,
+      "y": 0.895,
+      "width": 0.42,
+      "height": 0.065,
       "groupedSkus": [
         "PKWY-D-SPN-3"
       ]
@@ -1418,10 +1218,10 @@
     {
       "sku": "TBL-T-4-F",
       "name": "Fully Printed Table Throw",
-      "x": 0.02,
-      "y": 0.08,
-      "width": 0.38,
-      "height": 0.3,
+      "x": 0.47,
+      "y": 0.17,
+      "width": 0.5,
+      "height": 0.28,
       "groupedSkus": [
         "TBL-T-4-F",
         "TBL-T-4-E",
@@ -1433,21 +1233,12 @@
       ]
     },
     {
-      "sku": "TBL-T-6-E",
-      "name": "Economy Table Throw (shortened back)",
-      "x": 0.02,
-      "y": 0.38,
-      "width": 0.42,
-      "height": 0.18,
-      "groupedSkus": []
-    },
-    {
       "sku": "TBL-T-FC",
       "name": "Convertible Table Throw",
-      "x": 0.02,
-      "y": 0.54,
-      "width": 0.42,
-      "height": 0.2,
+      "x": 0.47,
+      "y": 0.58,
+      "width": 0.5,
+      "height": 0.12,
       "groupedSkus": [
         "TBL-T-FC",
         "TBL-T-EC"
@@ -1455,11 +1246,11 @@
     },
     {
       "sku": "TBL-R-24-F",
-      "name": "Table Runner",
-      "x": 0.02,
+      "name": "Table Runners",
+      "x": 0.47,
       "y": 0.78,
-      "width": 0.42,
-      "height": 0.18,
+      "width": 0.5,
+      "height": 0.2,
       "groupedSkus": [
         "TBL-R-24-F",
         "TBL-R-24-E",
@@ -1476,10 +1267,10 @@
     {
       "sku": "TBL-SW-4-F",
       "name": "Stretch Table Throw",
-      "x": 0.02,
-      "y": 0.06,
-      "width": 0.44,
-      "height": 0.14,
+      "x": 0.03,
+      "y": 0.33,
+      "width": 0.42,
+      "height": 0.16,
       "groupedSkus": [
         "TBL-SW-4-F",
         "TBL-SW-4-36-F",
@@ -1490,10 +1281,10 @@
     {
       "sku": "TBL-FITTED-4-F",
       "name": "Fitted Table Throw",
-      "x": 0.5,
-      "y": 0.06,
-      "width": 0.46,
-      "height": 0.14,
+      "x": 0.48,
+      "y": 0.31,
+      "width": 0.48,
+      "height": 0.2,
       "groupedSkus": [
         "TBL-FITTED-4-F",
         "TBL-FITTED-4-36-F",
@@ -1504,28 +1295,18 @@
     },
     {
       "sku": "RND-TBL-T-30X30",
-      "name": "Round Table Throw Draped/Stretch",
-      "x": 0.02,
-      "y": 0.42,
-      "width": 0.22,
-      "height": 0.15,
+      "name": "Round Table Throw",
+      "x": 0.48,
+      "y": 0.6,
+      "width": 0.5,
+      "height": 0.22,
       "groupedSkus": [
         "RND-TBL-T-30X30",
+        "RND-TBL-FT-30X30",
         "RND-TBL-SW-30X30",
         "RND-TBL-T-30X42",
-        "RND-TBL-SW-30X42"
-      ]
-    },
-    {
-      "sku": "RND-TBL-FT-30X30",
-      "name": "Round Table Throw Fitted/Stretch",
-      "x": 0.02,
-      "y": 0.58,
-      "width": 0.22,
-      "height": 0.15,
-      "groupedSkus": [
-        "RND-TBL-FT-30X30",
         "RND-TBL-FT-30X42",
+        "RND-TBL-SW-30X42",
         "RND-TBL-T-48X30",
         "RND-TBL-FT-48X30",
         "RND-TBL-T-60X30",
@@ -1535,10 +1316,10 @@
     {
       "sku": "TBL-ODC-FITTED-6-F",
       "name": "Outdoor Table Throw",
-      "x": 0.02,
-      "y": 0.76,
-      "width": 0.38,
-      "height": 0.2,
+      "x": 0.48,
+      "y": 0.9,
+      "width": 0.42,
+      "height": 0.07,
       "groupedSkus": [
         "TBL-ODC-FITTED-6-F",
         "TBL-ODC-FITTED-8-F"
@@ -1549,75 +1330,30 @@
     {
       "sku": "HZ-TT-S",
       "name": "Horizon 3 Tabletop Display",
-      "x": 0.02,
-      "y": 0.28,
-      "width": 0.48,
-      "height": 0.32,
+      "x": 0.1,
+      "y": 0.595,
+      "width": 0.18,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "HZ-TT-M",
       "name": "Horizon 5 Tabletop Display",
-      "x": 0.5,
-      "y": 0.28,
-      "width": 0.5,
-      "height": 0.32,
+      "x": 0.6,
+      "y": 0.595,
+      "width": 0.18,
+      "height": 0.04,
       "groupedSkus": []
     }
   ],
   "53": [
     {
       "sku": "VY-1",
-      "name": "Mini Kit (small, 5 lbs.)",
-      "x": 0.03,
-      "y": 0.33,
-      "width": 0.25,
-      "height": 0.2,
-      "groupedSkus": []
-    },
-    {
-      "sku": "VY-2",
-      "name": "Maxi Kit (medium, 6.5 lbs.)",
-      "x": 0.28,
-      "y": 0.33,
-      "width": 0.3,
-      "height": 0.2,
-      "groupedSkus": []
-    },
-    {
-      "sku": "VY-3",
-      "name": "Mega Kit (large, 8.25 lbs.)",
-      "x": 0.58,
-      "y": 0.33,
-      "width": 0.38,
-      "height": 0.2,
-      "groupedSkus": []
-    },
-    {
-      "sku": "VY-4",
-      "name": "Supreme Kit (x-large, 8.25 lbs.)",
-      "x": 0.03,
-      "y": 0.53,
-      "width": 0.27,
-      "height": 0.22,
-      "groupedSkus": []
-    },
-    {
-      "sku": "VY-5",
-      "name": "Monster Kit (xx-large, 10 lbs.)",
-      "x": 0.28,
-      "y": 0.53,
-      "width": 0.3,
-      "height": 0.22,
-      "groupedSkus": []
-    },
-    {
-      "sku": "VY-1",
-      "name": "Voyager Folding Panels (all sizes)",
-      "x": 0.48,
-      "y": 0.08,
-      "width": 0.48,
-      "height": 0.25,
+      "name": "Mini Kit",
+      "x": 0.04,
+      "y": 0.56,
+      "width": 0.68,
+      "height": 0.27,
       "groupedSkus": [
         "VY-1",
         "VY-2",
@@ -1628,11 +1364,11 @@
     },
     {
       "sku": "VY-1-BG",
-      "name": "Voyager Carry Bag",
-      "x": 0.03,
-      "y": 0.78,
-      "width": 0.35,
-      "height": 0.15,
+      "name": "Mini Kit Bag",
+      "x": 0.04,
+      "y": 0.9,
+      "width": 0.3,
+      "height": 0.18,
       "groupedSkus": [
         "VY-1-BG",
         "VY-2-BG",
@@ -1644,29 +1380,25 @@
   ],
   "56": [
     {
-      "sku": "HOP-LITE-3X3-FG-S",
-      "name": "Hopup Lite Tension Fabric",
-      "x": 0.03,
-      "y": 0.17,
-      "width": 0.6,
-      "height": 0.58,
-      "groupedSkus": [
-        "HOP-LITE-3X3-FG-S",
-        "HOP-LITE-3X3-FGE-S",
-        "HOP-LITE-4X3-FG-S",
-        "HOP-LITE-4X3-FGE-S"
-      ]
+      "sku": "HOP-CT-2",
+      "name": "Hopup Counter",
+      "x": 0.37,
+      "y": 0.93,
+      "width": 0.28,
+      "height": 0.03,
+      "groupedSkus": []
     }
   ],
   "57": [
     {
       "sku": "HOP-DIM01-3X3FG-S",
       "name": "Kit 01 - 7 1/2' full height straight backwall kit",
-      "x": 0.03,
-      "y": 0.12,
-      "width": 0.38,
-      "height": 0.28,
+      "x": 0.05,
+      "y": 0.555,
+      "width": 0.42,
+      "height": 0.045,
       "groupedSkus": [
+        "HOP-DIM01-3X3FG-S",
         "HOP-DIM-01"
       ]
     },
@@ -1674,21 +1406,23 @@
       "sku": "HOP-DIM02-3X3FG-S",
       "name": "Kit 02 - 7 1/2' full height straight backwall kit with counter",
       "x": 0.52,
-      "y": 0.12,
-      "width": 0.38,
-      "height": 0.28,
+      "y": 0.585,
+      "width": 0.45,
+      "height": 0.045,
       "groupedSkus": [
+        "HOP-DIM02-3X3FG-S",
         "HOP-DIM-02"
       ]
     },
     {
       "sku": "HOP-DIM03-4X3FGE-S",
       "name": "Kit 03 - 10' full height straight backwall kit with accessory counter",
-      "x": 0.03,
-      "y": 0.55,
-      "width": 0.38,
-      "height": 0.28,
+      "x": 0.05,
+      "y": 0.92,
+      "width": 0.42,
+      "height": 0.045,
       "groupedSkus": [
+        "HOP-DIM03-4X3FGE-S",
         "HOP-DIM-03"
       ]
     },
@@ -1696,10 +1430,11 @@
       "sku": "HOP-DIM04-4X3FGE-S",
       "name": "Kit 04 - 10' full height straight backwall kit with standoff counter",
       "x": 0.52,
-      "y": 0.55,
-      "width": 0.38,
-      "height": 0.28,
+      "y": 0.92,
+      "width": 0.45,
+      "height": 0.045,
       "groupedSkus": [
+        "HOP-DIM04-4X3FGE-S",
         "HOP-DIM-04"
       ]
     }
@@ -1708,11 +1443,12 @@
     {
       "sku": "HOP-LITE-3X3-FG-S",
       "name": "Hopup Lite 7 1/2' full height front graphic",
-      "x": 0.03,
-      "y": 0.18,
-      "width": 0.55,
-      "height": 0.58,
+      "x": 0.04,
+      "y": 0.88,
+      "width": 0.92,
+      "height": 0.09,
       "groupedSkus": [
+        "HOP-LITE-3X3-FG-S",
         "HOP-LITE-3X3-FGE-S",
         "HOP-LITE-4X3-FG-S",
         "HOP-LITE-4X3-FGE-S"
@@ -1723,104 +1459,166 @@
     {
       "sku": "HOP-2-BL-2X2-S",
       "name": "5' tabletop kit",
-      "x": 0.32,
-      "y": 0.12,
-      "width": 0.35,
-      "height": 0.32,
-      "groupedSkus": []
-    },
-    {
-      "sku": "HOP-2-BL-3X3-S",
-      "name": "7 1/2' kit",
-      "x": 0.55,
-      "y": 0.1,
-      "width": 0.42,
-      "height": 0.55,
+      "x": 0.38,
+      "y": 0.84,
+      "width": 0.52,
+      "height": 0.14,
       "groupedSkus": [
+        "HOP-2-BL-2X2-S",
         "HOP-2-BL-1X3-S",
+        "HOP-2-BL-3X3-S",
         "HOP-2-BL-4X3-S"
       ]
-    },
-    {
-      "sku": "HOP-2-BL-1X3-S",
-      "name": "2 1/2' kit",
-      "x": 0.42,
-      "y": 0.42,
-      "width": 0.25,
-      "height": 0.42,
-      "groupedSkus": []
     }
   ],
   "62": [
     {
       "sku": "EMB-1X1FG-S",
-      "name": "Embrace Tabletop",
-      "x": 0.03,
-      "y": 0.15,
-      "width": 0.25,
-      "height": 0.22,
-      "groupedSkus": [
-        "EMB-1X1FG-S",
-        "EMB-1X1FGE-S",
-        "EMB-2X1FG-S",
-        "EMB-2X1FGE-S",
-        "EMB-2X2FG-S",
-        "EMB-2X2FGE-S",
-        "EMB-3X2FG-S",
-        "EMB-3X2FGE-S"
-      ]
+      "name": "2 1/2' tabletop",
+      "x": 0.04,
+      "y": 0.505,
+      "width": 0.92,
+      "height": 0.035
+    },
+    {
+      "sku": "EMB-2X1FG-S",
+      "name": "5' tabletop",
+      "x": 0.04,
+      "y": 0.545,
+      "width": 0.92,
+      "height": 0.035
+    },
+    {
+      "sku": "EMB-2X2FG-S",
+      "name": "5' tabletop",
+      "x": 0.04,
+      "y": 0.585,
+      "width": 0.92,
+      "height": 0.035
+    },
+    {
+      "sku": "EMB-3X2FG-S",
+      "name": "7 1/2' tabletop",
+      "x": 0.04,
+      "y": 0.625,
+      "width": 0.92,
+      "height": 0.035
     },
     {
       "sku": "EMB-1X3FG-S",
-      "name": "Embrace Floor Backwall",
-      "x": 0.28,
-      "y": 0.1,
-      "width": 0.35,
-      "height": 0.32,
-      "groupedSkus": [
-        "EMB-1X3FG-S",
-        "EMB-1X3FGE-S",
-        "EMB-2X3FG-S",
-        "EMB-2X3FGE-S",
-        "EMB-3X3FG-S",
-        "EMB-3X3FGE-S",
-        "EMB-3X4FG-S",
-        "EMB-3X4FGE-S",
-        "EMB-4X3FG-S",
-        "EMB-4X3FGE-S",
-        "EMB-4X4FG-S",
-        "EMB-4X4FGE-S",
-        "EMB-5X3FG-S",
-        "EMB-5X3FGE-S",
-        "EMB-6X3FG-S",
-        "EMB-6X3FGE-S",
-        "EMB-8X3FG-S",
-        "EMB-8X3FGE-S",
-        "EMB-12X3FG-S",
-        "EMB-12X3FGE-S"
-      ]
+      "name": "2 1/2' full height",
+      "x": 0.04,
+      "y": 0.665,
+      "width": 0.92,
+      "height": 0.035
+    },
+    {
+      "sku": "EMB-2X3FG-S",
+      "name": "5' full height",
+      "x": 0.04,
+      "y": 0.705,
+      "width": 0.92,
+      "height": 0.035
+    },
+    {
+      "sku": "EMB-3X3FG-S",
+      "name": "7 1/2' full height",
+      "x": 0.04,
+      "y": 0.745,
+      "width": 0.92,
+      "height": 0.035
     },
     {
       "sku": "EMB-3X4FG-S",
-      "name": "Embrace Extra Long",
-      "x": 0.6,
-      "y": 0.1,
-      "width": 0.35,
-      "height": 0.32,
+      "name": "7 1/2' extra tall",
+      "x": 0.5,
+      "y": 0.505,
+      "width": 0.46,
+      "height": 0.035,
       "groupedSkus": [
         "EMB-3X4FG-S",
-        "EMB-3X4FGE-S",
+        "EMB-3X4FGE-S"
+      ]
+    },
+    {
+      "sku": "EMB-4X3FG-S",
+      "name": "10' full height",
+      "x": 0.5,
+      "y": 0.545,
+      "width": 0.46,
+      "height": 0.035,
+      "groupedSkus": [
+        "EMB-4X3FG-S",
+        "EMB-4X3FGE-S"
+      ]
+    },
+    {
+      "sku": "EMB-4X4FG-S",
+      "name": "10' extra tall",
+      "x": 0.5,
+      "y": 0.585,
+      "width": 0.46,
+      "height": 0.035,
+      "groupedSkus": [
         "EMB-4X4FG-S",
         "EMB-4X4FGE-S"
       ]
     },
     {
+      "sku": "EMB-5X3FG-S",
+      "name": "12 1/4' full height",
+      "x": 0.5,
+      "y": 0.625,
+      "width": 0.46,
+      "height": 0.035,
+      "groupedSkus": [
+        "EMB-5X3FG-S",
+        "EMB-5X3FGE-S"
+      ]
+    },
+    {
+      "sku": "EMB-6X3FG-S",
+      "name": "15' wide",
+      "x": 0.5,
+      "y": 0.665,
+      "width": 0.46,
+      "height": 0.035,
+      "groupedSkus": [
+        "EMB-6X3FG-S",
+        "EMB-6X3FGE-S"
+      ]
+    },
+    {
+      "sku": "EMB-8X3FG-S",
+      "name": "20' wide",
+      "x": 0.5,
+      "y": 0.705,
+      "width": 0.46,
+      "height": 0.035,
+      "groupedSkus": [
+        "EMB-8X3FG-S",
+        "EMB-8X3FGE-S"
+      ]
+    },
+    {
+      "sku": "EMB-12X3FG-S",
+      "name": "30' wide",
+      "x": 0.5,
+      "y": 0.745,
+      "width": 0.46,
+      "height": 0.035,
+      "groupedSkus": [
+        "EMB-12X3FG-S",
+        "EMB-12X3FGE-S"
+      ]
+    },
+    {
       "sku": "EMB-CT",
       "name": "Embrace Counter",
-      "x": 0.03,
-      "y": 0.76,
-      "width": 0.35,
-      "height": 0.2,
+      "x": 0.42,
+      "y": 0.915,
+      "width": 0.24,
+      "height": 0.04,
       "groupedSkus": [
         "EMB-CT",
         "EMB-CT-BL"
@@ -1831,28 +1629,28 @@
     {
       "sku": "EMB-MM",
       "name": "Embrace Monitor Mount",
-      "x": 0.03,
-      "y": 0.09,
-      "width": 0.28,
-      "height": 0.24,
+      "x": 0.52,
+      "y": 0.83,
+      "width": 0.42,
+      "height": 0.03,
       "groupedSkus": []
     },
     {
       "sku": "EMB-TBL-BLACK",
       "name": "Embrace Table",
-      "x": 0.48,
-      "y": 0.09,
-      "width": 0.22,
-      "height": 0.24,
+      "x": 0.52,
+      "y": 0.855,
+      "width": 0.42,
+      "height": 0.03,
       "groupedSkus": []
     },
     {
       "sku": "EMB-EXT-SHLF-K-1",
       "name": "Embrace Shelving",
-      "x": 0.03,
-      "y": 0.4,
-      "width": 0.35,
-      "height": 0.25,
+      "x": 0.52,
+      "y": 0.882,
+      "width": 0.42,
+      "height": 0.03,
       "groupedSkus": [
         "EMB-EXT-SHLF-K-2"
       ]
@@ -1860,19 +1658,19 @@
     {
       "sku": "EMB-BRIDGE-CONNECTOR",
       "name": "Embrace Bridge Connector",
-      "x": 0.48,
-      "y": 0.4,
-      "width": 0.15,
-      "height": 0.12,
+      "x": 0.52,
+      "y": 0.91,
+      "width": 0.42,
+      "height": 0.03,
       "groupedSkus": []
     },
     {
       "sku": "EMB-BRIDGE-LT",
       "name": "Embrace Bridge Light/Light Kit",
-      "x": 0.48,
-      "y": 0.56,
-      "width": 0.25,
-      "height": 0.15,
+      "x": 0.52,
+      "y": 0.937,
+      "width": 0.42,
+      "height": 0.033,
       "groupedSkus": [
         "EMB-BRIDGE-LT-KIT"
       ]
@@ -1880,24 +1678,25 @@
     {
       "sku": "EMB-BRIDGE",
       "name": "Embrace Bridge",
-      "x": 0.03,
-      "y": 0.73,
-      "width": 0.3,
-      "height": 0.2,
+      "x": 0.52,
+      "y": 0.965,
+      "width": 0.42,
+      "height": 0.03,
       "groupedSkus": []
     }
   ],
   "64": [
     {
-      "sku": "EMB-BL-2X3-S",
-      "name": "5' full height Backlit Embrace",
-      "x": 0.03,
-      "y": 0.22,
-      "width": 0.52,
-      "height": 0.52,
+      "sku": "EMB-BL-2X2-S",
+      "name": "5' tabletop Backlit Embrace",
+      "x": 0.5,
+      "y": 0.82,
+      "width": 0.48,
+      "height": 0.16,
       "groupedSkus": [
         "EMB-BL-2X2-S",
         "EMB-BL-1X3-S",
+        "EMB-BL-2X3-S",
         "EMB-BL-3X3-S",
         "EMB-BL-4X3-S",
         "EMB-BL-5X3-S",
@@ -1909,11 +1708,12 @@
     {
       "sku": "EMB-LITE-3X3FG-S",
       "name": "Embrace Lite 7 1/2' full height fabric graphic",
-      "x": 0.4,
-      "y": 0.25,
-      "width": 0.55,
-      "height": 0.45,
+      "x": 0.44,
+      "y": 0.855,
+      "width": 0.52,
+      "height": 0.075,
       "groupedSkus": [
+        "EMB-LITE-3X3FG-S",
         "EMB-LITE-3X3FGE-S",
         "EMB-LITE-4X3FG-S",
         "EMB-LITE-4X3FGE-S"
@@ -1923,150 +1723,180 @@
   "68": [
     {
       "sku": "XCLM-2X2-K1",
-      "name": "5' tabletop Kit 1",
-      "x": 0.08,
-      "y": 0.1,
-      "width": 0.42,
-      "height": 0.38,
+      "name": "Xclaim 5ft Tabletop Fabric Popup Display Kit 01",
+      "x": 0.13,
+      "y": 0.49,
+      "width": 0.18,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "XCLM-2X2-K2",
-      "name": "5' tabletop Kit 2",
-      "x": 0.5,
-      "y": 0.1,
-      "width": 0.45,
-      "height": 0.38,
+      "name": "Xclaim 5ft Tabletop Fabric Popup Display Kit 02",
+      "x": 0.6,
+      "y": 0.49,
+      "width": 0.18,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "XCLM-2X2-K3",
-      "name": "5' tabletop Kit 3",
-      "x": 0.08,
-      "y": 0.5,
-      "width": 0.42,
-      "height": 0.38,
+      "name": "Xclaim 5ft Tabletop Fabric Popup Display Kit 03",
+      "x": 0.13,
+      "y": 0.82,
+      "width": 0.18,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "XCLM-2X2-K4",
-      "name": "5' tabletop Kit 4",
-      "x": 0.5,
-      "y": 0.5,
-      "width": 0.45,
-      "height": 0.38,
+      "name": "Xclaim 5ft Tabletop Fabric Popup Display Kit 04",
+      "x": 0.6,
+      "y": 0.82,
+      "width": 0.18,
+      "height": 0.04,
       "groupedSkus": []
+    },
+    {
+      "sku": "XCLM-2X2-K1",
+      "name": "Xclaim 5ft Tabletop Fabric Popup Display Kit 01",
+      "x": 0.3,
+      "y": 0.88,
+      "width": 0.52,
+      "height": 0.1,
+      "groupedSkus": [
+        "XCLM-2X2-K1",
+        "XCLM-2X2-K2",
+        "XCLM-2X2-K3",
+        "XCLM-2X2-K4"
+      ]
     }
   ],
   "69": [
     {
       "sku": "XCLM-1X3-K1",
-      "name": "2 1/2' full height display",
+      "name": "Xclaim 2.5ft Fabric Popup Display Kit 01",
       "x": 0.02,
-      "y": 0.09,
-      "width": 0.22,
-      "height": 0.45,
+      "y": 0.555,
+      "width": 0.2,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "XCLM-1X3-K2",
-      "name": "2 1/2' full height display",
-      "x": 0.26,
-      "y": 0.09,
-      "width": 0.22,
-      "height": 0.45,
+      "name": "Xclaim 2.5ft Fabric Popup Display Kit 02",
+      "x": 0.24,
+      "y": 0.555,
+      "width": 0.2,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "XCLM-1X3-K3",
-      "name": "2 1/2' full height display",
-      "x": 0.5,
-      "y": 0.09,
-      "width": 0.22,
-      "height": 0.45,
+      "name": "Xclaim 2.5ft Fabric Popup Display Kit 03",
+      "x": 0.48,
+      "y": 0.555,
+      "width": 0.2,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "XCLM-1X3-K4",
-      "name": "2 1/2' full height display",
-      "x": 0.74,
-      "y": 0.09,
-      "width": 0.22,
-      "height": 0.45,
+      "name": "Xclaim 2.5ft Fabric Popup Display Kit 04",
+      "x": 0.71,
+      "y": 0.555,
+      "width": 0.2,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "XCLM-2X3-K1",
-      "name": "5' full height display",
-      "x": 0.02,
-      "y": 0.57,
-      "width": 0.3,
-      "height": 0.35,
+      "name": "Xclaim 5ft Full Height Fabric Popup Display Kit 01",
+      "x": 0.04,
+      "y": 0.91,
+      "width": 0.18,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "XCLM-2X3-K2",
-      "name": "5' full height display",
-      "x": 0.33,
-      "y": 0.57,
-      "width": 0.3,
-      "height": 0.35,
+      "name": "Xclaim 5ft Full Height Fabric Popup Display Kit 02",
+      "x": 0.28,
+      "y": 0.91,
+      "width": 0.18,
+      "height": 0.04,
       "groupedSkus": []
+    },
+    {
+      "sku": "XCLM-1X3-K1",
+      "name": "Xclaim Full Height Kits Spec Table",
+      "x": 0.5,
+      "y": 0.67,
+      "width": 0.45,
+      "height": 0.24,
+      "groupedSkus": [
+        "XCLM-1X3-K1",
+        "XCLM-1X3-K2",
+        "XCLM-1X3-K3",
+        "XCLM-1X3-K4",
+        "XCLM-2X3-K1",
+        "XCLM-2X3-K2"
+      ]
     }
   ],
   "70": [
     {
       "sku": "XCLM-3X3-K1",
-      "name": "7 1/2' full height display",
-      "x": 0.1,
-      "y": 0.08,
-      "width": 0.3,
-      "height": 0.33,
+      "name": "Xclaim 8ft Fabric Popup Display Kit 01",
+      "x": 0.12,
+      "y": 0.41,
+      "width": 0.24,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "XCLM-3X3-K2",
-      "name": "7 1/2' full height display",
-      "x": 0.52,
-      "y": 0.08,
-      "width": 0.38,
-      "height": 0.33,
+      "name": "Xclaim 8ft Fabric Popup Display Kit 02",
+      "x": 0.6,
+      "y": 0.41,
+      "width": 0.24,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "XCLM-3X3-K3",
       "name": "7 1/2' full height display",
-      "x": 0.08,
-      "y": 0.42,
-      "width": 0.35,
-      "height": 0.3,
+      "x": 0.12,
+      "y": 0.68,
+      "width": 0.24,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "XCLM-3X3-K4",
       "name": "7 1/2' full height display",
-      "x": 0.52,
-      "y": 0.42,
-      "width": 0.38,
-      "height": 0.3,
+      "x": 0.6,
+      "y": 0.68,
+      "width": 0.24,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "XCLM-3X3-K5",
       "name": "7 1/2' full height display",
-      "x": 0.08,
-      "y": 0.73,
-      "width": 0.35,
-      "height": 0.22,
+      "x": 0.12,
+      "y": 0.93,
+      "width": 0.24,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "XCLM-3X3-K6",
       "name": "7 1/2' full height display",
-      "x": 0.52,
-      "y": 0.73,
-      "width": 0.38,
-      "height": 0.22,
+      "x": 0.6,
+      "y": 0.93,
+      "width": 0.24,
+      "height": 0.04,
       "groupedSkus": []
     }
   ],
@@ -2074,43 +1904,47 @@
     {
       "sku": "XCLM-4X3-K1",
       "name": "10' full height display",
-      "x": 0.03,
-      "y": 0.1,
-      "width": 0.45,
-      "height": 0.42,
+      "x": 0.07,
+      "y": 0.555,
+      "width": 0.22,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "XCLM-4X3-K2",
       "name": "10' full height display",
-      "x": 0.48,
-      "y": 0.1,
-      "width": 0.48,
-      "height": 0.42,
+      "x": 0.55,
+      "y": 0.555,
+      "width": 0.22,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "XCLM-4X3-K3",
       "name": "10' full height display",
-      "x": 0.03,
-      "y": 0.58,
-      "width": 0.42,
-      "height": 0.35,
+      "x": 0.07,
+      "y": 0.93,
+      "width": 0.22,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "XCLM-3X3-K1",
-      "name": "7 1/2' full height",
-      "x": 0.47,
-      "y": 0.58,
-      "width": 0.5,
-      "height": 0.35,
+      "name": "Xclaim 8ft Fabric Popup Display Kit 01",
+      "x": 0.42,
+      "y": 0.635,
+      "width": 0.55,
+      "height": 0.32,
       "groupedSkus": [
+        "XCLM-3X3-K1",
         "XCLM-3X3-K2",
         "XCLM-3X3-K3",
         "XCLM-3X3-K4",
         "XCLM-3X3-K5",
-        "XCLM-3X3-K6"
+        "XCLM-3X3-K6",
+        "XCLM-4X3-K1",
+        "XCLM-4X3-K2",
+        "XCLM-4X3-K3"
       ]
     }
   ],
@@ -2118,187 +1952,199 @@
     {
       "sku": "XCLM-4X3-K4",
       "name": "10' full height display",
-      "x": 0.03,
-      "y": 0.08,
-      "width": 0.45,
-      "height": 0.38,
+      "x": 0.08,
+      "y": 0.48,
+      "width": 0.22,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "XCLM-4X3-K5",
       "name": "10' full height display",
-      "x": 0.48,
-      "y": 0.08,
-      "width": 0.48,
-      "height": 0.38,
+      "x": 0.57,
+      "y": 0.48,
+      "width": 0.22,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "XCLM-4X3-K6",
       "name": "10' full height display",
-      "x": 0.03,
-      "y": 0.5,
-      "width": 0.42,
-      "height": 0.36,
+      "x": 0.1,
+      "y": 0.82,
+      "width": 0.22,
+      "height": 0.04,
       "groupedSkus": []
+    },
+    {
+      "sku": "XCLM-4X3-K4",
+      "name": "SKU Bank",
+      "x": 0.52,
+      "y": 0.87,
+      "width": 0.42,
+      "height": 0.08,
+      "groupedSkus": [
+        "XCLM-4X3-K4",
+        "XCLM-4X3-K5",
+        "XCLM-4X3-K6"
+      ]
     }
   ],
   "73": [
     {
       "sku": "XCLM-3QP-K1",
       "name": "7' display Pyramid Kit",
-      "x": 0.08,
-      "y": 0.07,
-      "width": 0.35,
-      "height": 0.25,
+      "x": 0.17,
+      "y": 0.33,
+      "width": 0.15,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "XCLM-3QP-K2",
       "name": "7' display Pyramid Kit",
-      "x": 0.5,
-      "y": 0.07,
-      "width": 0.4,
-      "height": 0.25,
+      "x": 0.6,
+      "y": 0.33,
+      "width": 0.15,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "XCLM-6QP-K1",
       "name": "10' display Pyramid Kit",
-      "x": 0.05,
-      "y": 0.33,
-      "width": 0.42,
-      "height": 0.27,
+      "x": 0.17,
+      "y": 0.58,
+      "width": 0.15,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "XCLM-6QP-K2",
       "name": "10' display Pyramid Kit",
-      "x": 0.5,
-      "y": 0.33,
-      "width": 0.42,
-      "height": 0.27,
+      "x": 0.6,
+      "y": 0.58,
+      "width": 0.15,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "XCLM-10QP-K1",
       "name": "14' full height display Pyramid Kit",
-      "x": 0.02,
-      "y": 0.6,
-      "width": 0.3,
-      "height": 0.22,
+      "x": 0.05,
+      "y": 0.8,
+      "width": 0.2,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "XCLM-10QP-K2",
       "name": "14' full height display Pyramid Kit",
-      "x": 0.3,
-      "y": 0.6,
-      "width": 0.3,
-      "height": 0.22,
+      "x": 0.33,
+      "y": 0.8,
+      "width": 0.2,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "XCLM-10QP-K3",
       "name": "14' full height display Pyramid Kit",
-      "x": 0.6,
-      "y": 0.6,
-      "width": 0.35,
-      "height": 0.22,
+      "x": 0.65,
+      "y": 0.8,
+      "width": 0.2,
+      "height": 0.04,
       "groupedSkus": []
+    },
+    {
+      "sku": "XCLM-3QP-K1",
+      "name": "SKU Bank - Pyramid Kits",
+      "x": 0.35,
+      "y": 0.85,
+      "width": 0.42,
+      "height": 0.13,
+      "groupedSkus": [
+        "XCLM-3QP-K1",
+        "XCLM-3QP-K2",
+        "XCLM-6QP-K1",
+        "XCLM-6QP-K2",
+        "XCLM-10QP-K1",
+        "XCLM-10QP-K2",
+        "XCLM-10QP-K3"
+      ]
     }
   ],
   "76": [
     {
       "sku": "COY-KKG-1X1-C",
       "name": "4'w tabletop",
-      "x": 0.22,
-      "y": 0.07,
-      "width": 0.25,
-      "height": 0.25,
+      "x": 0.27,
+      "y": 0.33,
+      "width": 0.15,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "COY-KKG-2X1-C",
       "name": "6'w tabletop",
-      "x": 0.52,
-      "y": 0.07,
-      "width": 0.3,
-      "height": 0.25,
+      "x": 0.55,
+      "y": 0.33,
+      "width": 0.15,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "COY-KKG-2X2-C",
       "name": "6'w tabletop",
-      "x": 0.17,
-      "y": 0.36,
-      "width": 0.3,
-      "height": 0.28,
+      "x": 0.25,
+      "y": 0.66,
+      "width": 0.16,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "COY-KKG-3X2-C",
       "name": "8'w tabletop",
-      "x": 0.5,
-      "y": 0.36,
-      "width": 0.35,
-      "height": 0.28,
+      "x": 0.54,
+      "y": 0.66,
+      "width": 0.16,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "COY-KKG-2X3-C",
       "name": "6'w full height slim-line display system",
-      "x": 0.03,
-      "y": 0.67,
-      "width": 0.27,
-      "height": 0.27,
+      "x": 0.05,
+      "y": 0.9,
+      "width": 0.21,
+      "height": 0.05,
       "groupedSkus": []
     },
     {
       "sku": "COY-KKG-3X3-C",
       "name": "8'w full height standard display system",
-      "x": 0.33,
-      "y": 0.67,
-      "width": 0.3,
-      "height": 0.27,
+      "x": 0.34,
+      "y": 0.9,
+      "width": 0.23,
+      "height": 0.05,
       "groupedSkus": []
     },
     {
       "sku": "COY-KKG-4X3-C",
       "name": "10'w full height standard display system",
-      "x": 0.65,
-      "y": 0.67,
-      "width": 0.32,
-      "height": 0.27,
+      "x": 0.63,
+      "y": 0.9,
+      "width": 0.24,
+      "height": 0.05,
       "groupedSkus": []
     }
   ],
   "77": [
     {
-      "sku": "COY-IS-CK",
-      "name": "internal shelf kit",
-      "x": 0.03,
-      "y": 0.05,
-      "width": 0.35,
-      "height": 0.22,
-      "groupedSkus": []
-    },
-    {
-      "sku": "COY-MM",
-      "name": "monitor mount",
-      "x": 0.5,
-      "y": 0.05,
-      "width": 0.35,
-      "height": 0.22,
-      "groupedSkus": []
-    },
-    {
-      "sku": "OCX",
-      "name": "OCX",
-      "x": 0.03,
-      "y": 0.42,
-      "width": 0.28,
-      "height": 0.22,
+      "sku": "COY-KKG-1X1-C",
+      "name": "Coyote Popup Display Systems - Size Variants",
+      "x": 0.04,
+      "y": 0.78,
+      "width": 0.44,
+      "height": 0.2,
       "groupedSkus": [
         "COY-KKG-1X1-C",
         "COY-KKG-2X1-C",
@@ -2310,39 +2156,46 @@
       ]
     },
     {
-      "sku": "OCX-C2C-G",
-      "name": "OCX roll wrap",
-      "x": 0.33,
-      "y": 0.42,
-      "width": 0.28,
-      "height": 0.22,
-      "groupedSkus": []
-    },
-    {
-      "sku": "OCX-SW-G",
-      "name": "OCX stretch wrap",
-      "x": 0.65,
-      "y": 0.42,
-      "width": 0.28,
-      "height": 0.22,
-      "groupedSkus": []
+      "sku": "COY-IS-CK",
+      "name": "Accessories and Counters",
+      "x": 0.52,
+      "y": 0.78,
+      "width": 0.46,
+      "height": 0.15,
+      "groupedSkus": [
+        "COY-IS-CK",
+        "COY-MM",
+        "OCX",
+        "OCX-C2C-G",
+        "OCX-SW-G"
+      ]
     }
   ],
   "82": [
     {
       "sku": "TRP2-1-S/B",
       "name": "Trappa Poster Frame",
-      "x": 0.04,
-      "y": 0.18,
-      "width": 0.92,
-      "height": 0.32,
+      "x": 0.38,
+      "y": 0.465,
+      "width": 0.32,
+      "height": 0.235,
       "groupedSkus": [
         "TRP2-1-S/B",
         "TRP2-2-S/B",
         "TRP2-11-S/B",
         "TRP2-12-S/B",
         "TRP2-4-S/B",
-        "TRP2-5-S/B",
+        "TRP2-5-S/B"
+      ]
+    },
+    {
+      "sku": "TRP2-6-S/B",
+      "name": "Trappa Poster Frame",
+      "x": 0.7,
+      "y": 0.465,
+      "width": 0.29,
+      "height": 0.195,
+      "groupedSkus": [
         "TRP2-6-S/B",
         "TRP2-7-S/B",
         "TRP2-8-S/B",
@@ -2353,10 +2206,10 @@
     {
       "sku": "LED-SNAP-03-2",
       "name": "Trappa Light Box",
-      "x": 0.55,
-      "y": 0.6,
+      "x": 0.05,
+      "y": 0.915,
       "width": 0.42,
-      "height": 0.38,
+      "height": 0.065,
       "groupedSkus": [
         "LED-SNAP-03-2",
         "LED-SNAP-04-2",
@@ -2367,49 +2220,11 @@
   "83": [
     {
       "sku": "VFE-S-01",
-      "name": "Square 01",
-      "x": 0.03,
-      "y": 0.68,
-      "width": 0.25,
-      "height": 0.18,
-      "groupedSkus": [
-        "VFE-S-01",
-        "VFE-S-02",
-        "VFE-S-03",
-        "VFE-S-04",
-        "VFE-S-05",
-        "VFE-R-01",
-        "VFE-R-02",
-        "VFE-R-03",
-        "VFE-R-04"
-      ]
-    },
-    {
-      "sku": "VFE-S-05",
-      "name": "Square 05 - Wall Display Example",
-      "x": 0.3,
-      "y": 0.65,
+      "name": "Square 01 - 11.8\"w x 11.8\"h x .79\"d",
+      "x": 0.05,
+      "y": 0.39,
       "width": 0.45,
-      "height": 0.23,
-      "groupedSkus": [
-        "VFE-S-01",
-        "VFE-S-02",
-        "VFE-S-03",
-        "VFE-S-04",
-        "VFE-S-05",
-        "VFE-R-01",
-        "VFE-R-02",
-        "VFE-R-03",
-        "VFE-R-04"
-      ]
-    },
-    {
-      "sku": "VFE-R-04",
-      "name": "Rectangle 04 - Retail Setting",
-      "x": 0.42,
-      "y": 0.86,
-      "width": 0.55,
-      "height": 0.12,
+      "height": 0.32,
       "groupedSkus": [
         "VFE-S-01",
         "VFE-S-02",
@@ -2427,64 +2242,88 @@
     {
       "sku": "MOD-FRM-01-M-TL",
       "name": "Banner 1",
-      "x": 0.15,
-      "y": 0.17,
-      "width": 0.22,
-      "height": 0.25,
-      "groupedSkus": []
-    },
-    {
-      "sku": "MOD-FRM-02-M-TL",
-      "name": "Banner 2",
-      "x": 0.37,
-      "y": 0.17,
-      "width": 0.2,
-      "height": 0.25,
-      "groupedSkus": []
-    },
-    {
-      "sku": "MOD-FRM-03-M-TL",
-      "name": "Banner 3",
-      "x": 0.6,
-      "y": 0.17,
-      "width": 0.2,
-      "height": 0.25,
-      "groupedSkus": []
-    },
-    {
-      "sku": "MOD-FRM-04-M-TL",
-      "name": "Banner 4",
-      "x": 0.08,
-      "y": 0.43,
-      "width": 0.28,
-      "height": 0.25,
-      "groupedSkus": []
-    },
-    {
-      "sku": "MOD-FRM-05-M-TL",
-      "name": "Banner 5",
-      "x": 0.35,
-      "y": 0.43,
-      "width": 0.22,
-      "height": 0.25,
-      "groupedSkus": []
-    },
-    {
-      "sku": "MOD-FRM-06-M-TL",
-      "name": "Banner 6",
-      "x": 0.58,
-      "y": 0.43,
-      "width": 0.25,
-      "height": 0.25,
-      "groupedSkus": []
+      "x": 0.05,
+      "y": 0.76,
+      "width": 0.58,
+      "height": 0.48,
+      "groupedSkus": [
+        "MOD-FRM-01-M-TL",
+        "MOD-FRM-02-M-TL",
+        "MOD-FRM-03-M-TL",
+        "MOD-FRM-04-M-TL",
+        "MOD-FRM-05-M-TL",
+        "MOD-FRM-06-M-TL",
+        "MOD-FRM-07-M-TL",
+        "MOD-FRM-08-M-TL",
+        "MOD-FRM-09-M-TL",
+        "MOD-FRM-10-M-TL",
+        "MOD-FRM-11-M-TL",
+        "MOD-FRM-12-M-TL",
+        "MOD-FRM-13-M-TL",
+        "MOD-FRM-14-M-TL"
+      ]
     },
     {
       "sku": "MOD-CNTR-M",
       "name": "Modulate Counter",
-      "x": 0.55,
-      "y": 0.73,
-      "width": 0.4,
-      "height": 0.2,
+      "x": 0.62,
+      "y": 0.9,
+      "width": 0.34,
+      "height": 0.05,
+      "groupedSkus": []
+    },
+    {
+      "sku": "BANNER-1",
+      "name": "Banner 1",
+      "x": 0.17,
+      "y": 0.36,
+      "width": 0.1,
+      "height": 0.03,
+      "groupedSkus": []
+    },
+    {
+      "sku": "BANNER-2",
+      "name": "Banner 2",
+      "x": 0.41,
+      "y": 0.36,
+      "width": 0.1,
+      "height": 0.03,
+      "groupedSkus": []
+    },
+    {
+      "sku": "BANNER-3",
+      "name": "Banner 3",
+      "x": 0.65,
+      "y": 0.36,
+      "width": 0.1,
+      "height": 0.03,
+      "groupedSkus": []
+    },
+    {
+      "sku": "BANNER-4",
+      "name": "Banner 4",
+      "x": 0.14,
+      "y": 0.59,
+      "width": 0.1,
+      "height": 0.03,
+      "groupedSkus": []
+    },
+    {
+      "sku": "BANNER-5",
+      "name": "Banner 5",
+      "x": 0.41,
+      "y": 0.59,
+      "width": 0.1,
+      "height": 0.03,
+      "groupedSkus": []
+    },
+    {
+      "sku": "BANNER-6",
+      "name": "Banner 6",
+      "x": 0.65,
+      "y": 0.59,
+      "width": 0.1,
+      "height": 0.03,
       "groupedSkus": []
     }
   ],
@@ -2493,19 +2332,20 @@
       "sku": "MOD-DOOR-M",
       "name": "Modulate Door",
       "x": 0.04,
-      "y": 0.73,
-      "width": 0.22,
-      "height": 0.2,
+      "y": 0.89,
+      "width": 0.38,
+      "height": 0.05,
       "groupedSkus": []
     },
     {
       "sku": "MOD-ML-01",
       "name": "Accent Ladder",
-      "x": 0.42,
-      "y": 0.72,
-      "width": 0.28,
-      "height": 0.22,
+      "x": 0.48,
+      "y": 0.89,
+      "width": 0.42,
+      "height": 0.07,
       "groupedSkus": [
+        "MOD-ML-01",
         "MOD-ML-02"
       ]
     }
@@ -2514,123 +2354,116 @@
     {
       "sku": "MOD-30-02-M-TL",
       "name": "30' Inline Modulate Magnetic Display",
-      "x": 0.1,
-      "y": 0.24,
-      "width": 0.75,
-      "height": 0.2,
+      "x": 0.08,
+      "y": 0.44,
+      "width": 0.18,
+      "height": 0.03,
       "groupedSkus": []
     },
     {
       "sku": "MOD-20-02-M-TL",
       "name": "20' Inline Modulate Magnetic Display",
-      "x": 0.15,
-      "y": 0.48,
-      "width": 0.6,
-      "height": 0.2,
+      "x": 0.16,
+      "y": 0.68,
+      "width": 0.18,
+      "height": 0.03,
       "groupedSkus": []
     },
     {
       "sku": "MOD-10-03-M-TL",
       "name": "10' Inline Modulate Magnetic Display",
-      "x": 0.1,
-      "y": 0.73,
-      "width": 0.35,
-      "height": 0.18,
+      "x": 0.14,
+      "y": 0.9,
+      "width": 0.18,
+      "height": 0.03,
       "groupedSkus": []
     },
     {
       "sku": "MOD-10-04-M-TL",
       "name": "10' Inline Modulate Magnetic Display",
-      "x": 0.48,
-      "y": 0.73,
-      "width": 0.32,
-      "height": 0.18,
+      "x": 0.5,
+      "y": 0.9,
+      "width": 0.18,
+      "height": 0.03,
       "groupedSkus": []
     }
   ],
   "93": [
     {
       "sku": "MOD-30-01-M-TL",
-      "name": "30' Inline Display (converts to 20' or two 10' displays)",
-      "x": 0.04,
-      "y": 0.22,
-      "width": 0.45,
-      "height": 0.22,
-      "groupedSkus": []
+      "name": "30' Inline Display",
+      "x": 0.02,
+      "y": 0.47,
+      "width": 0.16,
+      "height": 0.03
     },
     {
       "sku": "MOD-20-01-M-TL",
       "name": "20' Inline Display - Kit includes banners 3, 6, 5, 6",
-      "x": 0.52,
-      "y": 0.17,
-      "width": 0.42,
-      "height": 0.18,
-      "groupedSkus": []
+      "x": 0.55,
+      "y": 0.36,
+      "width": 0.35,
+      "height": 0.05
     },
     {
       "sku": "MOD-10-01-M-TL",
       "name": "10' Inline Display - Kit includes banners 4, 6, 3",
-      "x": 0.52,
-      "y": 0.4,
+      "x": 0.5,
+      "y": 0.53,
       "width": 0.2,
-      "height": 0.16,
-      "groupedSkus": []
+      "height": 0.06
     },
     {
       "sku": "MOD-10-02-M-TL",
       "name": "10' Inline Display - Kit includes banners 6, 4, 3",
-      "x": 0.74,
-      "y": 0.4,
+      "x": 0.71,
+      "y": 0.53,
       "width": 0.2,
-      "height": 0.16,
-      "groupedSkus": []
+      "height": 0.06
     },
     {
       "sku": "MOD-30-03-M-TL",
-      "name": "30' Inline Display (converts to 20' or two 10' displays)",
-      "x": 0.04,
-      "y": 0.62,
-      "width": 0.45,
-      "height": 0.22,
-      "groupedSkus": []
+      "name": "30' Inline Display",
+      "x": 0.02,
+      "y": 0.88,
+      "width": 0.16,
+      "height": 0.03
     },
     {
       "sku": "MOD-20-03-M-TL",
       "name": "20' Inline Display - Kit includes banners 11, 10, 7, 10, 11",
-      "x": 0.52,
-      "y": 0.58,
-      "width": 0.42,
-      "height": 0.16,
-      "groupedSkus": []
+      "x": 0.55,
+      "y": 0.76,
+      "width": 0.4,
+      "height": 0.05
     },
     {
       "sku": "MOD-10-05-M-TL",
       "name": "10' Inline Display - Kit includes banners 11, 10, 11",
-      "x": 0.52,
-      "y": 0.8,
+      "x": 0.5,
+      "y": 0.93,
       "width": 0.2,
-      "height": 0.14,
-      "groupedSkus": []
+      "height": 0.06
     },
     {
       "sku": "MOD-10-06-M-TL",
       "name": "10' Inline Display - Kit includes banners 9 & 10",
-      "x": 0.74,
-      "y": 0.8,
+      "x": 0.71,
+      "y": 0.93,
       "width": 0.2,
-      "height": 0.14,
-      "groupedSkus": []
+      "height": 0.06
     }
   ],
   "95": [
     {
       "sku": "FMLT-E-S-600-2",
-      "name": "Formulate Essential Banner Display 23.5\" wide",
-      "x": 0.03,
-      "y": 0.18,
-      "width": 0.55,
-      "height": 0.35,
+      "name": "Formulate Essential Banner 600 - Straight",
+      "x": 0.045,
+      "y": 0.617,
+      "width": 0.38,
+      "height": 0.22,
       "groupedSkus": [
+        "FMLT-E-S-600-2",
         "FMLT-E-S-800-2",
         "FMLT-E-S-850-2",
         "FMLT-E-S-920-2",
@@ -2644,19 +2477,19 @@
     {
       "sku": "FMLT-ESS-STT-01",
       "name": "Formulate Essential Tabletop 8' Straight",
-      "x": 0.42,
-      "y": 0.1,
-      "width": 0.5,
-      "height": 0.38,
+      "x": 0.7,
+      "y": 0.485,
+      "width": 0.22,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "FMLT-ESS-S08-01",
       "name": "Formulate Essential 8' Straight Display",
-      "x": 0.42,
-      "y": 0.55,
-      "width": 0.52,
-      "height": 0.38,
+      "x": 0.7,
+      "y": 0.88,
+      "width": 0.22,
+      "height": 0.04,
       "groupedSkus": []
     }
   ],
@@ -2664,22 +2497,32 @@
     {
       "sku": "FMLT-ESS-S10-01",
       "name": "10' straight Formulate Essential display",
-      "x": 0.42,
-      "y": 0.18,
-      "width": 0.55,
-      "height": 0.32,
+      "x": 0.05,
+      "y": 0.33,
+      "width": 0.52,
+      "height": 0.08,
+      "groupedSkus": [
+        "FMLT-ESS-S10-01",
+        "FMLT-E-SC10-01"
+      ]
+    },
+    {
+      "sku": "FMLT-ESS-S10-01",
+      "name": "Straight Formulate Essential display",
+      "x": 0.44,
+      "y": 0.46,
+      "width": 0.16,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "FMLT-ESS-SC10-01",
       "name": "Serpentine Curved Formulate Essential display",
-      "x": 0.42,
-      "y": 0.55,
-      "width": 0.56,
-      "height": 0.35,
-      "groupedSkus": [
-        "FMLT-E-SC10-01"
-      ]
+      "x": 0.36,
+      "y": 0.84,
+      "width": 0.2,
+      "height": 0.04,
+      "groupedSkus": []
     }
   ],
   "100": [
@@ -2687,92 +2530,113 @@
       "sku": "FMLT-WL01",
       "name": "Accent 01 - Pillowcase fabric graphic",
       "x": 0.03,
-      "y": 0.42,
+      "y": 0.6,
       "width": 0.15,
-      "height": 0.22,
+      "height": 0.06,
       "groupedSkus": []
     },
     {
       "sku": "FMLT-WL02",
       "name": "Accent 02 - Three 20\"w shelves and top and bottom printed infill panels",
-      "x": 0.19,
-      "y": 0.42,
-      "width": 0.15,
-      "height": 0.22,
+      "x": 0.17,
+      "y": 0.6,
+      "width": 0.2,
+      "height": 0.1,
       "groupedSkus": []
     },
     {
       "sku": "FMLT-WL03-L/R",
-      "name": "Accent 03 - Choice of right-hand or left-hand arm tables, no table, top and bottom printed infill panels; fits a medium sized monitor",
-      "x": 0.37,
-      "y": 0.42,
-      "width": 0.15,
-      "height": 0.22,
+      "name": "Accent 03 - Choice of right-hand or left-hand arm tables",
+      "x": 0.38,
+      "y": 0.6,
+      "width": 0.2,
+      "height": 0.14,
       "groupedSkus": []
     },
     {
       "sku": "FMLT-WL04",
-      "name": "Accent 04 - Features a 36\"w table top, top and bottom hook & loop applied printed fabric graphics and hardware mounts for a medium sized monitor",
-      "x": 0.57,
-      "y": 0.42,
-      "width": 0.18,
-      "height": 0.22,
+      "name": "Formulate Accent 04",
+      "x": 0.6,
+      "y": 0.6,
+      "width": 0.2,
+      "height": 0.12,
       "groupedSkus": []
     },
     {
       "sku": "FMLT-WL07",
-      "name": "Accent 07 - Two 30\"w shelves and a 36\"w fabric counter adds space for small products to be displayed with style",
-      "x": 0.78,
-      "y": 0.42,
+      "name": "Accent 07 - Two 30\"w shelves and a 36\"w fabric counter",
+      "x": 0.8,
+      "y": 0.6,
       "width": 0.18,
-      "height": 0.22,
+      "height": 0.1,
       "groupedSkus": []
+    },
+    {
+      "sku": "FMLT-WL01",
+      "name": "SKU Bank - All Accent Ladders",
+      "x": 0.03,
+      "y": 0.85,
+      "width": 0.42,
+      "height": 0.12,
+      "groupedSkus": [
+        "FMLT-WL01",
+        "FMLT-WL02",
+        "FMLT-WL03-L/R",
+        "FMLT-WL04",
+        "FMLT-WL07"
+      ]
     }
   ],
   "101": [
     {
       "sku": "FMLT-WBWC",
       "name": "Backwall Connector",
-      "x": 0.28,
-      "y": 0.03,
-      "width": 0.55,
-      "height": 0.32,
-      "groupedSkus": []
+      "x": 0.33,
+      "y": 0.84,
+      "width": 0.52,
+      "height": 0.13,
+      "groupedSkus": [
+        "FMLT-WBWC",
+        "FMLT-WBWC-03",
+        "FMLT-WBWC-04",
+        "FMLT-WBWC-05",
+        "FMLT-WBWC-07"
+      ]
     },
     {
       "sku": "FMLT-WBWC-03",
       "name": "Connector 03",
       "x": 0.02,
-      "y": 0.4,
-      "width": 0.22,
-      "height": 0.28,
+      "y": 0.64,
+      "width": 0.2,
+      "height": 0.05,
       "groupedSkus": []
     },
     {
       "sku": "FMLT-WBWC-04",
       "name": "Connector 04",
-      "x": 0.26,
-      "y": 0.4,
-      "width": 0.22,
-      "height": 0.28,
+      "x": 0.27,
+      "y": 0.64,
+      "width": 0.2,
+      "height": 0.05,
       "groupedSkus": []
     },
     {
       "sku": "FMLT-WBWC-05",
       "name": "Connector 05",
-      "x": 0.5,
-      "y": 0.4,
-      "width": 0.22,
-      "height": 0.28,
+      "x": 0.52,
+      "y": 0.64,
+      "width": 0.2,
+      "height": 0.05,
       "groupedSkus": []
     },
     {
       "sku": "FMLT-WBWC-07",
       "name": "Connector 07",
-      "x": 0.74,
-      "y": 0.4,
-      "width": 0.22,
-      "height": 0.28,
+      "x": 0.76,
+      "y": 0.64,
+      "width": 0.2,
+      "height": 0.05,
       "groupedSkus": []
     }
   ],
@@ -2780,37 +2644,27 @@
     {
       "sku": "FMLT-WBWA-04C-L/R",
       "name": "Backwall Accent 04",
-      "x": 0.42,
-      "y": 0.15,
-      "width": 0.55,
-      "height": 0.22
-    },
-    {
-      "sku": "FMLT-WBWA-05",
-      "name": "Backwall Accent 05",
-      "x": 0.42,
-      "y": 0.4,
-      "width": 0.55,
-      "height": 0.22
-    },
-    {
-      "sku": "FMLT-WBWA-06",
-      "name": "Backwall Accent 06",
-      "x": 0.42,
-      "y": 0.65,
-      "width": 0.55,
-      "height": 0.22
+      "x": 0.37,
+      "y": 0.89,
+      "width": 0.56,
+      "height": 0.09,
+      "groupedSkus": [
+        "FMLT-WBWA-04C-L/R",
+        "FMLT-WBWA-05",
+        "FMLT-WBWA-06"
+      ]
     }
   ],
   "103": [
     {
       "sku": "FMLT-10FT-EXT-3",
-      "name": "Formulate Master Height Extenders",
-      "x": 0.42,
-      "y": 0.05,
-      "width": 0.52,
-      "height": 0.35,
+      "name": "8' / 10' Straight",
+      "x": 0.04,
+      "y": 0.33,
+      "width": 0.48,
+      "height": 0.17,
       "groupedSkus": [
+        "FMLT-10FT-EXT-3",
         "FMLT-10FT-EXT-3-HC",
         "FMLT-10FT-EXT-4-HC",
         "FMLT-10FT-EXT-5",
@@ -2820,46 +2674,57 @@
     {
       "sku": "FMLT-WH2010",
       "name": "20'w Extended Height Horizontal",
-      "x": 0,
-      "y": 0.52,
-      "width": 0.22,
-      "height": 0.22,
+      "x": 0.3,
+      "y": 0.82,
+      "width": 0.55,
+      "height": 0.15,
       "groupedSkus": [
-        "FMLT-WS2010"
-      ]
-    },
-    {
-      "sku": "FMLT-WH1010",
-      "name": "10'w Horizontal",
-      "x": 0.22,
-      "y": 0.5,
-      "width": 0.32,
-      "height": 0.24,
-      "groupedSkus": [
-        "FMLT-WS1010"
-      ]
-    },
-    {
-      "sku": "FMLT-WH0810",
-      "name": "8'w Horizontal",
-      "x": 0.58,
-      "y": 0.52,
-      "width": 0.22,
-      "height": 0.22,
-      "groupedSkus": [
+        "FMLT-WH2010",
+        "FMLT-WS2010",
+        "FMLT-WH1010",
+        "FMLT-WS1010",
+        "FMLT-WH0810",
         "FMLT-WS0810"
       ]
+    },
+    {
+      "sku": "FMLT-WS2010",
+      "name": "20'w Extended Height Straight",
+      "x": 0.04,
+      "y": 0.73,
+      "width": 0.22,
+      "height": 0.06,
+      "groupedSkus": []
+    },
+    {
+      "sku": "FMLT-WS1010",
+      "name": "10'w Straight",
+      "x": 0.33,
+      "y": 0.73,
+      "width": 0.22,
+      "height": 0.06,
+      "groupedSkus": []
+    },
+    {
+      "sku": "FMLT-WS0810",
+      "name": "8'w Straight",
+      "x": 0.63,
+      "y": 0.73,
+      "width": 0.22,
+      "height": 0.06,
+      "groupedSkus": []
     }
   ],
   "104": [
     {
       "sku": "FMLT-BL-WSS3-01",
       "name": "3' Backlit kit",
-      "x": 0.03,
-      "y": 0.22,
+      "x": 0.27,
+      "y": 0.72,
       "width": 0.55,
-      "height": 0.43,
+      "height": 0.12,
       "groupedSkus": [
+        "FMLT-BL-WSS3-01",
         "FMLT-BL-WSS5-01",
         "FMLT-BL-WSS8-01"
       ]
@@ -2868,467 +2733,487 @@
   "105": [
     {
       "sku": "FMLT-LT-01",
-      "name": "8'/10' lite display",
-      "x": 0.3,
-      "y": 0.15,
-      "width": 0.65,
-      "height": 0.42,
+      "name": "Formulate Lite 8ft Fabric Backwall",
+      "x": 0.05,
+      "y": 0.38,
+      "width": 0.42,
+      "height": 0.06,
       "groupedSkus": []
     },
     {
       "sku": "FMLT-WTT-V01",
-      "name": "tabletop 01",
+      "name": "Formulate Master Tabletop TT1 Fabric Backwall",
       "x": 0.05,
-      "y": 0.55,
-      "width": 0.45,
-      "height": 0.28,
+      "y": 0.88,
+      "width": 0.48,
+      "height": 0.1,
       "groupedSkus": [
-        "FMLT-WTT-V03"
+        "FMLT-WTT-V01",
+        "FMLT-WTT-V03",
+        "FMLT-WTT-S01"
       ]
-    },
-    {
-      "sku": "FMLT-WTT-S01",
-      "name": "tabletop 04",
-      "x": 0.5,
-      "y": 0.55,
-      "width": 0.45,
-      "height": 0.38,
-      "groupedSkus": []
     }
   ],
   "108": [
     {
       "sku": "FMLT-DS-10-01",
-      "name": "Kit 01 - 116.3\"w x 97.42\"h x 50.1\"d",
-      "x": 0.02,
-      "y": 0.25,
-      "width": 0.3,
-      "height": 0.25,
-      "groupedSkus": []
+      "name": "Formulate Designer Series 10ft Fabric Backwall Kit 01",
+      "x": 0.03,
+      "y": 0.48,
+      "width": 0.12,
+      "height": 0.035
     },
     {
       "sku": "FMLT-DS-10-02",
-      "name": "Kit 02 - 119.19\"w x 105.41\"h x 37.79\"d",
-      "x": 0.32,
-      "y": 0.22,
-      "width": 0.32,
-      "height": 0.28,
-      "groupedSkus": []
+      "name": "Formulate Designer Series 10ft Fabric Backwall Kit 02",
+      "x": 0.33,
+      "y": 0.48,
+      "width": 0.12,
+      "height": 0.035
     },
     {
       "sku": "FMLT-DS-10-03",
-      "name": "Kit 03 - 119.95\"w x 98.36\"h x 17.7\"d",
-      "x": 0.65,
-      "y": 0.25,
-      "width": 0.33,
-      "height": 0.25,
-      "groupedSkus": []
+      "name": "Formulate Designer Series 10ft Fabric Backwall Kit 03",
+      "x": 0.64,
+      "y": 0.48,
+      "width": 0.12,
+      "height": 0.035
     },
     {
       "sku": "FMLT-DS-10-04",
-      "name": "Kit 04 - 120.01\"w x 98.17\"h x 41.6\"d",
-      "x": 0.02,
-      "y": 0.52,
-      "width": 0.3,
-      "height": 0.25,
-      "groupedSkus": []
+      "name": "Formulate Designer Series 10ft Fabric Backwall Kit 04",
+      "x": 0.03,
+      "y": 0.73,
+      "width": 0.12,
+      "height": 0.035
     },
     {
       "sku": "FMLT-DS-10-05",
-      "name": "Kit 05 - 116.9\"w x 98.27\"h x 29.8\"d",
-      "x": 0.32,
-      "y": 0.52,
-      "width": 0.32,
-      "height": 0.25,
-      "groupedSkus": []
+      "name": "Formulate Designer Series 10ft Fabric Backwall Kit 05",
+      "x": 0.33,
+      "y": 0.73,
+      "width": 0.12,
+      "height": 0.035
     },
     {
       "sku": "FMLT-DS-10-06",
-      "name": "Kit 06 - 116.76\"w x 98.62\"h x 35.59\"d",
-      "x": 0.65,
-      "y": 0.52,
-      "width": 0.33,
-      "height": 0.25,
-      "groupedSkus": []
+      "name": "Formulate Designer Series 10ft Fabric Backwall Kit 06",
+      "x": 0.64,
+      "y": 0.73,
+      "width": 0.12,
+      "height": 0.035
+    },
+    {
+      "sku": "FMLT-DS-10-01",
+      "name": "Formulate Designer Series 10ft Fabric Backwall Kits Table",
+      "x": 0.32,
+      "y": 0.81,
+      "width": 0.41,
+      "height": 0.135,
+      "groupedSkus": [
+        "FMLT-DS-10-01",
+        "FMLT-DS-10-02",
+        "FMLT-DS-10-03",
+        "FMLT-DS-10-04",
+        "FMLT-DS-10-05",
+        "FMLT-DS-10-06"
+      ]
     }
   ],
   "109": [
     {
       "sku": "FMLT-DS-10-07",
-      "name": "Kit 07 - 10' Display, 118.2\"w x 98.22\"h x 28.2\"d",
+      "name": "Formulate Designer Series 10ft Fabric Backwall Kit 07",
       "x": 0.02,
-      "y": 0.22,
-      "width": 0.32,
-      "height": 0.28,
+      "y": 0.47,
+      "width": 0.12,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "FMLT-DS-10-08",
-      "name": "Kit 08 - 10' Display, 117.2\"w x 97.41\"h x 32.5\"d",
-      "x": 0.33,
-      "y": 0.22,
-      "width": 0.33,
-      "height": 0.28,
+      "name": "Formulate Designer Series 10ft Fabric Backwall Kit 08",
+      "x": 0.34,
+      "y": 0.47,
+      "width": 0.12,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "FMLT-DS-10-09",
-      "name": "Kit 09 - 10' Display, 118.4\"w x 98.32\"h x 28.5\"d",
-      "x": 0.64,
-      "y": 0.22,
-      "width": 0.34,
-      "height": 0.28,
+      "name": "Formulate Designer Series 10ft Fabric Backwall Kit 09",
+      "x": 0.66,
+      "y": 0.47,
+      "width": 0.12,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "FMLT-DS-10-10",
-      "name": "Kit 10 - 10' Display, 115.4\"w x 98.28\"h x 36.5\"d",
+      "name": "Formulate Designer Series 10ft Fabric Backwall Kit 10",
       "x": 0.02,
-      "y": 0.52,
-      "width": 0.32,
-      "height": 0.28,
+      "y": 0.77,
+      "width": 0.12,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "FMLT-DS-10-11",
-      "name": "Kit 11 - 10' Display, 111.1\"w x 96\"h x 50.7\"d",
-      "x": 0.33,
-      "y": 0.52,
-      "width": 0.33,
-      "height": 0.28,
+      "name": "Formulate Designer Series 10ft Fabric Backwall Kit 11",
+      "x": 0.3,
+      "y": 0.77,
+      "width": 0.12,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "FMLT-DS-10-13",
-      "name": "Kit 13 - 10' Display Counter, 114\"w x 90.89\"h x 25.59\"d",
-      "x": 0.64,
-      "y": 0.52,
-      "width": 0.34,
-      "height": 0.28,
+      "name": "Formulate Designer Series 10ft Fabric Backwall Kit 13",
+      "x": 0.62,
+      "y": 0.77,
+      "width": 0.12,
+      "height": 0.04,
       "groupedSkus": []
+    },
+    {
+      "sku": "FMLT-DS-10-07",
+      "name": "Formulate Designer Series 10ft Fabric Backwall Kits Table",
+      "x": 0.33,
+      "y": 0.84,
+      "width": 0.42,
+      "height": 0.13,
+      "groupedSkus": [
+        "FMLT-DS-10-07",
+        "FMLT-DS-10-08",
+        "FMLT-DS-10-09",
+        "FMLT-DS-10-10",
+        "FMLT-DS-10-11",
+        "FMLT-DS-10-13"
+      ]
     }
   ],
   "110": [
     {
       "sku": "FMLT-DS-20-01",
-      "name": "Kit 01 - 226.4\"w x 96\"h x 29.33\"d",
-      "x": 0.03,
-      "y": 0.25,
-      "width": 0.42,
-      "height": 0.22,
+      "name": "Kit 01",
+      "x": 0.04,
+      "y": 0.46,
+      "width": 0.12,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "FMLT-DS-20-02",
-      "name": "Kit 02 - 230\"w x 96\"h x 40\"d",
-      "x": 0.45,
-      "y": 0.22,
-      "width": 0.54,
-      "height": 0.27,
+      "name": "Kit 02",
+      "x": 0.47,
+      "y": 0.46,
+      "width": 0.12,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "FMLT-DS-20-03",
-      "name": "Kit 03 - 227\"w x 96\"h x 40.75\"d",
-      "x": 0.03,
-      "y": 0.5,
-      "width": 0.42,
-      "height": 0.22,
+      "name": "Kit 03",
+      "x": 0.04,
+      "y": 0.72,
+      "width": 0.12,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "FMLT-DS-20-04",
-      "name": "Kit 04 - 234.77\"w x 96\"h x 17.72\"d",
-      "x": 0.45,
-      "y": 0.5,
-      "width": 0.42,
-      "height": 0.22,
+      "name": "Kit 04",
+      "x": 0.47,
+      "y": 0.72,
+      "width": 0.12,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "FMLT-DS-20-05",
-      "name": "Kit 05 - 234.75\"w x 98.41\"h x 39.2\"d",
-      "x": 0.03,
-      "y": 0.76,
-      "width": 0.35,
-      "height": 0.2,
+      "name": "Kit 05",
+      "x": 0.04,
+      "y": 0.95,
+      "width": 0.12,
+      "height": 0.04,
       "groupedSkus": []
+    },
+    {
+      "sku": "FMLT-DS-20-01",
+      "name": "Kit 01 - Kit 05 SKU Bank",
+      "x": 0.47,
+      "y": 0.8,
+      "width": 0.48,
+      "height": 0.16,
+      "groupedSkus": [
+        "FMLT-DS-20-01",
+        "FMLT-DS-20-02",
+        "FMLT-DS-20-03",
+        "FMLT-DS-20-04",
+        "FMLT-DS-20-05"
+      ]
     }
   ],
   "111": [
     {
       "sku": "FMLT-DS-20-06",
-      "name": "Kit 06 - 20' Display, 233\"w x 96\"h x 27.58\"d",
-      "x": 0.02,
-      "y": 0.22,
-      "width": 0.48,
-      "height": 0.22,
-      "groupedSkus": []
-    },
-    {
-      "sku": "FMLT-DS-20-07",
-      "name": "Kit 07 - 20' Display, 224.57\"w x 96\"h x 31.54\"d",
+      "name": "Formulate Designer Series 20ft Fabric Backwall Display Kits",
       "x": 0.5,
-      "y": 0.22,
-      "width": 0.48,
-      "height": 0.22,
-      "groupedSkus": []
-    },
-    {
-      "sku": "FMLT-DS-20-08",
-      "name": "Kit 08 - 20' Display, 235.98\"w x 96\"h x 27.36\"d",
-      "x": 0.02,
-      "y": 0.48,
-      "width": 0.48,
-      "height": 0.22,
-      "groupedSkus": []
-    },
-    {
-      "sku": "FMLT-DS-20-12",
-      "name": "Kit 12 - 20' Display, 232.06\"w x 96\"h x 33.67\"d",
-      "x": 0.5,
-      "y": 0.48,
-      "width": 0.48,
-      "height": 0.22,
-      "groupedSkus": []
-    },
-    {
-      "sku": "FMLT-DS-20-13",
-      "name": "Kit 13 - 20' Display, 240\"w x 96\"h x 42.63\"d",
-      "x": 0.02,
-      "y": 0.73,
-      "width": 0.35,
-      "height": 0.2,
-      "groupedSkus": []
+      "y": 0.79,
+      "width": 0.45,
+      "height": 0.17,
+      "groupedSkus": [
+        "FMLT-DS-20-06",
+        "FMLT-DS-20-07",
+        "FMLT-DS-20-08",
+        "FMLT-DS-20-12",
+        "FMLT-DS-20-13"
+      ]
     }
   ],
   "112": [
     {
       "sku": "KIT 01",
       "name": "30' Formulate Designer Series Kit 01",
-      "x": 0.13,
-      "y": 0.27,
-      "width": 0.72,
-      "height": 0.2,
+      "x": 0.06,
+      "y": 0.47,
+      "width": 0.1,
+      "height": 0.035,
       "groupedSkus": []
     },
     {
       "sku": "KIT 03",
       "name": "30' Formulate Designer Series Kit 03",
-      "x": 0.13,
-      "y": 0.5,
-      "width": 0.72,
-      "height": 0.2,
+      "x": 0.06,
+      "y": 0.7,
+      "width": 0.1,
+      "height": 0.035,
       "groupedSkus": []
     },
     {
       "sku": "KIT 04",
       "name": "30' Formulate Designer Series Kit 04",
-      "x": 0.13,
-      "y": 0.73,
-      "width": 0.72,
-      "height": 0.2,
+      "x": 0.08,
+      "y": 0.92,
+      "width": 0.1,
+      "height": 0.035,
       "groupedSkus": []
     }
   ],
   "113": [
     {
-      "sku": "FMLT-DS-30-05",
-      "name": "kit 05",
-      "x": 0.03,
-      "y": 0.15,
-      "width": 0.85,
-      "height": 0.32,
-      "groupedSkus": []
-    },
-    {
-      "sku": "FMLT-DS-30-06",
-      "name": "kit 06",
-      "x": 0.1,
-      "y": 0.48,
-      "width": 0.8,
-      "height": 0.3,
-      "groupedSkus": []
+      "sku": "FMLT-DS-30-01",
+      "name": "Formulate Designer Series 30ft Fabric Backwall Kit 01",
+      "x": 0.38,
+      "y": 0.78,
+      "width": 0.45,
+      "height": 0.18,
+      "groupedSkus": [
+        "FMLT-DS-30-01",
+        "FMLT-DS-30-03",
+        "FMLT-DS-30-04",
+        "FMLT-DS-30-05",
+        "FMLT-DS-30-06"
+      ]
     }
   ],
   "115": [
     {
       "sku": "CFAB-K-05",
-      "name": "Kit 05 - Formulate Fusion Island Exhibit",
-      "x": 0.03,
-      "y": 0.2,
-      "width": 0.52,
-      "height": 0.42,
-      "groupedSkus": []
-    },
-    {
-      "sku": "CFAB-K-05",
-      "name": "Kit 06 - Formulate Fusion Island Exhibit",
-      "x": 0.03,
-      "y": 0.62,
-      "width": 0.48,
-      "height": 0.32,
+      "name": "Formulate Fusion 20x20 Island Kit 05",
+      "x": 0.44,
+      "y": 0.415,
+      "width": 0.4,
+      "height": 0.045,
       "groupedSkus": []
     }
   ],
   "116": [
     {
       "sku": "CFAB-K-07",
-      "name": "Kit 07 - 20' x 20' Island Exhibit Kit",
-      "x": 0.02,
-      "y": 0.1,
-      "width": 0.42,
-      "height": 0.38,
+      "name": "Formulate Fusion 20x20 Island Kit 07",
+      "x": 0.4,
+      "y": 0.27,
+      "width": 0.38,
+      "height": 0.05,
       "groupedSkus": []
     },
     {
       "sku": "CFAB-K-08",
-      "name": "Kit 08 - 20' x 20' Island Exhibit Kit",
-      "x": 0.02,
-      "y": 0.52,
-      "width": 0.45,
-      "height": 0.4,
+      "name": "Formulate Fusion 20x20 Island Kit 08",
+      "x": 0.4,
+      "y": 0.7,
+      "width": 0.38,
+      "height": 0.05,
       "groupedSkus": []
     }
   ],
   "117": [
     {
       "sku": "CFAB-K-09",
-      "name": "Kit 09 - 20' x 20' Island Exhibit Kit",
-      "x": 0.02,
-      "y": 0.08,
+      "name": "Formulate Fusion 20x20 Island Kit 09",
+      "x": 0.4,
+      "y": 0.29,
       "width": 0.35,
-      "height": 0.32,
-      "groupedSkus": []
+      "height": 0.05
     },
     {
       "sku": "CFAB-K-10",
-      "name": "Kit 10 - 20' x 20' Island Exhibit Kit",
-      "x": 0.02,
-      "y": 0.42,
+      "name": "Formulate Fusion 20x20 Island Kit 10",
+      "x": 0.4,
+      "y": 0.6,
       "width": 0.35,
-      "height": 0.32,
-      "groupedSkus": []
+      "height": 0.05
     },
     {
       "sku": "CFAB-K-11",
       "name": "Kit 11 - 20' x 20' Island Exhibit Kit",
-      "x": 0.02,
-      "y": 0.74,
+      "x": 0.4,
+      "y": 0.89,
       "width": 0.35,
-      "height": 0.24,
-      "groupedSkus": []
+      "height": 0.05
     }
   ],
   "118": [
     {
       "sku": "W-01-C",
-      "name": "Pillar",
+      "name": "Formulate Pillar Counter",
+      "x": 0.08,
+      "y": 0.89,
+      "width": 0.42,
+      "height": 0.14,
+      "groupedSkus": [
+        "W-01-C",
+        "W-02-C",
+        "W-03-C",
+        "W-04-C",
+        "W-05-C"
+      ]
+    },
+    {
+      "sku": "W-06-C-02",
+      "name": "Formulate Bar Counter 02",
+      "x": 0.52,
+      "y": 0.89,
+      "width": 0.44,
+      "height": 0.17,
+      "groupedSkus": [
+        "W-06-C-02",
+        "W-06-C-03",
+        "W-06-C-04",
+        "W-06-C-05",
+        "W-06-C-06",
+        "W-06-C-07"
+      ]
+    },
+    {
+      "sku": "W-01-C",
+      "name": "Formulate Pillar Counter",
       "x": 0.05,
-      "y": 0.17,
-      "width": 0.15,
-      "height": 0.25,
+      "y": 0.43,
+      "width": 0.13,
+      "height": 0.03,
       "groupedSkus": []
     },
     {
       "sku": "W-02-C",
-      "name": "Half moon",
-      "x": 0.2,
-      "y": 0.17,
-      "width": 0.18,
-      "height": 0.25,
+      "name": "Formulate Half Moon Counter",
+      "x": 0.18,
+      "y": 0.43,
+      "width": 0.15,
+      "height": 0.03,
       "groupedSkus": []
     },
     {
       "sku": "W-03-C",
-      "name": "Ellipse",
-      "x": 0.38,
-      "y": 0.17,
-      "width": 0.18,
-      "height": 0.25,
+      "name": "Formulate Ellipse Counter",
+      "x": 0.37,
+      "y": 0.43,
+      "width": 0.14,
+      "height": 0.03,
       "groupedSkus": []
     },
     {
       "sku": "W-04-C",
-      "name": "Bullet",
-      "x": 0.56,
-      "y": 0.17,
-      "width": 0.18,
-      "height": 0.25,
+      "name": "Formulate Bullet Counter",
+      "x": 0.55,
+      "y": 0.43,
+      "width": 0.12,
+      "height": 0.03,
       "groupedSkus": []
     },
     {
       "sku": "W-05-C",
-      "name": "Oval",
-      "x": 0.74,
-      "y": 0.17,
-      "width": 0.18,
-      "height": 0.25,
+      "name": "Formulate Oval Counter",
+      "x": 0.75,
+      "y": 0.43,
+      "width": 0.12,
+      "height": 0.03,
       "groupedSkus": []
     },
     {
       "sku": "W-06-C-02",
-      "name": "Bar 02",
-      "x": 0.03,
-      "y": 0.46,
-      "width": 0.28,
-      "height": 0.22,
+      "name": "Formulate Bar Counter 02",
+      "x": 0.08,
+      "y": 0.66,
+      "width": 0.1,
+      "height": 0.03,
       "groupedSkus": []
     },
     {
       "sku": "W-06-C-03",
-      "name": "Bar 03",
-      "x": 0.34,
-      "y": 0.5,
-      "width": 0.28,
-      "height": 0.18,
+      "name": "Formulate Bar Counter 03",
+      "x": 0.38,
+      "y": 0.66,
+      "width": 0.1,
+      "height": 0.03,
       "groupedSkus": []
     },
     {
       "sku": "W-06-C-04",
-      "name": "Bar 04",
-      "x": 0.65,
-      "y": 0.5,
-      "width": 0.3,
-      "height": 0.18,
+      "name": "Formulate Bar Counter 04",
+      "x": 0.7,
+      "y": 0.66,
+      "width": 0.1,
+      "height": 0.03,
       "groupedSkus": []
     },
     {
       "sku": "W-06-C-05",
-      "name": "Bar 05",
-      "x": 0.03,
-      "y": 0.7,
-      "width": 0.3,
-      "height": 0.18,
+      "name": "Formulate Bar Counter 05",
+      "x": 0.08,
+      "y": 0.86,
+      "width": 0.1,
+      "height": 0.03,
       "groupedSkus": []
     },
     {
       "sku": "W-06-C-06",
-      "name": "Bar 06",
-      "x": 0.34,
-      "y": 0.7,
-      "width": 0.3,
-      "height": 0.18,
+      "name": "Formulate Bar Counter 06",
+      "x": 0.38,
+      "y": 0.86,
+      "width": 0.1,
+      "height": 0.03,
       "groupedSkus": []
     },
     {
       "sku": "W-06-C-07",
       "name": "Bar 07",
-      "x": 0.65,
-      "y": 0.7,
-      "width": 0.3,
-      "height": 0.18,
+      "x": 0.7,
+      "y": 0.86,
+      "width": 0.1,
+      "height": 0.03,
       "groupedSkus": []
     }
   ],
   "122": [
     {
       "sku": "ESS-RNG-0802-2",
-      "name": "Essential Hanging Ring",
-      "x": 0.04,
-      "y": 0.12,
-      "width": 0.42,
-      "height": 0.38,
+      "name": "Essential Hanging Ring 8' dia. x 2'h",
+      "x": 0.65,
+      "y": 0.155,
+      "width": 0.3,
+      "height": 0.305,
       "groupedSkus": [
         "ESS-RNG-0802-2",
         "ESS-RNG-0803-2",
@@ -3343,11 +3228,11 @@
     },
     {
       "sku": "ESS-SQU-0802-2",
-      "name": "Essential Hanging Square",
-      "x": 0.04,
-      "y": 0.56,
-      "width": 0.42,
-      "height": 0.36,
+      "name": "Essential Hanging Square 8'w x 2'h",
+      "x": 0.65,
+      "y": 0.59,
+      "width": 0.3,
+      "height": 0.305,
       "groupedSkus": [
         "ESS-SQU-0802-2",
         "ESS-SQU-0803-2",
@@ -3365,10 +3250,10 @@
     {
       "sku": "RNG-BL-0803",
       "name": "8' dia. x 3'h Backlit Ring Hanging Structure",
-      "x": 0.15,
-      "y": 0.22,
-      "width": 0.65,
-      "height": 0.48,
+      "x": 0.5,
+      "y": 0.855,
+      "width": 0.44,
+      "height": 0.135,
       "groupedSkus": [
         "RNG-BL-0803",
         "RNG-BL-0804",
@@ -3382,11 +3267,11 @@
   "127": [
     {
       "sku": "SQU-BL-0803",
-      "name": "Square Backlit Hanging Structure",
-      "x": 0.05,
-      "y": 0.18,
-      "width": 0.65,
-      "height": 0.48,
+      "name": "Square Backlit Hanging Structure 8'w x 3'h",
+      "x": 0.5,
+      "y": 0.87,
+      "width": 0.42,
+      "height": 0.12,
       "groupedSkus": [
         "SQU-BL-0803",
         "SQU-BL-0804",
@@ -3400,235 +3285,177 @@
   "128": [
     {
       "sku": "FUN-01",
-      "name": "Funnel 01 - 20'h",
-      "x": 0.02,
-      "y": 0.25,
-      "width": 0.3,
-      "height": 0.45,
-      "groupedSkus": []
-    },
-    {
-      "sku": "FUN-02",
-      "name": "Funnel 02 - 16'h",
-      "x": 0.3,
-      "y": 0.25,
-      "width": 0.3,
-      "height": 0.45,
-      "groupedSkus": []
-    },
-    {
-      "sku": "FUN-03",
-      "name": "Funnel 03 - 12'h",
-      "x": 0.6,
-      "y": 0.25,
-      "width": 0.38,
-      "height": 0.45,
-      "groupedSkus": []
-    },
-    {
-      "sku": "FUN-04",
-      "name": "Funnel 04 - 16'h",
-      "x": 0.02,
-      "y": 0.7,
-      "width": 0.3,
-      "height": 0.28,
-      "groupedSkus": []
+      "name": "Funnel 01 - 20'h Formulate Funnel",
+      "x": 0.5,
+      "y": 0.195,
+      "width": 0.48,
+      "height": 0.18,
+      "groupedSkus": [
+        "FUN-01",
+        "FUN-02",
+        "FUN-03",
+        "FUN-04"
+      ]
     }
   ],
   "129": [
     {
       "sku": "COL-01",
-      "name": "Four Sided Tower 01 (3' x 12')",
+      "name": "Formulate Four Sided Tower 01 Tension Fabric Structure",
+      "x": 0.5,
+      "y": 0.22,
+      "width": 0.48,
+      "height": 0.28,
+      "groupedSkus": [
+        "COL-01",
+        "COL-02",
+        "COL-03",
+        "COL-01-BL",
+        "COL-02-BL",
+        "COL-03-BL"
+      ]
+    },
+    {
+      "sku": "COL-01",
+      "name": "12' Four Sided Tower",
       "x": 0.02,
-      "y": 0.3,
-      "width": 0.3,
-      "height": 0.35,
+      "y": 0.6,
+      "width": 0.2,
+      "height": 0.06,
       "groupedSkus": []
     },
     {
       "sku": "COL-02",
-      "name": "Four Sided Tower 02 (3' x 10')",
-      "x": 0.33,
-      "y": 0.33,
-      "width": 0.3,
-      "height": 0.32,
+      "name": "10' Four Sided Tower",
+      "x": 0.3,
+      "y": 0.6,
+      "width": 0.22,
+      "height": 0.06,
       "groupedSkus": []
     },
     {
       "sku": "COL-03",
-      "name": "Four Sided Tower 03 (3' x 8')",
-      "x": 0.63,
-      "y": 0.36,
-      "width": 0.3,
-      "height": 0.29,
+      "name": "8' Four Sided Tower",
+      "x": 0.6,
+      "y": 0.6,
+      "width": 0.18,
+      "height": 0.06,
       "groupedSkus": []
     },
     {
       "sku": "COL-01-BL",
-      "name": "Backlit Four Sided Tower 01 (3' x 12')",
+      "name": "12' Backlit Four Sided Tower",
       "x": 0.02,
-      "y": 0.68,
-      "width": 0.3,
-      "height": 0.27,
+      "y": 0.9,
+      "width": 0.2,
+      "height": 0.07,
       "groupedSkus": []
     },
     {
       "sku": "COL-02-BL",
-      "name": "Backlit Four Sided Tower 02 (3' x 10')",
-      "x": 0.33,
-      "y": 0.68,
-      "width": 0.3,
-      "height": 0.25,
+      "name": "10' Backlit Four Sided Tower",
+      "x": 0.3,
+      "y": 0.9,
+      "width": 0.2,
+      "height": 0.07,
       "groupedSkus": []
     },
     {
       "sku": "COL-03-BL",
-      "name": "Backlit Four Sided Tower 03 (3' x 8')",
-      "x": 0.63,
-      "y": 0.68,
-      "width": 0.3,
-      "height": 0.25,
+      "name": "8' Backlit Four Sided Tower",
+      "x": 0.58,
+      "y": 0.9,
+      "width": 0.22,
+      "height": 0.07,
       "groupedSkus": []
     }
   ],
   "130": [
     {
       "sku": "TOWER-02",
-      "name": "Tower 02 - 10'h",
-      "x": 0.52,
-      "y": 0.18,
-      "width": 0.28,
-      "height": 0.35,
-      "groupedSkus": []
-    },
-    {
-      "sku": "SHD-TOWER-03",
-      "name": "Shield Tower 03 - 12'h",
-      "x": 0.02,
-      "y": 0.45,
-      "width": 0.28,
+      "name": "Formulate 10ft Tower 02 Tension Fabric Structure",
+      "x": 0.04,
+      "y": 0.22,
+      "width": 0.52,
       "height": 0.28,
-      "groupedSkus": []
-    },
-    {
-      "sku": "SHD-TOWER-02",
-      "name": "Shield Tower 02 - 10'h",
-      "x": 0.33,
-      "y": 0.45,
-      "width": 0.28,
-      "height": 0.28,
-      "groupedSkus": []
-    },
-    {
-      "sku": "SHD-TOWER-01",
-      "name": "Shield Tower 01 - 8'h",
-      "x": 0.65,
-      "y": 0.45,
-      "width": 0.28,
-      "height": 0.28,
-      "groupedSkus": []
-    },
-    {
-      "sku": "CYL-01",
-      "name": "Cylinder Tower 01 - 12'h",
-      "x": 0.02,
-      "y": 0.72,
-      "width": 0.28,
-      "height": 0.22,
-      "groupedSkus": []
-    },
-    {
-      "sku": "CYL-02",
-      "name": "Cylinder Tower 02 - 10'h",
-      "x": 0.33,
-      "y": 0.72,
-      "width": 0.28,
-      "height": 0.22,
-      "groupedSkus": []
-    },
-    {
-      "sku": "CYL-03",
-      "name": "Cylinder Tower 03 - 8'h",
-      "x": 0.65,
-      "y": 0.72,
-      "width": 0.28,
-      "height": 0.22,
-      "groupedSkus": []
+      "groupedSkus": [
+        "TOWER-02",
+        "SHD-TOWER-03",
+        "SHD-TOWER-02",
+        "SHD-TOWER-01",
+        "CYL-01",
+        "CYL-02",
+        "CYL-03"
+      ]
     }
   ],
   "131": [
     {
       "sku": "CUBE-2X2-BL",
       "name": "Formulate Backlit Cube",
-      "x": 0.28,
-      "y": 0.25,
-      "width": 0.55,
-      "height": 0.32,
+      "x": 0.04,
+      "y": 0.59,
+      "width": 0.42,
+      "height": 0.045,
       "groupedSkus": []
     },
     {
-      "sku": "CUBE-2X2",
-      "name": "Formulate Cube",
-      "x": 0.28,
-      "y": 0.65,
-      "width": 0.55,
-      "height": 0.25,
-      "groupedSkus": []
+      "sku": "CUBE-2X2-BL",
+      "name": "Formulate Backlit Cube",
+      "x": 0.04,
+      "y": 0.9,
+      "width": 0.42,
+      "height": 0.07,
+      "groupedSkus": [
+        "CUBE-2X2-BL",
+        "CUBE-2X2"
+      ]
     }
   ],
   "134": [
     {
       "sku": "ARCH-01",
-      "name": "Arch 01 12'",
+      "name": "Formulate 12ft Arch 01 Tension Fabric Structure",
       "x": 0.02,
-      "y": 0.13,
-      "width": 0.32,
-      "height": 0.32,
-      "groupedSkus": []
-    },
-    {
-      "sku": "ARCH-01",
-      "name": "Arch 01 12' overhead perspective",
-      "x": 0.34,
-      "y": 0.13,
-      "width": 0.25,
-      "height": 0.32,
+      "y": 0.42,
+      "width": 0.42,
+      "height": 0.14,
       "groupedSkus": []
     },
     {
       "sku": "ARCH-02",
-      "name": "Arch 02 10'",
-      "x": 0.6,
-      "y": 0.13,
-      "width": 0.38,
-      "height": 0.32,
+      "name": "Formulate 10ft Arch 02 Tension Fabric Structure",
+      "x": 0.56,
+      "y": 0.42,
+      "width": 0.4,
+      "height": 0.12,
       "groupedSkus": []
     },
     {
       "sku": "ARCH-03",
-      "name": "Arch 03 20'",
+      "name": "Formulate 20ft Arch 03 Tension Fabric Structure",
       "x": 0.02,
-      "y": 0.55,
+      "y": 0.82,
       "width": 0.3,
-      "height": 0.28,
+      "height": 0.1,
       "groupedSkus": []
     },
     {
       "sku": "ARCH-06",
-      "name": "Arch 06 17'",
-      "x": 0.33,
-      "y": 0.55,
+      "name": "Formulate 12.5ft Arch 06 Tension Fabric Structure",
+      "x": 0.35,
+      "y": 0.82,
       "width": 0.3,
-      "height": 0.28,
+      "height": 0.08,
       "groupedSkus": []
     },
     {
       "sku": "ARCH-07",
-      "name": "Arch 07 10'",
-      "x": 0.64,
-      "y": 0.55,
-      "width": 0.34,
-      "height": 0.28,
+      "name": "Formulate 10ft Arch 07 Tension Fabric Structure",
+      "x": 0.67,
+      "y": 0.82,
+      "width": 0.3,
+      "height": 0.08,
       "groupedSkus": []
     }
   ],
@@ -3636,461 +3463,542 @@
     {
       "sku": "C-WALL",
       "name": "C-shaped wall",
-      "x": 0.02,
-      "y": 0.15,
-      "width": 0.28,
-      "height": 0.25,
+      "x": 0.03,
+      "y": 0.49,
+      "width": 0.3,
+      "height": 0.035,
       "groupedSkus": []
     },
     {
       "sku": "C-WALL-02",
       "name": "Conference wall",
-      "x": 0.3,
-      "y": 0.15,
-      "width": 0.32,
-      "height": 0.25,
+      "x": 0.35,
+      "y": 0.49,
+      "width": 0.3,
+      "height": 0.035,
       "groupedSkus": []
     },
     {
       "sku": "CHIP-WALL",
       "name": "Chip-shaped wall",
-      "x": 0.64,
-      "y": 0.15,
-      "width": 0.34,
-      "height": 0.25,
+      "x": 0.67,
+      "y": 0.49,
+      "width": 0.31,
+      "height": 0.035,
       "groupedSkus": []
     },
     {
       "sku": "CHIP-WALL-02",
       "name": "Chip-shaped wall 02",
-      "x": 0.02,
-      "y": 0.5,
-      "width": 0.35,
-      "height": 0.25,
+      "x": 0.03,
+      "y": 0.82,
+      "width": 0.33,
+      "height": 0.035,
       "groupedSkus": []
     },
     {
       "sku": "SURF-WALL",
       "name": "Surf video wall",
-      "x": 0.38,
-      "y": 0.5,
-      "width": 0.35,
-      "height": 0.25,
+      "x": 0.43,
+      "y": 0.82,
+      "width": 0.33,
+      "height": 0.035,
       "groupedSkus": []
     },
     {
       "sku": "TREEHOUSE-RM",
       "name": "Tree house room",
-      "x": 0.23,
-      "y": 0.83,
-      "width": 0.2,
-      "height": 0.12,
+      "x": 0.43,
+      "y": 0.95,
+      "width": 0.33,
+      "height": 0.035,
       "groupedSkus": []
     }
   ],
   "140": [
     {
       "sku": "HP-K-01",
-      "name": "Kit 01 - 10' Exhibit Kit",
-      "x": 0.03,
-      "y": 0.1,
-      "width": 0.42,
-      "height": 0.28,
+      "name": "Hybrid Pro 10ft Modular Backwall Kit 01",
+      "x": 0.27,
+      "y": 0.17,
+      "width": 0.12,
+      "height": 0.05,
       "groupedSkus": []
     },
     {
       "sku": "HP-K-02",
-      "name": "Kit 02 - 10' Exhibit Kit",
-      "x": 0.52,
-      "y": 0.1,
-      "width": 0.45,
-      "height": 0.28,
+      "name": "Hybrid Pro 10ft Modular Backwall Kit 02",
+      "x": 0.72,
+      "y": 0.17,
+      "width": 0.12,
+      "height": 0.05,
       "groupedSkus": []
     },
     {
       "sku": "HP-K-03",
-      "name": "Kit 03 - 10' Exhibit Kit",
-      "x": 0.03,
-      "y": 0.38,
-      "width": 0.42,
-      "height": 0.26,
+      "name": "Hybrid Pro 10ft Modular Backwall Kit 03",
+      "x": 0.27,
+      "y": 0.4,
+      "width": 0.12,
+      "height": 0.05,
       "groupedSkus": []
     },
     {
       "sku": "HP-K-04",
-      "name": "Kit 04 - 10' Exhibit Kit",
-      "x": 0.52,
-      "y": 0.38,
-      "width": 0.45,
-      "height": 0.26,
+      "name": "Hybrid Pro 10ft Modular Backwall Kit 04",
+      "x": 0.72,
+      "y": 0.4,
+      "width": 0.12,
+      "height": 0.05,
       "groupedSkus": []
     },
     {
       "sku": "HP-K-05",
-      "name": "Kit 05 - 10' Exhibit Kit",
-      "x": 0.03,
-      "y": 0.65,
-      "width": 0.42,
-      "height": 0.25,
+      "name": "Hybrid Pro 10ft Modular Backwall Kit 05",
+      "x": 0.27,
+      "y": 0.63,
+      "width": 0.12,
+      "height": 0.05,
       "groupedSkus": []
     },
     {
       "sku": "HP-K-06",
-      "name": "Kit 06 - 10' Exhibit Kit",
-      "x": 0.52,
-      "y": 0.65,
-      "width": 0.45,
-      "height": 0.25,
+      "name": "Hybrid Pro 10ft Modular Backwall Kit 06",
+      "x": 0.72,
+      "y": 0.63,
+      "width": 0.12,
+      "height": 0.05,
       "groupedSkus": []
+    },
+    {
+      "sku": "HP-K-01",
+      "name": "Hybrid Pro 10ft Modular Backwall Kit 01",
+      "x": 0.53,
+      "y": 0.84,
+      "width": 0.45,
+      "height": 0.13,
+      "groupedSkus": [
+        "HP-K-01",
+        "HP-K-02",
+        "HP-K-03",
+        "HP-K-04",
+        "HP-K-05",
+        "HP-K-06"
+      ]
     }
   ],
   "141": [
     {
       "sku": "HP-K-07",
-      "name": "Kit 07 - 10' Exhibit Kit",
+      "name": "Hybrid Pro 10ft Modular Backwall Kit 07",
       "x": 0.05,
-      "y": 0.1,
-      "width": 0.38,
-      "height": 0.25,
+      "y": 0.13,
+      "width": 0.08,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "HP-K-34",
-      "name": "Kit 34 - 10' Exhibit Kit with slot wall",
-      "x": 0.5,
-      "y": 0.08,
-      "width": 0.42,
-      "height": 0.27,
+      "name": "Hybrid Pro 10ft Modular Backwall Kit 34",
+      "x": 0.52,
+      "y": 0.13,
+      "width": 0.08,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "HP-K-35",
-      "name": "Kit 35 - 10' Exhibit Kit with illuminated panels",
+      "name": "Hybrid Pro 10ft Modular Backwall Kit 35",
       "x": 0.05,
-      "y": 0.36,
-      "width": 0.4,
-      "height": 0.27,
+      "y": 0.39,
+      "width": 0.08,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "HP-K-24",
-      "name": "Kit 24 - 10' Exhibit Kit",
-      "x": 0.5,
-      "y": 0.36,
-      "width": 0.42,
-      "height": 0.27,
+      "name": "Hybrid Pro 10ft Modular Backwall Kit 24",
+      "x": 0.52,
+      "y": 0.39,
+      "width": 0.08,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "HP-K-27",
-      "name": "Kit 27 - 10' Exhibit Kit",
+      "name": "Hybrid Pro 10ft Modular Backwall Kit 27",
       "x": 0.05,
       "y": 0.64,
-      "width": 0.4,
-      "height": 0.27,
+      "width": 0.08,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "HP-K-30",
-      "name": "Kit 30 - 10' Exhibit Kit",
-      "x": 0.5,
+      "name": "Hybrid Pro 10ft Modular Backwall Kit 30",
+      "x": 0.52,
       "y": 0.64,
-      "width": 0.42,
-      "height": 0.27,
+      "width": 0.08,
+      "height": 0.04,
       "groupedSkus": []
+    },
+    {
+      "sku": "HP-K-07",
+      "name": "Hybrid Pro 10ft Modular Backwall Kit 07",
+      "x": 0.5,
+      "y": 0.855,
+      "width": 0.48,
+      "height": 0.12,
+      "groupedSkus": [
+        "HP-K-07",
+        "HP-K-34",
+        "HP-K-35",
+        "HP-K-24",
+        "HP-K-27",
+        "HP-K-30"
+      ]
     }
   ],
   "142": [
     {
       "sku": "KIT 09",
-      "name": "20' Hybrid Pro Modular Exhibit Kit 09 with illuminated walls",
-      "x": 0.02,
-      "y": 0.08,
-      "width": 0.48,
-      "height": 0.28
+      "name": "20' Exhibit Kit with illuminated walls",
+      "x": 0.42,
+      "y": 0.13,
+      "width": 0.12,
+      "height": 0.05,
+      "groupedSkus": []
     },
     {
       "sku": "KIT 10",
-      "name": "20' Hybrid Pro Modular Exhibit Kit 10",
-      "x": 0.5,
-      "y": 0.08,
-      "width": 0.48,
-      "height": 0.28
+      "name": "20' Exhibit Kit",
+      "x": 0.82,
+      "y": 0.13,
+      "width": 0.12,
+      "height": 0.05,
+      "groupedSkus": []
     },
     {
       "sku": "KIT 11",
-      "name": "20' Hybrid Pro Modular Exhibit Kit 11 with illuminated wall",
-      "x": 0.02,
-      "y": 0.38,
-      "width": 0.48,
-      "height": 0.27
+      "name": "20' Exhibit Kit with illuminated wall",
+      "x": 0.42,
+      "y": 0.44,
+      "width": 0.12,
+      "height": 0.05,
+      "groupedSkus": []
     },
     {
       "sku": "KIT 13",
-      "name": "20' Hybrid Pro Modular Exhibit Kit 13",
-      "x": 0.5,
-      "y": 0.38,
-      "width": 0.48,
-      "height": 0.27
+      "name": "20' Exhibit Kit",
+      "x": 0.82,
+      "y": 0.44,
+      "width": 0.12,
+      "height": 0.05,
+      "groupedSkus": []
     },
     {
       "sku": "KIT 14",
-      "name": "20' Hybrid Pro Modular Exhibit Kit 14",
-      "x": 0.02,
-      "y": 0.66,
-      "width": 0.48,
-      "height": 0.25
+      "name": "20' Exhibit Kit",
+      "x": 0.42,
+      "y": 0.7,
+      "width": 0.12,
+      "height": 0.05,
+      "groupedSkus": []
     },
     {
       "sku": "KIT 15",
-      "name": "20' Hybrid Pro Modular Exhibit Kit 15",
-      "x": 0.5,
-      "y": 0.66,
-      "width": 0.48,
-      "height": 0.25
+      "name": "20' Exhibit Kit",
+      "x": 0.82,
+      "y": 0.7,
+      "width": 0.12,
+      "height": 0.05,
+      "groupedSkus": []
     }
   ],
   "143": [
     {
+      "sku": "HP-K-09",
+      "name": "Hybrid Pro 20ft Modular Backwall Kit 09",
+      "x": 0.5,
+      "y": 0.635,
+      "width": 0.47,
+      "height": 0.365,
+      "groupedSkus": [
+        "HP-K-09",
+        "HP-K-10",
+        "HP-K-11",
+        "HP-K-13",
+        "HP-K-14",
+        "HP-K-15",
+        "HP-K-36",
+        "HP-K-22",
+        "HP-K-25",
+        "HP-K-37",
+        "HP-K-31"
+      ]
+    },
+    {
       "sku": "HP-K-36",
-      "name": "Kit 36",
+      "name": "Hybrid Pro 20ft Modular Backwall Kit 36",
       "x": 0.03,
-      "y": 0.1,
-      "width": 0.45,
-      "height": 0.32,
-      "groupedSkus": []
+      "y": 0.13,
+      "width": 0.1,
+      "height": 0.03
     },
     {
       "sku": "HP-K-22",
-      "name": "Kit 22",
-      "x": 0.48,
-      "y": 0.08,
-      "width": 0.5,
-      "height": 0.38,
-      "groupedSkus": []
+      "name": "Hybrid Pro 20ft Modular Backwall Kit 22",
+      "x": 0.5,
+      "y": 0.13,
+      "width": 0.1,
+      "height": 0.03
     },
     {
       "sku": "HP-K-25",
-      "name": "Kit 25",
+      "name": "Hybrid Pro 20ft Modular Backwall Kit 25",
       "x": 0.03,
       "y": 0.44,
-      "width": 0.45,
-      "height": 0.28,
-      "groupedSkus": []
+      "width": 0.1,
+      "height": 0.03
     },
     {
       "sku": "HP-K-37",
-      "name": "Kit 37",
-      "x": 0.48,
+      "name": "Hybrid Pro 20ft Modular Backwall Kit 37",
+      "x": 0.5,
       "y": 0.44,
-      "width": 0.5,
-      "height": 0.28,
-      "groupedSkus": []
+      "width": 0.1,
+      "height": 0.03
     },
     {
       "sku": "HP-K-31",
-      "name": "Kit 31",
+      "name": "Hybrid Pro 20ft Modular Backwall Kit 31",
       "x": 0.03,
-      "y": 0.72,
-      "width": 0.45,
-      "height": 0.22,
-      "groupedSkus": []
+      "y": 0.65,
+      "width": 0.1,
+      "height": 0.03
     }
   ],
   "144": [
     {
       "sku": "HP-K-17",
-      "name": "Kit 17 - 20'x20' Island Exhibit Kit",
-      "x": 0.03,
-      "y": 0.2,
+      "name": "Kit 17 / 17B - 15'9\" tall 20' x 20' island display",
+      "x": 0.48,
+      "y": 0.22,
       "width": 0.45,
-      "height": 0.33,
+      "height": 0.08,
       "groupedSkus": [
+        "HP-K-17",
         "HP-K-17-B"
       ]
     },
     {
-      "sku": "HP-K-18",
-      "name": "Kit 18 - 20'x20' Square Shaped Island Exhibit Kit",
-      "x": 0.03,
-      "y": 0.55,
-      "width": 0.45,
-      "height": 0.33,
+      "sku": "HP-K-17",
+      "name": "HP-K-17 Overhead",
+      "x": 0.48,
+      "y": 0.47,
+      "width": 0.12,
+      "height": 0.07,
       "groupedSkus": []
+    },
+    {
+      "sku": "HP-K-17",
+      "name": "HP-K-17 Isometric",
+      "x": 0.6,
+      "y": 0.47,
+      "width": 0.12,
+      "height": 0.07,
+      "groupedSkus": []
+    },
+    {
+      "sku": "HP-K-17-B",
+      "name": "HP-K-17-B Overhead",
+      "x": 0.72,
+      "y": 0.47,
+      "width": 0.12,
+      "height": 0.07,
+      "groupedSkus": []
+    },
+    {
+      "sku": "HP-K-17-B",
+      "name": "HP-K-17-B Isometric",
+      "x": 0.84,
+      "y": 0.47,
+      "width": 0.12,
+      "height": 0.07,
+      "groupedSkus": []
+    },
+    {
+      "sku": "HP-K-18",
+      "name": "Kit 18 - 11'10\" tall square shaped island display",
+      "x": 0.48,
+      "y": 0.56,
+      "width": 0.35,
+      "height": 0.08,
+      "groupedSkus": []
+    },
+    {
+      "sku": "HP-K-17",
+      "name": "Kit 17 / Kit 17B / Kit 18 specs table",
+      "x": 0.3,
+      "y": 0.86,
+      "width": 0.42,
+      "height": 0.09,
+      "groupedSkus": [
+        "HP-K-17",
+        "HP-K-17-B",
+        "HP-K-18"
+      ]
     }
   ],
   "145": [
     {
       "sku": "HP-K-18B",
       "name": "Kit 18B - 20'x20' Island Exhibit Kit",
-      "x": 0.03,
-      "y": 0.2,
-      "width": 0.42,
-      "height": 0.32,
-      "groupedSkus": []
-    },
-    {
-      "sku": "HP-K-19",
-      "name": "Kit 19 - 20'x20' Island Exhibit Kit",
-      "x": 0.03,
-      "y": 0.55,
-      "width": 0.42,
-      "height": 0.35,
-      "groupedSkus": []
+      "x": 0.29,
+      "y": 0.89,
+      "width": 0.52,
+      "height": 0.07,
+      "groupedSkus": [
+        "HP-K-18B",
+        "HP-K-19"
+      ]
     }
   ],
   "146": [
     {
       "sku": "HP-K-19B",
       "name": "Kit 19B - 20'x20' Island Exhibit Kit",
-      "x": 0.03,
-      "y": 0.15,
-      "width": 0.48,
-      "height": 0.38,
+      "x": 0.5,
+      "y": 0.2,
+      "width": 0.15,
+      "height": 0.05,
       "groupedSkus": []
     },
     {
       "sku": "HP-K-20",
       "name": "Kit 20 - 20'x20' Island Exhibit Kit",
-      "x": 0.03,
-      "y": 0.56,
-      "width": 0.48,
-      "height": 0.38,
+      "x": 0.5,
+      "y": 0.57,
+      "width": 0.12,
+      "height": 0.05,
       "groupedSkus": []
+    },
+    {
+      "sku": "HP-K-19B",
+      "name": "SKU Bank - Kit 19B and Kit 20",
+      "x": 0.3,
+      "y": 0.88,
+      "width": 0.42,
+      "height": 0.07,
+      "groupedSkus": [
+        "HP-K-19B",
+        "HP-K-20"
+      ]
     }
   ],
   "147": [
     {
       "sku": "HP-K-23",
       "name": "Kit 23 - 20'x20' Island Exhibit Kit",
-      "x": 0.03,
-      "y": 0.14,
-      "width": 0.45,
-      "height": 0.38,
-      "groupedSkus": []
-    },
-    {
-      "sku": "HP-K-26",
-      "name": "Kit 26 - 20'x20' Island Exhibit Kit",
-      "x": 0.03,
-      "y": 0.55,
-      "width": 0.45,
-      "height": 0.35,
-      "groupedSkus": []
+      "x": 0.34,
+      "y": 0.9,
+      "width": 0.42,
+      "height": 0.06,
+      "groupedSkus": [
+        "HP-K-23",
+        "HP-K-26"
+      ]
     }
   ],
   "148": [
     {
       "sku": "HP-K-29",
       "name": "Kit 29 - 20'x20' Island Exhibit Kit",
-      "x": 0.03,
-      "y": 0.2,
-      "width": 0.42,
-      "height": 0.32,
-      "groupedSkus": []
-    },
-    {
-      "sku": "HP-K-32",
-      "name": "Kit 32 - 20'x20' Island Exhibit Kit",
-      "x": 0.03,
-      "y": 0.55,
-      "width": 0.45,
-      "height": 0.35,
-      "groupedSkus": []
+      "x": 0.34,
+      "y": 0.9,
+      "width": 0.52,
+      "height": 0.065,
+      "groupedSkus": [
+        "HP-K-29",
+        "HP-K-32"
+      ]
     }
   ],
   "149": [
     {
       "sku": "HP-K-38",
       "name": "Kit 38 - 20'x20' Island Exhibit Kit",
-      "x": 0.03,
-      "y": 0.18,
-      "width": 0.45,
-      "height": 0.38,
-      "groupedSkus": []
-    },
-    {
-      "sku": "HP-K-38",
-      "name": "Kit 38 - 20'x20' Island Exhibit Kit",
-      "x": 0.22,
-      "y": 0.58,
-      "width": 0.56,
-      "height": 0.35,
+      "x": 0.39,
+      "y": 0.615,
+      "width": 0.52,
+      "height": 0.04,
       "groupedSkus": []
     }
   ],
   "150": [
     {
       "sku": "COUNTER 01",
-      "name": "Counter 01",
-      "x": 0.03,
-      "y": 0.13,
-      "width": 0.27,
-      "height": 0.22,
-      "groupedSkus": []
+      "name": "White laminate cabinet with fabric graphic on the front, opaque or backlit",
+      "x": 0.04,
+      "y": 0.33,
+      "width": 0.28,
+      "height": 0.07
     },
     {
       "sku": "COUNTER 12",
-      "name": "Counter 12",
-      "x": 0.34,
-      "y": 0.1,
-      "width": 0.24,
-      "height": 0.25,
-      "groupedSkus": []
+      "name": "White laminate cabinet with vinyl graphic (-01-B) or fabric graphic (-12), available opaque or backlit",
+      "x": 0.35,
+      "y": 0.33,
+      "width": 0.3,
+      "height": 0.08
     },
     {
       "sku": "COUNTER 02",
-      "name": "Counter 02",
-      "x": 0.62,
-      "y": 0.13,
-      "width": 0.35,
-      "height": 0.2,
-      "groupedSkus": []
+      "name": "White laminate cabinet with fabric graphic on the front, opaque or backlit",
+      "x": 0.65,
+      "y": 0.33,
+      "width": 0.3,
+      "height": 0.07
     },
     {
       "sku": "COUNTER 09",
-      "name": "Counter 09",
-      "x": 0.03,
-      "y": 0.44,
-      "width": 0.27,
-      "height": 0.22,
-      "groupedSkus": []
+      "name": "White laminate cabinet with UV graphic on the front, opaque or backlit",
+      "x": 0.04,
+      "y": 0.62,
+      "width": 0.28,
+      "height": 0.07
     },
     {
       "sku": "COUNTER 10",
-      "name": "Counter 10",
-      "x": 0.32,
-      "y": 0.44,
-      "width": 0.33,
-      "height": 0.2,
-      "groupedSkus": []
+      "name": "White laminate cabinet with UV graphic on the front, opaque or backlit",
+      "x": 0.35,
+      "y": 0.62,
+      "width": 0.28,
+      "height": 0.07
     },
     {
       "sku": "COUNTER 13",
-      "name": "Counter 13",
-      "x": 0.68,
-      "y": 0.44,
-      "width": 0.25,
-      "height": 0.22,
-      "groupedSkus": []
+      "name": "4ft wide, open white laminate counter",
+      "x": 0.65,
+      "y": 0.62,
+      "width": 0.3,
+      "height": 0.09
     },
     {
       "sku": "COUNTER 19",
-      "name": "Counter 19",
-      "x": 0.03,
-      "y": 0.73,
-      "width": 0.24,
-      "height": 0.18,
-      "groupedSkus": []
+      "name": "Sleek and stylish laminated wood counter",
+      "x": 0.04,
+      "y": 0.87,
+      "width": 0.28,
+      "height": 0.09
     },
     {
       "sku": "COUNTER 20",
-      "name": "Counter 20",
-      "x": 0.3,
-      "y": 0.73,
-      "width": 0.22,
-      "height": 0.18,
-      "groupedSkus": []
+      "name": "Sleek and stylish laminated wood counter",
+      "x": 0.35,
+      "y": 0.87,
+      "width": 0.28,
+      "height": 0.09
     }
   ],
   "151": [
@@ -4098,146 +4006,210 @@
       "sku": "HPC-03",
       "name": "Counter 03",
       "x": 0.03,
-      "y": 0.12,
-      "width": 0.28,
-      "height": 0.22,
+      "y": 0.29,
+      "width": 0.27,
+      "height": 0.1,
       "groupedSkus": []
     },
     {
       "sku": "HPC-04",
       "name": "Counter 04",
       "x": 0.33,
-      "y": 0.12,
-      "width": 0.3,
-      "height": 0.22,
+      "y": 0.29,
+      "width": 0.27,
+      "height": 0.1,
       "groupedSkus": []
     },
     {
       "sku": "RCK-06",
       "name": "Counter 11",
-      "x": 0.65,
-      "y": 0.12,
-      "width": 0.3,
-      "height": 0.22,
+      "x": 0.63,
+      "y": 0.29,
+      "width": 0.27,
+      "height": 0.1,
       "groupedSkus": []
     },
     {
       "sku": "HPC-14",
       "name": "Counter 14",
       "x": 0.03,
-      "y": 0.44,
-      "width": 0.28,
-      "height": 0.22,
+      "y": 0.62,
+      "width": 0.27,
+      "height": 0.08,
       "groupedSkus": []
     },
     {
       "sku": "HPC-17",
       "name": "Counter 17",
       "x": 0.33,
-      "y": 0.44,
-      "width": 0.28,
-      "height": 0.22,
+      "y": 0.62,
+      "width": 0.3,
+      "height": 0.13,
       "groupedSkus": []
     },
     {
       "sku": "HPC-18",
       "name": "Counter 18",
       "x": 0.63,
-      "y": 0.44,
-      "width": 0.3,
-      "height": 0.22,
+      "y": 0.62,
+      "width": 0.33,
+      "height": 0.13,
       "groupedSkus": []
+    },
+    {
+      "sku": "HPC-01",
+      "name": "Counter 01",
+      "x": 0.04,
+      "y": 0.82,
+      "width": 0.36,
+      "height": 0.15,
+      "groupedSkus": [
+        "HPC-01",
+        "HPC-01-B",
+        "HPC-12",
+        "HPC-02",
+        "HPC-03",
+        "HPC-04",
+        "RCK-06",
+        "REC-42"
+      ]
+    },
+    {
+      "sku": "REC-53",
+      "name": "Counter 10",
+      "x": 0.42,
+      "y": 0.82,
+      "width": 0.36,
+      "height": 0.15,
+      "groupedSkus": [
+        "REC-53",
+        "HPC-13",
+        "HPC-14",
+        "HPC-17",
+        "HPC-18",
+        "HPC-19",
+        "HPC-20"
+      ]
     }
   ],
   "152": [
     {
       "sku": "HPT-01",
       "name": "Closet 01",
-      "x": 0.1,
-      "y": 0.2,
-      "width": 0.3,
-      "height": 0.32,
+      "x": 0.08,
+      "y": 0.545,
+      "width": 0.18,
+      "height": 0.035,
       "groupedSkus": []
     },
     {
       "sku": "HPT-02",
       "name": "Closet 02",
-      "x": 0.42,
-      "y": 0.2,
-      "width": 0.38,
-      "height": 0.32,
+      "x": 0.48,
+      "y": 0.545,
+      "width": 0.18,
+      "height": 0.035,
       "groupedSkus": []
     },
     {
       "sku": "HPT-03",
       "name": "Closet 03",
-      "x": 0.1,
-      "y": 0.55,
-      "width": 0.3,
-      "height": 0.32,
+      "x": 0.08,
+      "y": 0.87,
+      "width": 0.18,
+      "height": 0.035,
       "groupedSkus": []
     },
     {
       "sku": "HPC-04",
       "name": "Closet 04",
-      "x": 0.42,
-      "y": 0.55,
-      "width": 0.35,
-      "height": 0.32,
+      "x": 0.48,
+      "y": 0.87,
+      "width": 0.18,
+      "height": 0.035,
       "groupedSkus": []
+    },
+    {
+      "sku": "HPT-01",
+      "name": "Closet 01 - Closet 04 SKU Bank",
+      "x": 0.545,
+      "y": 0.905,
+      "width": 0.39,
+      "height": 0.072,
+      "groupedSkus": [
+        "HPT-01",
+        "HPT-02",
+        "HPT-03",
+        "HPC-04"
+      ]
     }
   ],
   "153": [
     {
       "sku": "HPT-05",
       "name": "Closet 05",
-      "x": 0.05,
-      "y": 0.17,
-      "width": 0.38,
-      "height": 0.35,
+      "x": 0.06,
+      "y": 0.52,
+      "width": 0.16,
+      "height": 0.035,
       "groupedSkus": []
     },
     {
       "sku": "HPT-06",
       "name": "Closet 06",
-      "x": 0.5,
-      "y": 0.1,
-      "width": 0.4,
-      "height": 0.42,
+      "x": 0.53,
+      "y": 0.52,
+      "width": 0.16,
+      "height": 0.035,
       "groupedSkus": []
     },
     {
       "sku": "HPT-07",
       "name": "Closet 07",
-      "x": 0.05,
-      "y": 0.53,
-      "width": 0.3,
-      "height": 0.35,
+      "x": 0.06,
+      "y": 0.84,
+      "width": 0.16,
+      "height": 0.035,
       "groupedSkus": []
     },
     {
       "sku": "HPC-08",
       "name": "Closet 08",
-      "x": 0.52,
-      "y": 0.53,
-      "width": 0.3,
-      "height": 0.35,
+      "x": 0.53,
+      "y": 0.84,
+      "width": 0.16,
+      "height": 0.035,
       "groupedSkus": []
+    },
+    {
+      "sku": "HPT-05",
+      "name": "Closet 05",
+      "x": 0.25,
+      "y": 0.88,
+      "width": 0.52,
+      "height": 0.1,
+      "groupedSkus": [
+        "HPT-05",
+        "HPT-06",
+        "HPT-07",
+        "HPC-08"
+      ]
     }
   ],
   "156": [
     {
-      "sku": "VF-ESS-LB-S-01",
-      "name": "Square 01",
-      "x": 0.04,
-      "y": 0.2,
-      "width": 0.5,
-      "height": 0.62,
+      "sku": "VF-ESS-LB-R-01",
+      "name": "Vector Frame Essential Light Box",
+      "x": 0.42,
+      "y": 0.89,
+      "width": 0.56,
+      "height": 0.1,
       "groupedSkus": [
         "VF-ESS-LB-R-01",
         "VF-ESS-LB-R-02",
         "VF-ESS-LB-R-03",
         "VF-ESS-LB-R-04",
+        "VF-ESS-LB-S-01",
         "VF-ESS-LB-R-05",
         "VF-ESS-LB-R-06"
       ]
@@ -4245,12 +4217,12 @@
   ],
   "157": [
     {
-      "sku": "VF-LB-R-03",
-      "name": "Rectangle 03 Light Box",
-      "x": 0.55,
-      "y": 0.15,
-      "width": 0.42,
-      "height": 0.55,
+      "sku": "VF-R-01",
+      "name": "Rectangle 01",
+      "x": 0.065,
+      "y": 0.375,
+      "width": 0.56,
+      "height": 0.62,
       "groupedSkus": [
         "VF-R-01",
         "VF-LB-R-01",
@@ -4277,155 +4249,129 @@
         "VF-S-04",
         "VF-LB-S-04"
       ]
-    },
-    {
-      "sku": "VF-R-01",
-      "name": "Rectangle 01 Banner Assembly",
-      "x": 0.05,
-      "y": 0.7,
-      "width": 0.25,
-      "height": 0.25,
-      "groupedSkus": [
-        "VF-R-01",
-        "VF-R-02",
-        "VF-R-03",
-        "VF-R-04",
-        "VF-R-05",
-        "VF-R-06",
-        "VF-R-07",
-        "VF-R-08",
-        "VF-S-01",
-        "VF-S-02",
-        "VF-S-03",
-        "VF-S-04"
-      ]
-    },
-    {
-      "sku": "VF-LB-R-01",
-      "name": "Rectangle 01 Light Box Assembly",
-      "x": 0.35,
-      "y": 0.7,
-      "width": 0.25,
-      "height": 0.25,
-      "groupedSkus": [
-        "VF-LB-R-01",
-        "VF-LB-R-02",
-        "VF-LB-R-03",
-        "VF-LB-R-04",
-        "VF-LB-R-05",
-        "VF-LB-R-06",
-        "VF-LB-R-07",
-        "VF-LB-R-08",
-        "VF-LB-S-01",
-        "VF-LB-S-02",
-        "VF-LB-S-03",
-        "VF-LB-S-04"
-      ]
-    },
-    {
-      "sku": "VF-R-03-profile",
-      "name": "Banner Extrusion Profile",
-      "x": 0.6,
-      "y": 0.72,
-      "width": 0.15,
-      "height": 0.12,
-      "groupedSkus": []
-    },
-    {
-      "sku": "VF-LB-R-03-profile",
-      "name": "Light Box Extrusion Profile",
-      "x": 0.6,
-      "y": 0.86,
-      "width": 0.15,
-      "height": 0.12,
-      "groupedSkus": []
     }
   ],
   "158": [
     {
       "sku": "KIT 02",
       "name": "Vector Frame 10' Master Exhibit Kit 02",
-      "x": 0.03,
-      "y": 0.17,
-      "width": 0.42,
-      "height": 0.3
+      "x": 0.38,
+      "y": 0.22,
+      "width": 0.1,
+      "height": 0.035,
+      "groupedSkus": []
     },
     {
       "sku": "KIT 03",
-      "name": "Vector Frame 10' Master Exhibit Kit 03",
-      "x": 0.5,
-      "y": 0.17,
-      "width": 0.45,
-      "height": 0.3
+      "name": "30' Formulate Designer Series Kit 03",
+      "x": 0.78,
+      "y": 0.22,
+      "width": 0.12,
+      "height": 0.035,
+      "groupedSkus": []
     },
     {
       "sku": "KIT 04",
-      "name": "Vector Frame 10' Master Exhibit Kit 04",
-      "x": 0.03,
-      "y": 0.49,
-      "width": 0.42,
-      "height": 0.27
+      "name": "30' Formulate Designer Series Kit 04",
+      "x": 0.38,
+      "y": 0.48,
+      "width": 0.1,
+      "height": 0.035,
+      "groupedSkus": []
     },
     {
       "sku": "KIT 09",
-      "name": "Vector Frame 10' Master Exhibit Kit 09",
-      "x": 0.5,
-      "y": 0.49,
-      "width": 0.45,
-      "height": 0.27
+      "name": "20' Exhibit Kit with illuminated walls",
+      "x": 0.78,
+      "y": 0.48,
+      "width": 0.1,
+      "height": 0.035,
+      "groupedSkus": []
     },
     {
       "sku": "KIT 10",
-      "name": "Vector Frame 10' Master Exhibit Kit 10",
-      "x": 0.03,
-      "y": 0.76,
-      "width": 0.42,
-      "height": 0.2
+      "name": "20' Exhibit Kit",
+      "x": 0.38,
+      "y": 0.74,
+      "width": 0.1,
+      "height": 0.035,
+      "groupedSkus": []
     },
     {
       "sku": "KIT 11",
-      "name": "Vector Frame 10' Master Exhibit Kit 11",
-      "x": 0.5,
-      "y": 0.76,
-      "width": 0.45,
-      "height": 0.2
+      "name": "20' Exhibit Kit with illuminated wall",
+      "x": 0.78,
+      "y": 0.74,
+      "width": 0.1,
+      "height": 0.035,
+      "groupedSkus": []
     }
   ],
   "159": [
     {
+      "sku": "VF-K-02A",
+      "name": "Kit 02",
+      "x": 0.08,
+      "y": 0.835,
+      "width": 0.48,
+      "height": 0.15,
+      "groupedSkus": [
+        "VF-K-02A",
+        "VF-K-03",
+        "VF-K-04A",
+        "VF-K-09A",
+        "VF-K-10A",
+        "VF-K-11"
+      ]
+    },
+    {
       "sku": "VF-K-13",
       "name": "Kit 13",
-      "x": 0.03,
+      "x": 0.53,
+      "y": 0.835,
+      "width": 0.44,
+      "height": 0.1,
+      "groupedSkus": [
+        "VF-K-13",
+        "VF-K-15",
+        "VF-K-16",
+        "VF-K-25"
+      ]
+    },
+    {
+      "sku": "VF-K-13",
+      "name": "Kit 13",
+      "x": 0.06,
       "y": 0.22,
-      "width": 0.45,
-      "height": 0.32,
+      "width": 0.08,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "VF-K-15",
       "name": "Kit 15",
-      "x": 0.5,
-      "y": 0.2,
-      "width": 0.48,
-      "height": 0.35,
+      "x": 0.54,
+      "y": 0.22,
+      "width": 0.08,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "VF-K-16",
       "name": "Kit 16",
-      "x": 0.03,
-      "y": 0.54,
-      "width": 0.45,
-      "height": 0.35,
+      "x": 0.06,
+      "y": 0.52,
+      "width": 0.08,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "VF-K-25",
       "name": "Kit 25",
-      "x": 0.5,
-      "y": 0.54,
-      "width": 0.48,
-      "height": 0.35,
+      "x": 0.54,
+      "y": 0.52,
+      "width": 0.09,
+      "height": 0.04,
       "groupedSkus": []
     }
   ],
@@ -4433,85 +4379,114 @@
     {
       "sku": "VF-K-05A",
       "name": "Kit 05",
-      "x": 0.04,
-      "y": 0.2,
-      "width": 0.45,
-      "height": 0.3,
+      "x": 0.37,
+      "y": 0.27,
+      "width": 0.12,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "VF-K-07",
       "name": "Kit 07",
-      "x": 0.5,
-      "y": 0.2,
-      "width": 0.48,
-      "height": 0.3,
+      "x": 0.77,
+      "y": 0.27,
+      "width": 0.12,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "VF-K-08A",
       "name": "Kit 08",
-      "x": 0.04,
-      "y": 0.53,
-      "width": 0.45,
-      "height": 0.3,
+      "x": 0.28,
+      "y": 0.58,
+      "width": 0.12,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "VF-K-17",
       "name": "Kit 17",
-      "x": 0.5,
-      "y": 0.53,
-      "width": 0.48,
-      "height": 0.3,
+      "x": 0.77,
+      "y": 0.58,
+      "width": 0.12,
+      "height": 0.04,
       "groupedSkus": []
+    },
+    {
+      "sku": "VF-K-05A",
+      "name": "Kit 05",
+      "x": 0.3,
+      "y": 0.83,
+      "width": 0.52,
+      "height": 0.14,
+      "groupedSkus": [
+        "VF-K-05A",
+        "VF-K-07",
+        "VF-K-08A",
+        "VF-K-17"
+      ]
     }
   ],
   "161": [
     {
       "sku": "VF-K-19A",
       "name": "Kit 19",
-      "x": 0.02,
-      "y": 0.17,
-      "width": 0.47,
-      "height": 0.3,
+      "x": 0.04,
+      "y": 0.24,
+      "width": 0.12,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "VF-K-22A",
       "name": "Kit 22",
       "x": 0.5,
-      "y": 0.17,
-      "width": 0.48,
-      "height": 0.33,
+      "y": 0.24,
+      "width": 0.12,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "VF-K-26",
       "name": "Kit 26",
-      "x": 0.02,
-      "y": 0.52,
-      "width": 0.47,
-      "height": 0.32,
+      "x": 0.04,
+      "y": 0.57,
+      "width": 0.12,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "VF-K-27",
       "name": "Kit 27",
       "x": 0.5,
-      "y": 0.52,
-      "width": 0.48,
-      "height": 0.32,
+      "y": 0.57,
+      "width": 0.12,
+      "height": 0.04,
       "groupedSkus": []
+    },
+    {
+      "sku": "VF-K-19A",
+      "name": "Kit 19 - Kit 27 spec table",
+      "x": 0.1,
+      "y": 0.83,
+      "width": 0.42,
+      "height": 0.12,
+      "groupedSkus": [
+        "VF-K-19A",
+        "VF-K-22A",
+        "VF-K-26",
+        "VF-K-27"
+      ]
     },
     {
       "sku": "OCH2",
       "name": "OCH2 & OCE-2 wheeled molded cases",
-      "x": 0.62,
-      "y": 0.82,
+      "x": 0.6,
+      "y": 0.9,
       "width": 0.22,
-      "height": 0.12,
+      "height": 0.05,
       "groupedSkus": [
+        "OCH2",
         "OCE-2"
       ]
     }
@@ -4520,85 +4495,108 @@
     {
       "sku": "VFC-01",
       "name": "Counter 01",
-      "x": 0.02,
-      "y": 0.12,
-      "width": 0.28,
-      "height": 0.25,
+      "x": 0.03,
+      "y": 0.37,
+      "width": 0.2,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "VFC-02",
       "name": "Counter 02",
       "x": 0.33,
-      "y": 0.1,
-      "width": 0.3,
-      "height": 0.28,
+      "y": 0.37,
+      "width": 0.22,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "VFC-03",
       "name": "Counter 03",
       "x": 0.65,
-      "y": 0.1,
-      "width": 0.32,
-      "height": 0.28,
+      "y": 0.37,
+      "width": 0.22,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "VFC-04",
       "name": "Counter 04",
-      "x": 0.02,
-      "y": 0.42,
-      "width": 0.28,
-      "height": 0.26,
+      "x": 0.03,
+      "y": 0.62,
+      "width": 0.2,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "VFC-05",
       "name": "Counter 05",
-      "x": 0.33,
-      "y": 0.42,
-      "width": 0.3,
-      "height": 0.26,
+      "x": 0.3,
+      "y": 0.62,
+      "width": 0.25,
+      "height": 0.07,
       "groupedSkus": []
     },
     {
       "sku": "VFC-06",
       "name": "Counter 06",
-      "x": 0.65,
-      "y": 0.42,
-      "width": 0.32,
-      "height": 0.26,
+      "x": 0.62,
+      "y": 0.62,
+      "width": 0.25,
+      "height": 0.07,
       "groupedSkus": []
     },
     {
       "sku": "VFC-07",
       "name": "Counter 07",
-      "x": 0.02,
-      "y": 0.73,
-      "width": 0.25,
-      "height": 0.2,
+      "x": 0.03,
+      "y": 0.83,
+      "width": 0.2,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
+      "sku": "VFC-01",
+      "name": "Counter 01-07 SKU Bank",
+      "x": 0.3,
+      "y": 0.7,
+      "width": 0.38,
+      "height": 0.22,
+      "groupedSkus": [
+        "VFC-01",
+        "VFC-02",
+        "VFC-03",
+        "VFC-04",
+        "VFC-05",
+        "VFC-06",
+        "VFC-07"
+      ]
+    },
+    {
       "sku": "OCH2",
-      "name": "OCH2 Case (included with counters)",
-      "x": 0.65,
-      "y": 0.8,
-      "width": 0.2,
-      "height": 0.13,
+      "name": "OCH2 wheeled molded case",
+      "x": 0.6,
+      "y": 0.93,
+      "width": 0.32,
+      "height": 0.03,
       "groupedSkus": []
     }
   ],
   "163": [
     {
-      "sku": "VF-BL-TWR-01",
-      "name": "Backlit Tower",
-      "x": 0.05,
-      "y": 0.2,
-      "width": 0.28,
-      "height": 0.45,
+      "sku": "VF-TWR-01",
+      "name": "Vector Frame Modular Tower 01-06 and Backlit Tower 01-06",
+      "x": 0.02,
+      "y": 0.76,
+      "width": 0.48,
+      "height": 0.23,
       "groupedSkus": [
+        "VF-TWR-01",
+        "VF-TWR-02",
+        "VF-TWR-03",
+        "VF-TWR-04",
+        "VF-TWR-05",
+        "VF-TWR-06",
         "VF-BL-TWR-01",
         "VF-BL-TWR-02",
         "VF-BL-TWR-03",
@@ -4608,29 +4606,19 @@
       ]
     },
     {
-      "sku": "VF-TWR-05-MM",
-      "name": "Standard Tower with Monitor",
-      "x": 0.45,
-      "y": 0.22,
-      "width": 0.25,
-      "height": 0.38,
+      "sku": "VF-TWR-01-MM",
+      "name": "Monitor Tower 01-06 and Backlit Monitor Tower 01-06",
+      "x": 0.5,
+      "y": 0.76,
+      "width": 0.48,
+      "height": 0.23,
       "groupedSkus": [
         "VF-TWR-01-MM",
         "VF-TWR-02-MM",
         "VF-TWR-03-MM",
         "VF-TWR-04-MM",
         "VF-TWR-05-MM",
-        "VF-TWR-06-MM"
-      ]
-    },
-    {
-      "sku": "VF-BL-TWR-01-MM",
-      "name": "Backlit Tower with Monitor",
-      "x": 0.55,
-      "y": 0.48,
-      "width": 0.22,
-      "height": 0.35,
-      "groupedSkus": [
+        "VF-TWR-06-MM",
         "VF-BL-TWR-01-MM",
         "VF-BL-TWR-02-MM",
         "VF-BL-TWR-03-MM",
@@ -4638,250 +4626,249 @@
         "VF-BL-TWR-05-MM",
         "VF-BL-TWR-06-MM"
       ]
-    },
-    {
-      "sku": "VF-TWR-01",
-      "name": "Standard Tower",
-      "x": 0.25,
-      "y": 0.55,
-      "width": 0.25,
-      "height": 0.3,
-      "groupedSkus": [
-        "VF-TWR-01",
-        "VF-TWR-02",
-        "VF-TWR-03",
-        "VF-TWR-04",
-        "VF-TWR-05",
-        "VF-TWR-06"
-      ]
     }
   ],
   "168": [
     {
       "sku": "OR-K-CO1",
-      "name": "Clio 10'x10' Exhibit Kit",
-      "x": 0.03,
-      "y": 0.22,
-      "width": 0.35,
-      "height": 0.32
+      "name": "Clio Orbital Express Truss 10ft Modular Exhibit",
+      "x": 0.3,
+      "y": 0.27,
+      "width": 0.1,
+      "height": 0.05,
+      "groupedSkus": []
     },
     {
       "sku": "OR-K-LU1",
-      "name": "Luna 10'x10' Exhibit Kit",
-      "x": 0.38,
-      "y": 0.22,
-      "width": 0.38,
-      "height": 0.32
+      "name": "Luna 1 Orbital Express Truss 10ft Modular Exhibit",
+      "x": 0.73,
+      "y": 0.27,
+      "width": 0.15,
+      "height": 0.05,
+      "groupedSkus": []
     },
     {
       "sku": "OR-K-HE1",
-      "name": "Helios 10'x10' Exhibit Kit",
-      "x": 0.03,
+      "name": "Helios Orbital Express Truss 10ft Modular Exhibit",
+      "x": 0.3,
       "y": 0.53,
-      "width": 0.35,
-      "height": 0.32
+      "width": 0.13,
+      "height": 0.05,
+      "groupedSkus": []
     },
     {
       "sku": "OR-K-SR1",
-      "name": "Sirius 10'x10' Exhibit Kit",
-      "x": 0.38,
+      "name": "Sirius Orbital Express Truss 10ft Modular Exhibit",
+      "x": 0.76,
       "y": 0.53,
-      "width": 0.38,
-      "height": 0.32
+      "width": 0.12,
+      "height": 0.05,
+      "groupedSkus": []
     },
     {
       "sku": "OR-K-LX1",
-      "name": "Lynx 10'x10' Exhibit Kit",
-      "x": 0.03,
-      "y": 0.73,
-      "width": 0.35,
-      "height": 0.25
+      "name": "Lynx Orbital Express Truss 10ft Modular Exhibit",
+      "x": 0.3,
+      "y": 0.78,
+      "width": 0.1,
+      "height": 0.05,
+      "groupedSkus": []
+    },
+    {
+      "sku": "OR-K-CO1",
+      "name": "Clio Orbital Express Truss 10ft Modular Exhibit",
+      "x": 0.44,
+      "y": 0.82,
+      "width": 0.48,
+      "height": 0.15,
+      "groupedSkus": [
+        "OR-K-CO1",
+        "OR-K-LU1",
+        "OR-K-HE1",
+        "OR-K-SR1",
+        "OR-K-LX1"
+      ]
     }
   ],
   "169": [
     {
       "sku": "OR-K-LU2",
-      "name": "Luna 20",
-      "x": 0.05,
-      "y": 0.12,
-      "width": 0.42,
-      "height": 0.35,
-      "groupedSkus": []
+      "name": "Luna 2 Orbital Express Truss 20ft Modular Exhibit",
+      "x": 0.06,
+      "y": 0.44,
+      "width": 0.15,
+      "height": 0.04
     },
     {
       "sku": "OR-K-OB1",
-      "name": "Orbea",
+      "name": "Orbea Orbital Express Truss 20ft Modular Exhibit",
       "x": 0.5,
-      "y": 0.12,
-      "width": 0.45,
-      "height": 0.35,
-      "groupedSkus": []
+      "y": 0.44,
+      "width": 0.15,
+      "height": 0.04
     },
     {
       "sku": "OR-K-AX1",
-      "name": "Apex",
-      "x": 0.05,
-      "y": 0.5,
-      "width": 0.42,
-      "height": 0.32,
-      "groupedSkus": []
+      "name": "Apex Orbital Express Truss 20ft Modular Exhibit",
+      "x": 0.06,
+      "y": 0.73,
+      "width": 0.12,
+      "height": 0.04
     },
     {
       "sku": "OR-K-CI1",
       "name": "Callisto",
       "x": 0.5,
-      "y": 0.5,
+      "y": 0.73,
+      "width": 0.18,
+      "height": 0.04
+    },
+    {
+      "sku": "OR-K-LU2",
+      "name": "SKU Bank",
+      "x": 0.33,
+      "y": 0.85,
       "width": 0.42,
-      "height": 0.32,
-      "groupedSkus": []
+      "height": 0.1,
+      "groupedSkus": [
+        "OR-K-LU2",
+        "OR-K-OB1",
+        "OR-K-AX1",
+        "OR-K-CI1"
+      ]
     }
   ],
   "170": [
     {
       "sku": "OR-K-CE1-2",
-      "name": "Cepheus 2 10'x20' Exhibit Kit",
-      "x": 0.04,
-      "y": 0.14,
-      "width": 0.45,
-      "height": 0.3
+      "name": "Cepheus 2",
+      "x": 0.24,
+      "y": 0.42,
+      "width": 0.2,
+      "height": 0.05,
+      "groupedSkus": []
     },
     {
       "sku": "OR-K-AT1",
-      "name": "Antares 10'x20' Exhibit Kit",
-      "x": 0.5,
-      "y": 0.14,
-      "width": 0.48,
-      "height": 0.3
+      "name": "Antares",
+      "x": 0.7,
+      "y": 0.42,
+      "width": 0.18,
+      "height": 0.05,
+      "groupedSkus": []
     },
     {
       "sku": "OR-K-PX1",
-      "name": "Phoenix 10'x20' Exhibit Kit",
-      "x": 0.04,
-      "y": 0.52,
-      "width": 0.45,
-      "height": 0.28
+      "name": "Phoenix",
+      "x": 0.24,
+      "y": 0.72,
+      "width": 0.18,
+      "height": 0.05,
+      "groupedSkus": []
     },
     {
       "sku": "OR-K-PR1",
-      "name": "Polaris 10'x20' Exhibit Kit",
-      "x": 0.5,
-      "y": 0.52,
-      "width": 0.48,
-      "height": 0.28
+      "name": "Polaris",
+      "x": 0.7,
+      "y": 0.72,
+      "width": 0.16,
+      "height": 0.05,
+      "groupedSkus": []
+    },
+    {
+      "sku": "OR-K-CE1-2",
+      "name": "Cepheus 2",
+      "x": 0.3,
+      "y": 0.87,
+      "width": 0.45,
+      "height": 0.1,
+      "groupedSkus": [
+        "OR-K-CE1-2",
+        "OR-K-AT1",
+        "OR-K-PX1",
+        "OR-K-PR1"
+      ]
     }
   ],
   "171": [
     {
       "sku": "OR-K-ON1",
       "name": "Onyx 20'x20' Island Kit",
-      "x": 0.02,
-      "y": 0.18,
+      "x": 0.03,
+      "y": 0.88,
       "width": 0.42,
-      "height": 0.28,
-      "groupedSkus": []
+      "height": 0.1,
+      "groupedSkus": [
+        "OR-K-ON1",
+        "OR-K-CV1",
+        "OR-K-ZE1"
+      ]
     },
     {
       "sku": "OR-K-AH1",
       "name": "Aarhus 20'x20' Island Kit",
-      "x": 0.45,
-      "y": 0.18,
-      "width": 0.53,
-      "height": 0.28,
-      "groupedSkus": []
-    },
-    {
-      "sku": "OR-K-CV1",
-      "name": "Corvus 20'x20' Island Kit",
-      "x": 0.02,
-      "y": 0.46,
-      "width": 0.42,
-      "height": 0.25,
-      "groupedSkus": []
-    },
-    {
-      "sku": "OR-K-GE1",
-      "name": "Gemini 20'x20' Island Kit",
-      "x": 0.45,
-      "y": 0.46,
-      "width": 0.53,
-      "height": 0.25,
-      "groupedSkus": []
-    },
-    {
-      "sku": "OR-K-ZE1",
-      "name": "Zenit 20'x20' Island Kit",
-      "x": 0.02,
-      "y": 0.71,
-      "width": 0.42,
-      "height": 0.23,
-      "groupedSkus": []
-    },
-    {
-      "sku": "OR-K-CA1",
-      "name": "Canis 20'x20' Island Kit",
-      "x": 0.45,
-      "y": 0.71,
-      "width": 0.53,
-      "height": 0.23,
-      "groupedSkus": []
+      "x": 0.5,
+      "y": 0.88,
+      "width": 0.45,
+      "height": 0.1,
+      "groupedSkus": [
+        "OR-K-AH1",
+        "OR-K-GE1",
+        "OR-K-CA1"
+      ]
     }
   ],
   "172": [
     {
       "sku": "OR-K-HC08",
-      "name": "Hercules 08",
+      "name": "Hercules 08 Orbital Express Truss 10ft Modular Backwall",
       "x": 0.03,
-      "y": 0.27,
-      "width": 0.42,
-      "height": 0.33,
-      "groupedSkus": []
+      "y": 0.56,
+      "width": 0.22,
+      "height": 0.035
     },
     {
       "sku": "OR-K-HC09",
-      "name": "Hercules 09",
-      "x": 0.45,
-      "y": 0.25,
-      "width": 0.4,
-      "height": 0.35,
-      "groupedSkus": []
+      "name": "Hercules 09 Orbital Express Truss 10ft Modular Backwall",
+      "x": 0.5,
+      "y": 0.56,
+      "width": 0.22,
+      "height": 0.035
     },
     {
       "sku": "OR-K-HC10",
-      "name": "Hercules 10",
+      "name": "Hercules 10 Orbital Express Truss 10ft Modular Backwall",
       "x": 0.03,
-      "y": 0.58,
-      "width": 0.45,
-      "height": 0.33,
-      "groupedSkus": []
+      "y": 0.81,
+      "width": 0.22,
+      "height": 0.035
+    },
+    {
+      "sku": "OR-K-HC08",
+      "name": "Hercules Kit Spec Table",
+      "x": 0.03,
+      "y": 0.87,
+      "width": 0.42,
+      "height": 0.1,
+      "groupedSkus": [
+        "OR-K-HC08",
+        "OR-K-HC09",
+        "OR-K-HC10"
+      ]
     }
   ],
   "173": [
     {
-      "sku": "OR-K-HC15",
-      "name": "Hercules 12",
-      "x": 0.03,
-      "y": 0.12,
-      "width": 0.48,
-      "height": 0.35,
-      "groupedSkus": []
-    },
-    {
       "sku": "OR-K-HC13",
-      "name": "Hercules 13",
-      "x": 0.5,
-      "y": 0.12,
-      "width": 0.5,
-      "height": 0.35,
-      "groupedSkus": []
-    },
-    {
-      "sku": "OR-K-HC15",
-      "name": "Hercules 15",
+      "name": "Hercules 13 Orbital Express Truss 20ft Modular Backwall",
       "x": 0.05,
-      "y": 0.47,
-      "width": 0.45,
-      "height": 0.33,
-      "groupedSkus": []
+      "y": 0.88,
+      "width": 0.42,
+      "height": 0.08,
+      "groupedSkus": [
+        "OR-K-HC13",
+        "OR-K-HC15"
+      ]
     }
   ],
   "174": [
@@ -4889,103 +4876,94 @@
       "sku": "OR-SM-MB",
       "name": "Opti-Mount 1 Truss Monitor Mount (23\"-42\" LCD, 50 lbs max)",
       "x": 0.03,
-      "y": 0.44,
-      "width": 0.2,
-      "height": 0.18,
-      "groupedSkus": []
+      "y": 0.58,
+      "width": 0.28,
+      "height": 0.07
     },
     {
       "sku": "OR-M-MB",
       "name": "Opti-Mount 2 Truss Monitor Mount (32\"-55\" LCD, 80 lbs max)",
-      "x": 0.33,
-      "y": 0.44,
-      "width": 0.22,
-      "height": 0.18,
-      "groupedSkus": []
+      "x": 0.35,
+      "y": 0.58,
+      "width": 0.3,
+      "height": 0.07
     },
     {
       "sku": "OR-LG-MB",
       "name": "Opti-Mount 3 Truss Monitor Mount (37\"-70\" LCD, 150 lbs max)",
-      "x": 0.65,
-      "y": 0.44,
-      "width": 0.25,
-      "height": 0.18,
-      "groupedSkus": []
+      "x": 0.67,
+      "y": 0.58,
+      "width": 0.3,
+      "height": 0.07
     },
     {
       "sku": "OR-STG",
       "name": "Lit Rack (10 pocket clamp on literature rack)",
-      "x": 0.75,
-      "y": 0.73,
-      "width": 0.18,
-      "height": 0.22,
-      "groupedSkus": []
+      "x": 0.44,
+      "y": 0.72,
+      "width": 0.27,
+      "height": 0.07
     }
   ],
   "175": [
     {
       "sku": "OR-TC01",
       "name": "Rectangle Truss Counter",
-      "x": 0.02,
-      "y": 0.14,
-      "width": 0.22,
-      "height": 0.2,
-      "groupedSkus": []
-    },
-    {
-      "sku": "OR-TC02",
-      "name": "Oval Truss Counter",
-      "x": 0.25,
-      "y": 0.14,
-      "width": 0.22,
-      "height": 0.2,
-      "groupedSkus": []
+      "x": 0.03,
+      "y": 0.44,
+      "width": 0.32,
+      "height": 0.08,
+      "groupedSkus": [
+        "OR-TC01",
+        "OR-TC02"
+      ]
     },
     {
       "sku": "OR-TC03",
       "name": "Racetrack Truss Counter",
-      "x": 0.49,
-      "y": 0.14,
-      "width": 0.22,
-      "height": 0.2,
-      "groupedSkus": []
-    },
-    {
-      "sku": "OR-TC04",
-      "name": "Curve Truss Counter",
-      "x": 0.73,
-      "y": 0.14,
-      "width": 0.22,
-      "height": 0.2,
-      "groupedSkus": []
+      "x": 0.37,
+      "y": 0.44,
+      "width": 0.33,
+      "height": 0.08,
+      "groupedSkus": [
+        "OR-TC03",
+        "OR-TC04"
+      ]
     },
     {
       "sku": "OR-24/36/46-MP",
       "name": "Wire Rack",
       "x": 0.03,
-      "y": 0.58,
+      "y": 0.9,
       "width": 0.28,
-      "height": 0.25,
-      "groupedSkus": [
-        "OR-24-MP-M"
-      ]
+      "height": 0.04,
+      "groupedSkus": []
     },
     {
       "sku": "OR-36/46-SP",
       "name": "Hanging Rack",
       "x": 0.35,
-      "y": 0.58,
+      "y": 0.9,
       "width": 0.28,
-      "height": 0.25,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "OR-24/36/46-SST",
       "name": "Wire/Hanging Rack Connector",
-      "x": 0.67,
-      "y": 0.58,
-      "width": 0.28,
-      "height": 0.25,
+      "x": 0.66,
+      "y": 0.9,
+      "width": 0.3,
+      "height": 0.04,
+      "groupedSkus": []
+    },
+    {
+      "sku": "OR-24-MP-M",
+      "name": "Wire Rack mount to verticals",
+      "x": 0.03,
+      "y": 0.85,
+      "width": 0.25,
+      "height": 0.03,
       "groupedSkus": []
     }
   ],
@@ -4993,79 +4971,81 @@
     {
       "sku": "HOP-CT-2",
       "name": "Hopup Counter",
-      "x": 0.02,
-      "y": 0.22,
+      "x": 0.03,
+      "y": 0.59,
       "width": 0.42,
-      "height": 0.32,
+      "height": 0.04,
       "groupedSkus": []
-    },
-    {
-      "sku": "EMB-CT",
-      "name": "Embrace Counter",
-      "x": 0.5,
-      "y": 0.22,
-      "width": 0.48,
-      "height": 0.32,
-      "groupedSkus": [
-        "EMB-CT-BL"
-      ]
     },
     {
       "sku": "VFF-CT-BL",
       "name": "Vector Fast Frame Backlit Counter",
-      "x": 0.02,
-      "y": 0.58,
-      "width": 0.42,
-      "height": 0.28,
+      "x": 0.03,
+      "y": 0.92,
+      "width": 0.45,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "FF-CT-CL-BL",
       "name": "Fast Frame Foldaway Counter",
-      "x": 0.5,
-      "y": 0.58,
+      "x": 0.52,
+      "y": 0.9,
       "width": 0.42,
-      "height": 0.28,
+      "height": 0.04,
       "groupedSkus": []
+    },
+    {
+      "sku": "EMB-CT",
+      "name": "Embrace Counter",
+      "x": 0.52,
+      "y": 0.59,
+      "width": 0.42,
+      "height": 0.04,
+      "groupedSkus": [
+        "EMB-CT",
+        "EMB-CT-BL"
+      ]
     }
   ],
   "180": [
     {
       "sku": "CP-B3",
       "name": "Campaign Counter",
-      "x": 0.03,
-      "y": 0.18,
-      "width": 0.25,
-      "height": 0.25,
+      "x": 0.04,
+      "y": 0.575,
+      "width": 0.42,
+      "height": 0.035,
       "groupedSkus": []
     },
     {
       "sku": "PERCH-6",
-      "name": "Perch Table Banner 6' wide",
-      "x": 0.45,
-      "y": 0.14,
-      "width": 0.35,
-      "height": 0.28,
+      "name": "Perch Table Banner",
+      "x": 0.5,
+      "y": 0.575,
+      "width": 0.48,
+      "height": 0.07,
       "groupedSkus": [
+        "PERCH-6",
         "PERCH-8"
       ]
     },
     {
       "sku": "FMLT-CHRG-01",
-      "name": "Charging Tower",
-      "x": 0.03,
-      "y": 0.6,
-      "width": 0.25,
-      "height": 0.25,
+      "name": "Formulate Charging Tower",
+      "x": 0.04,
+      "y": 0.95,
+      "width": 0.35,
+      "height": 0.035,
       "groupedSkus": []
     },
     {
       "sku": "FMLT-CHRG-CNTR-01-G",
       "name": "Charging Counter",
       "x": 0.5,
-      "y": 0.58,
-      "width": 0.3,
-      "height": 0.25,
+      "y": 0.93,
+      "width": 0.42,
+      "height": 0.035,
       "groupedSkus": []
     }
   ],
@@ -5073,166 +5053,130 @@
     {
       "sku": "PAD21-04",
       "name": "Universal Tablet Stand",
-      "x": 0.03,
-      "y": 0.1,
-      "width": 0.3,
-      "height": 0.35,
+      "x": 0.04,
+      "y": 0.575,
+      "width": 0.38,
+      "height": 0.045,
       "groupedSkus": []
     },
     {
       "sku": "TABLET-STD-ESS-SH-S",
       "name": "Tablet Stand Small",
-      "x": 0.45,
-      "y": 0.1,
-      "width": 0.5,
-      "height": 0.35,
+      "x": 0.52,
+      "y": 0.575,
+      "width": 0.46,
+      "height": 0.065,
       "groupedSkus": [
+        "TABLET-STD-ESS-SH-S",
         "TABLET-STD-ESS-SH-L"
       ]
     },
     {
       "sku": "TABLET-STD-02",
       "name": "Tension Fabric iPad Stand 02",
-      "x": 0.03,
-      "y": 0.58,
-      "width": 0.15,
-      "height": 0.32,
-      "groupedSkus": []
-    },
-    {
-      "sku": "TABLET-STD-03",
-      "name": "Tension Fabric iPad Stand 03",
-      "x": 0.17,
-      "y": 0.58,
-      "width": 0.13,
-      "height": 0.32,
-      "groupedSkus": []
-    },
-    {
-      "sku": "TABLET-STD-04",
-      "name": "Tension Fabric iPad Stand 04",
-      "x": 0.3,
-      "y": 0.58,
-      "width": 0.1,
-      "height": 0.32,
-      "groupedSkus": []
-    },
-    {
-      "sku": "TABLET-STD-05",
-      "name": "Tension Fabric iPad Stand 05",
-      "x": 0.4,
-      "y": 0.58,
-      "width": 0.1,
-      "height": 0.32,
-      "groupedSkus": []
+      "x": 0.53,
+      "y": 0.86,
+      "width": 0.42,
+      "height": 0.1,
+      "groupedSkus": [
+        "TABLET-STD-02",
+        "TABLET-STD-03",
+        "TABLET-STD-04",
+        "TABLET-STD-05"
+      ]
     }
   ],
   "182": [
     {
       "sku": "FMLT-KIOSK-01",
-      "name": "Formulate Kiosk 01",
-      "x": 0.03,
-      "y": 0.08,
-      "width": 0.14,
-      "height": 0.32,
-      "groupedSkus": []
-    },
-    {
-      "sku": "FMLT-KIOSK-02",
-      "name": "Formulate Kiosk 02",
-      "x": 0.17,
-      "y": 0.08,
-      "width": 0.14,
-      "height": 0.32,
-      "groupedSkus": []
-    },
-    {
-      "sku": "FMLT-KIOSK-03",
-      "name": "Formulate Kiosk 03",
-      "x": 0.31,
-      "y": 0.08,
-      "width": 0.14,
-      "height": 0.32,
-      "groupedSkus": []
-    },
-    {
-      "sku": "FMLT-KIOSK-04",
-      "name": "Formulate Kiosk 04",
-      "x": 0.45,
-      "y": 0.08,
-      "width": 0.14,
-      "height": 0.32,
-      "groupedSkus": []
+      "name": "Formulate Tension Fabric Kiosk",
+      "x": 0.52,
+      "y": 0.3,
+      "width": 0.46,
+      "height": 0.18,
+      "groupedSkus": [
+        "FMLT-KIOSK-01",
+        "FMLT-KIOSK-02",
+        "FMLT-KIOSK-03",
+        "FMLT-KIOSK-04"
+      ]
     },
     {
       "sku": "FREESTANDING-SPLIT-MM",
       "name": "Freestanding Portable Monitor Kiosk",
-      "x": 0.03,
-      "y": 0.46,
-      "width": 0.15,
-      "height": 0.25,
+      "x": 0.04,
+      "y": 0.6,
+      "width": 0.17,
+      "height": 0.1,
       "groupedSkus": []
     },
     {
       "sku": "PM4S3-MK-M/L",
       "name": "Freestanding Monitor Kiosk",
-      "x": 0.2,
-      "y": 0.46,
-      "width": 0.15,
-      "height": 0.25,
+      "x": 0.22,
+      "y": 0.6,
+      "width": 0.17,
+      "height": 0.14,
       "groupedSkus": []
     },
     {
       "sku": "PM4S3-MK-M-MSHELF",
       "name": "Freestanding Monitor Kiosk w/ Shelf",
-      "x": 0.37,
-      "y": 0.46,
-      "width": 0.15,
-      "height": 0.25,
+      "x": 0.4,
+      "y": 0.6,
+      "width": 0.17,
+      "height": 0.12,
       "groupedSkus": [
+        "PM4S3-MK-M-MSHELF",
         "PM4S3-MK-L-MSHELF"
       ]
     },
     {
       "sku": "PM4S3-MK-SHELF-UNIT",
       "name": "Freestanding Shelf",
-      "x": 0.55,
-      "y": 0.46,
-      "width": 0.15,
-      "height": 0.25,
+      "x": 0.58,
+      "y": 0.6,
+      "width": 0.17,
+      "height": 0.08,
       "groupedSkus": []
     },
     {
       "sku": "VB-MK-01",
       "name": "Vibe Monitor Kiosk",
-      "x": 0.73,
-      "y": 0.46,
-      "width": 0.15,
-      "height": 0.25,
+      "x": 0.76,
+      "y": 0.6,
+      "width": 0.17,
+      "height": 0.1,
       "groupedSkus": []
+    },
+    {
+      "sku": "FREESTANDING-SPLIT-MM",
+      "name": "Freestanding Monitor Kiosks Table",
+      "x": 0.5,
+      "y": 0.82,
+      "width": 0.48,
+      "height": 0.15,
+      "groupedSkus": [
+        "FREESTANDING-SPLIT-MM",
+        "PM4S3-MK-M/L",
+        "PM4S3-MK-M-MSHELF",
+        "PM4S3-MK-L-MSHELF",
+        "PM4S3-MK-SHELF-UNIT",
+        "VB-MK-01"
+      ]
     }
   ],
   "183": [
     {
       "sku": "VF-MK-01-SS",
-      "name": "Monitor Kiosk 01 (single-sided)",
-      "x": 0.03,
-      "y": 0.08,
-      "width": 0.18,
-      "height": 0.32,
+      "name": "Monitor Kiosk 01",
+      "x": 0.46,
+      "y": 0.3,
+      "width": 0.48,
+      "height": 0.08,
       "groupedSkus": [
         "VF-MK-01-SS",
-        "VF-MK-01-DS"
-      ]
-    },
-    {
-      "sku": "VF-MK-02-SS",
-      "name": "Monitor Kiosk 02 (single-sided)",
-      "x": 0.2,
-      "y": 0.08,
-      "width": 0.22,
-      "height": 0.32,
-      "groupedSkus": [
+        "VF-MK-01-DS",
         "VF-MK-02-SS",
         "VF-MK-02-DS"
       ]
@@ -5241,18 +5185,18 @@
       "sku": "TWIST-3",
       "name": "Twist 3 Display Cabinet",
       "x": 0.03,
-      "y": 0.42,
-      "width": 0.22,
-      "height": 0.33,
+      "y": 0.93,
+      "width": 0.35,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "TWIST-4",
       "name": "Twist 4 Display Cabinet",
-      "x": 0.4,
-      "y": 0.42,
-      "width": 0.27,
-      "height": 0.33,
+      "x": 0.5,
+      "y": 0.93,
+      "width": 0.35,
+      "height": 0.04,
       "groupedSkus": []
     }
   ],
@@ -5260,19 +5204,19 @@
     {
       "sku": "ADVOCATE",
       "name": "advocate sign stand",
-      "x": 0.03,
-      "y": 0.18,
-      "width": 0.35,
-      "height": 0.47,
+      "x": 0.04,
+      "y": 0.76,
+      "width": 0.42,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "SNP-STAND",
       "name": "snapper sign stand",
-      "x": 0.45,
-      "y": 0.18,
-      "width": 0.45,
-      "height": 0.47,
+      "x": 0.52,
+      "y": 0.73,
+      "width": 0.44,
+      "height": 0.04,
       "groupedSkus": []
     }
   ],
@@ -5280,42 +5224,41 @@
     {
       "sku": "OBS-LP-SYS",
       "name": "Observe Pro",
-      "x": 0.03,
-      "y": 0.15,
-      "width": 0.25,
-      "height": 0.42
+      "x": 0.035,
+      "y": 0.685,
+      "width": 0.28,
+      "height": 0.045,
+      "groupedSkus": []
     },
     {
       "sku": "OBS-DLX",
       "name": "Observe Deluxe",
-      "x": 0.32,
-      "y": 0.15,
-      "width": 0.28,
-      "height": 0.42
+      "x": 0.35,
+      "y": 0.72,
+      "width": 0.3,
+      "height": 0.045,
+      "groupedSkus": []
     },
     {
       "sku": "WED-1-B",
       "name": "Wedge",
-      "x": 0.65,
-      "y": 0.15,
-      "width": 0.25,
-      "height": 0.38
+      "x": 0.67,
+      "y": 0.685,
+      "width": 0.3,
+      "height": 0.045,
+      "groupedSkus": []
     },
     {
       "sku": "TP1",
-      "name": "Trappa Post TP1",
-      "x": 0.03,
-      "y": 0.68,
-      "width": 0.28,
-      "height": 0.28
-    },
-    {
-      "sku": "TP2",
-      "name": "Trappa Post TP2",
-      "x": 0.33,
-      "y": 0.68,
-      "width": 0.28,
-      "height": 0.28
+      "name": "Trappa Post",
+      "x": 0.4,
+      "y": 0.93,
+      "width": 0.18,
+      "height": 0.03,
+      "groupedSkus": [
+        "TP1",
+        "TP2"
+      ]
     }
   ],
   "186": [
@@ -5323,9 +5266,9 @@
       "sku": "ZD-1-B",
       "name": "Zedup 1",
       "x": 0.02,
-      "y": 0.08,
-      "width": 0.3,
-      "height": 0.35,
+      "y": 0.565,
+      "width": 0.33,
+      "height": 0.055,
       "groupedSkus": [
         "ZD-1-B",
         "ZD-1-S"
@@ -5334,46 +5277,46 @@
     {
       "sku": "QNTM-SS",
       "name": "Quantum Single-Sided",
-      "x": 0.33,
-      "y": 0.08,
+      "x": 0.35,
+      "y": 0.58,
       "width": 0.3,
-      "height": 0.35,
+      "height": 0.05,
       "groupedSkus": []
     },
     {
       "sku": "ZD-LITE",
       "name": "Zedup Lite",
-      "x": 0.65,
-      "y": 0.08,
-      "width": 0.33,
-      "height": 0.35,
+      "x": 0.66,
+      "y": 0.58,
+      "width": 0.32,
+      "height": 0.05,
       "groupedSkus": []
     },
     {
       "sku": "OASIS",
       "name": "Oasis",
       "x": 0.02,
-      "y": 0.56,
-      "width": 0.28,
-      "height": 0.25,
+      "y": 0.9,
+      "width": 0.2,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "SMDR-ST-01",
       "name": "Clothing Display Rack",
-      "x": 0.33,
-      "y": 0.56,
+      "x": 0.35,
+      "y": 0.96,
       "width": 0.28,
-      "height": 0.25,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "STEP-STOOL-BLUE",
       "name": "Step Stool",
-      "x": 0.65,
-      "y": 0.56,
-      "width": 0.33,
-      "height": 0.25,
+      "x": 0.66,
+      "y": 0.91,
+      "width": 0.28,
+      "height": 0.045,
       "groupedSkus": []
     }
   ],
@@ -5381,55 +5324,55 @@
     {
       "sku": "LUM-LED4-ORL-B",
       "name": "LED flood",
-      "x": 0.08,
-      "y": 0.15,
-      "width": 0.22,
-      "height": 0.25,
+      "x": 0.17,
+      "y": 0.37,
+      "width": 0.24,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "LUM-LED3-ORL-B",
       "name": "LED spot",
-      "x": 0.55,
-      "y": 0.12,
-      "width": 0.22,
-      "height": 0.22,
+      "x": 0.62,
+      "y": 0.33,
+      "width": 0.24,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "LUM-LED5-ORL-B",
       "name": "LED strip",
-      "x": 0.08,
-      "y": 0.45,
-      "width": 0.2,
-      "height": 0.2,
+      "x": 0.17,
+      "y": 0.68,
+      "width": 0.24,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "LUM-LED6-ORL-B",
       "name": "LED exhibition",
-      "x": 0.55,
-      "y": 0.45,
-      "width": 0.2,
-      "height": 0.18,
+      "x": 0.62,
+      "y": 0.66,
+      "width": 0.26,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "LUM-LED2-ORL-B/S",
       "name": "lumina 200 LED",
-      "x": 0.08,
-      "y": 0.72,
-      "width": 0.22,
-      "height": 0.18,
+      "x": 0.17,
+      "y": 0.95,
+      "width": 0.27,
+      "height": 0.04,
       "groupedSkus": []
     },
     {
       "sku": "LUM-LED7-ORL-B",
       "name": "LED eco",
-      "x": 0.55,
-      "y": 0.74,
-      "width": 0.22,
-      "height": 0.15,
+      "x": 0.62,
+      "y": 0.94,
+      "width": 0.3,
+      "height": 0.05,
       "groupedSkus": [
         "LUM-LED7-ORL-B-EXT"
       ]
@@ -5439,78 +5382,66 @@
     {
       "sku": "ZM-TNT-LED-01",
       "name": "zoom tent light kit",
-      "x": 0.05,
-      "y": 0.13,
-      "width": 0.22,
-      "height": 0.15,
+      "x": 0.04,
+      "y": 0.48,
+      "width": 0.26,
+      "height": 0.045,
       "groupedSkus": []
     },
     {
       "sku": "UNI-LT-CLP30",
       "name": "universal light clamp kit",
-      "x": 0.35,
-      "y": 0.13,
-      "width": 0.22,
-      "height": 0.15,
+      "x": 0.34,
+      "y": 0.42,
+      "width": 0.3,
+      "height": 0.065,
       "groupedSkus": [
+        "UNI-LT-CLP30",
         "UNI-LT-CLP50"
       ]
     },
     {
       "sku": "SPT-CASE",
       "name": "spt case",
-      "x": 0.7,
-      "y": 0.13,
-      "width": 0.25,
-      "height": 0.15,
+      "x": 0.67,
+      "y": 0.36,
+      "width": 0.2,
+      "height": 0.045,
       "groupedSkus": []
     },
     {
       "sku": "LED-FLOOD",
       "name": "LED flood light",
-      "x": 0.05,
-      "y": 0.47,
-      "width": 0.18,
-      "height": 0.15,
+      "x": 0.24,
+      "y": 0.66,
+      "width": 0.32,
+      "height": 0.045,
       "groupedSkus": []
     },
     {
       "sku": "LED-10W-FLOOD-RGB",
       "name": "mini LED flood light",
-      "x": 0.55,
-      "y": 0.47,
-      "width": 0.15,
-      "height": 0.13,
+      "x": 0.58,
+      "y": 0.68,
+      "width": 0.38,
+      "height": 0.055,
       "groupedSkus": [
+        "LED-10W-FLOOD-RGB",
         "LED-10W-FLOOD-W"
       ]
     },
     {
       "sku": "LED-WRM-WHT-BLAST",
-      "name": "color blast accent lights warm white",
-      "x": 0.05,
-      "y": 0.73,
-      "width": 0.17,
-      "height": 0.16,
-      "groupedSkus": []
-    },
-    {
-      "sku": "LED-COOL-WHT-BLAST",
-      "name": "color blast accent lights cool white",
-      "x": 0.23,
-      "y": 0.73,
-      "width": 0.17,
-      "height": 0.16,
-      "groupedSkus": []
-    },
-    {
-      "sku": "LED-RGB-BLAST",
-      "name": "color blast accent lights RGB",
-      "x": 0.41,
-      "y": 0.73,
-      "width": 0.17,
-      "height": 0.16,
-      "groupedSkus": []
+      "name": "color blast accent lights",
+      "x": 0.59,
+      "y": 0.9,
+      "width": 0.33,
+      "height": 0.065,
+      "groupedSkus": [
+        "LED-WRM-WHT-BLAST",
+        "LED-COOL-WHT-BLAST",
+        "LED-RGB-BLAST"
+      ]
     }
   ],
   "189": [
@@ -5518,28 +5449,27 @@
       "sku": "OCA-2",
       "name": "lighting & accessory case",
       "x": 0.04,
-      "y": 0.14,
-      "width": 0.28,
-      "height": 0.25,
-      "groupedSkus": []
+      "y": 0.47,
+      "width": 0.44,
+      "height": 0.07
     },
     {
       "sku": "OCB-2",
       "name": "banner stand case",
       "x": 0.52,
-      "y": 0.14,
-      "width": 0.35,
-      "height": 0.35,
-      "groupedSkus": []
+      "y": 0.56,
+      "width": 0.46,
+      "height": 0.07
     },
     {
       "sku": "OCS",
       "name": "small graphic case",
       "x": 0.04,
-      "y": 0.56,
-      "width": 0.22,
-      "height": 0.3,
+      "y": 0.93,
+      "width": 0.44,
+      "height": 0.07,
       "groupedSkus": [
+        "OCS",
         "OCL"
       ]
     },
@@ -5547,38 +5477,37 @@
       "sku": "OCE-2",
       "name": "expandable case",
       "x": 0.52,
-      "y": 0.56,
-      "width": 0.3,
-      "height": 0.28,
-      "groupedSkus": []
+      "y": 0.93,
+      "width": 0.46,
+      "height": 0.05
     }
   ],
   "190": [
     {
       "sku": "OCX",
       "name": "Standard Wheeled Display Case",
-      "x": 0.03,
-      "y": 0.12,
-      "width": 0.55,
-      "height": 0.35,
+      "x": 0.04,
+      "y": 0.575,
+      "width": 0.52,
+      "height": 0.055,
       "groupedSkus": []
     },
     {
       "sku": "OC-HOP",
       "name": "Hopup-Medium Wheeled Case",
-      "x": 0.03,
-      "y": 0.58,
-      "width": 0.35,
-      "height": 0.32,
+      "x": 0.04,
+      "y": 0.93,
+      "width": 0.45,
+      "height": 0.055,
       "groupedSkus": []
     },
     {
       "sku": "TROLLEY",
       "name": "Trolley Roller",
-      "x": 0.52,
-      "y": 0.58,
-      "width": 0.25,
-      "height": 0.3,
+      "x": 0.54,
+      "y": 0.9,
+      "width": 0.43,
+      "height": 0.055,
       "groupedSkus": []
     }
   ],
@@ -5586,55 +5515,80 @@
     {
       "sku": "OCH",
       "name": "large display case",
-      "x": 0.03,
-      "y": 0.1,
-      "width": 0.18,
-      "height": 0.28,
+      "x": 0.37,
+      "y": 0.38,
+      "width": 0.55,
+      "height": 0.08,
+      "groupedSkus": [
+        "OCH",
+        "OCH2"
+      ]
+    },
+    {
+      "sku": "OCH",
+      "name": "large display case",
+      "x": 0.06,
+      "y": 0.44,
+      "width": 0.08,
+      "height": 0.03,
       "groupedSkus": []
     },
     {
       "sku": "OCH2",
-      "name": "large display case 2",
+      "name": "OCH2 wheeled molded case",
       "x": 0.2,
-      "y": 0.1,
-      "width": 0.18,
-      "height": 0.28,
+      "y": 0.44,
+      "width": 0.08,
+      "height": 0.03,
       "groupedSkus": []
     },
     {
       "sku": "OCFM",
       "name": "freight case",
-      "x": 0.03,
-      "y": 0.49,
-      "width": 0.22,
-      "height": 0.18,
+      "x": 0.07,
+      "y": 0.6,
+      "width": 0.08,
+      "height": 0.03,
       "groupedSkus": []
     },
     {
       "sku": "OCF",
       "name": "freight case",
-      "x": 0.15,
-      "y": 0.62,
-      "width": 0.22,
-      "height": 0.18,
+      "x": 0.3,
+      "y": 0.72,
+      "width": 0.06,
+      "height": 0.03,
       "groupedSkus": []
     },
     {
       "sku": "OCF2",
       "name": "freight case",
-      "x": 0.03,
-      "y": 0.7,
-      "width": 0.2,
-      "height": 0.15,
+      "x": 0.07,
+      "y": 0.78,
+      "width": 0.08,
+      "height": 0.03,
       "groupedSkus": []
+    },
+    {
+      "sku": "OCFM",
+      "name": "freight case",
+      "x": 0.37,
+      "y": 0.73,
+      "width": 0.55,
+      "height": 0.12,
+      "groupedSkus": [
+        "OCFM",
+        "OCF",
+        "OCF2"
+      ]
     },
     {
       "sku": "OCT",
       "name": "orbital curved truss case",
-      "x": 0.03,
-      "y": 0.86,
-      "width": 0.2,
-      "height": 0.12,
+      "x": 0.37,
+      "y": 0.91,
+      "width": 0.55,
+      "height": 0.05,
       "groupedSkus": []
     }
   ],
@@ -5642,19 +5596,19 @@
     {
       "sku": "MFY-SS-K-01-W/B/S",
       "name": "Kit 01 - Single Sided Merchandise Display",
-      "x": 0.03,
-      "y": 0.1,
-      "width": 0.35,
-      "height": 0.35,
+      "x": 0.48,
+      "y": 0.12,
+      "width": 0.45,
+      "height": 0.07,
       "groupedSkus": []
     },
     {
       "sku": "MFY-SS-K-02-W/B/S",
       "name": "Kit 02 - Single Sided Merchandise Display with Slatwall",
-      "x": 0.03,
-      "y": 0.56,
-      "width": 0.35,
-      "height": 0.35,
+      "x": 0.44,
+      "y": 0.6,
+      "width": 0.48,
+      "height": 0.08,
       "groupedSkus": []
     }
   ],
@@ -5663,31 +5617,31 @@
       "sku": "MFY-SS-K-03-W/B/S",
       "name": "Kit 03 - Single Sided Merchandise Display with Two Slatwall Panels",
       "x": 0.05,
-      "y": 0.08,
-      "width": 0.92,
-      "height": 0.55,
+      "y": 0.68,
+      "width": 0.52,
+      "height": 0.09,
       "groupedSkus": []
     }
   ],
   "200": [
     {
       "sku": "MFY-SS-K-04-W/B/S",
-      "name": "KIT 04 Single Sided Merchandise Display with Three Slatwall Panels",
-      "x": 0.02,
-      "y": 0.07,
-      "width": 0.96,
-      "height": 0.53,
+      "name": "Kit 04 Single Sided Merchandise Display with Three Slatwall Panels",
+      "x": 0.05,
+      "y": 0.62,
+      "width": 0.52,
+      "height": 0.09,
       "groupedSkus": []
     }
   ],
   "201": [
     {
       "sku": "MFY-SS-K-05-W/B/S",
-      "name": "KIT 05 - Single Sided Merchandise Display",
-      "x": 0.03,
-      "y": 0.06,
-      "width": 0.72,
-      "height": 0.5,
+      "name": "KIT 05 Single Sided Merchandise Display",
+      "x": 0.04,
+      "y": 0.62,
+      "width": 0.45,
+      "height": 0.07,
       "groupedSkus": []
     }
   ],
@@ -5695,10 +5649,10 @@
     {
       "sku": "MFY-DS-K-01-W/B/S",
       "name": "Kit 01 Double Sided Merchandise Display",
-      "x": 0.05,
-      "y": 0.1,
-      "width": 0.35,
-      "height": 0.48,
+      "x": 0.06,
+      "y": 0.62,
+      "width": 0.52,
+      "height": 0.08,
       "groupedSkus": []
     }
   ],
@@ -5706,10 +5660,10 @@
     {
       "sku": "MFY-DS-K-02-W/B/S",
       "name": "KIT 02 Double Sided Merchandise Display",
-      "x": 0.03,
-      "y": 0.1,
-      "width": 0.95,
-      "height": 0.52,
+      "x": 0.05,
+      "y": 0.7,
+      "width": 0.48,
+      "height": 0.06,
       "groupedSkus": []
     }
   ],
@@ -5717,21 +5671,21 @@
     {
       "sku": "MFY-DS-K-03-W/B/S",
       "name": "KIT 03 Double Sided Merchandise Display",
-      "x": 0.08,
-      "y": 0.08,
-      "width": 0.72,
-      "height": 0.52,
+      "x": 0.04,
+      "y": 0.62,
+      "width": 0.48,
+      "height": 0.07,
       "groupedSkus": []
     }
   ],
   "205": [
     {
       "sku": "MFY-DS-K-04-W/B/S",
-      "name": "Kit 04 Double Sided Slatwall Merchandise Display",
-      "x": 0.02,
-      "y": 0.08,
-      "width": 0.96,
-      "height": 0.47,
+      "name": "KIT 04 Double Sided Slatwall Merchandise Display",
+      "x": 0.065,
+      "y": 0.625,
+      "width": 0.52,
+      "height": 0.075,
       "groupedSkus": []
     }
   ],
@@ -5739,41 +5693,41 @@
     {
       "sku": "MFY-GN-K-01-W/B/S",
       "name": "KIT 01 Gondola Retail Display 76.5\"W x 72\"H x 37.5\"D",
-      "x": 0.03,
-      "y": 0.1,
-      "width": 0.94,
-      "height": 0.48,
+      "x": 0.08,
+      "y": 0.6,
+      "width": 0.5,
+      "height": 0.07,
       "groupedSkus": []
     }
   ],
   "207": [
     {
       "sku": "MFY-GN-K-02-W/B/S",
-      "name": "KIT 02 Gondola Retail Display 76.5\"W x 96\"H x 28.5\"D",
-      "x": 0.02,
+      "name": "KIT 02 Gondola Retail Display",
+      "x": 0.47,
       "y": 0.07,
-      "width": 0.42,
-      "height": 0.38,
+      "width": 0.45,
+      "height": 0.07,
       "groupedSkus": []
     },
     {
       "sku": "MFY-GN-K-03-W/B/S",
-      "name": "KIT 03 Gondola Retail Display 39\"W x 61.5\"H x 37.5\"D",
-      "x": 0.02,
+      "name": "KIT 03 Gondola Retail Display",
+      "x": 0.47,
       "y": 0.56,
-      "width": 0.22,
-      "height": 0.28,
+      "width": 0.45,
+      "height": 0.07,
       "groupedSkus": []
     }
   ],
   "208": [
     {
       "sku": "MFY-4S-K-01-W/B/S",
-      "name": "KIT 01 Four Sided Backlit Retail Tower 39\"W x 144\"H x 39\"D",
-      "x": 0.03,
-      "y": 0.08,
-      "width": 0.94,
-      "height": 0.52,
+      "name": "KIT 01 Four Sided Backlit Retail Tower",
+      "x": 0.04,
+      "y": 0.62,
+      "width": 0.52,
+      "height": 0.06,
       "groupedSkus": []
     }
   ],
@@ -5781,55 +5735,46 @@
     {
       "sku": "MFY-4S-K-02-W/B/S",
       "name": "Four Sided Retail Tower w/ Square Header",
-      "x": 0.03,
-      "y": 0.07,
-      "width": 0.38,
-      "height": 0.55,
+      "x": 0.04,
+      "y": 0.62,
+      "width": 0.52,
+      "height": 0.07,
       "groupedSkus": []
     }
   ],
   "210": [
     {
       "sku": "MFY-4S-K-03-W/B/S",
-      "name": "KIT 03 Four Sided Arch Retail Display",
-      "x": 0.04,
-      "y": 0.1,
-      "width": 0.92,
-      "height": 0.45,
+      "name": "Kit 03 Four Sided Arch Retail Display",
+      "x": 0.06,
+      "y": 0.6,
+      "width": 0.42,
+      "height": 0.05,
       "groupedSkus": []
     }
   ],
   "212": [
     {
       "sku": "MFY-RSR-01",
-      "name": "Riser 34\"W x 18\"H x 17.75\"D",
-      "x": 0.35,
-      "y": 0.3,
-      "width": 0.3,
-      "height": 0.22,
+      "name": "MODify Riser",
+      "x": 0.05,
+      "y": 0.27,
+      "width": 0.38,
+      "height": 0.06,
       "groupedSkus": [
-        "MFY-RSR-02"
-      ]
-    },
-    {
-      "sku": "MFY-RSR-01",
-      "name": "Riser with Magnetic Graphics",
-      "x": 0.62,
-      "y": 0.28,
-      "width": 0.35,
-      "height": 0.28,
-      "groupedSkus": [
+        "MFY-RSR-01",
         "MFY-RSR-02"
       ]
     },
     {
       "sku": "MFY-TBL-01-W/B/S",
-      "name": "Modify Nesting Table 56\"W x 36\"H x 30\"D",
-      "x": 0.38,
-      "y": 0.6,
-      "width": 0.58,
-      "height": 0.32,
+      "name": "Modify Nesting Table",
+      "x": 0.05,
+      "y": 0.62,
+      "width": 0.42,
+      "height": 0.1,
       "groupedSkus": [
+        "MFY-TBL-01-W/B/S",
         "MFY-TBL-02-W/B/S",
         "MFY-TBL-03-W/B/S",
         "MFY-TBL-04-W/B/S"
@@ -5840,44 +5785,55 @@
     {
       "sku": "HPC-14",
       "name": "Modify Display Table",
-      "x": 0.52,
-      "y": 0.13,
-      "width": 0.42,
-      "height": 0.25,
+      "x": 0.04,
+      "y": 0.14,
+      "width": 0.38,
+      "height": 0.06,
       "groupedSkus": [
+        "HPC-14",
         "HPC-13"
       ]
     },
     {
       "sku": "HPC-02",
       "name": "Modify Counter",
-      "x": 0.55,
-      "y": 0.42,
-      "width": 0.4,
-      "height": 0.25,
+      "x": 0.04,
+      "y": 0.44,
+      "width": 0.38,
+      "height": 0.05,
       "groupedSkus": []
     },
     {
       "sku": "MFY-PED-01",
-      "name": "Modify Pedestal",
-      "x": 0.5,
-      "y": 0.72,
-      "width": 0.22,
-      "height": 0.22,
+      "name": "Modify Pedestals",
+      "x": 0.04,
+      "y": 0.73,
+      "width": 0.48,
+      "height": 0.1,
       "groupedSkus": [
-        "MFY-PED-01A"
+        "MFY-PED-01",
+        "MFY-PED-01A",
+        "MFY-PED-02",
+        "MFY-PED-02A"
       ]
     },
     {
+      "sku": "MFY-PED-01",
+      "name": "MFY-PED-01",
+      "x": 0.56,
+      "y": 0.95,
+      "width": 0.12,
+      "height": 0.03,
+      "groupedSkus": []
+    },
+    {
       "sku": "MFY-PED-02A",
-      "name": "Modify Pedestal w/ topper",
-      "x": 0.73,
-      "y": 0.72,
-      "width": 0.2,
-      "height": 0.22,
-      "groupedSkus": [
-        "MFY-PED-02"
-      ]
+      "name": "MFY-PED-02A",
+      "x": 0.72,
+      "y": 0.95,
+      "width": 0.14,
+      "height": 0.03,
+      "groupedSkus": []
     }
   ]
 }
