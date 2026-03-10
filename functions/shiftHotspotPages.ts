@@ -15,12 +15,13 @@ Deno.serve(async (req) => {
   const all = await base44.asServiceRole.entities.CatalogHotspot.list('page_number', 500);
   let updated = 0;
 
-  for (const record of all) {
-    const newPage = record.page_number + offset;
-    if (newPage < 1) continue;
-    await base44.asServiceRole.entities.CatalogHotspot.update(record.id, { page_number: newPage });
-    updated++;
-  }
+  const toUpdate = all.filter(r => (r.page_number + offset) >= 1);
 
-  return Response.json({ success: true, updated, offset });
+  await Promise.all(
+    toUpdate.map(record =>
+      base44.asServiceRole.entities.CatalogHotspot.update(record.id, { page_number: record.page_number + offset })
+    )
+  );
+
+  return Response.json({ success: true, updated: toUpdate.length, offset });
 });
