@@ -14,26 +14,15 @@ export default function Home() {
     try {
       const isAuth = await base44.auth.isAuthenticated();
       if (isAuth) {
-        const user = await base44.auth.me();
-        if (!user.user_type) {
-          navigate(createPageUrl('UserTypeSelection'));
-        } else if (user.is_sales_rep) {
-          navigate(createPageUrl('SalesDashboard'));
-        } else if (user.user_type === 'student') {
-          navigate(createPageUrl('StudentHome'));
-        } else {
-          navigate(createPageUrl('QuoteRequest'));
-        }
+        navigate(createPageUrl('SalesDashboard'));
         return;
       }
-    } catch (e) {
-      // Not authenticated
-    }
+    } catch (e) {}
     navigate(createPageUrl('Landing'));
   };
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center">
+    <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
       <div className="w-8 h-8 border-4 border-[#e2231a] border-t-transparent rounded-full animate-spin" />
     </div>
   );
