@@ -32,8 +32,8 @@ for (const page of Object.keys(PAGE_PRODUCTS)) {
 }
 
 const CATALOG_PAGES = Object.keys(PAGE_PRODUCTS).map(Number).sort((a, b) => a - b);
-// Full catalog is 214 pages — navigation covers all pages, not just product pages
-const MAX_PAGE = 214;
+// Full catalog is 218 print pages (2026 edition)
+const MAX_PAGE = 218;
 const MIN_PAGE = 1;
 
 // SKU → primary page lookup (for "where is this product?" feature)

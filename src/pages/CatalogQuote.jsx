@@ -13,7 +13,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 // ─── Claude Vision: detect product within a specific bounding box ─────────────
 async function detectProductInBox(pageNum, box, supabaseUrl) {
-  const imageUrl = `${supabaseUrl}/catalog/pages/page-${String(pageNum).padStart(3, '0')}.jpg`;
+  const imageUrl = `${supabaseUrl}/catalog/pages/page-${String(pageNum + 2).padStart(3, '0')}.jpg`;
 
   const prompt = `This is page ${pageNum} of the Orbus Exhibitor's Handbook trade show display catalog.
 
@@ -54,7 +54,7 @@ If you cannot identify a SKU, return an empty string for sku.`;
 
 // ─── Claude Vision hotspot detection (runs via backend integration) ───────────────────────
 async function detectHotspotsWithClaude(pageNum, products, supabaseUrl) {
-  const imageUrl = `${supabaseUrl}/catalog/pages/page-${String(pageNum).padStart(3, '0')}.jpg`;
+  const imageUrl = `${supabaseUrl}/catalog/pages/page-${String(pageNum + 2).padStart(3, '0')}.jpg`;
 
   const productList = products && products.length > 0
     ? products.map(p => `- ${p.sku}: "${p.name}" (${p.category})${p.isPrimary ? ' [FEATURED]' : ''}`).join('\n')
@@ -121,9 +121,13 @@ Return a JSON array of bounding boxes for each product's primary visual/photo ar
 // ─── Config ─────────────────────────────────────────────────────────────────
 const SUPABASE_URL = 'https://xpgvpzbzmkubahyxwipk.supabase.co/storage/v1/object/public/orbus-assets';
 const LS_KEY = 'catalog-hotspot-edits';
+// Catalog print pages (1–218) are stored in Supabase as PDF page numbers (print + 2).
+// page-007.jpg in the catalog = page-009.jpg in Supabase.
+const CATALOG_PAGE_OFFSET = 2;
 
-function pageImageUrl(pageNum) {
-  return `${SUPABASE_URL}/catalog/pages/page-${String(pageNum).padStart(3, '0')}.jpg`;
+function pageImageUrl(printPageNum) {
+  const pdfPage = printPageNum + CATALOG_PAGE_OFFSET;
+  return `${SUPABASE_URL}/catalog/pages/page-${String(pdfPage).padStart(3, '0')}.jpg`;
 }
 
 function fmt(n) {
