@@ -538,15 +538,17 @@ function HotspotEditor({ pageNum, spots, onChange, pageProducts, productCache, a
           }}
           className="border-2 border-blue-500 bg-blue-500/10 rounded group"
         >
-          {/* Move handle — drag the whole box */}
+          {/* Move handle — drag the whole box, double-click to edit */}
           <div
             className="absolute inset-0 cursor-move"
             onMouseDown={(e) => onMouseDown(e, 'move', i)}
+            onDoubleClick={(e) => handleDoubleClick(e, i)}
           />
 
           {/* Label */}
-          <div className="absolute top-0 left-0 right-0 bg-blue-600/90 text-white text-[9px] px-1 py-0.5 leading-tight truncate pointer-events-none rounded-t">
-            {spot.name || spot.sku}
+          <div className="absolute top-0 left-0 right-0 bg-blue-600/90 text-white text-[9px] px-1 py-0.5 leading-tight truncate pointer-events-none rounded-t flex items-center gap-1">
+            <span className="truncate">{spot.name || spot.sku}</span>
+            <span className="opacity-50 ml-auto flex-shrink-0">✎</span>
           </div>
 
           {/* Delete button */}
@@ -556,6 +558,11 @@ function HotspotEditor({ pageNum, spots, onChange, pageProducts, productCache, a
           >
             <X className="w-2.5 h-2.5" />
           </button>
+
+          {/* Edit button (double click hint) */}
+          <div className="absolute bottom-0 left-0 right-0 bg-blue-800/70 text-white text-[8px] px-1 py-0.5 text-center pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
+            double-click to edit
+          </div>
 
           {/* Resize handle — bottom-right corner */}
           <div
