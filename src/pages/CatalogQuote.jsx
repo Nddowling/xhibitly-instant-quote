@@ -490,6 +490,18 @@ function HotspotEditor({ pageNum, spots, onChange, pageProducts, productCache, a
 
   const deleteSpot = (idx) => onChange(spots.filter((_, i) => i !== idx));
 
+  const handleDoubleClick = (e, idx) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setEditingSpot({ idx, spot: { ...spots[idx] } });
+  };
+
+  const commitEditedSpot = (updatedSpot) => {
+    if (!editingSpot) return;
+    onChange(spots.map((s, i) => i === editingSpot.idx ? updatedSpot : s));
+    setEditingSpot(null);
+  };
+
   const commitNewSpot = (sku, name, groupedSkus) => {
     if (!newSkuPrompt) return;
     const spot = { sku, name, ...newSkuPrompt, groupedSkus: groupedSkus?.length > 0 ? groupedSkus : [sku] };
