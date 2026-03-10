@@ -1,18 +1,5 @@
 {
-  "2": [
-    {
-      "sku": "TBL-ODC-FITTED",
-      "name": "Outdoor Table Throw",
-      "x": 0,
-      "y": 0,
-      "width": 0.5,
-      "height": 0.5,
-      "groupedSkus": [
-        "TBL-ODC-FITTED"
-      ]
-    }
-  ],
-  "9": [
+  "7": [
     {
       "sku": "BLD-LT-400",
       "name": "Blade Lite 400 Retractable Banner Stand",
@@ -54,7 +41,7 @@
       ]
     }
   ],
-  "10": [
+  "8": [
     {
       "sku": "ONT-850",
       "name": "Orient 850 Retractable Banner Stand",
@@ -82,7 +69,7 @@
       ]
     }
   ],
-  "11": [
+  "9": [
     {
       "sku": "RU-S1-4",
       "name": "Rollup Retractable Banner Stand",
@@ -95,7 +82,7 @@
       ]
     }
   ],
-  "12": [
+  "10": [
     {
       "sku": "ILLUM-800-1",
       "name": "Illumistand Double Sided Light Up Retractable Banner Stand",
@@ -131,7 +118,7 @@
       ]
     }
   ],
-  "13": [
+  "11": [
     {
       "sku": "BLD-LT-400",
       "name": "Blade Lite 400 Retractable Banner Stand",
@@ -161,7 +148,7 @@
       ]
     }
   ],
-  "14": [
+  "12": [
     {
       "sku": "SYNERGY-800",
       "name": "Synergy 800 Retractable Banner Stand",
@@ -174,7 +161,7 @@
       ]
     }
   ],
-  "15": [
+  "13": [
     {
       "sku": "BREZ-2-S",
       "name": "Breeze 2 Tabletop Retractable Banner Stand",
@@ -210,7 +197,7 @@
       ]
     }
   ],
-  "16": [
+  "14": [
     {
       "sku": "PGSUS3",
       "name": "Pegasus Supreme Telescopic Banner Stand",
@@ -257,7 +244,7 @@
       ]
     }
   ],
-  "17": [
+  "15": [
     {
       "sku": "LTNG",
       "name": "Lightning Spring Back Banner Stand",
@@ -296,7 +283,7 @@
       ]
     }
   ],
-  "18": [
+  "16": [
     {
       "sku": "FMLT-E-S-600-2",
       "name": "Formulate Essential Banner - Straight (All Variants)",
@@ -326,7 +313,7 @@
       ]
     }
   ],
-  "19": [
+  "17": [
     {
       "sku": "FMLT-BL-WS3-01",
       "name": "Formulate Master 3ft Straight Backlit Display",
@@ -363,7 +350,7 @@
       ]
     }
   ],
-  "23": [
+  "21": [
     {
       "sku": "BLZ-0406",
       "name": "Blaze Light Box - Freestanding",
@@ -383,7 +370,7 @@
       ]
     }
   ],
-  "25": [
+  "23": [
     {
       "sku": "BLZ-W-0603",
       "name": "Blaze Light Box - Wall Mounted",
@@ -407,7 +394,7 @@
       ]
     }
   ],
-  "27": [
+  "25": [
     {
       "sku": "BLZ-W-2010",
       "name": "Blaze Hanging Light Box - Primary Display Image",
@@ -432,7 +419,7 @@
       ]
     }
   ],
-  "29": [
+  "27": [
     {
       "sku": "BLZ-SQ-0802",
       "name": "Blaze Hanging Square 0802",
@@ -456,7 +443,7 @@
       ]
     }
   ],
-  "30": [
+  "28": [
     {
       "sku": "VF-R-03",
       "name": "Rectangle 03",
@@ -519,7 +506,7 @@
       "groupedSkus": []
     }
   ],
-  "31": [
+  "29": [
     {
       "sku": "VF-ESS-LB-S-01",
       "name": "Vector Frame Essential Light Box 0808",
@@ -538,7 +525,7 @@
       ]
     }
   ],
-  "32": [
+  "30": [
     {
       "sku": "VFF-01-F",
       "name": "Vector Fast Frame Banner 01",
@@ -573,7 +560,7 @@
       ]
     }
   ],
-  "33": [
+  "31": [
     {
       "sku": "VFF-LB-01-F",
       "name": "Vector Fast Frame Light Box 0307",
@@ -608,7 +595,7 @@
       ]
     }
   ],
-  "34": [
+  "32": [
     {
       "sku": "VFF-LB-BAT-1-ASM",
       "name": "Rechargeable Light Box",
@@ -628,7 +615,7 @@
       "groupedSkus": []
     }
   ],
-  "35": [
+  "33": [
     {
       "sku": "VFF-01-3",
       "name": "Vector Fast Frame 10ft Backwall Kit",
@@ -641,7 +628,7 @@
       ]
     }
   ],
-  "40": [
+  "38": [
     {
       "sku": "TNT-S-3X3",
       "name": "Zoom Standard 10' Popup Tent",
@@ -656,7 +643,7 @@
       ]
     }
   ],
-  "41": [
+  "39": [
     {
       "sku": "PBFM902-B",
       "name": "Popup Bar Mini",
@@ -692,7 +679,7 @@
       ]
     }
   ],
-  "42": [
+  "40": [
     {
       "sku": "ZOOM-FLX-SM",
       "name": "Zoom Flex Flags - Top Section Product Images",
@@ -741,7 +728,7 @@
       ]
     }
   ],
-  "43": [
+  "41": [
     {
       "sku": "ZM-FLX-CB",
       "name": "Cross Base",
@@ -864,7 +851,7 @@
       ]
     }
   ],
-  "44": [
+  "42": [
     {
       "sku": "ZOOM-FLX-SM",
       "name": "Zoom Flex - Small Flag",
@@ -899,7 +886,7 @@
       ]
     }
   ],
-  "45": [
+  "43": [
     {
       "sku": "ZOOM-FLX-LNTRN",
       "name": "Zoom Flex Lantern",
@@ -950,7 +937,7 @@
       ]
     }
   ],
-  "46": [
+  "44": [
     {
       "sku": "ZOOM-FLX-D-SM",
       "name": "Zoom Flex D-Shaped Flag Small",
@@ -985,7 +972,7 @@
       ]
     }
   ],
-  "47": [
+  "45": [
     {
       "sku": "ZOOM-FLX-LNTRN",
       "name": "Zoom Flex Lantern",
@@ -1009,7 +996,7 @@
       ]
     }
   ],
-  "48": [
+  "46": [
     {
       "sku": "WHRL-WND-2",
       "name": "Whirlwind Outdoor Sign Stand",
@@ -1033,7 +1020,7 @@
       ]
     }
   ],
-  "49": [
+  "47": [
     {
       "sku": "ZOOM-FLX-OD-BB",
       "name": "Zoom Flex Outdoor Billboard",
@@ -1080,7 +1067,7 @@
       ]
     }
   ],
-  "50": [
+  "48": [
     {
       "sku": "TBL-T-4-F",
       "name": "Fully Printed Table Throw",
@@ -1129,7 +1116,7 @@
       ]
     }
   ],
-  "51": [
+  "49": [
     {
       "sku": "TBL-SW-4-F",
       "name": "Stretch Table Throw",
@@ -1192,7 +1179,7 @@
       ]
     }
   ],
-  "52": [
+  "50": [
     {
       "sku": "HZ-TT-S",
       "name": "Horizon 3 Tabletop Display",
@@ -1260,7 +1247,7 @@
       ]
     }
   ],
-  "53": [
+  "51": [
     {
       "sku": "TBL-FITTED",
       "name": "Fitted Dye Sub Table Throw",
@@ -1306,7 +1293,7 @@
       ]
     }
   ],
-  "54": [
+  "52": [
     {
       "sku": "HZ-TT-S",
       "name": "Horizon 3 Tabletop Display",
@@ -1326,7 +1313,7 @@
       "groupedSkus": []
     }
   ],
-  "55": [
+  "53": [
     {
       "sku": "VY-1",
       "name": "Mini Kit (small, 5 lbs.)",
@@ -1403,7 +1390,7 @@
       ]
     }
   ],
-  "58": [
+  "56": [
     {
       "sku": "HOP-LITE-3X3-FG-S",
       "name": "Hopup Lite Tension Fabric",
@@ -1419,7 +1406,7 @@
       ]
     }
   ],
-  "59": [
+  "57": [
     {
       "sku": "HOP-DIM01-3X3FG-S",
       "name": "Kit 01 - 7 1/2' full height straight backwall kit",
@@ -1465,7 +1452,7 @@
       ]
     }
   ],
-  "60": [
+  "58": [
     {
       "sku": "HOP-LITE-3X3-FG-S",
       "name": "Hopup Lite 7 1/2' full height front graphic",
@@ -1480,7 +1467,7 @@
       ]
     }
   ],
-  "61": [
+  "59": [
     {
       "sku": "HOP-2-BL-2X2-S",
       "name": "5' tabletop kit",
@@ -1511,7 +1498,7 @@
       ]
     }
   ],
-  "64": [
+  "62": [
     {
       "sku": "EMB-1X1FG-S",
       "name": "Embrace Tabletop",
@@ -1583,7 +1570,7 @@
       ]
     }
   ],
-  "65": [
+  "63": [
     {
       "sku": "EMB-MM",
       "name": "Embrace Monitor Mount",
@@ -1643,7 +1630,7 @@
       "groupedSkus": []
     }
   ],
-  "66": [
+  "64": [
     {
       "sku": "EMB-BL-4X3-S",
       "name": "Embrace 10ft Backlit Full Height Push-Fit Tension Fabric Display",
@@ -1656,7 +1643,7 @@
       ]
     }
   ],
-  "67": [
+  "65": [
     {
       "sku": "EMB-LITE-3X3FG-S",
       "name": "Embrace Lite 7 1/2' full height fabric graphic",
@@ -1671,7 +1658,7 @@
       ]
     }
   ],
-  "70": [
+  "68": [
     {
       "sku": "XCLM-2X2-K1",
       "name": "Xclaim 5ft Tabletop Fabric Popup Display Kit 01",
@@ -1717,7 +1704,7 @@
       ]
     }
   ],
-  "71": [
+  "69": [
     {
       "sku": "XCLM-2X3-K1",
       "name": "Xclaim 5ft Full Height Fabric Popup Display Kit 01",
@@ -1755,7 +1742,7 @@
       ]
     }
   ],
-  "72": [
+  "70": [
     {
       "sku": "XCLM-4X3-K4",
       "name": "Xclaim 10ft Full Height Fabric Popup Display Kit 04",
@@ -1790,7 +1777,7 @@
       ]
     }
   ],
-  "73": [
+  "71": [
     {
       "sku": "XCLM-3QP-K1",
       "name": "Xclaim Pyramid Kit 7ft Display K1",
@@ -1869,7 +1856,7 @@
       ]
     }
   ],
-  "74": [
+  "72": [
     {
       "sku": "XCLM-4X3-K6",
       "name": "Xclaim 10ft Fabric Popup Display Kit 06",
@@ -1882,7 +1869,7 @@
       ]
     }
   ],
-  "75": [
+  "73": [
     {
       "sku": "XCLM-3QP-K1",
       "name": "7' display Pyramid Kit",
@@ -1947,7 +1934,7 @@
       "groupedSkus": []
     }
   ],
-  "78": [
+  "76": [
     {
       "sku": "COY-KKG-1X1-C",
       "name": "4'w tabletop",
@@ -2012,7 +1999,7 @@
       "groupedSkus": []
     }
   ],
-  "79": [
+  "77": [
     {
       "sku": "COY-IS-CK",
       "name": "internal shelf kit",
@@ -2067,7 +2054,7 @@
       "groupedSkus": []
     }
   ],
-  "84": [
+  "82": [
     {
       "sku": "TRP2-1-S/B",
       "name": "Trappa Poster Frame",
@@ -2103,7 +2090,7 @@
       ]
     }
   ],
-  "85": [
+  "83": [
     {
       "sku": "VFE-S-01",
       "name": "Vector Frame Edge - Frame Detail",
@@ -2162,7 +2149,7 @@
       ]
     }
   ],
-  "92": [
+  "90": [
     {
       "sku": "MOD-FRM-06",
       "name": "Modulate Frame Banner 06",
@@ -2296,7 +2283,7 @@
       ]
     }
   ],
-  "93": [
+  "91": [
     {
       "sku": "MOD-30-01-M-TL",
       "name": "30ft Inline Display",
@@ -2386,7 +2373,7 @@
       ]
     }
   ],
-  "94": [
+  "92": [
     {
       "sku": "MOD-10-03",
       "name": "Modulate Series 2 10ft Fabric Backwall Kit 03",
@@ -2399,7 +2386,7 @@
       ]
     }
   ],
-  "95": [
+  "93": [
     {
       "sku": "FMLT-E-S-600-2",
       "name": "Formulate Essential Banner Display",
@@ -2418,7 +2405,7 @@
       ]
     }
   ],
-  "97": [
+  "95": [
     {
       "sku": "FMLT-E-S-1500-2",
       "name": "Formulate Essential Banner 1500 - Straight",
@@ -2437,7 +2424,7 @@
       ]
     }
   ],
-  "98": [
+  "96": [
     {
       "sku": "FMLT-ESS-STT-01",
       "name": "Formulate Essential Tabletop 8' Straight",
@@ -2457,7 +2444,7 @@
       "groupedSkus": []
     }
   ],
-  "99": [
+  "97": [
     {
       "sku": "FMLT-ESS-S10-01",
       "name": "10' straight Formulate Essential display",
@@ -2482,7 +2469,7 @@
       ]
     }
   ],
-  "102": [
+  "100": [
     {
       "sku": "FMLT-WBWA-04C-L/R",
       "name": "Backwall Accent 04",
@@ -2517,7 +2504,7 @@
       ]
     }
   ],
-  "103": [
+  "101": [
     {
       "sku": "FMLT-WBWC",
       "name": "Backwall Connector",
@@ -2564,7 +2551,7 @@
       "groupedSkus": []
     }
   ],
-  "104": [
+  "102": [
     {
       "sku": "FMLT-BL-WS3-01",
       "name": "Formulate Backlit Kit 3'",
@@ -2579,7 +2566,7 @@
       ]
     }
   ],
-  "105": [
+  "103": [
     {
       "sku": "FMLT-WS0810",
       "name": "Formulate Master 8ft Straight 10ft Tall Fabric Backwall",
@@ -2603,7 +2590,7 @@
       ]
     }
   ],
-  "106": [
+  "104": [
     {
       "sku": "FMLT-BL-WS5-01",
       "name": "Formulate Master Straight Backlit Display",
@@ -2618,7 +2605,7 @@
       ]
     }
   ],
-  "107": [
+  "105": [
     {
       "sku": "FMLT-LT-01",
       "name": "Formulate Lite 8ft Fabric Backwall",
@@ -2664,7 +2651,7 @@
       ]
     }
   ],
-  "110": [
+  "108": [
     {
       "sku": "FMLT-DS-10-01",
       "name": "Formulate Designer Series 10ft Fabric Backwall Kit 01",
@@ -2732,7 +2719,7 @@
       ]
     }
   ],
-  "111": [
+  "109": [
     {
       "sku": "FMLT-DS-10-07",
       "name": "Formulate Designer Series 10ft Fabric Backwall Kit 07",
@@ -2800,7 +2787,7 @@
       ]
     }
   ],
-  "112": [
+  "110": [
     {
       "sku": "FMLT-DS-20-01",
       "name": "Kit 01 - 226.4\"w x 96\"h x 29.33\"d",
@@ -2847,7 +2834,7 @@
       "groupedSkus": []
     }
   ],
-  "113": [
+  "111": [
     {
       "sku": "FMLT-DS-30-05",
       "name": "Formulate Designer Series 30ft Fabric Backwall Kit 05",
@@ -2871,7 +2858,7 @@
       ]
     }
   ],
-  "114": [
+  "112": [
     {
       "sku": "KIT 01",
       "name": "30' Formulate Designer Series Kit 01",
@@ -2900,7 +2887,7 @@
       "groupedSkus": []
     }
   ],
-  "115": [
+  "113": [
     {
       "sku": "CFAB-K-05",
       "name": "Formulate Fusion Island Kit 05",
@@ -2924,7 +2911,7 @@
       ]
     }
   ],
-  "117": [
+  "115": [
     {
       "sku": "CFAB-K-09",
       "name": "Formulate Fusion 20x20 Island Kit 09",
@@ -2959,7 +2946,7 @@
       ]
     }
   ],
-  "118": [
+  "116": [
     {
       "sku": "W-01-C",
       "name": "Pillar Counter",
@@ -3082,7 +3069,7 @@
       ]
     }
   ],
-  "119": [
+  "117": [
     {
       "sku": "CFAB-K-10",
       "name": "Formulate Fusion 20x20 Island Kit 10",
@@ -3097,7 +3084,7 @@
       ]
     }
   ],
-  "120": [
+  "118": [
     {
       "sku": "W-06-C-02",
       "name": "Formulate Bar Counter 02",
@@ -3209,7 +3196,7 @@
       ]
     }
   ],
-  "124": [
+  "122": [
     {
       "sku": "ESS-RNG-0802-2",
       "name": "Essential Hanging Ring",
@@ -3249,7 +3236,7 @@
       ]
     }
   ],
-  "128": [
+  "126": [
     {
       "sku": "RNG-BL-0803",
       "name": "8' dia. x 3'h Backlit Ring Hanging Structure",
@@ -3266,7 +3253,7 @@
       ]
     }
   ],
-  "129": [
+  "127": [
     {
       "sku": "COL-01",
       "name": "12' Four Sided Tower",
@@ -3334,7 +3321,7 @@
       ]
     }
   ],
-  "130": [
+  "128": [
     {
       "sku": "FUN-01",
       "name": "Funnel 01 - 20'h Formulate Funnel",
@@ -3372,7 +3359,7 @@
       "groupedSkus": []
     }
   ],
-  "131": [
+  "129": [
     {
       "sku": "COL-01",
       "name": "Formulate Four Sided Tower 01 Tension Fabric Structure",
@@ -3462,7 +3449,7 @@
       ]
     }
   ],
-  "132": [
+  "130": [
     {
       "sku": "ARCH-01",
       "name": "ARCH 01 12' Formulate Arch Tension Fabric Structure",
@@ -3519,7 +3506,7 @@
       ]
     }
   ],
-  "133": [
+  "131": [
     {
       "sku": "CUBE-2X2-BL",
       "name": "Formulate Backlit Cube",
@@ -3539,7 +3526,7 @@
       "groupedSkus": []
     }
   ],
-  "136": [
+  "134": [
     {
       "sku": "ARCH-07",
       "name": "Formulate 10ft Arch 07 Tension Fabric Structure",
@@ -3556,7 +3543,7 @@
       ]
     }
   ],
-  "137": [
+  "135": [
     {
       "sku": "C-WALL",
       "name": "Formulate C-Shaped Wall Tension Fabric Structure",
@@ -3569,7 +3556,7 @@
       ]
     }
   ],
-  "142": [
+  "140": [
     {
       "sku": "HP-K-17",
       "name": "Hybrid Pro 20x20 Island Exhibit Kit 17",
@@ -3594,7 +3581,7 @@
       ]
     }
   ],
-  "143": [
+  "141": [
     {
       "sku": "HP-K-18B",
       "name": "Hybrid Pro 20x20 Island Exhibit Kit 18B",
@@ -3618,7 +3605,7 @@
       ]
     }
   ],
-  "144": [
+  "142": [
     {
       "sku": "KIT 09",
       "name": "20' Exhibit Kit with illuminated walls",
@@ -3668,7 +3655,7 @@
       "height": 0.28
     }
   ],
-  "145": [
+  "143": [
     {
       "sku": "HP-K-23",
       "name": "Hybrid Pro 20x20 Island Exhibit Kit 23",
@@ -3692,7 +3679,7 @@
       ]
     }
   ],
-  "146": [
+  "144": [
     {
       "sku": "HP-K-17",
       "name": "Kit 17 - 15'9\" tall 20' x 20' island display",
@@ -3714,7 +3701,7 @@
       "groupedSkus": []
     }
   ],
-  "147": [
+  "145": [
     {
       "sku": "HP-K-38",
       "name": "Hybrid Pro 20x20 Modular Island Kit 38",
@@ -3738,7 +3725,7 @@
       ]
     }
   ],
-  "148": [
+  "146": [
     {
       "sku": "COUNTER-01",
       "name": "Counter 01 - white laminate cabinet with fabric graphic",
@@ -3828,7 +3815,7 @@
       ]
     }
   ],
-  "149": [
+  "147": [
     {
       "sku": "HP-K-23",
       "name": "Kit 23 - 20'x20' Island Exhibit Kit",
@@ -3846,7 +3833,7 @@
       "height": 0.35
     }
   ],
-  "150": [
+  "148": [
     {
       "sku": "HP-K-29",
       "name": "Kit 29 - 20'x20' Island Exhibit Kit",
@@ -3866,7 +3853,7 @@
       "groupedSkus": []
     }
   ],
-  "151": [
+  "149": [
     {
       "sku": "HP-K-38",
       "name": "Kit 38 - 20'x20' Island Exhibit Kit",
@@ -3886,7 +3873,7 @@
       "groupedSkus": []
     }
   ],
-  "152": [
+  "150": [
     {
       "sku": "COUNTER 01",
       "name": "Counter 01",
@@ -3960,7 +3947,7 @@
       "groupedSkus": []
     }
   ],
-  "153": [
+  "151": [
     {
       "sku": "REC-53",
       "name": "Hybrid Pro Modular Counter 10",
@@ -3973,7 +3960,7 @@
       ]
     }
   ],
-  "154": [
+  "152": [
     {
       "sku": "VF-ESS-LB-S-01",
       "name": "Vector Frame Essential Light Box Square 01",
@@ -3992,7 +3979,7 @@
       ]
     }
   ],
-  "155": [
+  "153": [
     {
       "sku": "HPT-05",
       "name": "Closet 05",
@@ -4030,7 +4017,7 @@
       "groupedSkus": []
     }
   ],
-  "158": [
+  "156": [
     {
       "sku": "VF-K-05A",
       "name": "Kit 05",
@@ -4076,7 +4063,7 @@
       ]
     }
   ],
-  "159": [
+  "157": [
     {
       "sku": "VF-R-03",
       "name": "Rectangle 03",
@@ -4139,7 +4126,7 @@
       "groupedSkus": []
     }
   ],
-  "160": [
+  "158": [
     {
       "sku": "KIT 02",
       "name": "Vector Frame 10' Master Exhibit Kit 02",
@@ -4189,7 +4176,7 @@
       "height": 0.18
     }
   ],
-  "161": [
+  "159": [
     {
       "sku": "VF-K-13",
       "name": "Kit 13",
@@ -4227,7 +4214,7 @@
       "groupedSkus": []
     }
   ],
-  "162": [
+  "160": [
     {
       "sku": "VF-K-05A",
       "name": "Kit 05",
@@ -4265,7 +4252,7 @@
       "groupedSkus": []
     }
   ],
-  "163": [
+  "161": [
     {
       "sku": "VF-K-19A",
       "name": "Kit 19",
@@ -4310,7 +4297,7 @@
       ]
     }
   ],
-  "164": [
+  "162": [
     {
       "sku": "VFC-01",
       "name": "Counter 01",
@@ -4384,7 +4371,7 @@
       "groupedSkus": []
     }
   ],
-  "165": [
+  "163": [
     {
       "sku": "TOWER-02",
       "name": "Formulate 10ft Tower 02 Tension Fabric Structure",
@@ -4419,7 +4406,7 @@
       ]
     }
   ],
-  "170": [
+  "168": [
     {
       "sku": "OR-K-HE1",
       "name": "Helios Orbital Express Truss 10ft Modular Exhibit",
@@ -4476,7 +4463,7 @@
       ]
     }
   ],
-  "171": [
+  "169": [
     {
       "sku": "OR-K-HC12",
       "name": "Hercules 12 Orbital Express Truss 10x20 Modular Exhibit",
@@ -4511,7 +4498,7 @@
       ]
     }
   ],
-  "172": [
+  "170": [
     {
       "sku": "OR-K-CE1-2",
       "name": "Cepheus 2",
@@ -4549,7 +4536,7 @@
       "groupedSkus": []
     }
   ],
-  "173": [
+  "171": [
     {
       "sku": "OR-K-CA1",
       "name": "Canis Orbital Express Truss 20x20 Modular Island Exhibit",
@@ -4573,7 +4560,7 @@
       ]
     }
   ],
-  "174": [
+  "172": [
     {
       "sku": "OR-K-HC08",
       "name": "Hercules 08 Orbital Express Truss 10ft Modular Backwall",
@@ -4608,7 +4595,7 @@
       ]
     }
   ],
-  "175": [
+  "173": [
     {
       "sku": "OR-K-HC13",
       "name": "Hercules 13 Orbital Express Truss 20ft Modular Backwall",
@@ -4621,7 +4608,7 @@
       ]
     }
   ],
-  "176": [
+  "174": [
     {
       "sku": "OR-SM-MB",
       "name": "Opti-Mount 1 Truss Monitor Mount (23\"-42\" LCD, 50 lbs max)",
@@ -4659,7 +4646,7 @@
       "groupedSkus": []
     }
   ],
-  "177": [
+  "175": [
     {
       "sku": "OR-TC01",
       "name": "Rectangle Truss Counter",
@@ -4726,7 +4713,7 @@
       "groupedSkus": []
     }
   ],
-  "181": [
+  "179": [
     {
       "sku": "VF-MK-01-SS",
       "name": "Vector Frame Monitor Kiosk 01",
@@ -4774,7 +4761,7 @@
       ]
     }
   ],
-  "182": [
+  "180": [
     {
       "sku": "ADVOCATE",
       "name": "Advocate Sign Stand",
@@ -4798,7 +4785,7 @@
       ]
     }
   ],
-  "183": [
+  "181": [
     {
       "sku": "TABLET-STD-05",
       "name": "Formulate iPad Kiosk 05",
@@ -4822,7 +4809,7 @@
       ]
     }
   ],
-  "184": [
+  "182": [
     {
       "sku": "FMLT-KIOSK-01",
       "name": "Formulate Tension Fabric Kiosk 01",
@@ -4879,7 +4866,7 @@
       ]
     }
   ],
-  "185": [
+  "183": [
     {
       "sku": "VF-MK-01-SS",
       "name": "Monitor Kiosk 01 (Single-Sided)",
@@ -4921,7 +4908,7 @@
       "groupedSkus": []
     }
   ],
-  "186": [
+  "184": [
     {
       "sku": "ADVOCATE",
       "name": "advocate sign stand",
@@ -4941,7 +4928,7 @@
       "groupedSkus": []
     }
   ],
-  "187": [
+  "185": [
     {
       "sku": "OCA-2",
       "name": "Lighting & Accessory Case",
@@ -4988,7 +4975,7 @@
       ]
     }
   ],
-  "188": [
+  "186": [
     {
       "sku": "ZD-1-B",
       "name": "Zedup 1",
@@ -5047,7 +5034,7 @@
       "groupedSkus": []
     }
   ],
-  "189": [
+  "187": [
     {
       "sku": "LUM-LED3-ORL-B",
       "name": "Slimline LED Spot Display Light",
@@ -5115,7 +5102,7 @@
       ]
     }
   ],
-  "190": [
+  "188": [
     {
       "sku": "LED-COOL-WHT-BLAST",
       "name": "LED Color Blast Accent Light - Cool White",
@@ -5274,7 +5261,7 @@
       ]
     }
   ],
-  "191": [
+  "189": [
     {
       "sku": "OCB-2",
       "name": "OCB Banner Stand Case",
@@ -5287,7 +5274,7 @@
       ]
     }
   ],
-  "192": [
+  "190": [
     {
       "sku": "TROLLEY",
       "name": "Trolley Roller",
@@ -5300,7 +5287,7 @@
       ]
     }
   ],
-  "193": [
+  "191": [
     {
       "sku": "TROLLEY",
       "name": "Trolley Roller",
@@ -5313,7 +5300,7 @@
       ]
     }
   ],
-  "200": [
+  "198": [
     {
       "sku": "MFY-SS-K-01-W/B/S",
       "name": "Kit 01 - Single Sided Merchandise Display",
@@ -5333,7 +5320,7 @@
       "groupedSkus": []
     }
   ],
-  "201": [
+  "199": [
     {
       "sku": "MFY-SS-K-03-W/B/S",
       "name": "Kit 03 - Single Sided Merchandise Display with Two Slatwall Panels",
@@ -5344,7 +5331,7 @@
       "groupedSkus": []
     }
   ],
-  "202": [
+  "200": [
     {
       "sku": "MFY-SS-K-04-W/B/S",
       "name": "Kit 04 Single Sided Merchandise Display with Three Slatwall Panels",
@@ -5355,7 +5342,7 @@
       "groupedSkus": []
     }
   ],
-  "203": [
+  "201": [
     {
       "sku": "MFY-SS-K-05-W/B/S",
       "name": "KIT 05 Single Sided Merchandise Display",
@@ -5366,7 +5353,7 @@
       "groupedSkus": []
     }
   ],
-  "204": [
+  "202": [
     {
       "sku": "MFY-DS-K-01-W/B/S",
       "name": "Kit 01 Double Sided Merchandise Display",
@@ -5377,7 +5364,7 @@
       "groupedSkus": []
     }
   ],
-  "205": [
+  "203": [
     {
       "sku": "MFY-DS-K-02-W/B/S",
       "name": "KIT 02 Double Sided Merchandise Display",
@@ -5388,7 +5375,7 @@
       "groupedSkus": []
     }
   ],
-  "206": [
+  "204": [
     {
       "sku": "MFY-DS-K-03-W/B/S",
       "name": "KIT 03 Double Sided Merchandise Display",
@@ -5399,7 +5386,7 @@
       "groupedSkus": []
     }
   ],
-  "207": [
+  "205": [
     {
       "sku": "MFY-DS-K-04-W/B/S",
       "name": "KIT 04 Double Sided Slatwall Merchandise Display 110\"W x 96\"H x 37.5\"D",
@@ -5410,7 +5397,7 @@
       "groupedSkus": []
     }
   ],
-  "208": [
+  "206": [
     {
       "sku": "MFY-GN-K-01-W/B/S",
       "name": "KIT 01 Gondola Retail Display 76.5\"W x 72\"H x 37.5\"D",
@@ -5421,7 +5408,7 @@
       "groupedSkus": []
     }
   ],
-  "209": [
+  "207": [
     {
       "sku": "MFY-GN-K-02-W/B/S",
       "name": "KIT 02 Gondola Retail Display 76.5\"W x 96\"H x 28.5\"D",
@@ -5441,7 +5428,7 @@
       "groupedSkus": []
     }
   ],
-  "210": [
+  "208": [
     {
       "sku": "MFY-4S-K-01-W/B/S",
       "name": "KIT 01 Four Sided Backlit Retail Tower",
@@ -5452,7 +5439,7 @@
       "groupedSkus": []
     }
   ],
-  "211": [
+  "209": [
     {
       "sku": "MFY-4S-K-02-W/B/S",
       "name": "Four Sided Retail Tower w/ Square Header",
@@ -5481,7 +5468,7 @@
       "groupedSkus": []
     }
   ],
-  "212": [
+  "210": [
     {
       "sku": "MFY-4S-K-03-W/B/S",
       "name": "Kit 03 Four Sided Arch Retail Display",
@@ -5492,7 +5479,7 @@
       "groupedSkus": []
     }
   ],
-  "214": [
+  "212": [
     {
       "sku": "MFY-RSR-02",
       "name": "MODify Riser 02",
@@ -5505,7 +5492,7 @@
       ]
     }
   ],
-  "215": [
+  "213": [
     {
       "sku": "HPC-14",
       "name": "Modify Display Table",
