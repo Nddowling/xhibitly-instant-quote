@@ -728,6 +728,7 @@ function OrderItem({ item, onQtyChange, onRemove, onSizeChange }) {
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 export default function CatalogQuote() {
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(9);
   const [pageInput, setPageInput] = useState('9');
   const [direction, setDirection] = useState(1);
