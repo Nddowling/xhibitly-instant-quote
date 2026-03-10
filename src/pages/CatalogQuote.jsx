@@ -466,98 +466,138 @@ function HotspotEditor({ pageNum, spots, onChange, pageProducts, productCache, a
 }
 
 function NewHotspotForm({ pageProducts, productCache, autoDetecting, autoDetected, onConfirm, onCancel }) {
-  const [sku, setSku] = useState('');
-  const [name, setName] = useState('');
+  const [displayName, setDisplayName] = useState('');
   const [groupedSkus, setGroupedSkus] = useState([]);
+  const [skuInput, setSkuInput] = useState('');
 
-  // When auto-detection completes, pre-fill the form
+  // When auto-detection completes, pre-fill
   useEffect(() => {
     if (autoDetected && autoDetected.sku) {
-      setSku(autoDetected.sku);
-      setName(autoDetected.name || autoDetected.sku);
-      setGroupedSkus(autoDetected.groupedSkus || [autoDetected.sku]);
+      setDisplayName(autoDetected.name || autoDetected.sku);
+      setGroupedSkus(autoDetected.groupedSkus?.length > 0 ? autoDetected.groupedSkus : [autoDetected.sku]);
     }
   }, [autoDetected]);
 
-  const selectProduct = (p) => {
-    const pd = productCache[p.sku];
-    setSku(p.sku);
-    setName(pd?.name || p.name);
-    setGroupedSkus([p.sku]);
+  const togglePageProduct = (p) => {
+    const s = p.sku;
+    if (groupedSkus.includes(s)) {
+      setGroupedSkus(prev => prev.filter(x => x !== s));
+    } else {
+      setGroupedSkus(prev => [...prev, s]);
+      if (!displayName) setDisplayName(productCache[s]?.name || p.name);
+    }
   };
 
+  const addManualSku = () => {
+    const s = skuInput.trim().toUpperCase();
+    if (!s || groupedSkus.includes(s)) { setSkuInput(''); return; }
+    setGroupedSkus(prev => [...prev, s]);
+    setSkuInput('');
+  };
+
+  const removeSku = (s) => setGroupedSkus(prev => prev.filter(x => x !== s));
+
   const submit = () => {
-    if (!sku.trim()) return;
-    onConfirm(sku.trim().toUpperCase(), name.trim() || sku.trim(), groupedSkus.length > 0 ? groupedSkus : [sku.trim().toUpperCase()]);
+    if (groupedSkus.length === 0) return;
+    onConfirm(groupedSkus[0], displayName.trim() || groupedSkus[0], groupedSkus);
   };
 
   return (
     <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/50 rounded-lg">
-      <div className="bg-white rounded-2xl shadow-2xl w-80 p-4 space-y-3">
+      <div className="bg-white rounded-2xl shadow-2xl w-96 p-4 space-y-3 max-h-[90%] overflow-y-auto">
         <div className="flex items-center gap-2">
-          <p className="text-sm font-bold text-slate-900 flex-1">Assign Product to Hotspot</p>
+          <p className="text-sm font-bold text-slate-900 flex-1">Assign SKUs to Hotspot</p>
           {autoDetecting && (
             <div className="flex items-center gap-1.5 text-purple-600 text-[10px] font-medium">
-              <Loader2 className="w-3 h-3 animate-spin" />
-              AI detecting...
+              <Loader2 className="w-3 h-3 animate-spin" />AI detecting...
             </div>
           )}
           {!autoDetecting && autoDetected?.sku && (
-            <div className="flex items-center gap-1 text-green-600 text-[10px] font-medium">
-              <span>✓ AI detected</span>
-            </div>
+            <span className="text-green-600 text-[10px] font-medium">✓ AI detected</span>
           )}
         </div>
 
         {autoDetecting && (
           <div className="bg-purple-50 border border-purple-100 rounded-lg px-3 py-2.5 text-xs text-purple-700">
-            Reading SKU from the selected area…
+            Reading SKUs from the selected area…
           </div>
         )}
 
+        {/* Page product checkboxes */}
         {!autoDetecting && pageProducts.length > 0 && (
-          <div className="space-y-1 max-h-32 overflow-y-auto">
-            {pageProducts.map(p => (
-              <button
-                key={p.sku}
-                onClick={() => selectProduct(p)}
-                className={`w-full text-left px-3 py-2 rounded-lg text-xs border transition-all
-                  ${sku === p.sku ? 'border-[#e2231a] bg-[#e2231a]/10 font-bold' : 'border-slate-200 hover:border-[#e2231a]/40'}`}
-              >
-                <span className="text-slate-400 mr-2">{p.sku}</span>
-                {productCache[p.sku]?.name || p.name}
-              </button>
-            ))}
+          <div>
+            <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide mb-1.5">Page Products — click to toggle</p>
+            <div className="space-y-1 max-h-36 overflow-y-auto">
+              {pageProducts.map(p => {
+                const checked = groupedSkus.includes(p.sku);
+                return (
+                  <button
+                    key={p.sku}
+                    onClick={() => togglePageProduct(p)}
+                    className={`w-full text-left px-3 py-2 rounded-lg text-xs border transition-all flex items-center gap-2
+                      ${checked ? 'border-[#e2231a] bg-[#e2231a]/10 font-bold' : 'border-slate-200 hover:border-[#e2231a]/40'}`}
+                  >
+                    <div className={`w-3.5 h-3.5 rounded border flex-shrink-0 flex items-center justify-center ${checked ? 'bg-[#e2231a] border-[#e2231a]' : 'border-slate-300'}`}>
+                      {checked && <span className="text-white text-[8px] font-bold">✓</span>}
+                    </div>
+                    <span className="text-slate-400 font-mono mr-1">{p.sku}</span>
+                    <span className="truncate">{productCache[p.sku]?.name || p.name}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         )}
 
-        <div className="space-y-2">
-          <input
-            placeholder="SKU (e.g. ONT-800/S-84)"
-            value={sku}
-            onChange={e => { setSku(e.target.value); setGroupedSkus(e.target.value ? [e.target.value] : []); }}
-            className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30"
-          />
-          <input
-            placeholder="Display name"
-            value={name}
-            onChange={e => setName(e.target.value)}
-            className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30"
-          />
-          {groupedSkus.length > 1 && (
-            <div className="text-[10px] text-slate-500 bg-slate-50 rounded px-2 py-1">
-              Grouped SKUs: {groupedSkus.join(', ')}
-            </div>
-          )}
+        {/* Manual SKU entry */}
+        <div>
+          <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide mb-1.5">Add SKU Manually</p>
+          <div className="flex gap-1.5">
+            <input
+              placeholder="e.g. FX-2700"
+              value={skuInput}
+              onChange={e => setSkuInput(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && addManualSku()}
+              className="flex-1 text-sm border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30"
+            />
+            <Button size="sm" onClick={addManualSku} className="bg-slate-100 text-slate-700 hover:bg-slate-200 px-3">
+              <Plus className="w-3.5 h-3.5" />
+            </Button>
+          </div>
         </div>
 
+        {/* Selected SKUs */}
+        {groupedSkus.length > 0 && (
+          <div>
+            <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+              Selected SKUs ({groupedSkus.length})
+            </p>
+            <div className="flex flex-wrap gap-1.5">
+              {groupedSkus.map(s => (
+                <div key={s} className="flex items-center gap-1 bg-[#e2231a]/10 border border-[#e2231a]/30 text-[#e2231a] rounded-full px-2.5 py-1 text-[10px] font-bold">
+                  {s}
+                  <button onClick={() => removeSku(s)} className="hover:text-red-700 ml-0.5">
+                    <X className="w-2.5 h-2.5" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Display name */}
+        <input
+          placeholder="Hotspot display name"
+          value={displayName}
+          onChange={e => setDisplayName(e.target.value)}
+          className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30"
+        />
+
         <div className="flex gap-2">
-          <Button size="sm" onClick={submit} disabled={autoDetecting || !sku.trim()} className="flex-1 bg-[#e2231a] hover:bg-[#b01b13] text-white disabled:opacity-50">
-            Add Hotspot
+          <Button size="sm" onClick={submit} disabled={autoDetecting || groupedSkus.length === 0} className="flex-1 bg-[#e2231a] hover:bg-[#b01b13] text-white disabled:opacity-50">
+            Add Hotspot ({groupedSkus.length} SKU{groupedSkus.length !== 1 ? 's' : ''})
           </Button>
-          <Button size="sm" variant="outline" onClick={onCancel} className="flex-1">
-            Cancel
-          </Button>
+          <Button size="sm" variant="outline" onClick={onCancel} className="flex-1">Cancel</Button>
         </div>
       </div>
     </div>
