@@ -5470,7 +5470,8 @@
       "product_name": "Embrace Counter",
       "primary_page": 62,
       "pages": [
-        62
+        62,
+        179
       ],
       "category": "Embrace Push-Fit Tension Fabric",
       "source": "scan-2026"
@@ -5480,7 +5481,8 @@
       "product_name": "Embrace Counter",
       "primary_page": 62,
       "pages": [
-        62
+        62,
+        179
       ],
       "category": "Embrace Push-Fit Tension Fabric",
       "source": "scan-2026"
@@ -5777,7 +5779,8 @@
       "product_name": "OCX",
       "primary_page": 77,
       "pages": [
-        77
+        77,
+        190
       ],
       "category": "Coyote Popup Display Systems",
       "source": "scan-2026"
@@ -6973,7 +6976,8 @@
       "primary_page": 161,
       "pages": [
         161,
-        162
+        162,
+        191
       ],
       "category": "Vector Frame 20' Master Exhibit Kits",
       "source": "scan-2026"
@@ -6983,7 +6987,8 @@
       "product_name": "OCE-2 wheeled molded case",
       "primary_page": 161,
       "pages": [
-        161
+        161,
+        189
       ],
       "category": "Vector Frame 20' Master Exhibit Kits",
       "source": "scan-2026"
@@ -7523,7 +7528,8 @@
       "product_name": "Modify Display Table 59\"W x 39.5\"H x 23\"D",
       "primary_page": 213,
       "pages": [
-        213
+        213,
+        151
       ],
       "category": "MODify Accent Furniture",
       "source": "scan-2026"
@@ -7533,7 +7539,8 @@
       "product_name": "Modify Display Table 47.25\"W x 39.5\"H x 23\"D",
       "primary_page": 213,
       "pages": [
-        213
+        213,
+        151
       ],
       "category": "MODify Accent Furniture",
       "source": "scan-2026"
@@ -7543,7 +7550,8 @@
       "product_name": "Modify Counter 70.88\"W x 39.38\"H x 23.63\"D",
       "primary_page": 213,
       "pages": [
-        213
+        213,
+        151
       ],
       "category": "MODify Accent Furniture",
       "source": "scan-2026"
@@ -7584,6 +7592,3615 @@
       "primary_page": 213,
       "pages": [
         213
+      ],
+      "category": "MODify Accent Furniture",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLD-LT-400-1",
+      "product_name": "Blade Lite 400 - 15.75\" wide x 69.375\" height",
+      "primary_page": 7,
+      "pages": [
+        7
+      ],
+      "category": "Blade Lite",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLD-LT-600-1",
+      "product_name": "Blade Lite 600 - 23.5\" wide x 69\"-83.25\" height",
+      "primary_page": 7,
+      "pages": [
+        7
+      ],
+      "category": "Blade Lite",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLD-LT-800-1",
+      "product_name": "Blade Lite 800 - 31.5\" wide x 60\"-83.25\" height",
+      "primary_page": 7,
+      "pages": [
+        7
+      ],
+      "category": "Blade Lite",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLD-LT-850-1",
+      "product_name": "Blade Lite 850 - 33.5\" wide x 60\"-83.25\" height",
+      "primary_page": 7,
+      "pages": [
+        7
+      ],
+      "category": "Blade Lite",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLD-LT-920-1",
+      "product_name": "Blade Lite 920 - 36\" wide x 60\"-83.25\" height",
+      "primary_page": 7,
+      "pages": [
+        7
+      ],
+      "category": "Blade Lite",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLD-LT-1000-1",
+      "product_name": "Blade Lite 1000 - 39.25\" wide x 60\"-83.25\" height",
+      "primary_page": 7,
+      "pages": [
+        7
+      ],
+      "category": "Blade Lite",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLD-LT-1200-1",
+      "product_name": "Blade Lite 1200 - 47.25\" wide x 60\"-83.25\" height",
+      "primary_page": 7,
+      "pages": [
+        7
+      ],
+      "category": "Blade Lite",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLD-LT-1500-1",
+      "product_name": "Blade Lite 1500 - 59\" wide x 60\"-83.25\" height",
+      "primary_page": 7,
+      "pages": [
+        7
+      ],
+      "category": "Blade Lite",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "ONT-800-S/B-4",
+      "product_name": "Orient 1 - 31.5\" width banner stand",
+      "primary_page": 8,
+      "pages": [
+        8
+      ],
+      "category": "Orient Banner Stands",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "ONT-850-S/B-4",
+      "product_name": "Orient 1 - 33.5\" width banner stand",
+      "primary_page": 8,
+      "pages": [
+        8
+      ],
+      "category": "Orient Banner Stands",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "ONT-920-S/B-4",
+      "product_name": "Orient 1 - 35.5\" width banner stand",
+      "primary_page": 8,
+      "pages": [
+        8
+      ],
+      "category": "Orient Banner Stands",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "ONT-1000-S/B-4",
+      "product_name": "Orient 1 - 39.5\" width banner stand",
+      "primary_page": 8,
+      "pages": [
+        8
+      ],
+      "category": "Orient Banner Stands",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "ONT-800-DBL-S-4",
+      "product_name": "Orient 2 - 31.5\" width double-sided banner stand",
+      "primary_page": 8,
+      "pages": [
+        8
+      ],
+      "category": "Orient Banner Stands",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "ONT-920-DBL-S-4",
+      "product_name": "Orient 2 - 35.5\" width double-sided banner stand",
+      "primary_page": 8,
+      "pages": [
+        8
+      ],
+      "category": "Orient Banner Stands",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "ONT-850-DW",
+      "product_name": "Orient Organic - 33.5\" width maple woodgrain base banner stand",
+      "primary_page": 8,
+      "pages": [
+        8
+      ],
+      "category": "Orient Banner Stands",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "PAC-800-S-2",
+      "product_name": "Pacific Banner Stand 31.5\" wide",
+      "primary_page": 9,
+      "pages": [
+        9
+      ],
+      "category": "Banner Stands - Standard Retractable",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "PAC-920-S-2",
+      "product_name": "Pacific Banner Stand 35.5\" wide",
+      "primary_page": 9,
+      "pages": [
+        9
+      ],
+      "category": "Banner Stands - Standard Retractable",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "PAC-1000-S-2",
+      "product_name": "Pacific Banner Stand 39.25\" wide",
+      "primary_page": 9,
+      "pages": [
+        9
+      ],
+      "category": "Banner Stands - Standard Retractable",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "CN-24-S/B",
+      "product_name": "Contender Banner Stand 23.5\" wide",
+      "primary_page": 9,
+      "pages": [
+        9
+      ],
+      "category": "Banner Stands - Standard Retractable",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "CN-30-S/B",
+      "product_name": "Contender Banner Stand 29.5\" wide",
+      "primary_page": 9,
+      "pages": [
+        9
+      ],
+      "category": "Banner Stands - Standard Retractable",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "CN-36-S/B",
+      "product_name": "Contender Banner Stand 35.5\" wide",
+      "primary_page": 9,
+      "pages": [
+        9
+      ],
+      "category": "Banner Stands - Standard Retractable",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "CN-48-B",
+      "product_name": "Contender Banner Stand 47.5\" wide",
+      "primary_page": 9,
+      "pages": [
+        9
+      ],
+      "category": "Banner Stands - Standard Retractable",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MRLN-850-2",
+      "product_name": "Merlin Banner Stand 33.5\" wide",
+      "primary_page": 9,
+      "pages": [
+        9
+      ],
+      "category": "Banner Stands - Standard Retractable",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BCD-600-S-1",
+      "product_name": "Barracuda 23.5\" wide x 66.5\"-83\" height banner stand",
+      "primary_page": 10,
+      "pages": [
+        10
+      ],
+      "category": "Banner Stands - Premium Retractable",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BCD-800-S-1",
+      "product_name": "Barracuda 31.5\" wide x 60\"-83\" height banner stand",
+      "primary_page": 10,
+      "pages": [
+        10
+      ],
+      "category": "Banner Stands - Premium Retractable",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BCD-850-S-1",
+      "product_name": "Barracuda 33.5\" wide x 60\"-83\" height banner stand",
+      "primary_page": 10,
+      "pages": [
+        10
+      ],
+      "category": "Banner Stands - Premium Retractable",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BCD-920-S-1",
+      "product_name": "Barracuda 35.5\" wide x 60\"-83\" height banner stand",
+      "primary_page": 10,
+      "pages": [
+        10
+      ],
+      "category": "Banner Stands - Premium Retractable",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BCD-1200-S-1",
+      "product_name": "Barracuda 47.25\" wide x 60\"-83\" height banner stand",
+      "primary_page": 10,
+      "pages": [
+        10
+      ],
+      "category": "Banner Stands - Premium Retractable",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "ADV-800-S",
+      "product_name": "Advance 31.5\" wide x 29.5\"-83.35\" height double-sided banner stand",
+      "primary_page": 10,
+      "pages": [
+        10
+      ],
+      "category": "Banner Stands - Premium Retractable",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "IMG-850-S",
+      "product_name": "Imagine 33.5\" wide x 30.5\"-83.35\" height banner stand",
+      "primary_page": 10,
+      "pages": [
+        10
+      ],
+      "category": "Banner Stands - Premium Retractable",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MSQT-400",
+      "product_name": "Mosquito 400 - 15.75\" wide retractable banner stand",
+      "primary_page": 11,
+      "pages": [
+        11
+      ],
+      "category": "Mosquito Banner Stands",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MSQT-600",
+      "product_name": "Mosquito 600 - 23.5\" wide retractable banner stand",
+      "primary_page": 11,
+      "pages": [
+        11
+      ],
+      "category": "Mosquito Banner Stands",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MSQT-800",
+      "product_name": "Mosquito 800 - 31.5\" wide retractable banner stand (silver base)",
+      "primary_page": 11,
+      "pages": [
+        11
+      ],
+      "category": "Mosquito Banner Stands",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MSQT-800-B",
+      "product_name": "Mosquito 800 - 31.5\" wide retractable banner stand (black base)",
+      "primary_page": 11,
+      "pages": [
+        11
+      ],
+      "category": "Mosquito Banner Stands",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MSQT-850",
+      "product_name": "Mosquito 850 - 33.5\" wide retractable banner stand",
+      "primary_page": 11,
+      "pages": [
+        11
+      ],
+      "category": "Mosquito Banner Stands",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MSQT-920",
+      "product_name": "Mosquito 920 - 36\" wide retractable banner stand",
+      "primary_page": 11,
+      "pages": [
+        11
+      ],
+      "category": "Mosquito Banner Stands",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MSQT-1200",
+      "product_name": "Mosquito 1200 - 47.25\" wide retractable banner stand",
+      "primary_page": 11,
+      "pages": [
+        11
+      ],
+      "category": "Mosquito Banner Stands",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MSQT-1500",
+      "product_name": "Mosquito 1500 - 59\" wide retractable banner stand",
+      "primary_page": 11,
+      "pages": [
+        11
+      ],
+      "category": "Mosquito Banner Stands",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MSQT-GIANT-920-S",
+      "product_name": "Giant Mosquito",
+      "primary_page": 12,
+      "pages": [
+        12
+      ],
+      "category": "Banner Stands - Economy Retractable",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MSQT-LT-800",
+      "product_name": "Mosquito Lite",
+      "primary_page": 12,
+      "pages": [
+        12
+      ],
+      "category": "Banner Stands - Economy Retractable",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "DRAGON-FLY-1",
+      "product_name": "Dragon Fly",
+      "primary_page": 12,
+      "pages": [
+        12
+      ],
+      "category": "Banner Stands - Economy Retractable",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "PHX-850-S",
+      "product_name": "Phoenix banner stand, 33.5\" wide x 79\" height",
+      "primary_page": 13,
+      "pages": [
+        13
+      ],
+      "category": "Banner Stands - Economy Retractable",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "PHX-400-S",
+      "product_name": "Phoenix Mini banner stand, 15.5\" wide, 16.5\"-31.5\" height",
+      "primary_page": 13,
+      "pages": [
+        13
+      ],
+      "category": "Banner Stands - Economy Retractable",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "PHX-400-S-2P",
+      "product_name": "Phoenix Mini banner stand 2-piece pole, 15.5\" wide, 47.25\"-63\" height",
+      "primary_page": 13,
+      "pages": [
+        13
+      ],
+      "category": "Banner Stands - Economy Retractable",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BREZ-1-S",
+      "product_name": "Breeze retractable tabletop banner stand, 8.375\" wide x 11.75\" height",
+      "primary_page": 13,
+      "pages": [
+        13
+      ],
+      "category": "Banner Stands - Economy Retractable",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BREZ-2-S",
+      "product_name": "Breeze retractable tabletop banner stand, 11\" wide x 17\" height",
+      "primary_page": 13,
+      "pages": [
+        13
+      ],
+      "category": "Banner Stands - Economy Retractable",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "STLLR-LTR",
+      "product_name": "Stellar retractable tabletop banner stand, 8.5\" wide x 11\" height",
+      "primary_page": 13,
+      "pages": [
+        13
+      ],
+      "category": "Banner Stands - Economy Retractable",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "STLLR-TBLD",
+      "product_name": "Stellar retractable tabletop banner stand, 11\" wide x 17\" height",
+      "primary_page": 13,
+      "pages": [
+        13
+      ],
+      "category": "Banner Stands - Economy Retractable",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "PGSUS3-S/B",
+      "product_name": "Pegasus Supreme",
+      "primary_page": 14,
+      "pages": [
+        14
+      ],
+      "category": "Banner Stands - Standard Telescopic",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "PGSUS2-S/B",
+      "product_name": "Pegasus Standard",
+      "primary_page": 14,
+      "pages": [
+        14
+      ],
+      "category": "Banner Stands - Standard Telescopic",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "PGSUS3-EXT-S/B",
+      "product_name": "Pegasus Linking Kit (Supreme size)",
+      "primary_page": 14,
+      "pages": [
+        14
+      ],
+      "category": "Banner Stands - Standard Telescopic",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "PGSUS2-EXT-S/B",
+      "product_name": "Pegasus Linking Kit (Standard size)",
+      "primary_page": 14,
+      "pages": [
+        14
+      ],
+      "category": "Banner Stands - Standard Telescopic",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MOD-FRM-01-M-TL",
+      "product_name": "Banner 1",
+      "primary_page": 17,
+      "pages": [
+        17,
+        90
+      ],
+      "category": "Formulate & Modulate Backwall Displays",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MOD-FRM-02-M-TL",
+      "product_name": "Banner 2",
+      "primary_page": 17,
+      "pages": [
+        17,
+        90
+      ],
+      "category": "Formulate & Modulate Backwall Displays",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MOD-FRM-03-M-TL",
+      "product_name": "Banner 3",
+      "primary_page": 17,
+      "pages": [
+        17,
+        90
+      ],
+      "category": "Formulate & Modulate Backwall Displays",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MOD-FRM-04-M-TL",
+      "product_name": "Banner 4",
+      "primary_page": 17,
+      "pages": [
+        17,
+        90
+      ],
+      "category": "Formulate & Modulate Backwall Displays",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MOD-FRM-05-M-TL",
+      "product_name": "Banner 5",
+      "primary_page": 17,
+      "pages": [
+        17,
+        90
+      ],
+      "category": "Formulate & Modulate Backwall Displays",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MOD-FRM-06-M-TL",
+      "product_name": "Banner 6",
+      "primary_page": 17,
+      "pages": [
+        17,
+        90
+      ],
+      "category": "Formulate & Modulate Backwall Displays",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MOD-FRM-07-M-TL",
+      "product_name": "Banner 7",
+      "primary_page": 17,
+      "pages": [
+        17,
+        90
+      ],
+      "category": "Formulate & Modulate Backwall Displays",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MOD-FRM-08-M-TL",
+      "product_name": "Banner 8",
+      "primary_page": 17,
+      "pages": [
+        17,
+        90
+      ],
+      "category": "Formulate & Modulate Backwall Displays",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MOD-FRM-09-M-TL",
+      "product_name": "Banner 9",
+      "primary_page": 17,
+      "pages": [
+        17,
+        90
+      ],
+      "category": "Formulate & Modulate Backwall Displays",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MOD-FRM-10-M-TL",
+      "product_name": "Banner 10",
+      "primary_page": 17,
+      "pages": [
+        17,
+        90
+      ],
+      "category": "Formulate & Modulate Backwall Displays",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MOD-FRM-11-M-TL",
+      "product_name": "Banner 11",
+      "primary_page": 17,
+      "pages": [
+        17,
+        90
+      ],
+      "category": "Formulate & Modulate Backwall Displays",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MOD-FRM-12-M-TL",
+      "product_name": "Banner 12",
+      "primary_page": 17,
+      "pages": [
+        17,
+        90
+      ],
+      "category": "Formulate & Modulate Backwall Displays",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MOD-FRM-13-M-TL",
+      "product_name": "Banner 13",
+      "primary_page": 17,
+      "pages": [
+        17,
+        90
+      ],
+      "category": "Formulate & Modulate Backwall Displays",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MOD-FRM-14-M-TL",
+      "product_name": "Banner 14",
+      "primary_page": 17,
+      "pages": [
+        17,
+        90
+      ],
+      "category": "Formulate & Modulate Backwall Displays",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLZ-0306-S/B/W",
+      "product_name": "Blaze 0306",
+      "primary_page": 21,
+      "pages": [
+        21
+      ],
+      "category": "BLAZE Freestanding Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLZ-0308-S/B/W",
+      "product_name": "Blaze 0308",
+      "primary_page": 21,
+      "pages": [
+        21
+      ],
+      "category": "BLAZE Freestanding Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLZ-0406-S/B/W",
+      "product_name": "Blaze 0406",
+      "primary_page": 21,
+      "pages": [
+        21
+      ],
+      "category": "BLAZE Freestanding Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLZ-0408-S/B/W",
+      "product_name": "Blaze 0408",
+      "primary_page": 21,
+      "pages": [
+        21
+      ],
+      "category": "BLAZE Freestanding Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLZ-0608-S/B/W",
+      "product_name": "Blaze 0608",
+      "primary_page": 21,
+      "pages": [
+        21
+      ],
+      "category": "BLAZE Freestanding Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLZ-0808-S/B/W",
+      "product_name": "Blaze 0808",
+      "primary_page": 21,
+      "pages": [
+        21
+      ],
+      "category": "BLAZE Freestanding Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLZ-1008-S/B/W",
+      "product_name": "Blaze 1008",
+      "primary_page": 21,
+      "pages": [
+        21
+      ],
+      "category": "BLAZE Freestanding Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLZ-1010-S/B/W",
+      "product_name": "Blaze 1010",
+      "primary_page": 21,
+      "pages": [
+        21
+      ],
+      "category": "BLAZE Freestanding Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLZ-2010-S/B/W",
+      "product_name": "Blaze 2010",
+      "primary_page": 21,
+      "pages": [
+        21
+      ],
+      "category": "BLAZE Freestanding Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLZ-3010-S/B/W",
+      "product_name": "Blaze 3010",
+      "primary_page": 21,
+      "pages": [
+        21
+      ],
+      "category": "BLAZE Freestanding Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLZ-W-0603-S/B/W-F",
+      "product_name": "Blaze Wall 0603",
+      "primary_page": 23,
+      "pages": [
+        23
+      ],
+      "category": "BLAZE Wall Mounted Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLZ-W-0604-S/B/W-F",
+      "product_name": "Blaze Wall 0604",
+      "primary_page": 23,
+      "pages": [
+        23
+      ],
+      "category": "BLAZE Wall Mounted Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLZ-W-0606-S/B/W-F",
+      "product_name": "Blaze Wall 0606",
+      "primary_page": 23,
+      "pages": [
+        23
+      ],
+      "category": "BLAZE Wall Mounted Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLZ-W-0803-S/B/W-F",
+      "product_name": "Blaze Wall 0803",
+      "primary_page": 23,
+      "pages": [
+        23
+      ],
+      "category": "BLAZE Wall Mounted Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLZ-W-0804-S/B/W-F",
+      "product_name": "Blaze Wall 0804",
+      "primary_page": 23,
+      "pages": [
+        23
+      ],
+      "category": "BLAZE Wall Mounted Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLZ-W-0806-S/B/W-F",
+      "product_name": "Blaze Wall 0806",
+      "primary_page": 23,
+      "pages": [
+        23
+      ],
+      "category": "BLAZE Wall Mounted Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLZ-W-0808-S/B/W-F",
+      "product_name": "Blaze Wall 0808",
+      "primary_page": 23,
+      "pages": [
+        23
+      ],
+      "category": "BLAZE Wall Mounted Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLZ-W-1008-S/B/W-F",
+      "product_name": "Blaze Wall 1008",
+      "primary_page": 23,
+      "pages": [
+        23
+      ],
+      "category": "BLAZE Wall Mounted Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLZ-W-1010-S/B/W-F",
+      "product_name": "Blaze Wall 1010",
+      "primary_page": 23,
+      "pages": [
+        23
+      ],
+      "category": "BLAZE Wall Mounted Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLZ-W-2008-S/B/W-F",
+      "product_name": "Blaze Wall 2008",
+      "primary_page": 23,
+      "pages": [
+        23
+      ],
+      "category": "BLAZE Wall Mounted Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLZ-W-2010-S/B/W-F",
+      "product_name": "Blaze Wall 2010",
+      "primary_page": 23,
+      "pages": [
+        23
+      ],
+      "category": "BLAZE Wall Mounted Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLZ-W-3008-S/B/W-F",
+      "product_name": "Blaze Wall 3008",
+      "primary_page": 23,
+      "pages": [
+        23
+      ],
+      "category": "BLAZE Wall Mounted Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLZ-W-3010-S/B/W-F",
+      "product_name": "Blaze Wall 3010",
+      "primary_page": 23,
+      "pages": [
+        23
+      ],
+      "category": "BLAZE Wall Mounted Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLZ-H-0603",
+      "product_name": "Blaze Hanging 0603",
+      "primary_page": 25,
+      "pages": [
+        25
+      ],
+      "category": "BLAZE Hanging Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLZ-H-0604",
+      "product_name": "Blaze Hanging 0604",
+      "primary_page": 25,
+      "pages": [
+        25
+      ],
+      "category": "BLAZE Hanging Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLZ-H-0606",
+      "product_name": "Blaze Hanging 0606",
+      "primary_page": 25,
+      "pages": [
+        25
+      ],
+      "category": "BLAZE Hanging Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLZ-H-0803",
+      "product_name": "Blaze Hanging 0803",
+      "primary_page": 25,
+      "pages": [
+        25
+      ],
+      "category": "BLAZE Hanging Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLZ-H-0804",
+      "product_name": "Blaze Hanging 0804",
+      "primary_page": 25,
+      "pages": [
+        25
+      ],
+      "category": "BLAZE Hanging Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLZ-H-0806",
+      "product_name": "Blaze Hanging 0806",
+      "primary_page": 25,
+      "pages": [
+        25
+      ],
+      "category": "BLAZE Hanging Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLZ-H-0808",
+      "product_name": "Blaze Hanging 0808",
+      "primary_page": 25,
+      "pages": [
+        25
+      ],
+      "category": "BLAZE Hanging Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLZ-H-1008",
+      "product_name": "Blaze Hanging 1008",
+      "primary_page": 25,
+      "pages": [
+        25
+      ],
+      "category": "BLAZE Hanging Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLZ-H-1010",
+      "product_name": "Blaze Hanging 1010",
+      "primary_page": 25,
+      "pages": [
+        25
+      ],
+      "category": "BLAZE Hanging Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLZ-H-2008",
+      "product_name": "Blaze Hanging 2008",
+      "primary_page": 25,
+      "pages": [
+        25
+      ],
+      "category": "BLAZE Hanging Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLZ-W-3010",
+      "product_name": "Blaze Hanging 3010",
+      "primary_page": 25,
+      "pages": [
+        25
+      ],
+      "category": "BLAZE Hanging Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "VFF-01-3-F",
+      "product_name": "10' Backwall Kit",
+      "primary_page": 33,
+      "pages": [
+        33
+      ],
+      "category": "Vector Fast Frame",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "VFF-LB-01-MINI-F",
+      "product_name": "Mini Light Box",
+      "primary_page": 33,
+      "pages": [
+        33
+      ],
+      "category": "Vector Fast Frame",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TNT-E-3X3-SQ-3",
+      "product_name": "10' Economy (Steel) Hardware only kit",
+      "primary_page": 38,
+      "pages": [
+        38
+      ],
+      "category": "Zoom Popup Tents",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TNT-E-3X3-SQ-2-G",
+      "product_name": "10' Economy (Steel) Kit with canopy",
+      "primary_page": 38,
+      "pages": [
+        38
+      ],
+      "category": "Zoom Popup Tents",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "ZM-TNT-3MX3M-CAN-(COLOR)",
+      "product_name": "10' Economy (Steel) Stock canopy only",
+      "primary_page": 38,
+      "pages": [
+        38
+      ],
+      "category": "Zoom Popup Tents",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TNT-3X3-CAN-G",
+      "product_name": "10' Economy (Steel) Printed canopy only",
+      "primary_page": 38,
+      "pages": [
+        38
+      ],
+      "category": "Zoom Popup Tents",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TNT-3X3-FWL-G",
+      "product_name": "10' Economy (Steel) Full wall kit",
+      "primary_page": 38,
+      "pages": [
+        38
+      ],
+      "category": "Zoom Popup Tents",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TNT-3X3-HLF-K-G",
+      "product_name": "10' Economy (Steel) Half wall kit",
+      "primary_page": 38,
+      "pages": [
+        38
+      ],
+      "category": "Zoom Popup Tents",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TNT-S-3X3-HEX-FRM",
+      "product_name": "10' Standard (Aluminum) Hardware only kit",
+      "primary_page": 38,
+      "pages": [
+        38
+      ],
+      "category": "Zoom Popup Tents",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TNT-S-3X3-HEX-G",
+      "product_name": "10' Standard (Aluminum) Kit with canopy",
+      "primary_page": 38,
+      "pages": [
+        38
+      ],
+      "category": "Zoom Popup Tents",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TNT-S-3X6-HEX",
+      "product_name": "20' Standard (Aluminum) Hardware only kit",
+      "primary_page": 39,
+      "pages": [
+        39
+      ],
+      "category": "Zoom Popup Tents",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TNT-S-3X6-HEX-G",
+      "product_name": "20' Standard (Aluminum) Kit with canopy",
+      "primary_page": 39,
+      "pages": [
+        39
+      ],
+      "category": "Zoom Popup Tents",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "ZM-TNT-3MX6M-CAN-(COLOR)-3",
+      "product_name": "20' Standard (Aluminum) Stock canopy only",
+      "primary_page": 39,
+      "pages": [
+        39
+      ],
+      "category": "Zoom Popup Tents",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "ZM-TNT-3MX6M-CAN-G",
+      "product_name": "20' Standard (Aluminum) Printed canopy only",
+      "primary_page": 39,
+      "pages": [
+        39
+      ],
+      "category": "Zoom Popup Tents",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TNT-S-3X6-FWL-G",
+      "product_name": "20' Standard (Aluminum) Full wall kit",
+      "primary_page": 39,
+      "pages": [
+        39
+      ],
+      "category": "Zoom Popup Tents",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TNT-S-3X6-HWL-K-G",
+      "product_name": "20' Standard (Aluminum) Half wall kit",
+      "primary_page": 39,
+      "pages": [
+        39
+      ],
+      "category": "Zoom Popup Tents",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TNT-E-1.5-FRM-SQ-3",
+      "product_name": "5' Economy (Steel) Hardware only kit",
+      "primary_page": 39,
+      "pages": [
+        39
+      ],
+      "category": "Zoom Popup Tents",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TNT-E-1.5-SQ-2-G",
+      "product_name": "5' Economy (Steel) Kit with canopy",
+      "primary_page": 39,
+      "pages": [
+        39
+      ],
+      "category": "Zoom Popup Tents",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TNT-1.5-CAN-G",
+      "product_name": "5' Economy (Steel) Printed canopy only",
+      "primary_page": 39,
+      "pages": [
+        39
+      ],
+      "category": "Zoom Popup Tents",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TNT-1.5-FWL-G",
+      "product_name": "5' Economy (Steel) Full wall kit",
+      "primary_page": 39,
+      "pages": [
+        39
+      ],
+      "category": "Zoom Popup Tents",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "PBFM902-B",
+      "product_name": "popup bar mini",
+      "primary_page": 41,
+      "pages": [
+        41
+      ],
+      "category": "Popup Bar Collapsible Counter",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "PBFL301-B",
+      "product_name": "popup bar large",
+      "primary_page": 41,
+      "pages": [
+        41
+      ],
+      "category": "Popup Bar Collapsible Counter",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "ZOOM-FLX-XL-2",
+      "product_name": "extra large flag - feather, straight",
+      "primary_page": 42,
+      "pages": [
+        42
+      ],
+      "category": "Zoom Flex Flags",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "ZOOM-FLX-SM-E",
+      "product_name": "small flag - edge",
+      "primary_page": 42,
+      "pages": [
+        42
+      ],
+      "category": "Zoom Flex Flags",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "ZOOM-FLX-M-E",
+      "product_name": "medium flag - edge",
+      "primary_page": 42,
+      "pages": [
+        42
+      ],
+      "category": "Zoom Flex Flags",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "ZOOM-FLX-LG-E",
+      "product_name": "large flag - edge",
+      "primary_page": 42,
+      "pages": [
+        42
+      ],
+      "category": "Zoom Flex Flags",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "ZOOM-FLX-XL-E",
+      "product_name": "extra large flag - edge",
+      "primary_page": 42,
+      "pages": [
+        42
+      ],
+      "category": "Zoom Flex Flags",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "ZM-FLX-CB",
+      "product_name": "cross base",
+      "primary_page": 43,
+      "pages": [
+        43
+      ],
+      "category": "Zoom Flex Flags",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "ZM-FLX-SQ",
+      "product_name": "square steel base",
+      "primary_page": 43,
+      "pages": [
+        43
+      ],
+      "category": "Zoom Flex Flags",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "ZM-FLX-FB",
+      "product_name": "fillable ground base",
+      "primary_page": 43,
+      "pages": [
+        43
+      ],
+      "category": "Zoom Flex Flags",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "ZM-FLX-STCK-BASE",
+      "product_name": "stackable base",
+      "primary_page": 43,
+      "pages": [
+        43
+      ],
+      "category": "Zoom Flex Flags",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "ZM-FLX-AGR",
+      "product_name": "auger base",
+      "primary_page": 43,
+      "pages": [
+        43
+      ],
+      "category": "Zoom Flex Flags",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "ZM-FLX-STK",
+      "product_name": "ground stake (included)",
+      "primary_page": 43,
+      "pages": [
+        43
+      ],
+      "category": "Zoom Flex Flags",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "ZM-FLX-DO",
+      "product_name": "drive-over base",
+      "primary_page": 43,
+      "pages": [
+        43
+      ],
+      "category": "Zoom Flex Flags",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "ZM-FLX-WR",
+      "product_name": "water ring base support",
+      "primary_page": 43,
+      "pages": [
+        43
+      ],
+      "category": "Zoom Flex Flags",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "C-BRC-72X36-PS-G-W",
+      "product_name": "Barricade Cover 72\"w x 36\"h Power Stretch",
+      "primary_page": 45,
+      "pages": [
+        45
+      ],
+      "category": "Outdoor Signage",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "C-BRC-72X36-OD-GDBL",
+      "product_name": "Barricade Cover 72\"w x 36\"h Outdoor Canvas",
+      "primary_page": 45,
+      "pages": [
+        45
+      ],
+      "category": "Outdoor Signage",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "C-BRC-97X36-PS-G-W",
+      "product_name": "Barricade Cover 97\"w x 36\"h Power Stretch",
+      "primary_page": 45,
+      "pages": [
+        45
+      ],
+      "category": "Outdoor Signage",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "C-BRC-97X36-OD-GDBL",
+      "product_name": "Barricade Cover 97\"w x 36\"h Outdoor Canvas",
+      "primary_page": 45,
+      "pages": [
+        45
+      ],
+      "category": "Outdoor Signage",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BRKAWAY-POLES",
+      "product_name": "Breakaway Banner Poles",
+      "primary_page": 45,
+      "pages": [
+        45
+      ],
+      "category": "Outdoor Signage",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BREAKAWAY-SM-G",
+      "product_name": "Breakaway Banner Small Graphic 96\"w x 48\"h",
+      "primary_page": 45,
+      "pages": [
+        45
+      ],
+      "category": "Outdoor Signage",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BREAKAWAY-M-G",
+      "product_name": "Breakaway Banner Medium Graphic 116.5\"w x 96\"h",
+      "primary_page": 45,
+      "pages": [
+        45
+      ],
+      "category": "Outdoor Signage",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BREAKAWAY-LG-G",
+      "product_name": "Breakaway Banner Large Graphic 144\"w x 96\"h",
+      "primary_page": 45,
+      "pages": [
+        45
+      ],
+      "category": "Outdoor Signage",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "WIND-MIN",
+      "product_name": "Wind Dancer Mini",
+      "primary_page": 46,
+      "pages": [
+        46
+      ],
+      "category": "Outdoor Displays",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "WIND-LT",
+      "product_name": "Wind Dancer LT",
+      "primary_page": 46,
+      "pages": [
+        46
+      ],
+      "category": "Outdoor Displays",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "WIND-MX",
+      "product_name": "Wind Dancer",
+      "primary_page": 46,
+      "pages": [
+        46
+      ],
+      "category": "Outdoor Displays",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "SWING-SIGN",
+      "product_name": "Swing Sign",
+      "primary_page": 46,
+      "pages": [
+        46
+      ],
+      "category": "Outdoor Displays",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "CONTOUR-01-G",
+      "product_name": "Contour Arrow Up",
+      "primary_page": 47,
+      "pages": [
+        47
+      ],
+      "category": "Outdoor Displays",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "CONTOUR-02-G",
+      "product_name": "Contour Arrow Side",
+      "primary_page": 47,
+      "pages": [
+        47
+      ],
+      "category": "Outdoor Displays",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "CONTOUR-03-G",
+      "product_name": "Contour Wave 1",
+      "primary_page": 47,
+      "pages": [
+        47
+      ],
+      "category": "Outdoor Displays",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "CONTOUR-04-G",
+      "product_name": "Contour Bottle",
+      "primary_page": 47,
+      "pages": [
+        47
+      ],
+      "category": "Outdoor Displays",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "CONTOUR-05-G",
+      "product_name": "Contour Circle",
+      "primary_page": 47,
+      "pages": [
+        47
+      ],
+      "category": "Outdoor Displays",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "CONTOUR-06-G",
+      "product_name": "Contour Wave 2",
+      "primary_page": 47,
+      "pages": [
+        47
+      ],
+      "category": "Outdoor Displays",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "APEX",
+      "product_name": "Apex double-sided plastic A-frame",
+      "primary_page": 47,
+      "pages": [
+        47
+      ],
+      "category": "Outdoor Displays",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "ACE-2",
+      "product_name": "ACE-2 double-sided aluminum A-frame sign holder",
+      "primary_page": 47,
+      "pages": [
+        47
+      ],
+      "category": "Outdoor Displays",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "THUNDER-1",
+      "product_name": "Thunder double-sided outdoor retractable banner stand",
+      "primary_page": 48,
+      "pages": [
+        48
+      ],
+      "category": "Outdoor Signage",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "BLZD",
+      "product_name": "Blizzard outdoor display with hollow base",
+      "primary_page": 48,
+      "pages": [
+        48
+      ],
+      "category": "Outdoor Signage",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "STOW-3-S",
+      "product_name": "Stowaway small lightweight display stand",
+      "primary_page": 48,
+      "pages": [
+        48
+      ],
+      "category": "Outdoor Signage",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "STOW-3-L",
+      "product_name": "Stowaway large lightweight display stand",
+      "primary_page": 48,
+      "pages": [
+        48
+      ],
+      "category": "Outdoor Signage",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "STOW-3-XL",
+      "product_name": "Stowaway extra-large lightweight display stand",
+      "primary_page": 48,
+      "pages": [
+        48
+      ],
+      "category": "Outdoor Signage",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "ZOOM-FLX-OD-BB",
+      "product_name": "Zoom Flex Outdoor Billboard",
+      "primary_page": 49,
+      "pages": [
+        49
+      ],
+      "category": "Outdoor Signage",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "ZOOM-FLX-ARCH",
+      "product_name": "Zoom Flex Arch",
+      "primary_page": 49,
+      "pages": [
+        49
+      ],
+      "category": "Outdoor Signage",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "PKWY-S-SPN-3",
+      "product_name": "Parkway Single Span Street Pole Banner",
+      "primary_page": 49,
+      "pages": [
+        49
+      ],
+      "category": "Outdoor Signage",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "PKWY-D-SPN-3",
+      "product_name": "Parkway Double Span Street Pole Banner",
+      "primary_page": 49,
+      "pages": [
+        49
+      ],
+      "category": "Outdoor Signage",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TBL-T-4-F",
+      "product_name": "4' full Fully Printed Table Throw",
+      "primary_page": 50,
+      "pages": [
+        50
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TBL-T-4-E",
+      "product_name": "4' economy Fully Printed Table Throw",
+      "primary_page": 50,
+      "pages": [
+        50
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TBL-T-4-36-F",
+      "product_name": "4' full (48\"w x 36\"h) Fully Printed Table Throw",
+      "primary_page": 50,
+      "pages": [
+        50
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TBL-T-6-F",
+      "product_name": "6' full Fully Printed Table Throw",
+      "primary_page": 50,
+      "pages": [
+        50
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TBL-T-6-E",
+      "product_name": "6' economy Fully Printed Table Throw",
+      "primary_page": 50,
+      "pages": [
+        50
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TBL-T-8-F",
+      "product_name": "8' full Fully Printed Table Throw",
+      "primary_page": 50,
+      "pages": [
+        50
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TBL-T-8-E",
+      "product_name": "8' economy Fully Printed Table Throw",
+      "primary_page": 50,
+      "pages": [
+        50
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TBL-T-FC",
+      "product_name": "Convertible Table Throw full - fits 6' & 8' table",
+      "primary_page": 50,
+      "pages": [
+        50
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TBL-T-EC",
+      "product_name": "Convertible Table Throw economy - fits 6' & 8' table",
+      "primary_page": 50,
+      "pages": [
+        50
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TBL-R-24-F",
+      "product_name": "24\" full Table Runner",
+      "primary_page": 50,
+      "pages": [
+        50
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TBL-R-24-E",
+      "product_name": "24\" economy Table Runner",
+      "primary_page": 50,
+      "pages": [
+        50
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TBL-R-30-F",
+      "product_name": "30\" full Table Runner",
+      "primary_page": 50,
+      "pages": [
+        50
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TBL-R-30-E",
+      "product_name": "30\" economy Table Runner",
+      "primary_page": 50,
+      "pages": [
+        50
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TBL-R-36-F",
+      "product_name": "36\" full Table Runner",
+      "primary_page": 50,
+      "pages": [
+        50
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TBL-R-36-E",
+      "product_name": "36\" economy Table Runner",
+      "primary_page": 50,
+      "pages": [
+        50
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TBL-R-60-F",
+      "product_name": "60\" full Table Runner",
+      "primary_page": 50,
+      "pages": [
+        50
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TBL-R-60-E",
+      "product_name": "60\" economy Table Runner",
+      "primary_page": 50,
+      "pages": [
+        50
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TBL-SW-4-F",
+      "product_name": "Stretch Table Throw 4' full",
+      "primary_page": 51,
+      "pages": [
+        51
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TBL-SW-4-36-F",
+      "product_name": "Stretch Table Throw 4' full (48\"w x 36\"h)",
+      "primary_page": 51,
+      "pages": [
+        51
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TBL-SW-6-F",
+      "product_name": "Stretch Table Throw 6' full",
+      "primary_page": 51,
+      "pages": [
+        51
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TBL-SW-8-F",
+      "product_name": "Stretch Table Throw 8' full",
+      "primary_page": 51,
+      "pages": [
+        51
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TBL-FITTED-4-F",
+      "product_name": "Fitted Table Throw 4' full",
+      "primary_page": 51,
+      "pages": [
+        51
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TBL-FITTED-4-36-F",
+      "product_name": "Fitted Table Throw 4' full (48\"w x 36\"h)",
+      "primary_page": 51,
+      "pages": [
+        51
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TBL-FITTED-4-36-E",
+      "product_name": "Fitted Table Throw 4' economy",
+      "primary_page": 51,
+      "pages": [
+        51
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TBL-FITTED-6-F",
+      "product_name": "Fitted Table Throw 6' full",
+      "primary_page": 51,
+      "pages": [
+        51
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TBL-FITTED-8-F",
+      "product_name": "Fitted Table Throw 8' full",
+      "primary_page": 51,
+      "pages": [
+        51
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "RND-TBL-T-30X30",
+      "product_name": "Round Table Throw 30\" dia., 30\"h draped",
+      "primary_page": 51,
+      "pages": [
+        51
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "RND-TBL-FT-30X30",
+      "product_name": "Round Table Throw 30\" dia., 30\"h fitted",
+      "primary_page": 51,
+      "pages": [
+        51
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "RND-TBL-SW-30X30",
+      "product_name": "Round Table Throw 30\" dia., 30\"h stretch",
+      "primary_page": 51,
+      "pages": [
+        51
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "RND-TBL-T-30X42",
+      "product_name": "Round Table Throw 30\" dia., 42\"h draped",
+      "primary_page": 51,
+      "pages": [
+        51
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "RND-TBL-FT-30X42",
+      "product_name": "Round Table Throw 30\" dia., 42\"h fitted",
+      "primary_page": 51,
+      "pages": [
+        51
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "RND-TBL-SW-30X42",
+      "product_name": "Round Table Throw 30\" dia., 42\"h stretch",
+      "primary_page": 51,
+      "pages": [
+        51
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "RND-TBL-T-48X30",
+      "product_name": "Round Table Throw 48\" dia., 30\"h draped",
+      "primary_page": 51,
+      "pages": [
+        51
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "RND-TBL-FT-48X30",
+      "product_name": "Round Table Throw 48\" dia., 30\"h fitted",
+      "primary_page": 51,
+      "pages": [
+        51
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "RND-TBL-T-60X30",
+      "product_name": "Round Table Throw 60\" dia., 30\"h draped",
+      "primary_page": 51,
+      "pages": [
+        51
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "RND-TBL-FT-60X30",
+      "product_name": "Round Table Throw 60\" dia., 30\"h fitted",
+      "primary_page": 51,
+      "pages": [
+        51
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TBL-ODC-FITTED-6-F",
+      "product_name": "Outdoor Table Throw 6' full",
+      "primary_page": 51,
+      "pages": [
+        51
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TBL-ODC-FITTED-8-F",
+      "product_name": "Outdoor Table Throw 8' full",
+      "primary_page": 51,
+      "pages": [
+        51
+      ],
+      "category": "Table Throws & Runners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "EMB-BL-2X2-S",
+      "product_name": "5' tabletop Backlit Embrace",
+      "primary_page": 64,
+      "pages": [
+        64
+      ],
+      "category": "Embrace Push-Fit Tension Fabric Backlit",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "EMB-BL-1X3-S",
+      "product_name": "2 1/2' full height Backlit Embrace",
+      "primary_page": 64,
+      "pages": [
+        64
+      ],
+      "category": "Embrace Push-Fit Tension Fabric Backlit",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "EMB-BL-2X3-S",
+      "product_name": "5' full height Backlit Embrace",
+      "primary_page": 64,
+      "pages": [
+        64
+      ],
+      "category": "Embrace Push-Fit Tension Fabric Backlit",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "EMB-BL-3X3-S",
+      "product_name": "7 1/2' full height Backlit Embrace",
+      "primary_page": 64,
+      "pages": [
+        64
+      ],
+      "category": "Embrace Push-Fit Tension Fabric Backlit",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "EMB-BL-5X3-S",
+      "product_name": "12 1/4' full height Backlit Embrace",
+      "primary_page": 64,
+      "pages": [
+        64
+      ],
+      "category": "Embrace Push-Fit Tension Fabric Backlit",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "EMB-BL-8X3-S",
+      "product_name": "20' wide Backlit Embrace",
+      "primary_page": 64,
+      "pages": [
+        64
+      ],
+      "category": "Embrace Push-Fit Tension Fabric Backlit",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "XCLM-3X3-K3",
+      "product_name": "7 1/2' full height display",
+      "primary_page": 70,
+      "pages": [
+        70,
+        71
+      ],
+      "category": "XClaim Fabric Popup",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "XCLM-3X3-K4",
+      "product_name": "7 1/2' full height display",
+      "primary_page": 70,
+      "pages": [
+        70,
+        71
+      ],
+      "category": "XClaim Fabric Popup",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "XCLM-3X3-K5",
+      "product_name": "7 1/2' full height display",
+      "primary_page": 70,
+      "pages": [
+        70,
+        71
+      ],
+      "category": "XClaim Fabric Popup",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "XCLM-3X3-K6",
+      "product_name": "7 1/2' full height display",
+      "primary_page": 70,
+      "pages": [
+        70,
+        71
+      ],
+      "category": "XClaim Fabric Popup",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "XCLM-4X3-K1",
+      "product_name": "10' full height display",
+      "primary_page": 71,
+      "pages": [
+        71
+      ],
+      "category": "XClaim Fabric Popup",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "XCLM-4X3-K2",
+      "product_name": "10' full height display",
+      "primary_page": 71,
+      "pages": [
+        71
+      ],
+      "category": "XClaim Fabric Popup",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "XCLM-4X3-K3",
+      "product_name": "10' full height display",
+      "primary_page": 71,
+      "pages": [
+        71
+      ],
+      "category": "XClaim Fabric Popup",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "XCLM-4X3-K4",
+      "product_name": "10' full height display",
+      "primary_page": 72,
+      "pages": [
+        72
+      ],
+      "category": "XClaim Fabric Popup",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "XCLM-4X3-K5",
+      "product_name": "10' full height display",
+      "primary_page": 72,
+      "pages": [
+        72
+      ],
+      "category": "XClaim Fabric Popup",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MOD-CNTR-M",
+      "product_name": "Modulate Counter",
+      "primary_page": 90,
+      "pages": [
+        90
+      ],
+      "category": "Modulate Magnetic Mix & Match Banners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MOD-ML-01",
+      "product_name": "Accent Ladder, 31.5\"w x 92.2\"h x 23.5\"d",
+      "primary_page": 91,
+      "pages": [
+        91
+      ],
+      "category": "Modulate Magnetic Mix & Match Banners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MOD-ML-02",
+      "product_name": "Accent Ladder, 31.5\"w x 96.2\"h x 23.5\"d",
+      "primary_page": 91,
+      "pages": [
+        91
+      ],
+      "category": "Modulate Magnetic Mix & Match Banners",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MOD-30-02-M-TL",
+      "product_name": "30' Inline Modulate Magnetic Display",
+      "primary_page": 92,
+      "pages": [
+        92
+      ],
+      "category": "Modulate Magnetic Reconfigurable Kits",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MOD-20-02-M-TL",
+      "product_name": "20' Inline Modulate Magnetic Display",
+      "primary_page": 92,
+      "pages": [
+        92
+      ],
+      "category": "Modulate Magnetic Reconfigurable Kits",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MOD-10-03-M-TL",
+      "product_name": "10' Inline Modulate Magnetic Display",
+      "primary_page": 92,
+      "pages": [
+        92
+      ],
+      "category": "Modulate Magnetic Reconfigurable Kits",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MOD-10-04-M-TL",
+      "product_name": "10' Inline Modulate Magnetic Display",
+      "primary_page": 92,
+      "pages": [
+        92
+      ],
+      "category": "Modulate Magnetic Reconfigurable Kits",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MOD-30-01-M-TL",
+      "product_name": "30' Inline Display (converts to 20' or two 10' displays)",
+      "primary_page": 93,
+      "pages": [
+        93
+      ],
+      "category": "Modulate Magnetic Reconfigurable Kits",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MOD-20-01-M-TL",
+      "product_name": "20' Inline Display - Kit includes banners 3, 6, 5, 6",
+      "primary_page": 93,
+      "pages": [
+        93
+      ],
+      "category": "Modulate Magnetic Reconfigurable Kits",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MOD-10-01-M-TL",
+      "product_name": "10' Inline Display - Kit includes banners 4, 6, 3",
+      "primary_page": 93,
+      "pages": [
+        93
+      ],
+      "category": "Modulate Magnetic Reconfigurable Kits",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MOD-10-02-M-TL",
+      "product_name": "10' Inline Display - Kit includes banners 6, 4, 3",
+      "primary_page": 93,
+      "pages": [
+        93
+      ],
+      "category": "Modulate Magnetic Reconfigurable Kits",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MOD-30-03-M-TL",
+      "product_name": "30' Inline Display (converts to 20' or two 10' displays)",
+      "primary_page": 93,
+      "pages": [
+        93
+      ],
+      "category": "Modulate Magnetic Reconfigurable Kits",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MOD-20-03-M-TL",
+      "product_name": "20' Inline Display - Kit includes banners 11, 10, 7, 10, 11",
+      "primary_page": 93,
+      "pages": [
+        93
+      ],
+      "category": "Modulate Magnetic Reconfigurable Kits",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MOD-10-05-M-TL",
+      "product_name": "10' Inline Display - Kit includes banners 11, 10, 11",
+      "primary_page": 93,
+      "pages": [
+        93
+      ],
+      "category": "Modulate Magnetic Reconfigurable Kits",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MOD-10-06-M-TL",
+      "product_name": "10' Inline Display - Kit includes banners 9 & 10",
+      "primary_page": 93,
+      "pages": [
+        93
+      ],
+      "category": "Modulate Magnetic Reconfigurable Kits",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "FMLT-WL01",
+      "product_name": "Accent 01 - Pillowcase fabric graphic",
+      "primary_page": 100,
+      "pages": [
+        100
+      ],
+      "category": "Formulate Master Accents",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "FMLT-WL02",
+      "product_name": "Accent 02 - Three 20\"w shelves and top and bottom printed infill panels",
+      "primary_page": 100,
+      "pages": [
+        100
+      ],
+      "category": "Formulate Master Accents",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "FMLT-WL03-L/R",
+      "product_name": "Accent 03 - Choice of right-hand or left-hand arm tables, no table, top and bottom printed infill panels; fits a medium sized monitor",
+      "primary_page": 100,
+      "pages": [
+        100
+      ],
+      "category": "Formulate Master Accents",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "FMLT-WL07",
+      "product_name": "Accent 07 - Two 30\"w shelves and a 36\"w fabric counter adds space for small products to be displayed with style",
+      "primary_page": 100,
+      "pages": [
+        100
+      ],
+      "category": "Formulate Master Accents",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "FMLT-WBWA-04C-L/R",
+      "product_name": "Backwall Accent 04",
+      "primary_page": 102,
+      "pages": [
+        102
+      ],
+      "category": "Formulate Master Backwall Accents",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "FMLT-WBWA-06",
+      "product_name": "Backwall Accent 06",
+      "primary_page": 102,
+      "pages": [
+        102
+      ],
+      "category": "Formulate Master Backwall Accents",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "FMLT-10FT-EXT-3",
+      "product_name": "8' / 10' Straight",
+      "primary_page": 103,
+      "pages": [
+        103
+      ],
+      "category": "Formulate Master Height Extenders",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "FMLT-10FT-EXT-3-HC",
+      "product_name": "8' Horizontal Curved",
+      "primary_page": 103,
+      "pages": [
+        103
+      ],
+      "category": "Formulate Master Height Extenders",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "FMLT-10FT-EXT-4-HC",
+      "product_name": "10' Horizontal Curved",
+      "primary_page": 103,
+      "pages": [
+        103
+      ],
+      "category": "Formulate Master Height Extenders",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "FMLT-10FT-EXT-5",
+      "product_name": "20' Straight",
+      "primary_page": 103,
+      "pages": [
+        103
+      ],
+      "category": "Formulate Master Height Extenders",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "FMLT-10FT-EXT-7-HC",
+      "product_name": "20' Horizontal Curved",
+      "primary_page": 103,
+      "pages": [
+        103
+      ],
+      "category": "Formulate Master Height Extenders",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "FMLT-WH2010",
+      "product_name": "20'w Extended Height Horizontal",
+      "primary_page": 103,
+      "pages": [
+        103
+      ],
+      "category": "Formulate Master Height Extenders",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "FMLT-WS2010",
+      "product_name": "20'w Extended Height Straight",
+      "primary_page": 103,
+      "pages": [
+        103
+      ],
+      "category": "Formulate Master Height Extenders",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "FMLT-WH1010",
+      "product_name": "10'w Horizontal",
+      "primary_page": 103,
+      "pages": [
+        103
+      ],
+      "category": "Formulate Master Height Extenders",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "FMLT-WS1010",
+      "product_name": "10'w Straight",
+      "primary_page": 103,
+      "pages": [
+        103
+      ],
+      "category": "Formulate Master Height Extenders",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "FMLT-BL-WSS3-01",
+      "product_name": "3' Backlit kit",
+      "primary_page": 104,
+      "pages": [
+        104
+      ],
+      "category": "Formulate Master Backlit Kits",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "FMLT-BL-WSS5-01",
+      "product_name": "5' Backlit kit",
+      "primary_page": 104,
+      "pages": [
+        104
+      ],
+      "category": "Formulate Master Backlit Kits",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "FMLT-BL-WSS8-01",
+      "product_name": "8' Backlit kit",
+      "primary_page": 104,
+      "pages": [
+        104
+      ],
+      "category": "Formulate Master Backlit Kits",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "FMLT-WTT-S01",
+      "product_name": "tabletop 04",
+      "primary_page": 105,
+      "pages": [
+        105
+      ],
+      "category": "Formulate Master Lite & Tabletop",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "FMLT-DS-20-06",
+      "product_name": "Kit 06 - 20' Display, 233\"w x 96\"h x 27.58\"d",
+      "primary_page": 111,
+      "pages": [
+        111
+      ],
+      "category": "Formulate Designer Series",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "FMLT-DS-20-08",
+      "product_name": "Kit 08 - 20' Display, 235.98\"w x 96\"h x 27.36\"d",
+      "primary_page": 111,
+      "pages": [
+        111
+      ],
+      "category": "Formulate Designer Series",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "FMLT-DS-20-13",
+      "product_name": "Kit 13 - 20' Display, 240\"w x 96\"h x 42.63\"d",
+      "primary_page": 111,
+      "pages": [
+        111
+      ],
+      "category": "Formulate Designer Series",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "FMLT-DS-30-03",
+      "product_name": "kit 03",
+      "primary_page": 113,
+      "pages": [
+        113
+      ],
+      "category": "Formulate Designer Series",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "FMLT-DS-30-04",
+      "product_name": "kit 04",
+      "primary_page": 113,
+      "pages": [
+        113
+      ],
+      "category": "Formulate Designer Series",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "FMLT-DS-30-05",
+      "product_name": "kit 05",
+      "primary_page": 113,
+      "pages": [
+        113
+      ],
+      "category": "Formulate Designer Series",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "FMLT-DS-30-06",
+      "product_name": "kit 06",
+      "primary_page": 113,
+      "pages": [
+        113
+      ],
+      "category": "Formulate Designer Series",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "CFAB-K-11",
+      "product_name": "Kit 11 - 20' x 20' Island Exhibit Kit",
+      "primary_page": 117,
+      "pages": [
+        117
+      ],
+      "category": "Formulate Fusion 20' x 20' Island Exhibit Kits",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "W-06-C-07",
+      "product_name": "Bar 07",
+      "primary_page": 118,
+      "pages": [
+        118
+      ],
+      "category": "Formulate Fusion Counters",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "SQU-BL-0803",
+      "product_name": "Square Backlit Hanging Structure 8'w x 3'h",
+      "primary_page": 127,
+      "pages": [
+        127
+      ],
+      "category": "Formulate Master Backlit Hanging Structures - Square",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "SQU-BL-1003",
+      "product_name": "Square Backlit Hanging Structure 10'w x 3'h",
+      "primary_page": 127,
+      "pages": [
+        127
+      ],
+      "category": "Formulate Master Backlit Hanging Structures - Square",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "SQU-BL-1004",
+      "product_name": "Square Backlit Hanging Structure 10'w x 4'h",
+      "primary_page": 127,
+      "pages": [
+        127
+      ],
+      "category": "Formulate Master Backlit Hanging Structures - Square",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "SQU-BL-1203",
+      "product_name": "Square Backlit Hanging Structure 12'w x 3'h",
+      "primary_page": 127,
+      "pages": [
+        127
+      ],
+      "category": "Formulate Master Backlit Hanging Structures - Square",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "SQU-BL-1204",
+      "product_name": "Square Backlit Hanging Structure 12'w x 4'h",
+      "primary_page": 127,
+      "pages": [
+        127
+      ],
+      "category": "Formulate Master Backlit Hanging Structures - Square",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "CYL-02",
+      "product_name": "Cylinder Tower 02 - 10'h",
+      "primary_page": 130,
+      "pages": [
+        130
+      ],
+      "category": "Formulate Towers",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "CYL-03",
+      "product_name": "Cylinder Tower 03 - 8'h",
+      "primary_page": 130,
+      "pages": [
+        130
+      ],
+      "category": "Formulate Towers",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "C-WALL-02",
+      "product_name": "Conference wall",
+      "primary_page": 135,
+      "pages": [
+        135
+      ],
+      "category": "Formulate Conference Walls & Rooms",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "CHIP-WALL",
+      "product_name": "Chip-shaped wall",
+      "primary_page": 135,
+      "pages": [
+        135
+      ],
+      "category": "Formulate Conference Walls & Rooms",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "CHIP-WALL-02",
+      "product_name": "Chip-shaped wall 02",
+      "primary_page": 135,
+      "pages": [
+        135
+      ],
+      "category": "Formulate Conference Walls & Rooms",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "SURF-WALL",
+      "product_name": "Surf video wall",
+      "primary_page": 135,
+      "pages": [
+        135
+      ],
+      "category": "Formulate Conference Walls & Rooms",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TREEHOUSE-RM",
+      "product_name": "Tree house room",
+      "primary_page": 135,
+      "pages": [
+        135
+      ],
+      "category": "Formulate Conference Walls & Rooms",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "HP-K-18B",
+      "product_name": "Kit 18B - 20'x20' Island Exhibit Kit",
+      "primary_page": 145,
+      "pages": [
+        145
+      ],
+      "category": "Hybrid Pro Modular",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "HP-K-19B",
+      "product_name": "Kit 19B - 20'x20' Island Exhibit Kit",
+      "primary_page": 146,
+      "pages": [
+        146
+      ],
+      "category": "Hybrid Pro Modular",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "HP-K-20",
+      "product_name": "Kit 20 - 20'x20' Island Exhibit Kit",
+      "primary_page": 146,
+      "pages": [
+        146
+      ],
+      "category": "Hybrid Pro Modular",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "HPC-01",
+      "product_name": "Counter 01",
+      "primary_page": 151,
+      "pages": [
+        151
+      ],
+      "category": "Hybrid Pro Modular Counters",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "HPC-01-B",
+      "product_name": "Counter 12",
+      "primary_page": 151,
+      "pages": [
+        151
+      ],
+      "category": "Hybrid Pro Modular Counters",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "HPC-12",
+      "product_name": "Counter 12",
+      "primary_page": 151,
+      "pages": [
+        151
+      ],
+      "category": "Hybrid Pro Modular Counters",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "HPC-03",
+      "product_name": "Counter 03",
+      "primary_page": 151,
+      "pages": [
+        151
+      ],
+      "category": "Hybrid Pro Modular Counters",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "HPC-04",
+      "product_name": "Counter 04",
+      "primary_page": 151,
+      "pages": [
+        151,
+        152
+      ],
+      "category": "Hybrid Pro Modular Counters",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "RCK-06",
+      "product_name": "Counter 11",
+      "primary_page": 151,
+      "pages": [
+        151
+      ],
+      "category": "Hybrid Pro Modular Counters",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "REC-42",
+      "product_name": "Counter 09",
+      "primary_page": 151,
+      "pages": [
+        151
+      ],
+      "category": "Hybrid Pro Modular Counters",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "HPC-17",
+      "product_name": "Counter 17",
+      "primary_page": 151,
+      "pages": [
+        151
+      ],
+      "category": "Hybrid Pro Modular Counters",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "HPC-18",
+      "product_name": "Counter 18",
+      "primary_page": 151,
+      "pages": [
+        151
+      ],
+      "category": "Hybrid Pro Modular Counters",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "HPC-19",
+      "product_name": "Counter 19",
+      "primary_page": 151,
+      "pages": [
+        151
+      ],
+      "category": "Hybrid Pro Modular Counters",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "HPC-20",
+      "product_name": "Counter 20",
+      "primary_page": 151,
+      "pages": [
+        151
+      ],
+      "category": "Hybrid Pro Modular Counters",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "HPT-01",
+      "product_name": "Closet 01",
+      "primary_page": 152,
+      "pages": [
+        152
+      ],
+      "category": "Hybrid Pro Modular Closets",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "HPT-03",
+      "product_name": "Closet 03",
+      "primary_page": 152,
+      "pages": [
+        152
+      ],
+      "category": "Hybrid Pro Modular Closets",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "VF-TWR-02",
+      "product_name": "Tower 02, 4' x 8'",
+      "primary_page": 163,
+      "pages": [
+        163
+      ],
+      "category": "Vector Frame Towers / Hanging Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "VF-TWR-03",
+      "product_name": "Tower 03, 3' x 10'",
+      "primary_page": 163,
+      "pages": [
+        163
+      ],
+      "category": "Vector Frame Towers / Hanging Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "VF-TWR-04",
+      "product_name": "Tower 04, 4' x 10'",
+      "primary_page": 163,
+      "pages": [
+        163
+      ],
+      "category": "Vector Frame Towers / Hanging Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "VF-TWR-05",
+      "product_name": "Tower 05, 3' x 12'",
+      "primary_page": 163,
+      "pages": [
+        163
+      ],
+      "category": "Vector Frame Towers / Hanging Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "VF-TWR-06",
+      "product_name": "Tower 06, 4' x 12'",
+      "primary_page": 163,
+      "pages": [
+        163
+      ],
+      "category": "Vector Frame Towers / Hanging Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "VF-BL-TWR-01",
+      "product_name": "Backlit Tower 01, 3' x 8'",
+      "primary_page": 163,
+      "pages": [
+        163
+      ],
+      "category": "Vector Frame Towers / Hanging Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "VF-BL-TWR-02",
+      "product_name": "Backlit Tower 02, 4' x 8'",
+      "primary_page": 163,
+      "pages": [
+        163
+      ],
+      "category": "Vector Frame Towers / Hanging Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "VF-BL-TWR-03",
+      "product_name": "Backlit Tower 03, 3' x 10'",
+      "primary_page": 163,
+      "pages": [
+        163
+      ],
+      "category": "Vector Frame Towers / Hanging Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "VF-BL-TWR-04",
+      "product_name": "Backlit Tower 04, 4' x 10'",
+      "primary_page": 163,
+      "pages": [
+        163
+      ],
+      "category": "Vector Frame Towers / Hanging Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "VF-BL-TWR-05",
+      "product_name": "Backlit Tower 05, 3' x 12'",
+      "primary_page": 163,
+      "pages": [
+        163
+      ],
+      "category": "Vector Frame Towers / Hanging Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "VF-BL-TWR-06",
+      "product_name": "Backlit Tower 06, 4' x 12'",
+      "primary_page": 163,
+      "pages": [
+        163
+      ],
+      "category": "Vector Frame Towers / Hanging Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "VF-TWR-01-MM",
+      "product_name": "Monitor Tower 01, 3' x 8'",
+      "primary_page": 163,
+      "pages": [
+        163
+      ],
+      "category": "Vector Frame Towers / Hanging Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "VF-TWR-02-MM",
+      "product_name": "Monitor Tower 02, 4' x 8'",
+      "primary_page": 163,
+      "pages": [
+        163
+      ],
+      "category": "Vector Frame Towers / Hanging Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "VF-TWR-03-MM",
+      "product_name": "Monitor Tower 03, 3' x 10'",
+      "primary_page": 163,
+      "pages": [
+        163
+      ],
+      "category": "Vector Frame Towers / Hanging Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "VF-TWR-04-MM",
+      "product_name": "Monitor Tower 04, 4' x 10'",
+      "primary_page": 163,
+      "pages": [
+        163
+      ],
+      "category": "Vector Frame Towers / Hanging Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "VF-TWR-05-MM",
+      "product_name": "Monitor Tower 05, 3' x 12'",
+      "primary_page": 163,
+      "pages": [
+        163
+      ],
+      "category": "Vector Frame Towers / Hanging Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "VF-TWR-06-MM",
+      "product_name": "Monitor Tower 06, 4' x 12'",
+      "primary_page": 163,
+      "pages": [
+        163
+      ],
+      "category": "Vector Frame Towers / Hanging Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "VF-BL-TWR-01-MM",
+      "product_name": "Backlit Monitor Tower 01, 3' x 8'",
+      "primary_page": 163,
+      "pages": [
+        163
+      ],
+      "category": "Vector Frame Towers / Hanging Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "VF-BL-TWR-02-MM",
+      "product_name": "Backlit Monitor Tower 02, 4' x 8'",
+      "primary_page": 163,
+      "pages": [
+        163
+      ],
+      "category": "Vector Frame Towers / Hanging Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "VF-BL-TWR-03-MM",
+      "product_name": "Backlit Monitor Tower 03, 3' x 10'",
+      "primary_page": 163,
+      "pages": [
+        163
+      ],
+      "category": "Vector Frame Towers / Hanging Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "VF-BL-TWR-04-MM",
+      "product_name": "Backlit Monitor Tower 04, 4' x 10'",
+      "primary_page": 163,
+      "pages": [
+        163
+      ],
+      "category": "Vector Frame Towers / Hanging Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "VF-BL-TWR-05-MM",
+      "product_name": "Backlit Monitor Tower 05, 3' x 12'",
+      "primary_page": 163,
+      "pages": [
+        163
+      ],
+      "category": "Vector Frame Towers / Hanging Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "VF-BL-TWR-06-MM",
+      "product_name": "Backlit Monitor Tower 06, 4' x 12'",
+      "primary_page": 163,
+      "pages": [
+        163
+      ],
+      "category": "Vector Frame Towers / Hanging Light Boxes",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "OR-K-CI1",
+      "product_name": "Callisto",
+      "primary_page": 169,
+      "pages": [
+        169
+      ],
+      "category": "Orbital Express Truss",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "OR-K-ON1",
+      "product_name": "Onyx 20'x20' Island Kit",
+      "primary_page": 171,
+      "pages": [
+        171
+      ],
+      "category": "Orbital Express Truss 20'x20' Island Kits",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "OR-K-CV1",
+      "product_name": "Corvus 20'x20' Island Kit",
+      "primary_page": 171,
+      "pages": [
+        171
+      ],
+      "category": "Orbital Express Truss 20'x20' Island Kits",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "OR-K-ZE1",
+      "product_name": "Zenit 20'x20' Island Kit",
+      "primary_page": 171,
+      "pages": [
+        171
+      ],
+      "category": "Orbital Express Truss 20'x20' Island Kits",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "OR-K-AH1",
+      "product_name": "Aarhus 20'x20' Island Kit",
+      "primary_page": 171,
+      "pages": [
+        171
+      ],
+      "category": "Orbital Express Truss 20'x20' Island Kits",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "OR-K-HC15",
+      "product_name": "Hercules 12",
+      "primary_page": 173,
+      "pages": [
+        173
+      ],
+      "category": "Orbital Express Truss Hercules Kits",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "PERCH-6",
+      "product_name": "Perch Table Banner 6' wide",
+      "primary_page": 180,
+      "pages": [
+        180
+      ],
+      "category": "Counters & Charging Stations",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "PERCH-8",
+      "product_name": "Perch Table Banner 8' wide",
+      "primary_page": 180,
+      "pages": [
+        180
+      ],
+      "category": "Counters & Charging Stations",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "FMLT-CHRG-CNTR-01-G",
+      "product_name": "Charging Counter",
+      "primary_page": 180,
+      "pages": [
+        180
+      ],
+      "category": "Counters & Charging Stations",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "PAD21-04",
+      "product_name": "Universal Tablet Stand",
+      "primary_page": 181,
+      "pages": [
+        181
+      ],
+      "category": "Freestanding Tablet Stands",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TABLET-STD-ESS-SH-S",
+      "product_name": "Tablet Stand Small",
+      "primary_page": 181,
+      "pages": [
+        181
+      ],
+      "category": "Freestanding Tablet Stands",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TABLET-STD-ESS-SH-L",
+      "product_name": "Tablet Stand Large",
+      "primary_page": 181,
+      "pages": [
+        181
+      ],
+      "category": "Freestanding Tablet Stands",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TABLET-STD-02",
+      "product_name": "Tension Fabric iPad Stand 02",
+      "primary_page": 181,
+      "pages": [
+        181
+      ],
+      "category": "Freestanding Tablet Stands",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TABLET-STD-03",
+      "product_name": "Tension Fabric iPad Stand 03",
+      "primary_page": 181,
+      "pages": [
+        181
+      ],
+      "category": "Freestanding Tablet Stands",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "FREESTANDING-SPLIT-MM",
+      "product_name": "Freestanding Portable Monitor Kiosk",
+      "primary_page": 182,
+      "pages": [
+        182
+      ],
+      "category": "Kiosks",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "PM4S3-MK-M/L",
+      "product_name": "Freestanding Monitor Kiosk",
+      "primary_page": 182,
+      "pages": [
+        182
+      ],
+      "category": "Kiosks",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "PM4S3-MK-M-MSHELF",
+      "product_name": "Freestanding Monitor Kiosk w/ Shelf (Medium)",
+      "primary_page": 182,
+      "pages": [
+        182
+      ],
+      "category": "Kiosks",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "PM4S3-MK-L-MSHELF",
+      "product_name": "Freestanding Monitor Kiosk w/ Shelf (Large)",
+      "primary_page": 182,
+      "pages": [
+        182
+      ],
+      "category": "Kiosks",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "PM4S3-MK-SHELF-UNIT",
+      "product_name": "Freestanding Shelf",
+      "primary_page": 182,
+      "pages": [
+        182
+      ],
+      "category": "Kiosks",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "VB-MK-01",
+      "product_name": "Vibe Monitor Kiosk",
+      "primary_page": 182,
+      "pages": [
+        182
+      ],
+      "category": "Kiosks",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "OBS-LP-SYS",
+      "product_name": "Observe Pro",
+      "primary_page": 185,
+      "pages": [
+        185
+      ],
+      "category": "Sign Stands",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "OBS-DLX",
+      "product_name": "Observe Deluxe",
+      "primary_page": 185,
+      "pages": [
+        185
+      ],
+      "category": "Sign Stands",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TP1",
+      "product_name": "Trappa Post TP1",
+      "primary_page": 185,
+      "pages": [
+        185
+      ],
+      "category": "Sign Stands",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "TP2",
+      "product_name": "Trappa Post TP2",
+      "primary_page": 185,
+      "pages": [
+        185
+      ],
+      "category": "Sign Stands",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "LUM-LED4-ORL-B",
+      "product_name": "LED flood",
+      "primary_page": 187,
+      "pages": [
+        187
+      ],
+      "category": "Slimline LED Lighting",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "LUM-LED5-ORL-B",
+      "product_name": "LED strip",
+      "primary_page": 187,
+      "pages": [
+        187
+      ],
+      "category": "Slimline LED Lighting",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "LUM-LED6-ORL-B",
+      "product_name": "LED exhibition",
+      "primary_page": 187,
+      "pages": [
+        187
+      ],
+      "category": "Slimline LED Lighting",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "LUM-LED2-ORL-B/S",
+      "product_name": "lumina 200 LED",
+      "primary_page": 187,
+      "pages": [
+        187
+      ],
+      "category": "Slimline LED Lighting",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "LUM-LED7-ORL-B (set of 2)",
+      "product_name": "LED eco",
+      "primary_page": 187,
+      "pages": [
+        187
+      ],
+      "category": "Slimline LED Lighting",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "LUM-LED7-ORL-B-EXT (single)",
+      "product_name": "LED eco",
+      "primary_page": 187,
+      "pages": [
+        187
+      ],
+      "category": "Slimline LED Lighting",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "ZM-TNT-LED-01",
+      "product_name": "zoom tent light kit",
+      "primary_page": 188,
+      "pages": [
+        188
+      ],
+      "category": "Lighting",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "UNI-LT-CLP30",
+      "product_name": "universal light clamp kit",
+      "primary_page": 188,
+      "pages": [
+        188
+      ],
+      "category": "Lighting",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "UNI-LT-CLP50",
+      "product_name": "universal light clamp kit with bracket",
+      "primary_page": 188,
+      "pages": [
+        188
+      ],
+      "category": "Lighting",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "SPT-CASE",
+      "product_name": "spt case",
+      "primary_page": 188,
+      "pages": [
+        188
+      ],
+      "category": "Lighting",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "OCA-2",
+      "product_name": "lighting & accessory case",
+      "primary_page": 189,
+      "pages": [
+        189
+      ],
+      "category": "Cases",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "OCS",
+      "product_name": "small graphic case",
+      "primary_page": 189,
+      "pages": [
+        189
+      ],
+      "category": "Cases",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "OCL",
+      "product_name": "large graphic case",
+      "primary_page": 189,
+      "pages": [
+        189
+      ],
+      "category": "Cases",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "OC-HOP",
+      "product_name": "Hopup-Medium Wheeled Case",
+      "primary_page": 190,
+      "pages": [
+        190
+      ],
+      "category": "Cases",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "OCH",
+      "product_name": "large display case",
+      "primary_page": 191,
+      "pages": [
+        191
+      ],
+      "category": "Cases",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "OCFM",
+      "product_name": "freight case",
+      "primary_page": 191,
+      "pages": [
+        191
+      ],
+      "category": "Cases",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "OCF",
+      "product_name": "freight case",
+      "primary_page": 191,
+      "pages": [
+        191
+      ],
+      "category": "Cases",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "OCF2",
+      "product_name": "freight case",
+      "primary_page": 191,
+      "pages": [
+        191
+      ],
+      "category": "Cases",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "OCT",
+      "product_name": "orbital curved truss case",
+      "primary_page": 191,
+      "pages": [
+        191
+      ],
+      "category": "Cases",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MFY-RSR-01",
+      "product_name": "Riser 34\"W x 18\"H x 17.75\"D",
+      "primary_page": 212,
+      "pages": [
+        212
+      ],
+      "category": "MODify Accent Furniture",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MFY-TBL-01-W/B/S",
+      "product_name": "Modify Nesting Table 56\"W x 36\"H x 30\"D",
+      "primary_page": 212,
+      "pages": [
+        212
+      ],
+      "category": "MODify Accent Furniture",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MFY-TBL-02-W/B/S",
+      "product_name": "Modify Nesting Table 48\"W x 30\"H x 24\"D",
+      "primary_page": 212,
+      "pages": [
+        212
+      ],
+      "category": "MODify Accent Furniture",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MFY-TBL-03-W/B/S",
+      "product_name": "Modify Nesting Table 34\"W x 36\"H x 30\"D",
+      "primary_page": 212,
+      "pages": [
+        212
+      ],
+      "category": "MODify Accent Furniture",
+      "source": "scan-2026"
+    },
+    {
+      "product_sku": "MFY-TBL-04-W/B/S",
+      "product_name": "Modify Nesting Table 27\"W x 30\"H x 24\"D",
+      "primary_page": 212,
+      "pages": [
+        212
       ],
       "category": "MODify Accent Furniture",
       "source": "scan-2026"
