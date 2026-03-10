@@ -1,0 +1,1066 @@
+{
+  "1": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "3": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "4": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "5": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "6": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "7": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "8": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "20": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "21": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "22": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "24": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "26": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "28": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "29": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "BLZ-SQ-0802",
+      "BLZ-SQ-0803",
+      "BLZ-SQ-0804",
+      "BLZ-SQ-1002",
+      "BLZ-SQ-1003",
+      "BLZ-SQ-1004",
+      "BLZ-SQ-1202",
+      "BLZ-SQ-1203",
+      "BLZ-SQ-1204",
+      "BLZ-SQ-1602",
+      "BLZ-SQ-1603",
+      "BLZ-SQ-1604"
+    ]
+  },
+  "30": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "VF-R-01",
+      "VF-LB-R-01",
+      "VF-R-02",
+      "VF-LB-R-02",
+      "VF-R-03",
+      "VF-LB-R-03",
+      "VF-R-04",
+      "VF-LB-R-04",
+      "VF-R-05",
+      "VF-LB-R-05",
+      "VF-R-06",
+      "VF-LB-R-06",
+      "VF-R-07",
+      "VF-LB-R-07",
+      "VF-R-08",
+      "VF-LB-R-08",
+      "VF-S-01",
+      "VF-LB-S-01",
+      "VF-S-02",
+      "VF-LB-S-02",
+      "VF-S-03",
+      "VF-LB-S-03",
+      "VF-S-04",
+      "VF-LB-S-04",
+      "VF-CR-01",
+      "VF-CR-02",
+      "VF-CR-03"
+    ]
+  },
+  "34": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "VFF-LB-BAT-1-ASM",
+      "VFF-LB-BAT-1-ASM"
+    ]
+  },
+  "36": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "37": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "38": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "39": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "54": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "HZ-TT-S",
+      "HZ-TT-M"
+    ]
+  },
+  "55": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "VY-1",
+      "VY-2",
+      "VY-3",
+      "VY-4",
+      "VY-5",
+      "VY-1-BG",
+      "VY-2-BG",
+      "VY-3-BG",
+      "VY-4-BG",
+      "VY-5-BG"
+    ]
+  },
+  "56": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "57": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "59": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "HOP-DIM01-3X3FG-S",
+      "HOP-DIM-01",
+      "HOP-DIM02-3X3FG-S",
+      "HOP-DIM-02",
+      "HOP-DIM03-4X3FGE-S",
+      "HOP-DIM-03",
+      "HOP-DIM04-4X3FGE-S",
+      "HOP-DIM-04"
+    ]
+  },
+  "60": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "HOP-LITE-3X3-FG-S",
+      "HOP-LITE-3X3-FGE-S",
+      "HOP-LITE-4X3-FG-S",
+      "HOP-LITE-4X3-FGE-S"
+    ]
+  },
+  "61": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "HOP-2-BL-2X2-S",
+      "HOP-2-BL-1X3-S",
+      "HOP-2-BL-3X3-S",
+      "HOP-2-BL-4X3-S"
+    ]
+  },
+  "62": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "63": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "64": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "EMB-1X1FG-S",
+      "EMB-1X1FGE-S",
+      "EMB-2X1FG-S",
+      "EMB-2X1FGE-S",
+      "EMB-2X2FG-S",
+      "EMB-2X2FGE-S",
+      "EMB-3X2FG-S",
+      "EMB-3X2FGE-S",
+      "EMB-1X3FG-S",
+      "EMB-1X3FGE-S",
+      "EMB-2X3FG-S",
+      "EMB-2X3FGE-S",
+      "EMB-3X3FG-S",
+      "EMB-3X3FGE-S",
+      "EMB-3X4FG-S",
+      "EMB-3X4FGE-S",
+      "EMB-4X3FG-S",
+      "EMB-4X3FGE-S",
+      "EMB-4X4FG-S",
+      "EMB-4X4FGE-S",
+      "EMB-5X3FG-S",
+      "EMB-5X3FGE-S",
+      "EMB-6X3FG-S",
+      "EMB-6X3FGE-S",
+      "EMB-8X3FG-S",
+      "EMB-8X3FGE-S",
+      "EMB-12X3FG-S",
+      "EMB-12X3FGE-S",
+      "EMB-CT",
+      "EMB-CT-BL"
+    ]
+  },
+  "65": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "EMB-MM",
+      "EMB-TBL-BLACK",
+      "EMB-EXT-SHLF-K-1",
+      "EMB-EXT-SHLF-K-2",
+      "EMB-BRIDGE-CONNECTOR",
+      "EMB-BRIDGE-LT",
+      "EMB-BRIDGE-LT-KIT",
+      "EMB-BRIDGE"
+    ]
+  },
+  "67": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "EMB-LITE-3X3FG-S",
+      "EMB-LITE-3X3FGE-S",
+      "EMB-LITE-4X3FG-S",
+      "EMB-LITE-4X3FGE-S"
+    ]
+  },
+  "68": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "69": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "75": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "XCLM-3QP-K1",
+      "XCLM-3QP-K2",
+      "XCLM-6QP-K1",
+      "XCLM-6QP-K2",
+      "XCLM-10QP-K1",
+      "XCLM-10QP-K2",
+      "XCLM-10QP-K3"
+    ]
+  },
+  "76": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "77": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "78": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "COY-KKG-1X1-C",
+      "COY-KKG-2X1-C",
+      "COY-KKG-2X2-C",
+      "COY-KKG-3X2-C",
+      "COY-KKG-2X3-C",
+      "COY-KKG-3X3-C",
+      "COY-KKG-4X3-C"
+    ]
+  },
+  "79": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "COY-KKG-1X1-C",
+      "COY-KKG-2X1-C",
+      "COY-KKG-2X2-C",
+      "COY-KKG-3X2-C",
+      "COY-KKG-2X3-C",
+      "COY-KKG-3X3-C",
+      "COY-KKG-4X3-C",
+      "COY-IS-CK",
+      "COY-MM",
+      "OCX",
+      "OCX-C2C-G",
+      "OCX-SW-G"
+    ]
+  },
+  "80": {
+    "scanned": true,
+    "pageType": "cad-diagram",
+    "skus": []
+  },
+  "81": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "82": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "83": {
+    "scanned": true,
+    "pageType": "info",
+    "skus": []
+  },
+  "84": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "TRP2-1-S/B",
+      "TRP2-2-S/B",
+      "TRP2-11-S/B",
+      "TRP2-12-S/B",
+      "TRP2-4-S/B",
+      "TRP2-5-S/B",
+      "TRP2-6-S/B",
+      "TRP2-7-S/B",
+      "TRP2-8-S/B",
+      "TRP2-9-S/B",
+      "TRP2-10-S/B",
+      "LED-SNAP-03-2",
+      "LED-SNAP-04-2",
+      "LED-SNAP-05-2"
+    ]
+  },
+  "85": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "VFE-S-01",
+      "VFE-S-02",
+      "VFE-S-03",
+      "VFE-S-04",
+      "VFE-S-05",
+      "VFE-R-01",
+      "VFE-R-02",
+      "VFE-R-03",
+      "VFE-R-04"
+    ]
+  },
+  "86": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "87": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": []
+  },
+  "88": {
+    "scanned": true,
+    "pageType": "cad-diagram",
+    "skus": []
+  },
+  "89": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "90": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "91": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "96": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "98": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "FMLT-ESS-STT-01",
+      "FMLT-ESS-S08-01"
+    ]
+  },
+  "99": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "FMLT-ESS-S10-01",
+      "FMLT-E-SC10-01",
+      "FMLT-ESS-SC10-01"
+    ]
+  },
+  "100": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "101": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "103": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "FMLT-WBWC",
+      "FMLT-WBWC-03",
+      "FMLT-WBWC-04",
+      "FMLT-WBWC-05",
+      "FMLT-WBWC-07"
+    ]
+  },
+  "108": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "109": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "112": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "FMLT-DS-20-01",
+      "FMLT-DS-20-02",
+      "FMLT-DS-20-03",
+      "FMLT-DS-20-04",
+      "FMLT-DS-20-05"
+    ]
+  },
+  "114": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "KIT 01",
+      "KIT 03",
+      "KIT 04"
+    ]
+  },
+  "116": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "121": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "122": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "123": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "124": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "ESS-RNG-0802-2",
+      "ESS-RNG-0803-2",
+      "ESS-RNG-0804-2",
+      "ESS-RNG-1002-2",
+      "ESS-RNG-1003-2",
+      "ESS-RNG-1004-2",
+      "ESS-RNG-1202-2",
+      "ESS-RNG-1203-2",
+      "ESS-RNG-1204-2",
+      "ESS-SQU-0802-2",
+      "ESS-SQU-0803-2",
+      "ESS-SQU-0804-2",
+      "ESS-SQU-1002-2",
+      "ESS-SQU-1003-2",
+      "ESS-SQU-1004-2",
+      "ESS-SQU-1202-2",
+      "ESS-SQU-1203-2",
+      "ESS-SQU-1204-2"
+    ]
+  },
+  "125": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": []
+  },
+  "126": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": []
+  },
+  "127": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": []
+  },
+  "128": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "RNG-BL-0803",
+      "RNG-BL-0804",
+      "RNG-BL-1003",
+      "RNG-BL-1004",
+      "RNG-BL-1203",
+      "RNG-BL-1204"
+    ]
+  },
+  "130": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "FUN-01",
+      "FUN-02",
+      "FUN-03",
+      "FUN-04"
+    ]
+  },
+  "133": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "CUBE-2X2-BL",
+      "CUBE-2X2"
+    ]
+  },
+  "134": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "135": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "138": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "139": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "140": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "141": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "144": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "KIT 09",
+      "KIT 10",
+      "KIT 11",
+      "KIT 13",
+      "KIT 14",
+      "KIT 15"
+    ]
+  },
+  "146": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "HP-K-17",
+      "HP-K-17-B",
+      "HP-K-18"
+    ]
+  },
+  "149": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "HP-K-23",
+      "HP-K-26"
+    ]
+  },
+  "150": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "HP-K-29",
+      "HP-K-32"
+    ]
+  },
+  "151": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "HP-K-38"
+    ]
+  },
+  "152": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "COUNTER 01",
+      "COUNTER 12",
+      "COUNTER 02",
+      "COUNTER 09",
+      "COUNTER 10",
+      "COUNTER 13",
+      "COUNTER 19",
+      "COUNTER 20"
+    ]
+  },
+  "155": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "HPT-05",
+      "HPT-06",
+      "HPT-07",
+      "HPC-08"
+    ]
+  },
+  "156": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "157": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "159": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "VF-R-01",
+      "VF-LB-R-01",
+      "VF-R-02",
+      "VF-LB-R-02",
+      "VF-R-03",
+      "VF-LB-R-03",
+      "VF-R-04",
+      "VF-LB-R-04",
+      "VF-R-05",
+      "VF-LB-R-05",
+      "VF-R-06",
+      "VF-LB-R-06",
+      "VF-R-07",
+      "VF-LB-R-07",
+      "VF-R-08",
+      "VF-LB-R-08",
+      "VF-S-01",
+      "VF-LB-S-01",
+      "VF-S-02",
+      "VF-LB-S-02",
+      "VF-S-03",
+      "VF-LB-S-03",
+      "VF-S-04",
+      "VF-LB-S-04"
+    ]
+  },
+  "160": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "KIT 02",
+      "KIT 03",
+      "KIT 04",
+      "KIT 09",
+      "KIT 10",
+      "KIT 11"
+    ]
+  },
+  "161": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "VF-K-02A",
+      "VF-K-03",
+      "VF-K-04A",
+      "VF-K-09A",
+      "VF-K-10A",
+      "VF-K-11",
+      "VF-K-13",
+      "VF-K-15",
+      "VF-K-16",
+      "VF-K-25"
+    ]
+  },
+  "162": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "VF-K-05A",
+      "VF-K-07",
+      "VF-K-08A",
+      "VF-K-17"
+    ]
+  },
+  "163": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "VF-K-19A",
+      "VF-K-22A",
+      "VF-K-26",
+      "VF-K-27",
+      "OCH2",
+      "OCE-2"
+    ]
+  },
+  "164": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "VFC-01",
+      "VFC-02",
+      "VFC-03",
+      "VFC-04",
+      "VFC-05",
+      "VFC-06",
+      "VFC-07",
+      "OCH2"
+    ]
+  },
+  "166": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "167": {
+    "scanned": true,
+    "pageType": "info",
+    "skus": []
+  },
+  "168": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "169": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "172": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "OR-K-CE1-2",
+      "OR-K-AT1",
+      "OR-K-PX1",
+      "OR-K-PR1"
+    ]
+  },
+  "176": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "OR-SM-MB",
+      "OR-M-MB",
+      "OR-LG-MB",
+      "OR-STG"
+    ]
+  },
+  "177": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "OR-TC01",
+      "OR-TC02",
+      "OR-TC03",
+      "OR-TC04",
+      "OR-24/36/46-MP",
+      "OR-36/46-SP",
+      "OR-24/36/46-SST",
+      "OR-24-MP-M"
+    ]
+  },
+  "178": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "179": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "180": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "185": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "VF-MK-01-SS",
+      "VF-MK-01-DS",
+      "VF-MK-02-SS",
+      "VF-MK-02-DS",
+      "TWIST-3",
+      "TWIST-4"
+    ]
+  },
+  "186": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "ADVOCATE",
+      "SNP-STAND"
+    ]
+  },
+  "188": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "ZD-1-B",
+      "ZD-1-S",
+      "QNTM-SS",
+      "ZD-LITE",
+      "OASIS",
+      "SMDR-ST-01",
+      "STEP-STOOL-BLUE"
+    ]
+  },
+  "194": {
+    "scanned": true,
+    "pageType": "cad-diagram",
+    "skus": []
+  },
+  "195": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "196": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "197": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "198": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "199": {
+    "scanned": true,
+    "pageType": "info",
+    "skus": []
+  },
+  "200": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "MFY-SS-K-01-W/B/S",
+      "MFY-SS-K-02-W/B/S"
+    ]
+  },
+  "201": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "MFY-SS-K-03-W/B/S"
+    ]
+  },
+  "202": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "MFY-SS-K-04-W/B/S"
+    ]
+  },
+  "203": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "MFY-SS-K-05-W/B/S"
+    ]
+  },
+  "204": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "MFY-DS-K-01-W/B/S"
+    ]
+  },
+  "205": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "MFY-DS-K-02-W/B/S"
+    ]
+  },
+  "206": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "MFY-DS-K-03-W/B/S"
+    ]
+  },
+  "207": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "MFY-DS-K-04-W/B/S"
+    ]
+  },
+  "208": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "MFY-GN-K-01-W/B/S"
+    ]
+  },
+  "209": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "MFY-GN-K-02-W/B/S",
+      "MFY-GN-K-03-W/B/S"
+    ]
+  },
+  "210": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "MFY-4S-K-01-W/B/S"
+    ]
+  },
+  "211": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "MFY-4S-K-02-W/B/S"
+    ]
+  },
+  "212": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "MFY-4S-K-03-W/B/S"
+    ]
+  },
+  "213": {
+    "scanned": true,
+    "pageType": "section-intro",
+    "skus": []
+  },
+  "215": {
+    "scanned": true,
+    "pageType": "product",
+    "skus": [
+      "HPC-14",
+      "HPC-13",
+      "HPC-02",
+      "MFY-PED-01",
+      "MFY-PED-01A",
+      "MFY-PED-02",
+      "MFY-PED-02A"
+    ]
+  },
+  "216": {
+    "scanned": true,
+    "pageType": "info",
+    "skus": [],
+    "note": "MODify comparison table - no SKU codes"
+  },
+  "217": {
+    "scanned": true,
+    "pageType": "info",
+    "skus": []
+  },
+  "218": {
+    "scanned": true,
+    "pageType": "info",
+    "skus": []
+  },
+  "219": {
+    "scanned": true,
+    "pageType": "info",
+    "skus": []
+  },
+  "220": {
+    "scanned": true,
+    "pageType": "back-cover",
+    "skus": []
+  }
+}
