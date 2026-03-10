@@ -608,6 +608,17 @@ function HotspotEditor({ pageNum, spots, onChange, pageProducts, productCache, a
           onCancel={() => { setNewSkuPrompt(null); setAutoDetected(null); }}
         />
       )}
+
+      {/* Double-click edit dialog */}
+      {editingSpot && (
+        <EditHotspotDialog
+          spot={editingSpot.spot}
+          pageProducts={pageProducts}
+          productCache={productCache}
+          onSave={commitEditedSpot}
+          onCancel={() => setEditingSpot(null)}
+        />
+      )}
     </div>
   );
 }
