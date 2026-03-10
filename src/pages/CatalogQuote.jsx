@@ -906,7 +906,7 @@ export default function CatalogQuote() {
   const [editMode, setEditMode] = useState(false);
   const [addingHotspot, setAddingHotspot] = useState(false);
   const [isRerunning, setIsRerunning] = useState(false);
-  const { cache: productCache, fetchProduct } = useProductCache();
+  const { cache: productCache, fetchProduct, tick } = useProductCache();
 
   // Load hotspot data + localStorage overrides + DB (DB takes priority)
   useEffect(() => {
