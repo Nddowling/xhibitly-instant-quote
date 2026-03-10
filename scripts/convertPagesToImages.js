@@ -26,7 +26,7 @@ const supabase = createClient(
   process.env.VITE_SUPABASE_SERVICE_ROLE_KEY
 );
 
-const PDF_PATH = '/Users/nicholasdowling/Downloads/Exhibitors_Handbook_Catalog.pdf';
+const PDF_PATH = '/tmp/exhibitors-handbook-2026.pdf';
 const MAPPING_PATH = path.join(__dirname, '../orbus_catalog/product_catalog_page_mapping.json');
 const MANIFEST_PATH = path.join(__dirname, '../orbus_catalog/page_images_manifest.json');
 const TEMP_DIR = '/tmp/catalog_pages';
