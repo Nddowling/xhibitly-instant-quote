@@ -1384,11 +1384,23 @@ export default function CatalogQuote() {
           </div>
 
           {orderItems.length > 0 && (
-            <div className="p-3 border-t border-slate-100">
+            <div className="p-3 border-t border-slate-100 space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-xs text-slate-500">Subtotal</span>
                 <span className="text-sm font-black text-slate-900">{subtotal > 0 ? fmt(subtotal) : 'Quote'}</span>
               </div>
+              <Button
+                className="w-full bg-[#e2231a] hover:bg-[#b01b13] text-white text-xs h-9 gap-1.5"
+                onClick={() => {
+                  sessionStorage.setItem('quoteBuilderData', JSON.stringify({
+                    items: orderItems.map(i => ({ id: i.id, name: i.name, sku: i.sku, qty: i.qty, price: i.price, imageUrl: i.imageUrl })),
+                    customerName,
+                  }));
+                  navigate(createPageUrl('QuoteBuilder'));
+                }}
+              >
+                <FileText className="w-3.5 h-3.5" /> Generate Quote
+              </Button>
             </div>
           )}
         </div>
