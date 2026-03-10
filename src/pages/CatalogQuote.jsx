@@ -961,12 +961,15 @@ export default function CatalogQuote() {
   };
 
   // Hotspot clicked (read mode)
-  const handleHotspotClick = (spot) => {
+  const handleHotspotClick = async (spot) => {
     setSelectedHotspot(spot);
     const skus = spot.groupedSkus || [spot.sku];
     if (skus.length === 1) {
-      const p = productCache[skus[0]];
-      addToOrder({ sku: skus[0], name: p?.name || spot.name, price: p?.base_price, imageUrl: getImageUrl(p) });
+      const sku = skus[0];
+      // Ensure product is fetched first so we get the image
+      await fetchProduct(sku);
+      const p = productCache[sku];
+      addToOrder({ sku, name: p?.name || spot.name, price: p?.base_price, imageUrl: getImageUrl(p) });
       setSelectedHotspot(null);
     } else {
       setShowVariants(true);
