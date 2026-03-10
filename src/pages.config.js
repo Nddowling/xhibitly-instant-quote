@@ -50,6 +50,7 @@
 import BoothDesigner from './pages/BoothDesigner';
 import BrandVerification from './pages/BrandVerification';
 import CatalogImport from './pages/CatalogImport';
+import CatalogQuote from './pages/CatalogQuote';
 import Confirmation from './pages/Confirmation';
 import ContactDetail from './pages/ContactDetail';
 import Contacts from './pages/Contacts';
@@ -70,7 +71,6 @@ import SalesQuoteStart from './pages/SalesQuoteStart';
 import Settings from './pages/Settings';
 import StudentHome from './pages/StudentHome';
 import UserTypeSelection from './pages/UserTypeSelection';
-import CatalogQuote from './pages/CatalogQuote';
 import __Layout from './Layout.jsx';
 
 
@@ -78,6 +78,7 @@ export const PAGES = {
     "BoothDesigner": BoothDesigner,
     "BrandVerification": BrandVerification,
     "CatalogImport": CatalogImport,
+    "CatalogQuote": CatalogQuote,
     "Confirmation": Confirmation,
     "ContactDetail": ContactDetail,
     "Contacts": Contacts,
@@ -98,7 +99,6 @@ export const PAGES = {
     "Settings": Settings,
     "StudentHome": StudentHome,
     "UserTypeSelection": UserTypeSelection,
-    "CatalogQuote": CatalogQuote,
 }
 
 export const pagesConfig = {
