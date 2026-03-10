@@ -1211,6 +1211,13 @@ export default function CatalogQuote() {
                   ? <><Loader2 className="w-3.5 h-3.5 animate-spin" />Detecting...</>
                   : <><RefreshCw className="w-3.5 h-3.5" />Re-run AI</>}
               </button>
+              <button
+                onClick={() => shiftAllPageNumbers(-2)}
+                className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs font-semibold text-orange-600 bg-orange-50 hover:bg-orange-100 transition-all"
+                title="Shift all DB hotspot page numbers by -2 to fix the PDF vs print page offset"
+              >
+                Fix -2 Offset
+              </button>
               <button onClick={exportHotspots} className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs text-slate-500 hover:bg-slate-100 transition-all">
                 <Download className="w-3.5 h-3.5" />
                 Export JSON
