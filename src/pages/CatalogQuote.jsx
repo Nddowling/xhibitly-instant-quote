@@ -762,7 +762,7 @@ export default function CatalogQuote() {
 
   const pageProducts = PAGE_PRODUCTS[currentPage] || [];
 
-  // Effective hotspots: localStorage edits take priority over DB, then AI-generated
+  // Effective hotspots: localStorage edits > DB > JSON fallback
   const baseHotspots = hotspotData[currentPage] || [];
   const currentHotspots = editedHotspots[currentPage] ?? dbHotspots[currentPage] ?? baseHotspots;
   const hasHotspots = currentHotspots.length > 0;
