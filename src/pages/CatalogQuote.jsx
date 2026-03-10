@@ -154,7 +154,7 @@ function ProductImage({ src, alt, className = "w-full h-full object-contain", fa
   return <img src={src} alt={alt} className={className} onError={() => setError(true)} />;
 }
 
-// ─── Load hotspot data lazily ────────────────────────────────────────────────
+// ─── Load hotspot data lazily (JSON fallback only) ───────────────────────────
 let _hotspots = null;
 async function getHotspots() {
   if (_hotspots) return _hotspots;
@@ -163,6 +163,16 @@ async function getHotspots() {
     _hotspots = mod.default;
   } catch { _hotspots = {}; }
   return _hotspots;
+}
+
+// ─── Load ALL DB hotspots in one shot ────────────────────────────────────────
+async function loadAllDbHotspots() {
+  try {
+    const res = await base44.entities.CatalogHotspot.list('page_number', 500);
+    const map = {};
+    res.forEach(item => { map[item.page_number] = item.hotspots; });
+    return map;
+  } catch { return {}; }
 }
 
 // ─── Hook: product detail cache ──────────────────────────────────────────────
