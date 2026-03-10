@@ -747,28 +747,17 @@ export default function CatalogQuote() {
   const [isRerunning, setIsRerunning] = useState(false);
   const { cache: productCache, fetchProduct } = useProductCache();
 
-  // Load hotspot data + localStorage overrides
+  // Load hotspot data + localStorage overrides + DB (DB takes priority)
   useEffect(() => {
-    getHotspots().then(setHotspotData);
+    // Load JSON fallback and DB hotspots in parallel
+    Promise.all([getHotspots(), loadAllDbHotspots()]).then(([jsonData, dbData]) => {
+      setHotspotData(jsonData);
+      setDbHotspots(dbData);
+    });
     try {
       const saved = localStorage.getItem(LS_KEY);
       if (saved) setEditedHotspots(JSON.parse(saved));
     } catch {}
-    
-    // Load from DB
-    const loadDbHotspots = async () => {
-      try {
-        const res = await base44.entities.CatalogHotspot.list();
-        const map = {};
-        res.forEach(item => {
-          map[item.page_number] = item.hotspots;
-        });
-        setDbHotspots(map);
-      } catch (e) {
-        console.error("Failed to load hotspots from DB", e);
-      }
-    };
-    loadDbHotspots();
   }, []);
 
   const pageProducts = PAGE_PRODUCTS[currentPage] || [];
