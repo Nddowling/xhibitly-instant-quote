@@ -53,67 +53,16 @@ export default function Layout({ children, currentPageName }) {
     navigate(-1);
   };
 
-  const handleSwitchUserType = async (newType) => {
-    setMobileMenuOpen(false);
-    try {
-      const isSalesRep = newType === 'sales_rep';
-      
-      await base44.auth.updateMe({
-        user_type: newType,
-        is_sales_rep: isSalesRep
-      });
-
-      if (isSalesRep && !user.is_sales_rep) {
-        const existingReps = await base44.entities.SalesRep.filter({ user_id: user.id });
-        if (existingReps.length === 0) {
-          await base44.entities.SalesRep.create({
-            user_id: user.id,
-            email: user.email,
-            company_name: user.company_name || '',
-            contact_name: user.contact_name || user.full_name || '',
-            phone: user.phone || ''
-          });
-        }
-      }
-
-      if (isSalesRep) {
-        navigate(createPageUrl('SalesDashboard'));
-      } else if (newType === 'student') {
-        navigate(createPageUrl('StudentHome'));
-      } else {
-        navigate(createPageUrl('QuoteRequest'));
-      }
-      window.location.reload();
-    } catch (e) {
-      console.error('Error switching user type:', e);
-    }
-  };
-
-  const getUserTypeLabel = () => {
-    if (user?.is_sales_rep) return 'Sales Rep';
-    if (user?.user_type === 'student') return 'Student';
-    return 'Customer';
-  };
-
-  const getUserTypeIcon = () => {
-    if (user?.is_sales_rep) return Users;
-    if (user?.user_type === 'student') return GraduationCap;
-    return User;
-  };
-
-  // Pages that don't need the header
   const noHeaderPages = ['Loading', 'Home', 'Landing', 'UserTypeSelection'];
   const showHeader = !noHeaderPages.includes(currentPageName) && user;
-
-  // Pages where we hide the bottom nav (full-screen experiences)
-  const fullScreenPages = ['DesignConfigurator'];
-
-  // Root dashboard pages (no back button)
-  const rootPages = ['SalesDashboard', 'QuoteRequest', 'OrderHistory', 'Contacts', 'StudentHome'];
+  const rootPages = ['SalesDashboard', 'Contacts', 'CatalogQuote'];
   const showBackButton = showHeader && !rootPages.includes(currentPageName);
 
-  // Pages where mobile bottom nav is shown
-  const showMobileNav = showHeader && !noHeaderPages.includes(currentPageName) && !fullScreenPages.includes(currentPageName);
+  const navItems = [
+    { page: 'SalesDashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { page: 'Contacts', label: 'Clients', icon: Users },
+    { page: 'CatalogQuote', label: 'Catalog Quote', icon: BookOpen },
+  ];
 
   if (isLoading) {
     return (
@@ -125,758 +74,133 @@ export default function Layout({ children, currentPageName }) {
 
   return (
     <VoiceActivationProvider>
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
+    <div className="min-h-screen bg-slate-50">
       <style>{`
-        :root {
-          --primary: 4 79% 50%;
-          --primary-light: #f04238;
-          --primary-dark: #b01b13;
-        }
-        body {
-          overscroll-behavior: none;
-        }
+        body { overscroll-behavior: none; }
         button, a, [role="button"] {
           user-select: none;
           -webkit-user-select: none;
           -webkit-touch-callout: none;
         }
-
-        /* ============================================
-           Mega Menu Component - Nimlok Style
-           ============================================ */
-
-        /* Container */
-        .mega-menu-container {
-          background: #ffffff;
-          border-bottom: 2px solid #e5e7eb;
-          position: relative;
-          z-index: 1000;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-
-        /* Mobile Toggle Button */
-        .mobile-menu-toggle {
-          display: none;
-          background: none;
-          border: none;
-          padding: 1rem;
-          cursor: pointer;
-          flex-direction: column;
-          gap: 5px;
-        }
-
-        .mobile-menu-toggle span {
-          display: block;
-          width: 25px;
-          height: 3px;
-          background: #1f2937;
-          transition: all 0.3s ease;
-        }
-
-        /* Main Menu List */
-        .mega-menu {
-          display: flex;
-          list-style: none;
-          margin: 0;
-          padding: 0;
-          gap: 0;
-          max-width: 1400px;
-          margin: 0 auto;
-        }
-
-        /* Menu Items */
-        .menu-item {
-          position: relative;
-          flex-shrink: 0;
-        }
-
-        .menu-link {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          padding: 1.25rem 1.5rem;
-          color: #1f2937;
-          text-decoration: none;
-          font-weight: 500;
-          font-size: 0.95rem;
-          transition: all 0.2s ease;
-          white-space: nowrap;
-          cursor: pointer;
-        }
-
-        .menu-link:hover {
-          color: #2563eb;
-          background: #f3f4f6;
-        }
-
-        .menu-item.active .menu-link {
-          color: #2563eb;
-          background: #eff6ff;
-        }
-
-        /* Menu Icons */
-        .menu-icon {
-          font-size: 1.1rem;
-        }
-
-        /* Dropdown Arrow */
-        .dropdown-arrow {
-          font-size: 0.75rem;
-          margin-left: 0.25rem;
-          transition: transform 0.2s ease;
-        }
-
-        .menu-item.active .dropdown-arrow {
-          transform: rotate(180deg);
-        }
-
-        /* ============================================
-           Mega Dropdown Panel
-           ============================================ */
-
-        .mega-dropdown {
-          position: absolute;
-          top: 100%;
-          left: 0;
-          min-width: 650px;
-          background: white;
-          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-          border-radius: 0 0 8px 8px;
-          padding: 2.5rem;
-          opacity: 0;
-          visibility: hidden;
-          transform: translateY(-15px);
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          pointer-events: none;
-          max-height: 85vh;
-          overflow-y: auto;
-        }
-
-        /* Show dropdown on hover */
-        .menu-item.has-dropdown:hover .mega-dropdown,
-        .menu-item.has-dropdown.active .mega-dropdown {
-          opacity: 1;
-          visibility: visible;
-          transform: translateY(0);
-          pointer-events: all;
-        }
-
-        /* Dropdown Content Grid */
-        .mega-dropdown-content {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-          gap: 2.5rem;
-        }
-
-        /* ============================================
-           Columns & Subcategories
-           ============================================ */
-
-        .mega-column {
-          min-width: 200px;
-        }
-
-        .column-title {
-          font-size: 0.875rem;
-          font-weight: 700;
-          color: #6b7280;
-          text-transform: uppercase;
-          letter-spacing: 0.75px;
-          margin: 0 0 1rem 0;
-          padding-bottom: 0.75rem;
-          border-bottom: 2px solid #e5e7eb;
-        }
-
-        /* Subcategory List */
-        .subcategory-list {
-          list-style: none;
-          margin: 0;
-          padding: 0;
-        }
-
-        .subcategory-list li {
-          margin-bottom: 0.75rem;
-        }
-
-        .subcategory-link {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          color: #374151;
-          text-decoration: none;
-          font-size: 0.9rem;
-          padding: 0.4rem 0.5rem;
-          border-radius: 4px;
-          transition: all 0.2s ease;
-        }
-
-        .subcategory-link:hover {
-          color: #2563eb;
-          background: #eff6ff;
-          padding-left: 0.75rem;
-        }
-
-        .subcategory-name {
-          flex: 1;
-        }
-
-        /* Product Count Badge */
-        .product-count {
-          color: #9ca3af;
-          font-size: 0.8rem;
-          font-weight: 500;
-          background: #f3f4f6;
-          padding: 0.1rem 0.5rem;
-          border-radius: 12px;
-          margin-left: 0.5rem;
-        }
-
-        .subcategory-link:hover .product-count {
-          background: #dbeafe;
-          color: #2563eb;
-        }
-
-        /* Subcategory Description */
-        .subcategory-description {
-          font-size: 0.75rem;
-          color: #9ca3af;
-          margin: 0.25rem 0 0 0.5rem;
-          line-height: 1.3;
-        }
-
-        /* ============================================
-           Featured Product Section (Optional)
-           ============================================ */
-
-        .mega-featured {
-          grid-column: span 1;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          padding: 1.5rem;
-          border-radius: 8px;
-          text-align: center;
-        }
-
-        .mega-featured img {
-          width: 100%;
-          height: 150px;
-          object-fit: cover;
-          border-radius: 6px;
-          margin-bottom: 1rem;
-        }
-
-        .mega-featured h5 {
-          margin: 0.5rem 0;
-          font-size: 1rem;
-        }
-
-        .mega-featured a {
-          color: white;
-          text-decoration: none;
-          font-weight: 600;
-          display: inline-block;
-          margin-top: 0.5rem;
-        }
-
-        /* ============================================
-           Mobile Responsive
-           ============================================ */
-
-        @media (max-width: 1024px) {
-          .mega-dropdown {
-            min-width: 500px;
-          }
-
-          .mega-dropdown-content {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
-          }
-        }
-
-        @media (max-width: 768px) {
-          /* Show mobile toggle */
-          .mobile-menu-toggle {
-            display: flex;
-          }
-
-          /* Hide menu by default on mobile */
-          .mega-menu {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            flex-direction: column;
-            background: white;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-          }
-
-          .mega-menu.mobile-open {
-            max-height: 80vh;
-            overflow-y: auto;
-          }
-
-          /* Full width menu items */
-          .menu-item {
-            width: 100%;
-            border-bottom: 1px solid #e5e7eb;
-          }
-
-          .menu-link {
-            width: 100%;
-            justify-content: space-between;
-          }
-
-          /* Dropdown behavior on mobile */
-          .mega-dropdown {
-            position: static;
-            min-width: 100%;
-            box-shadow: none;
-            border-radius: 0;
-            padding: 1rem;
-            background: #f9fafb;
-          }
-
-          .mega-dropdown-content {
-            grid-template-columns: 1fr;
-            gap: 1rem;
-          }
-
-          /* Don't show dropdown on hover on mobile */
-          .menu-item.has-dropdown:hover .mega-dropdown {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-          }
-
-          /* Only show when explicitly active (clicked) */
-          .menu-item.has-dropdown.active .mega-dropdown {
-            opacity: 1;
-            visibility: visible;
-            transform: none;
-            pointer-events: all;
-          }
-
-          .column-title {
-            font-size: 0.8rem;
-          }
-        }
-
-        /* ============================================
-           Dark Mode Support
-           ============================================ */
-
-        .dark .mega-menu-container {
-          background: #1f2937;
-          border-bottom-color: #374151;
-        }
-
-        .dark .menu-link {
-          color: #e5e7eb;
-        }
-
-        .dark .menu-link:hover {
-          background: #374151;
-          color: #60a5fa;
-        }
-
-        .dark .mega-dropdown {
-          background: #111827;
-          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-        }
-
-        .dark .column-title {
-          color: #9ca3af;
-          border-bottom-color: #374151;
-        }
-
-        .dark .subcategory-link {
-          color: #d1d5db;
-        }
-
-        .dark .subcategory-link:hover {
-          background: #1f2937;
-          color: #60a5fa;
-        }
-
-        .dark .product-count {
-          background: #374151;
-          color: #9ca3af;
-        }
-
-        .dark .subcategory-link:hover .product-count {
-          background: #1e3a8a;
-          color: #60a5fa;
-        }
-
-        /* ============================================
-           Accessibility
-           ============================================ */
-
-        .menu-link:focus,
-        .subcategory-link:focus {
-          outline: 2px solid #2563eb;
-          outline-offset: 2px;
-        }
-
-        /* Keyboard navigation support */
-        .menu-item:focus-within .mega-dropdown {
-          opacity: 1;
-          visibility: visible;
-          transform: translateY(0);
-          pointer-events: all;
-        }
-
-        /* ============================================
-           Animations
-           ============================================ */
-
-        @keyframes slideDown {
-          from {
-            opacity: 0;
-            transform: translateY(-15px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .mega-dropdown {
-          animation: slideDown 0.3s ease;
-        }
-
-        /* Smooth scroll for mobile */
-        .mega-menu.mobile-open {
-          scroll-behavior: smooth;
-        }
       `}</style>
 
       {showHeader && (
-        <header className="bg-[#e2231a] text-white shadow-lg fixed top-0 left-0 right-0 z-50" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <header className="bg-[#1a1a1a] text-white shadow-xl fixed top-0 left-0 right-0 z-50 border-b border-white/5" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <div className="flex items-center justify-between h-14 md:h-16">
-              <div className="flex items-center gap-2">
-                {showBackButton ? (
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={handleBack}
-                    className="text-white hover:bg-white/20 mr-1"
-                  >
+
+              {/* Left: Logo + back */}
+              <div className="flex items-center gap-2 min-w-0">
+                {showBackButton && (
+                  <button onClick={() => navigate(-1)} className="p-1.5 rounded-lg hover:bg-white/10 text-white/70 hover:text-white transition-colors mr-1 flex-shrink-0">
                     <ArrowLeft className="w-5 h-5" />
-                  </Button>
-                ) : null}
-                <Link to={createPageUrl(user?.is_sales_rep ? 'SalesDashboard' : 'QuoteRequest')} className="flex items-center gap-2 shrink-0">
-                  <span className="text-sm md:text-base font-bold tracking-tight whitespace-nowrap">{"The Exhibitors' Handbook"}</span>
-                  <span className="text-sm font-normal tracking-tight hidden lg:inline whitespace-nowrap ml-1 text-white/70">Instant Quote</span>
+                  </button>
+                )}
+                <Link to={createPageUrl('SalesDashboard')} className="flex items-center gap-2.5 shrink-0">
+                  <div className="w-7 h-7 bg-[#e2231a] rounded-lg flex items-center justify-center font-black text-xs flex-shrink-0">EH</div>
+                  <span className="text-sm font-bold tracking-tight whitespace-nowrap hidden sm:block">The Exhibitors' Handbook</span>
+                  <span className="text-xs text-white/30 border border-white/10 rounded-full px-2 py-0.5 hidden lg:block">Dealer Portal</span>
                 </Link>
               </div>
 
-              
-              {/* Desktop Nav */}
-              <nav className="hidden md:flex items-center gap-2">
-                {user?.is_sales_rep ? (
-                  <>
-                    <Link to={createPageUrl('SalesDashboard')}>
-                      <Button 
-                        variant="ghost"
-                        className={`text-white hover:bg-white/20 ${currentPageName === 'SalesDashboard' ? 'border border-white/30' : ''}`}
-                      >
-                        Dashboard
-                      </Button>
-                    </Link>
-                    <Link to={createPageUrl('Contacts')}>
-                      <Button 
-                        variant="ghost"
-                        className={`text-white hover:bg-white/20 ${currentPageName === 'Contacts' ? 'border border-white/30' : ''}`}
-                      >
-                        Contacts
-                      </Button>
-                    </Link>
-                    <Link to={createPageUrl('CatalogQuote')}>
-                      <Button 
-                        variant="ghost"
-                        className={`text-white hover:bg-white/20 ${currentPageName === 'CatalogQuote' ? 'border border-white/30' : ''}`}
-                      >
-                        <FileText className="w-4 h-4 mr-2" />
-                        Catalog Quote
-                      </Button>
-                    </Link>
-
-                  </>
-                ) : user?.user_type === 'student' ? (
-                  <Link to={createPageUrl('StudentHome')}>
-                    <Button 
-                      variant="ghost"
-                      className={`text-white hover:bg-white/20 ${currentPageName === 'StudentHome' ? 'border border-white/30' : ''}`}
-                    >
-                      My Submissions
-                    </Button>
+              {/* Center: Main nav (desktop) */}
+              <nav className="hidden md:flex items-center gap-1">
+                {navItems.map(({ page, label, icon: Icon }) => (
+                  <Link key={page} to={createPageUrl(page)}>
+                    <button className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                      currentPageName === page
+                        ? 'bg-[#e2231a] text-white'
+                        : 'text-white/60 hover:text-white hover:bg-white/8'
+                    }`}>
+                      <Icon className="w-4 h-4" />
+                      {label}
+                    </button>
                   </Link>
-                ) : (
-                  <>
-
-                    <Link to={createPageUrl('OrderHistory')}>
-                      <Button 
-                        variant="ghost"
-                        className={`text-white hover:bg-white/20 ${currentPageName === 'OrderHistory' ? 'border border-white/30' : ''}`}
-                      >
-                        <FileText className="w-4 h-4 mr-2" />
-                        Order History
-                      </Button>
-                    </Link>
-                  </>
-                )}
-                <div className="h-6 w-px bg-white/20 mx-2" />
-                <div className="text-sm text-white/80 mr-2">
-                  Hello, {user?.full_name?.split(' ')[0] || user?.contact_name?.split(' ')[0]}
-                </div>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="text-white hover:bg-white/20 gap-2">
-                      {React.createElement(getUserTypeIcon(), { className: "w-4 h-4" })}
-                      {getUserTypeLabel()}
-                      <ChevronDown className="w-4 h-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-48">
-                    <DropdownMenuItem onClick={() => handleSwitchUserType('sales_rep')}>
-                      <Users className="w-4 h-4 mr-2" />
-                      Sales Rep
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                <Link to={createPageUrl('Settings')}>
-                  <Button 
-                    variant="ghost" 
-                    size="icon"
-                    className="text-white hover:bg-white/10"
-                  >
-                    <SettingsIcon className="w-5 h-5" />
-                  </Button>
-                </Link>
-                <Button 
-                  variant="ghost" 
-                  size="icon"
-                  onClick={handleLogout}
-                  className="text-white hover:bg-white/10"
-                >
-                  <LogOut className="w-5 h-5" />
-                </Button>
+                ))}
               </nav>
 
-              {/* Mobile: Role Switcher + Hamburger */}
-              <div className="md:hidden flex items-center gap-1">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm" className="text-white hover:bg-white/20 gap-1 px-2 text-xs">
-                      {React.createElement(getUserTypeIcon(), { className: "w-4 h-4" })}
-                      <span className="max-w-[60px] truncate">{getUserTypeLabel()}</span>
-                      <ChevronDown className="w-3 h-3" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-44">
-                    <DropdownMenuItem onClick={() => handleSwitchUserType('sales_rep')}>
-                      <Users className="w-4 h-4 mr-2" />
-                      Sales Rep
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                  className="text-white hover:bg-white/20"
+              {/* Right: User + actions */}
+              <div className="flex items-center gap-1 sm:gap-2">
+                <span className="hidden sm:block text-xs text-white/40 mr-1">
+                  {user?.full_name?.split(' ')[0] || 'Dealer'}
+                </span>
+                <Link to={createPageUrl('Settings')}>
+                  <button className="p-2 rounded-lg hover:bg-white/8 text-white/50 hover:text-white transition-colors">
+                    <SettingsIcon className="w-4 h-4" />
+                  </button>
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="p-2 rounded-lg hover:bg-white/8 text-white/50 hover:text-white transition-colors hidden sm:block"
                 >
-                  {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-                </Button>
+                  <LogOut className="w-4 h-4" />
+                </button>
+                {/* Mobile hamburger */}
+                <button
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                  className="md:hidden p-2 rounded-lg hover:bg-white/10 text-white transition-colors"
+                >
+                  {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                </button>
               </div>
             </div>
           </div>
 
-          {/* Mobile Slide-Down Menu */}
+          {/* Mobile slide-down */}
           {mobileMenuOpen && (
-            <div className="md:hidden bg-[#b01b13] border-t border-white/10">
+            <div className="md:hidden bg-[#111] border-t border-white/5">
               <div className="px-4 py-3 space-y-1">
-                <div className="px-3 py-2 text-white/70 text-sm">
-                  {user?.full_name?.split(' ')[0] || user?.contact_name?.split(' ')[0]} — {getUserTypeLabel()}
-                </div>
-                <div className="h-px bg-white/10 my-1" />
-
-                {user?.is_sales_rep ? (
-                  <>
-                    <Link to={createPageUrl('SalesDashboard')} onClick={() => setMobileMenuOpen(false)}>
-                      <div className={`flex items-center gap-3 px-3 py-3 rounded-lg ${currentPageName === 'SalesDashboard' ? 'bg-white/15' : 'hover:bg-white/10'}`}>
-                        <LayoutDashboard className="w-5 h-5 text-white/80" />
-                        <span className="text-white font-medium">Dashboard</span>
-                      </div>
-                    </Link>
-                    <Link to={createPageUrl('Contacts')} onClick={() => setMobileMenuOpen(false)}>
-                      <div className={`flex items-center gap-3 px-3 py-3 rounded-lg ${currentPageName === 'Contacts' ? 'bg-white/15' : 'hover:bg-white/10'}`}>
-                        <FileText className="w-5 h-5 text-white/80" />
-                        <span className="text-white font-medium">Contacts</span>
-                      </div>
-                    </Link>
-                    <Link to={createPageUrl('CatalogQuote')} onClick={() => setMobileMenuOpen(false)}>
-                      <div className={`flex items-center gap-3 px-3 py-3 rounded-lg ${currentPageName === 'CatalogQuote' ? 'bg-white/15' : 'hover:bg-white/10'}`}>
-                        <FileText className="w-5 h-5 text-white/80" />
-                        <span className="text-white font-medium">Catalog Quote</span>
-                      </div>
-                    </Link>
-
-                  </>
-                ) : user?.user_type === 'student' ? (
-                  <Link to={createPageUrl('StudentHome')} onClick={() => setMobileMenuOpen(false)}>
-                    <div className={`flex items-center gap-3 px-3 py-3 rounded-lg ${currentPageName === 'StudentHome' ? 'bg-white/15' : 'hover:bg-white/10'}`}>
-                      <GraduationCap className="w-5 h-5 text-white/80" />
-                      <span className="text-white font-medium">My Submissions</span>
+                {navItems.map(({ page, label, icon: Icon }) => (
+                  <Link key={page} to={createPageUrl(page)} onClick={() => setMobileMenuOpen(false)}>
+                    <div className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-all ${
+                      currentPageName === page ? 'bg-[#e2231a]/15 text-white' : 'text-white/60 hover:bg-white/5 hover:text-white'
+                    }`}>
+                      <Icon className="w-5 h-5 flex-shrink-0" />
+                      <span className="font-medium">{label}</span>
+                      {currentPageName === page && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-[#e2231a]" />}
                     </div>
                   </Link>
-                ) : (
-                  <>
-
-                    <Link to={createPageUrl('OrderHistory')} onClick={() => setMobileMenuOpen(false)}>
-                      <div className={`flex items-center gap-3 px-3 py-3 rounded-lg ${currentPageName === 'OrderHistory' ? 'bg-white/15' : 'hover:bg-white/10'}`}>
-                        <FileText className="w-5 h-5 text-white/80" />
-                        <span className="text-white font-medium">Order History</span>
-                      </div>
-                    </Link>
-                  </>
-                )}
-
-                <div className="h-px bg-white/10 my-1" />
+                ))}
+                <div className="h-px bg-white/5 my-2" />
                 <Link to={createPageUrl('Settings')} onClick={() => setMobileMenuOpen(false)}>
-                  <div className={`flex items-center gap-3 px-3 py-3 rounded-lg ${currentPageName === 'Settings' ? 'bg-white/15' : 'hover:bg-white/10'}`}>
-                    <SettingsIcon className="w-5 h-5 text-white/80" />
-                    <span className="text-white font-medium">Settings</span>
+                  <div className="flex items-center gap-3 px-3 py-3 rounded-xl text-white/50 hover:bg-white/5 hover:text-white">
+                    <SettingsIcon className="w-5 h-5" />
+                    <span className="font-medium">Settings</span>
                   </div>
                 </Link>
-
-                <div className="h-px bg-white/10 my-1" />
-                <div className="px-3 py-2 text-white/60 text-xs font-medium uppercase tracking-wide">Switch Role</div>
-                <div className="grid grid-cols-1 gap-2 px-3 pb-1">
-                  <button onClick={() => handleSwitchUserType('sales_rep')} className={`py-2.5 rounded-lg text-white text-xs font-medium text-center ${user?.is_sales_rep ? 'bg-white/25 ring-1 ring-white/30' : 'bg-white/10'}`}>Sales Rep</button>
-                </div>
-
-                <div className="h-px bg-white/10 my-1" />
-                <button onClick={handleLogout} className="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-white/10 w-full">
-                  <LogOut className="w-5 h-5 text-white/80" />
-                  <span className="text-white font-medium">Log Out</span>
+                <button onClick={handleLogout} className="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-white/50 hover:bg-white/5 hover:text-white">
+                  <LogOut className="w-5 h-5" />
+                  <span className="font-medium">Log Out</span>
                 </button>
               </div>
             </div>
           )}
         </header>
       )}
-      
+
       <main className={showHeader ? 'pt-14 md:pt-16' : ''}>
         <ErrorBoundary>
           {children}
         </ErrorBoundary>
       </main>
 
-      {/* Mobile Bottom Navigation */}
-      {showMobileNav && (
-        <nav 
-          className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 z-50"
+      {/* Mobile Bottom Nav */}
+      {showHeader && (
+        <nav
+          className="md:hidden fixed bottom-0 left-0 right-0 bg-[#1a1a1a] border-t border-white/8 z-50"
           style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
         >
           <div className="flex items-center justify-around h-14">
-            {user?.is_sales_rep ? (
-              <>
-                <Link to={createPageUrl('SalesDashboard')} className="flex-1">
-                  <button
-                    className={`w-full h-full flex flex-col items-center justify-center gap-0.5 ${
-                      currentPageName === 'SalesDashboard' ? 'text-[#e2231a]' : 'text-slate-500'
-                    }`}
-                  >
-                    <LayoutDashboard className="w-5 h-5" />
-                    <span className="text-[10px] font-medium">Home</span>
-                  </button>
-                </Link>
-
-                <Link to={createPageUrl('Contacts')} className="flex-1">
-                  <button
-                    className={`w-full h-full flex flex-col items-center justify-center gap-0.5 ${
-                      currentPageName === 'Contacts' || currentPageName === 'ContactDetail' ? 'text-[#e2231a]' : 'text-slate-500'
-                    }`}
-                  >
-                    <Users className="w-5 h-5" />
-                    <span className="text-[10px] font-medium">Contacts</span>
-                  </button>
-                </Link>
-                <Link to={createPageUrl('Settings')} className="flex-1">
-                  <button
-                    className={`w-full h-full flex flex-col items-center justify-center gap-0.5 ${
-                      currentPageName === 'Settings' ? 'text-[#e2231a]' : 'text-slate-500'
-                    }`}
-                  >
-                    <SettingsIcon className="w-5 h-5" />
-                    <span className="text-[10px] font-medium">More</span>
-                  </button>
-                </Link>
-              </>
-            ) : user?.user_type === 'student' ? (
-              <>
-                <Link to={createPageUrl('StudentHome')} className="flex-1">
-                  <button
-                    className={`w-full h-full flex flex-col items-center justify-center gap-0.5 ${
-                      currentPageName === 'StudentHome' ? 'text-[#e2231a]' : 'text-slate-500'
-                    }`}
-                  >
-                    <HomeIcon className="w-5 h-5" />
-                    <span className="text-[10px] font-medium">Home</span>
-                  </button>
-                </Link>
-                <Link to={createPageUrl('Settings')} className="flex-1">
-                  <button
-                    className={`w-full h-full flex flex-col items-center justify-center gap-0.5 ${
-                      currentPageName === 'Settings' ? 'text-[#e2231a]' : 'text-slate-500'
-                    }`}
-                  >
-                    <SettingsIcon className="w-5 h-5" />
-                    <span className="text-[10px] font-medium">Settings</span>
-                  </button>
-                </Link>
-              </>
-            ) : (
-              <>
-                <Link to={createPageUrl('QuoteRequest')} className="flex-1">
-                  <button
-                    className={`w-full h-full flex flex-col items-center justify-center gap-0.5 ${
-                      currentPageName === 'QuoteRequest' ? 'text-[#e2231a]' : 'text-slate-500'
-                    }`}
-                  >
-                    <HomeIcon className="w-5 h-5" />
-                    <span className="text-[10px] font-medium">Home</span>
-                  </button>
-                </Link>
-
-                <Link to={createPageUrl('OrderHistory')} className="flex-1">
-                  <button
-                    className={`w-full h-full flex flex-col items-center justify-center gap-0.5 ${
-                      currentPageName === 'OrderHistory' ? 'text-[#e2231a]' : 'text-slate-500'
-                    }`}
-                  >
-                    <FileText className="w-5 h-5" />
-                    <span className="text-[10px] font-medium">History</span>
-                  </button>
-                </Link>
-                <Link to={createPageUrl('Settings')} className="flex-1">
-                  <button
-                    className={`w-full h-full flex flex-col items-center justify-center gap-0.5 ${
-                      currentPageName === 'Settings' ? 'text-[#e2231a]' : 'text-slate-500'
-                    }`}
-                  >
-                    <SettingsIcon className="w-5 h-5" />
-                    <span className="text-[10px] font-medium">Settings</span>
-                  </button>
-                </Link>
-              </>
-            )}
+            {navItems.map(({ page, label, icon: Icon }) => (
+              <Link key={page} to={createPageUrl(page)} className="flex-1">
+                <button className={`w-full h-full flex flex-col items-center justify-center gap-0.5 transition-colors ${
+                  currentPageName === page ? 'text-[#e2231a]' : 'text-white/35'
+                }`}>
+                  <Icon className="w-5 h-5" />
+                  <span className="text-[9px] font-medium">{label}</span>
+                </button>
+              </Link>
+            ))}
           </div>
         </nav>
       )}
