@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
-import { LogOut, FileText, Plus, Home as HomeIcon, Settings as SettingsIcon, ArrowLeft, LayoutDashboard, ChevronDown, User, Users, GraduationCap, Menu, X, Package, TrendingUp, Box } from 'lucide-react';
+import { LogOut, FileText, Users, Menu, X, LayoutDashboard, Settings as SettingsIcon, ArrowLeft, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import VoiceActivationProvider from './components/voice/VoiceActivationProvider';
 import ErrorBoundary from './components/ErrorBoundary';
 
