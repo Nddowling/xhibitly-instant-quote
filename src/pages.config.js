@@ -47,7 +47,6 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
-import BoothDesigner from './pages/BoothDesigner';
 import BrandVerification from './pages/BrandVerification';
 import CatalogImport from './pages/CatalogImport';
 import CatalogQuote from './pages/CatalogQuote';
@@ -75,7 +74,6 @@ import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
-    "BoothDesigner": BoothDesigner,
     "BrandVerification": BrandVerification,
     "CatalogImport": CatalogImport,
     "CatalogQuote": CatalogQuote,
