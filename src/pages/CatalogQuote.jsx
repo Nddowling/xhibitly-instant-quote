@@ -929,6 +929,21 @@ export default function CatalogQuote() {
     localStorage.removeItem(LS_KEY);
   };
 
+  // Shift ALL DB hotspot page numbers by offset (runs in browser, no timeout)
+  const shiftAllPageNumbers = async (offset) => {
+    if (!window.confirm(`This will shift ALL hotspot page numbers by ${offset > 0 ? '+' : ''}${offset}. This cannot be undone. Continue?`)) return;
+    const all = await base44.entities.CatalogHotspot.list('page_number', 500);
+    let done = 0;
+    for (const record of all) {
+      const newPage = record.page_number + offset;
+      if (newPage < 1) continue;
+      await base44.entities.CatalogHotspot.update(record.id, { page_number: newPage });
+      done++;
+    }
+    alert(`Done! Shifted ${done} records by ${offset}.`);
+    await refreshFromDb();
+  };
+
   const pageProducts = PAGE_PRODUCTS[currentPage] || [];
 
   // Effective hotspots: localStorage edits > DB > JSON fallback
