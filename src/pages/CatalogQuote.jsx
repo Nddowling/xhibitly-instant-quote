@@ -178,7 +178,7 @@ async function loadAllDbHotspots() {
 // ─── Hook: product detail cache ──────────────────────────────────────────────
 function useProductCache() {
   const cache = useRef({});
-  const [, setTick] = useState(0);
+  const [tick, setTick] = useState(0);
 
   const fetchProduct = useCallback(async (sku) => {
     if (cache.current[sku] !== undefined) return;
@@ -204,14 +204,20 @@ function useProductCache() {
         }
       }
 
-      // If no image URL on the entity, look it up from Supabase storage —
-      // same pattern as ProductDetail.jsx which has working thumbnails.
+      // Try Supabase storage for image — check product folder directly first, then /image subfolder
       if (prod && !prod.image_cached_url && !prod.image_url) {
         try {
-          const imgRes = await base44.functions.invoke('listSupabaseAssets', { path: `products/${sku}/image` });
+          const imgRes = await base44.functions.invoke('listSupabaseAssets', { path: `products/${sku}` });
           if (imgRes.data?.files?.length > 0) {
             const imgFile = imgRes.data.files.find(f => f.name.match(/\.(png|jpe?g|gif|webp)$/i));
             if (imgFile) prod.image_url = imgFile.publicUrl;
+          }
+          if (!prod.image_url) {
+            const imgRes2 = await base44.functions.invoke('listSupabaseAssets', { path: `products/${sku}/image` });
+            if (imgRes2.data?.files?.length > 0) {
+              const imgFile = imgRes2.data.files.find(f => f.name.match(/\.(png|jpe?g|gif|webp)$/i));
+              if (imgFile) prod.image_url = imgFile.publicUrl;
+            }
           }
         } catch { /* no image in storage, fallback to icon */ }
       }
@@ -223,7 +229,7 @@ function useProductCache() {
     setTick(t => t + 1);
   }, []);
 
-  return { cache: cache.current, fetchProduct };
+  return { cache: cache.current, fetchProduct, tick };
 }
 
 // ─── Normal catalog page view (read-only hotspot overlays) ───────────────────
