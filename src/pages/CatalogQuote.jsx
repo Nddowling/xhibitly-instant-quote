@@ -1157,6 +1157,14 @@ export default function CatalogQuote() {
           {editMode ? (
             <>
               <button
+                onClick={refreshFromDb}
+                className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 transition-all"
+                title="Pull latest hotspots from database"
+              >
+                <RefreshCw className="w-3.5 h-3.5" />
+                Refresh DB
+              </button>
+              <button
                 onClick={() => setAddingHotspot(a => !a)}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all
                   ${addingHotspot ? 'bg-green-500 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
