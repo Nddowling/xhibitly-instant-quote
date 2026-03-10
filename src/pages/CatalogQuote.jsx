@@ -1312,6 +1312,7 @@ export default function CatalogQuote() {
               <VariantPicker
                 spot={selectedHotspot}
                 products={productCache}
+                fetchProduct={fetchProduct}
                 onAdd={addToOrder}
                 onClose={() => { setShowVariants(false); setSelectedHotspot(null); }}
               />
