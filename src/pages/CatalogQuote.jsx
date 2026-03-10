@@ -1154,6 +1154,15 @@ export default function CatalogQuote() {
 
         {/* Edit mode controls */}
         <div className="flex items-center gap-2 flex-shrink-0">
+          {!editMode && (
+            <button
+              onClick={refreshFromDb}
+              className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs text-slate-500 hover:bg-slate-100 transition-all"
+              title="Refresh hotspots from database"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+            </button>
+          )}
           {editMode ? (
             <>
               <button
