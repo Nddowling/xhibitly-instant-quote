@@ -4,7 +4,6 @@ import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import { LogOut, FileText, Users, Menu, X, LayoutDashboard, Settings as SettingsIcon, ArrowLeft, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import VoiceActivationProvider from './components/voice/VoiceActivationProvider';
 import ErrorBoundary from './components/ErrorBoundary';
 
 export default function Layout({ children, currentPageName }) {
