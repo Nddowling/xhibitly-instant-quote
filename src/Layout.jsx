@@ -72,7 +72,6 @@ export default function Layout({ children, currentPageName }) {
   }
 
   return (
-    <VoiceActivationProvider>
     <div className="min-h-screen bg-slate-50">
       <style>{`
         body { overscroll-behavior: none; }
