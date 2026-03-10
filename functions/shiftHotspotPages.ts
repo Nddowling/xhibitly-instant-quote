@@ -17,11 +17,19 @@ Deno.serve(async (req) => {
 
   const toUpdate = all.filter(r => (r.page_number + offset) >= 1);
 
-  await Promise.all(
-    toUpdate.map(record =>
-      base44.asServiceRole.entities.CatalogHotspot.update(record.id, { page_number: record.page_number + offset })
-    )
-  );
+  // Process in batches of 5 to avoid rate limits
+  const batchSize = 5;
+  for (let i = 0; i < toUpdate.length; i += batchSize) {
+    const batch = toUpdate.slice(i, i + batchSize);
+    await Promise.all(
+      batch.map(record =>
+        base44.asServiceRole.entities.CatalogHotspot.update(record.id, { page_number: record.page_number + offset })
+      )
+    );
+    if (i + batchSize < toUpdate.length) {
+      await new Promise(r => setTimeout(r, 300));
+    }
+  }
 
   return Response.json({ success: true, updated: toUpdate.length, offset });
 });
