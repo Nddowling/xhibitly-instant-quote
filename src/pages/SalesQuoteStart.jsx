@@ -27,20 +27,28 @@ export default function SalesQuoteStart() {
 
     setIsSearching(true);
     try {
-      const { data } = await base44.functions.invoke('checkCustomer', {
-        email,
-        company_name: companyName,
-        contact_name: contactName,
-        phone
-      });
+      // Look up existing orders by customer email
+      const orders = await base44.entities.Order.filter({ customer_email: email }) || [];
 
+      // Look up ClientProfile for auto-fill
+      const profiles = await base44.entities.ClientProfile.filter({ client_email: email }) || [];
+      const profile = profiles[0] || null;
+
+      const exists = orders.length > 0 || !!profile;
+      const customerInfo = profile
+        ? { company_name: profile.customer_company || companyName, contact_name: profile.customer_name || contactName, phone: profile.customer_phone || phone }
+        : orders.length > 0
+          ? { company_name: orders[0].customer_company || companyName, contact_name: orders[0].customer_name || contactName, phone: orders[0].customer_phone || phone }
+          : null;
+
+      const data = { exists, orders, customerInfo };
       setSearchResults(data);
 
-      // Auto-fill fields if customer exists
-      if (data.exists && data.customerInfo) {
-        setCompanyName(data.customerInfo.company_name || companyName);
-        setContactName(data.customerInfo.contact_name || contactName);
-        setPhone(data.customerInfo.phone || phone);
+      // Auto-fill fields if customer found
+      if (customerInfo) {
+        setCompanyName(prev => prev || customerInfo.company_name || '');
+        setContactName(prev => prev || customerInfo.contact_name || '');
+        setPhone(prev => prev || customerInfo.phone || '');
       }
     } catch (error) {
       console.error('Error checking customer:', error);
