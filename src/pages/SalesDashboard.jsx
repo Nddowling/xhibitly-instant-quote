@@ -319,14 +319,7 @@ export default function SalesDashboard() {
                       <span className="hidden sm:inline">Catalog Quote</span>
                       <span className="sm:hidden">Catalog</span>
                     </Button>
-                    <Button
-                      onClick={() => navigate(createPageUrl('SalesQuoteStart'))}
-                      className="bg-[#e2231a] hover:bg-[#b01b13] text-xs md:text-sm shrink-0"
-                    >
-                      <Plus className="w-4 h-4 mr-1 md:mr-2" />
-                      <span className="hidden sm:inline">New Quote</span>
-                      <span className="sm:hidden">New</span>
-                    </Button>
+
                   </div>
                 </div>
               </CardHeader>
