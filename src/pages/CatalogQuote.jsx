@@ -905,6 +905,8 @@ export default function CatalogQuote() {
   const [editMode, setEditMode] = useState(false);
   const [addingHotspot, setAddingHotspot] = useState(false);
   const [isRerunning, setIsRerunning] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [syncMsg, setSyncMsg] = useState(null);
   const { cache: productCache, fetchProduct, tick } = useProductCache();
 
   // ── Session / Quote state ─────────────────────────────────────────────────

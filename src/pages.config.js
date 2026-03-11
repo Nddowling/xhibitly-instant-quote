@@ -49,7 +49,6 @@
  */
 import BrandVerification from './pages/BrandVerification';
 import CatalogImport from './pages/CatalogImport';
-import CatalogQuote from './pages/CatalogQuote';
 import Confirmation from './pages/Confirmation';
 import ContactDetail from './pages/ContactDetail';
 import Contacts from './pages/Contacts';
@@ -66,18 +65,18 @@ import ProductDetail from './pages/ProductDetail';
 import QuoteRequest from './pages/QuoteRequest';
 import Results from './pages/Results';
 import SalesDashboard from './pages/SalesDashboard';
-import SalesQuoteStart from './pages/SalesQuoteStart';
 import Settings from './pages/Settings';
 import StudentHome from './pages/StudentHome';
 import UserTypeSelection from './pages/UserTypeSelection';
 import QuoteView from './pages/QuoteView';
+import CatalogQuote from './pages/CatalogQuote';
+import SalesQuoteStart from './pages/SalesQuoteStart';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "BrandVerification": BrandVerification,
     "CatalogImport": CatalogImport,
-    "CatalogQuote": CatalogQuote,
     "Confirmation": Confirmation,
     "ContactDetail": ContactDetail,
     "Contacts": Contacts,
@@ -94,11 +93,12 @@ export const PAGES = {
     "QuoteRequest": QuoteRequest,
     "Results": Results,
     "SalesDashboard": SalesDashboard,
-    "SalesQuoteStart": SalesQuoteStart,
     "Settings": Settings,
     "StudentHome": StudentHome,
     "UserTypeSelection": UserTypeSelection,
     "QuoteView": QuoteView,
+    "CatalogQuote": CatalogQuote,
+    "SalesQuoteStart": SalesQuoteStart,
 }
 
 export const pagesConfig = {
