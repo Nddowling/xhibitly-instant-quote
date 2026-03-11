@@ -63,6 +63,7 @@ export default function Layout({ children, currentPageName }) {
     { page: 'Contacts', label: 'Clients', icon: Users },
     { page: 'CatalogQuote', label: 'Catalog Quote', icon: BookOpen },
     { page: 'RecentQuotes', label: 'Quotes', icon: ClipboardList },
+    { page: 'PricingRules', label: 'Pricing', icon: Tag },
   ];
 
   if (isLoading) {
