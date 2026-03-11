@@ -68,7 +68,7 @@ export default function Layout({ children, currentPageName }) {
   // Analytics dropdown items
   const analyticsNav = [
     { page: 'Reports',       label: 'Reports',    icon: BarChart2 },
-    { page: 'Dashboards',    label: 'Dashboards', icon: DashIcon },
+    { page: 'Dashboards',    label: 'Dashboards', icon: LayoutDashboard },
   ];
 
   const analyticsActive = analyticsNav.some(n => n.page === currentPageName) ||
