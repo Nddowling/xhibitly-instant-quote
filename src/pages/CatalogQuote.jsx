@@ -1256,11 +1256,12 @@ export default function CatalogQuote() {
               </button>
               <button
                 onClick={refreshFromDb}
-                title="Refresh from DB"
-                className="flex flex-col items-center gap-1 p-2.5 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-all"
+                disabled={isSyncing}
+                title="Sync hotspots from database"
+                className="flex flex-col items-center gap-1 p-2.5 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 disabled:opacity-40 transition-all"
               >
-                <RefreshCw className="w-4 h-4" />
-                <span className="text-[9px] font-medium leading-none">Sync</span>
+                <RefreshCw className={`w-4 h-4 ${isSyncing ? 'animate-spin text-blue-500' : ''}`} />
+                <span className="text-[9px] font-medium leading-none">{isSyncing ? '...' : 'Sync'}</span>
               </button>
             </div>
           ) : (
