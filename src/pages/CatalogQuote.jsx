@@ -1098,14 +1098,23 @@ export default function CatalogQuote() {
   const handleProductSearch = async (query) => {
     setSearchSku(query);
     if (!query || query.length < 2) { setSearchResults([]); setShowSearchDropdown(false); return; }
+    const regex = { $regex: query, $options: 'i' };
     try {
-      const [byName, bySku, byCategory] = await Promise.all([
-        base44.entities.Product.filter({ name: query }),
-        base44.entities.Product.filter({ sku: query.toUpperCase() }),
-        base44.entities.Product.filter({ category: query }),
+      const [byName, bySku, byCategory, bySubcategory, byProductLine] = await Promise.all([
+        base44.entities.Product.filter({ name: regex }),
+        base44.entities.Product.filter({ sku: regex }),
+        base44.entities.Product.filter({ category: regex }),
+        base44.entities.Product.filter({ subcategory: regex }),
+        base44.entities.Product.filter({ product_line: regex }),
       ]);
-      const combined = [...(byName || []), ...(bySku || []), ...(byCategory || [])];
-      const unique = combined.filter((v, i, a) => a.findIndex(x => x.id === v.id) === i).slice(0, 12);
+      const combined = [
+        ...(byName || []),
+        ...(bySku || []),
+        ...(byCategory || []),
+        ...(bySubcategory || []),
+        ...(byProductLine || []),
+      ];
+      const unique = combined.filter((v, i, a) => a.findIndex(x => x.id === v.id) === i).slice(0, 15);
       setSearchResults(unique);
       setShowSearchDropdown(unique.length > 0);
     } catch { setShowSearchDropdown(false); }
