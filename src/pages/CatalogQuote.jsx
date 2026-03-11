@@ -988,15 +988,73 @@ export default function CatalogQuote() {
 
   const handleCreateQuote = async () => {
     if (!activeOrder || lineItems.length === 0) return;
-    const quoted_price = parseFloat(lineItems.reduce((s, i) => s + (i.total_price || 0), 0).toFixed(2));
+
+    // Load pricing rules + dealer settings
+    const [rulesRes, dealerSettingsRes] = await Promise.all([
+      base44.entities.PricingRule.filter({ is_active: true }),
+      base44.auth.me().then(u => base44.entities.DealerPricingSettings.filter({ user_id: u.id })),
+    ]);
+    const rules = rulesRes || [];
+    const dealerSettings = dealerSettingsRes?.[0] || null;
+
+    // Use latest pricing result from sidebar if available, otherwise re-run
+    let pricingResult = latestPricingResult;
+    if (!pricingResult) {
+      pricingResult = runPricingEngine({ order: activeOrder, lineItems, rules, dealerSettings });
+    }
+
+    const { itemResults, appliedRuleIds, generatedPromos: newPromos, listTotal, markupAmount, ruleDiscountAmount, customerDiscountAmount, promoDiscountAmount, finalTotal, markupPct, discountPct } = pricingResult;
+
+    // Update each line item with final prices
+    await Promise.all(itemResults.map(item =>
+      base44.entities.LineItem.update(item.id, {
+        list_unit_price: item.list_unit_price || item.unit_price,
+        final_unit_price: item.final_unit_price,
+        final_total_price: item.final_total_price,
+        rule_discount_amount: item.rule_discount_amount || 0,
+      })
+    ));
+
+    // Save generated promos to database
+    const savedPromos = [];
+    for (const p of (newPromos || [])) {
+      const expiresAt = new Date();
+      expiresAt.setDate(expiresAt.getDate() + (p.expires_days || 90));
+      const promo = await base44.entities.PromoCode.create({
+        code: p.code || generatePromoCode(),
+        generated_from_rule_id: appliedRuleIds?.[0] || '',
+        generated_from_order_id: activeOrder.id,
+        discount_pct: p.discount_pct,
+        applies_to: p.applies_to || 'quote',
+        applies_to_value: p.applies_to_value || '',
+        expires_at: expiresAt.toLocaleDateString('en-CA'),
+        message: p.message || '',
+        is_used: false,
+      });
+      savedPromos.push({ ...p, ...promo });
+    }
+
+    setGeneratedPromos(savedPromos);
+
+    const quoted_price = parseFloat(finalTotal.toFixed(2));
     const share_token = crypto.randomUUID();
-    const updated = await base44.entities.Order.update(activeOrder.id, {
+
+    await base44.entities.Order.update(activeOrder.id, {
       status: 'Quoted',
       quoted_price,
       final_price: quoted_price,
       share_token,
+      list_price_total: listTotal,
+      markup_amount: markupAmount,
+      rule_discount_amount: ruleDiscountAmount,
+      customer_discount_amount: customerDiscountAmount,
+      promo_discount_amount: promoDiscountAmount,
+      applied_rule_ids: appliedRuleIds,
+      dealer_markup_pct: markupPct ?? activeOrder.dealer_markup_pct ?? 0,
+      customer_discount_pct: discountPct ?? activeOrder.customer_discount_pct ?? 0,
     });
-    setActiveOrder({ ...activeOrder, ...updated, share_token, quoted_price });
+
+    setActiveOrder(prev => ({ ...prev, share_token, quoted_price, list_price_total: listTotal, markup_amount: markupAmount, rule_discount_amount: ruleDiscountAmount, applied_rule_ids: appliedRuleIds }));
     setShowConfirmModal(true);
   };
 
