@@ -791,7 +791,7 @@ function VariantPicker({ spot, products, fetchProduct, onAdd, onClose, hasSessio
     }
   }, [products[skus[0]]]);
 
-  if (skus.length === 1) {
+  if (skus.length === 1 && hasSession) {
     const p = products[skus[0]];
     if (!p) return (
       <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/40 rounded-lg">
@@ -801,7 +801,7 @@ function VariantPicker({ spot, products, fetchProduct, onAdd, onClose, hasSessio
         </div>
       </div>
     );
-    return null;
+    return null; // useEffect auto-adds it
   }
 
   return (
