@@ -4,8 +4,7 @@ import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import {
   LogOut, Users, Menu, X, LayoutDashboard, Settings as SettingsIcon,
-  ArrowLeft, BookOpen, ClipboardList, Tag, BarChart2, LayoutDashboard as DashIcon,
-  Database, ChevronDown, Settings2
+  ArrowLeft, BookOpen, ClipboardList, Tag, BarChart2, ChevronDown, Settings2
 } from 'lucide-react';
 import ErrorBoundary from './components/ErrorBoundary';
 
