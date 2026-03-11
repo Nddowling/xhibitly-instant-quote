@@ -135,11 +135,9 @@ export default function QuoteConfirmModal({ order, lineItems, onClose, isPreview
                   <span className="font-semibold text-slate-800 text-right">{value}</span>
                 </div>
               ))}
-              <div className="flex justify-between border-t border-slate-200 pt-2 mt-2">
-                <span className="font-semibold text-slate-700">Total</span>
-                <span className="font-black text-[#e2231a] text-base">{fmt(order?.quoted_price)}</span>
-              </div>
             </div>
+
+            <PricingBreakdown order={order} rules={appliedRules} generatedPromos={generatedPromos} />
 
             {/* Share link */}
             {shareUrl && (
