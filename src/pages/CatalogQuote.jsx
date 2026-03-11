@@ -1072,7 +1072,7 @@ export default function CatalogQuote() {
   const handlePageInput = (e) => {
     setPageInput(e.target.value);
     const n = parseInt(e.target.value);
-    if (!isNaN(n) && n >= 1) goToPage(n);
+    if (!isNaN(n) && n >= 0) goToPage(n);
   };
 
   const handleSkuSearch = () => {
@@ -1279,7 +1279,7 @@ export default function CatalogQuote() {
           <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5">
             <span className="text-xs text-slate-500">Page</span>
             <input
-              type="number" min={1} max={MAX_PAGE} value={pageInput}
+              type="number" min={0} max={MAX_PAGE} value={pageInput}
               onChange={handlePageInput}
               className="w-14 text-center text-sm font-bold bg-transparent focus:outline-none"
             />
