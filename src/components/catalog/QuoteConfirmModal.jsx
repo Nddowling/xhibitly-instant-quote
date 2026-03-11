@@ -8,7 +8,7 @@ function fmt(n) {
   return '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
-export default function QuoteConfirmModal({ order, lineItems, onClose }) {
+export default function QuoteConfirmModal({ order, lineItems, onClose, isPreview = false }) {
   const [copied, setCopied] = useState(false);
 
   const shareUrl = order?.share_token
@@ -51,10 +51,10 @@ export default function QuoteConfirmModal({ order, lineItems, onClose }) {
           <button onClick={onClose} className="absolute top-4 right-4 text-white/40 hover:text-white transition-colors">
             <X className="w-5 h-5" />
           </button>
-          <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-3">
-            <CheckCircle2 className="w-7 h-7 text-white" />
+          <div className={`w-12 h-12 ${isPreview ? 'bg-[#e2231a]' : 'bg-green-500'} rounded-full flex items-center justify-center mx-auto mb-3`}>
+            {isPreview ? <FileText className="w-7 h-7 text-white" /> : <CheckCircle2 className="w-7 h-7 text-white" />}
           </div>
-          <h2 className="text-xl font-bold text-white">Quote Created!</h2>
+          <h2 className="text-xl font-bold text-white">{isPreview ? 'Current Quote' : 'Quote Created!'}</h2>
           <p className="text-sm text-white/40 mt-1 font-mono">{order?.reference_number}</p>
         </div>
 
