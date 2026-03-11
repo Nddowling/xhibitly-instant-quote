@@ -102,8 +102,26 @@ export default function QuoteView() {
       <style>{`
         @media print {
           .no-print { display: none !important; }
-          body { font-size: 11px; background: white; }
-          .print-break { page-break-inside: avoid; }
+          body { font-size: 10px; background: white; margin: 0; }
+          @page { margin: 0.5in; size: letter; }
+          .max-w-4xl { max-width: 100% !important; padding: 0 !important; }
+          .space-y-8 > * + * { margin-top: 0.6rem !important; }
+          .py-10 { padding-top: 0.5rem !important; padding-bottom: 0.5rem !important; }
+          .print-break { page-break-inside: avoid; break-inside: avoid; }
+          .rounded-xl, .rounded-2xl { border-radius: 4px !important; }
+          .shadow-sm { box-shadow: none !important; }
+          table { font-size: 9px; }
+          td, th { padding: 3px 8px !important; }
+          .px-6 { padding-left: 8px !important; padding-right: 8px !important; }
+          .py-3 { padding-top: 3px !important; padding-bottom: 3px !important; }
+          .py-4 { padding-top: 4px !important; padding-bottom: 4px !important; }
+          .p-4, .p-5 { padding: 8px !important; }
+          .text-xl, .text-2xl { font-size: 14px !important; }
+          .text-base { font-size: 12px !important; }
+          .mb-3 { margin-bottom: 4px !important; }
+          .mt-1 { margin-top: 2px !important; }
+          .gap-4 { gap: 6px !important; }
+          h1, h2, h3 { page-break-after: avoid; }
         }
       `}</style>
 
