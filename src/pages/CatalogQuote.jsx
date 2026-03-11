@@ -1452,7 +1452,7 @@ export default function CatalogQuote() {
               <div className="flex-1" />
 
               <button
-                onClick={() => { setEditMode(false); setAddingHotspot(false); }}
+                onClick={handleExitEditMode}
                 title="Close edit mode"
                 className="flex flex-col items-center gap-1 p-2.5 rounded-lg w-full bg-blue-600 text-white hover:bg-blue-700 transition-all mb-1"
               >
