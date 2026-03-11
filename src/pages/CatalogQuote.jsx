@@ -1639,6 +1639,7 @@ export default function CatalogQuote() {
           onLineItemsChange={refreshLineItems}
           onCreateQuote={handleCreateQuote}
           productCache={productCache}
+          onPricingResult={setLatestPricingResult}
         />
       </div>
 
