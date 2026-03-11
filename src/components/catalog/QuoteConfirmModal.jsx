@@ -12,6 +12,46 @@ function fmt(n) {
 
 export default function QuoteConfirmModal({ order, lineItems, onClose, isPreview = false }) {
   const [copied, setCopied] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
+  const submitToQueue = async () => {
+    if (!order?.id || submitted) return;
+    setSubmitting(true);
+    try {
+      const user = await base44.auth.me();
+      const todayStr = new Date().toLocaleDateString('en-CA');
+
+      // Find this user's SalesRep record
+      let salesRepId = null;
+      const reps = await base44.entities.SalesRep.filter({ email: user.email });
+      if (reps?.length > 0) salesRepId = reps[0].id;
+
+      // Update the order: assign rep + set today as urgent follow-up
+      await base44.entities.Order.update(order.id, {
+        assigned_sales_rep_id: salesRepId || undefined,
+        follow_up_date: todayStr,
+        status: order.status === 'Draft' || order.status === 'Pending' ? 'Quoted' : order.status,
+      });
+
+      // Log a "quote_sent" activity
+      await base44.entities.Activity.create({
+        order_id: order.id,
+        activity_type: 'quote_sent',
+        subject: `Quote submitted to follow-up queue`,
+        description: `Quote ${order.reference_number} submitted for ${order.customer_name || order.customer_email}. Awaiting first contact.`,
+        outcome: 'neutral',
+        next_action: 'Make initial contact with customer',
+        next_action_date: todayStr,
+      });
+
+      setSubmitted(true);
+    } catch (e) {
+      console.error('Submit to queue failed:', e);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   const shareUrl = order?.share_token
     ? `${window.location.origin}/QuoteView?token=${order.share_token}`
