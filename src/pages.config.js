@@ -61,6 +61,7 @@ import Loading from './pages/Loading';
 import OrderDetail from './pages/OrderDetail';
 import OrderHistory from './pages/OrderHistory';
 import Pipeline from './pages/Pipeline';
+import PricingRules from './pages/PricingRules';
 import Product3DManager from './pages/Product3DManager';
 import ProductDetail from './pages/ProductDetail';
 import QuoteRequest from './pages/QuoteRequest';
@@ -72,7 +73,12 @@ import SalesQuoteStart from './pages/SalesQuoteStart';
 import Settings from './pages/Settings';
 import StudentHome from './pages/StudentHome';
 import UserTypeSelection from './pages/UserTypeSelection';
-import PricingRules from './pages/PricingRules';
+import Setup from './pages/Setup';
+import Reports from './pages/Reports';
+import Dashboards from './pages/Dashboards';
+import ReportBuilder from './pages/ReportBuilder';
+import ReportView from './pages/ReportView';
+import DashboardView from './pages/DashboardView';
 import __Layout from './Layout.jsx';
 
 
@@ -91,6 +97,7 @@ export const PAGES = {
     "OrderDetail": OrderDetail,
     "OrderHistory": OrderHistory,
     "Pipeline": Pipeline,
+    "PricingRules": PricingRules,
     "Product3DManager": Product3DManager,
     "ProductDetail": ProductDetail,
     "QuoteRequest": QuoteRequest,
@@ -102,7 +109,12 @@ export const PAGES = {
     "Settings": Settings,
     "StudentHome": StudentHome,
     "UserTypeSelection": UserTypeSelection,
-    "PricingRules": PricingRules,
+    "Setup": Setup,
+    "Reports": Reports,
+    "Dashboards": Dashboards,
+    "ReportBuilder": ReportBuilder,
+    "ReportView": ReportView,
+    "DashboardView": DashboardView,
 }
 
 export const pagesConfig = {
