@@ -996,11 +996,22 @@ export default function CatalogQuote() {
   }, []);
 
   const refreshFromDb = async () => {
-    const dbData = await loadAllDbHotspots();
-    setDbHotspots(dbData);
-    // Clear local edits so DB data shows fresh
-    setEditedHotspots({});
-    localStorage.removeItem(LS_KEY);
+    setIsSyncing(true);
+    setSyncMsg(null);
+    try {
+      const dbData = await loadAllDbHotspots();
+      const pageCount = Object.keys(dbData).length;
+      setDbHotspots(dbData);
+      setEditedHotspots({});
+      localStorage.removeItem(LS_KEY);
+      setSyncMsg(`Synced ${pageCount} pages from database`);
+      setTimeout(() => setSyncMsg(null), 3000);
+    } catch (e) {
+      setSyncMsg('Sync failed — check connection');
+      setTimeout(() => setSyncMsg(null), 4000);
+    } finally {
+      setIsSyncing(false);
+    }
   };
 
   // Shift ALL DB hotspot page numbers by offset (runs in browser, no timeout)
