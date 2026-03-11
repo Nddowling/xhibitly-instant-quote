@@ -53,7 +53,7 @@ export default function Layout({ children, currentPageName }) {
     navigate(-1);
   };
 
-  const noHeaderPages = ['Loading', 'Home', 'Landing', 'UserTypeSelection'];
+  const noHeaderPages = ['Loading', 'Home', 'Landing', 'UserTypeSelection', 'QuoteView'];
   const showHeader = !noHeaderPages.includes(currentPageName) && user;
   const rootPages = ['SalesDashboard', 'Contacts', 'CatalogQuote'];
   const showBackButton = showHeader && !rootPages.includes(currentPageName);
