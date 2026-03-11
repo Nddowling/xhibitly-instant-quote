@@ -2,6 +2,29 @@ import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { X, Plus, Minus, ShoppingCart, FileText, Package } from 'lucide-react';
+import { SKU_TO_PAGE } from '@/data/catalogPageMapping';
+
+const SUPABASE_URL = 'https://xpgvpzbzmkubahyxwipk.supabase.co/storage/v1/object/public/orbus-assets';
+
+function catalogPageThumb(sku) {
+  const page = SKU_TO_PAGE[sku];
+  if (!page) return null;
+  const pdfPage = page + 2;
+  return `${SUPABASE_URL}/catalog/pages/page-${String(pdfPage).padStart(3, '0')}.jpg`;
+}
+
+function getThumbUrl(item, productCache) {
+  // 1. Stored image_url on the line item (if Base44 schema has it)
+  if (item.image_url) return item.image_url;
+  // 2. From product cache (populated by CatalogQuote's fetchProduct)
+  const cached = productCache?.[item.sku];
+  if (cached) {
+    const url = cached.primary_image_url || cached.image_cached_url || cached.image_url || cached.thumbnail_url;
+    if (url) return url;
+  }
+  // 3. Catalog page image (always in Supabase)
+  return catalogPageThumb(item.sku);
+}
 
 function fmt(n) {
   if (!n && n !== 0) return '—';
@@ -14,7 +37,7 @@ function ProductThumb({ src }) {
   return <img src={src} alt="" className="w-full h-full object-contain p-0.5" onError={() => setError(true)} />;
 }
 
-export default function QuoteSidebar({ order, lineItems, onLineItemsChange, onCreateQuote }) {
+export default function QuoteSidebar({ order, lineItems, onLineItemsChange, onCreateQuote, productCache }) {
   const total = lineItems.reduce((s, i) => s + (i.total_price || 0), 0);
   const itemCount = lineItems.reduce((s, i) => s + (i.quantity || 0), 0);
 
@@ -65,7 +88,7 @@ export default function QuoteSidebar({ order, lineItems, onLineItemsChange, onCr
           <div key={item.id} className="bg-white border border-slate-200 rounded-xl p-2.5 shadow-sm">
             <div className="flex items-start gap-2">
               <div className="w-10 h-10 flex-shrink-0 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center overflow-hidden">
-                <ProductThumb src={item.image_url} />
+                <ProductThumb src={getThumbUrl(item, productCache)} />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-[11px] font-bold text-slate-800 leading-tight line-clamp-2">{item.product_name}</p>

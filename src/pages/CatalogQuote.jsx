@@ -1528,6 +1528,7 @@ export default function CatalogQuote() {
           lineItems={lineItems}
           onLineItemsChange={refreshLineItems}
           onCreateQuote={handleCreateQuote}
+          productCache={productCache}
         />
       </div>
 
