@@ -65,7 +65,7 @@ export default function QuoteSidebar({ order, lineItems, onLineItemsChange, onCr
           <div key={item.id} className="bg-white border border-slate-200 rounded-xl p-2.5 shadow-sm">
             <div className="flex items-start gap-2">
               <div className="w-10 h-10 flex-shrink-0 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center overflow-hidden">
-                <ProductThumb src={null} />
+                <ProductThumb src={item.image_url} />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-[11px] font-bold text-slate-800 leading-tight line-clamp-2">{item.product_name}</p>

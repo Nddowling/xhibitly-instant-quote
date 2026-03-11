@@ -143,7 +143,7 @@ function clamp(v, lo = 0, hi = 1) { return Math.max(lo, Math.min(hi, v)); }
 
 function getImageUrl(p) {
   if (!p) return null;
-  let url = p.image_cached_url || p.image_url || p.thumbnail_url;
+  let url = p.primary_image_url || p.image_cached_url || p.image_url || p.thumbnail_url;
   if (!url) return null;
   
   if (url.startsWith('http') || url.startsWith('data:')) return url;
@@ -944,9 +944,13 @@ export default function CatalogQuote() {
       });
     } else {
       let unitPrice = price;
-      if (!unitPrice) {
+      let resolvedImageUrl = imageUrl;
+      if (!unitPrice || !resolvedImageUrl) {
         const prods = await base44.entities.Product.filter({ sku });
-        if (prods?.length > 0) unitPrice = prods[0].base_price || 0;
+        if (prods?.length > 0) {
+          unitPrice = unitPrice || prods[0].base_price || 0;
+          resolvedImageUrl = resolvedImageUrl || getImageUrl(prods[0]);
+        }
       }
       await base44.entities.LineItem.create({
         order_id: activeOrder.id,
@@ -956,6 +960,7 @@ export default function CatalogQuote() {
         quantity: 1,
         unit_price: parseFloat((unitPrice || 0).toFixed(2)),
         total_price: parseFloat((unitPrice || 0).toFixed(2)),
+        image_url: resolvedImageUrl || '',
       });
     }
     refreshLineItems();
