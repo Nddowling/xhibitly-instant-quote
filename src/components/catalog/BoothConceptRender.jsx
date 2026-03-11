@@ -26,10 +26,32 @@ function getGridCols(boothW, itemCount) {
   return Math.min(itemCount, 3);
 }
 
+// ─── Booth type spatial descriptions for DALL-E accuracy
+function boothLayoutDescription(boothW, boothD, boothType) {
+  const type = (boothType || 'Inline').toLowerCase();
+  if (type === 'island') {
+    return `${boothW}x${boothD} foot island booth — open on all four sides with no back wall, products arranged around a central structure, visible from every aisle direction, wide open floor plan ${boothW} feet wide by ${boothD} feet deep`;
+  }
+  if (type === 'corner') {
+    return `${boothW}x${boothD} foot corner booth — two open sides facing two aisles meeting at a corner, back wall on two sides forming an L-shape, ${boothW} feet across the front aisle face`;
+  }
+  // Default: inline
+  return `${boothW}x${boothD} foot inline booth — single continuous back wall spanning the full ${boothW} feet in width, ${boothD} feet deep from back wall to aisle, open front facing the aisle`;
+}
+
+function aspectRatioDirective(boothW, boothD) {
+  const ratio = boothW / boothD;
+  if (ratio >= 2) return `ultra-wide panoramic composition, extreme horizontal perspective emphasizing the full ${boothW}-foot width, wide-angle lens view, the back wall must span the ENTIRE width of the image from left edge to right edge`;
+  if (ratio >= 1.5) return `wide landscape composition emphasizing horizontal span, the ${boothW}-foot back wall stretches fully across the frame`;
+  return `square-ish composition showing the ${boothW}x${boothD} foot booth from a slightly elevated front angle`;
+}
+
 // ─── Step 1: Claude Vision analyzes product photos → writes the perfect DALL-E prompt
 async function buildRenderingPrompt(order, lineItems) {
   const { w: boothW, d: boothD } = parseBoothSize(order?.booth_size);
   const boothType = order?.booth_type || 'Inline';
+  const layoutDesc = boothLayoutDescription(boothW, boothD, boothType);
+  const aspectDirective = aspectRatioDirective(boothW, boothD);
 
   const productImages = lineItems
     .map(item => resolveProductImage(item))
@@ -41,23 +63,31 @@ async function buildRenderingPrompt(order, lineItems) {
   ).join('\n');
 
   const response = await base44.integrations.Core.InvokeLLM({
-    prompt: `You are a trade show exhibit designer creating a photorealistic 3D rendering brief.
+    prompt: `You are a trade show exhibit designer creating a photorealistic 3D rendering brief for a DALL-E image generator.
 
-I'm showing you ${productImages.length} product photos from the Orbus trade show display catalog. These are the exact products a client has ordered for their booth:
+I'm showing you ${productImages.length} product photos from the Orbus trade show display catalog. These are the EXACT products ordered:
 
 ${productList}
 
-Booth specs: ${boothW}' × ${boothD}' ${boothType} configuration
+BOOTH SPECS — this is critical for accurate spatial representation:
+- Configuration: ${layoutDesc}
+- Booth type: ${boothType}
+- Total footprint: ${boothW} feet wide × ${boothD} feet deep
 
-Study each product photo carefully and write a single, highly detailed image generation prompt that will produce a photorealistic 3D rendering of this complete booth setup. Your prompt must:
+Study each product photo and write a single detailed DALL-E image generation prompt. Your prompt MUST include all of these elements:
 
-- Describe each product with specific visual details you can see in the photos (shape, material, fabric tension system, frame style, counter design, lighting fixtures, etc.)
-- Specify realistic arrangement: where each item sits in a ${boothW}x${boothD} ${boothType} booth (back wall displays at rear, counters/stands in front areas, lighting overhead)
-- Set the scene: bright trade show hall, clean neutral gray carpet, soft overhead spotlights, white walls, professional exhibit environment
-- Style directive: architectural visualization, photorealistic 3D render, no people, clean brand-neutral displays with white/gray graphics
-- Image ratio: wide landscape view showing the full booth from a slightly elevated front-facing angle
+1. BOOTH DIMENSIONS & PERSPECTIVE: ${aspectDirective}. The rendering must accurately show the booth is ${boothW} feet wide — a ${boothW}x${boothD} booth is NOT a square box, it is ${boothW === boothD ? 'a perfect square' : `${boothW > boothD ? 'wider than it is deep' : 'deeper than it is wide'}, ${Math.max(boothW, boothD) / Math.min(boothW, boothD)}:1 ratio`}.
 
-Return ONLY the image generation prompt — no explanation, no labels, just the prompt text.`,
+2. PRODUCTS WITH GRAPHICS: For each product you see in the photos, describe:
+   - The physical structure (frame type, fabric tension system, counter shape, stand mechanism)
+   - The GRAPHIC PANELS as shown — describe the colors, patterns, design style visible on the display graphics in the product photo (even if they are sample/demo graphics, describe them so the render shows displays with actual printed graphics, not blank white panels)
+   - Exact placement in the booth space
+
+3. SCENE: Bright professional trade show exhibition hall, clean medium-gray carpet, overhead track lighting with warm spotlights illuminating the booth, white/cream pipe-and-drape background on walls, neighboring booth frames barely visible at edges.
+
+4. RENDER STYLE: Photorealistic architectural visualization, 3D render, professional product photography lighting, high detail, no people, shot from eye-level slightly elevated (about 6 feet high), centered on the booth.
+
+Return ONLY the image generation prompt — no explanation, no preamble, just the prompt.`,
     file_urls: productImages,
     model: 'claude_sonnet_4_6',
     response_type: 'text',
