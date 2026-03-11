@@ -163,13 +163,11 @@ export default function SalesDashboard() {
   };
 
   // Calculate metrics
-  const todayProspects = orders.filter(o => {
-    const followUp = o.follow_up_date ? new Date(o.follow_up_date) : null;
-    const today = new Date();
-    return followUp && 
-           followUp.toDateString() === today.toDateString() &&
-           ['Pending', 'Contacted', 'Quoted', 'Negotiating'].includes(o.status);
-  });
+  const todayStr = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD in local time
+  const todayProspects = orders.filter(o =>
+    o.follow_up_date === todayStr &&
+    ['Pending', 'Contacted', 'Quoted', 'Negotiating'].includes(o.status)
+  );
 
   const activeOpportunities = orders.filter(o => 
     ['Pending', 'Contacted', 'Quoted', 'Negotiating'].includes(o.status)
