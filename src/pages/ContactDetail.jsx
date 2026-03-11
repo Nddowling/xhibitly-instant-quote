@@ -112,9 +112,9 @@ export default function ContactDetail() {
                     </CardDescription>
                   </div>
                 </div>
-                <Button onClick={handleNewQuote} className="bg-[#e2231a] hover:bg-[#b01b13]">
+                <Button onClick={() => navigate(createPageUrl('CatalogQuote'))} className="bg-[#e2231a] hover:bg-[#b01b13]">
                   <Plus className="w-4 h-4 mr-2" />
-                  New Quote
+                  Catalog Quote
                 </Button>
               </div>
             </CardHeader>
