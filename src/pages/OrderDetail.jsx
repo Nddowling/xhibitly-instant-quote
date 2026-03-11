@@ -89,6 +89,9 @@ export default function OrderDetail() {
             <TabsTrigger value="details" className="data-[state=active]:bg-[#e2231a] data-[state=active]:text-white">
               Details
             </TabsTrigger>
+            <TabsTrigger value="followup" className="data-[state=active]:bg-[#e2231a] data-[state=active]:text-white">
+              Follow-Up
+            </TabsTrigger>
             <TabsTrigger value="related" className="data-[state=active]:bg-[#e2231a] data-[state=active]:text-white">
               Related
             </TabsTrigger>
