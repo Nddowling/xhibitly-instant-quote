@@ -5,6 +5,7 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { PAGE_PRODUCTS, MAX_PAGE, SKU_TO_PAGE } from '@/data/catalogPageMapping';
+import { SKU_TO_IMAGE } from '@/data/skuImageMap';
 import {
   ChevronLeft, ChevronRight, Plus, Minus, X, ShoppingCart,
   FileText, Search, Loader2, ImageOff, Package, Edit2, Save,
@@ -209,30 +210,21 @@ function useProductCache() {
         }
       }
 
-      // Try Supabase storage for image if no image URL on the entity
+      // Ensure image URL — use real product photo from static map first
       if (prod && !prod.primary_image_url && !prod.image_cached_url && !prod.image_url) {
-        try {
-          const imgRes = await base44.functions.invoke('listSupabaseAssets', { path: `products/${sku}` });
-          if (imgRes.data?.files?.length > 0) {
-            const imgFile = imgRes.data.files.find(f => f.name.match(/\.(png|jpe?g|gif|webp)$/i));
-            if (imgFile) prod.image_url = imgFile.publicUrl;
-          }
-          if (!prod.image_url) {
-            const imgRes2 = await base44.functions.invoke('listSupabaseAssets', { path: `products/${sku}/image` });
-            if (imgRes2.data?.files?.length > 0) {
-              const imgFile = imgRes2.data.files.find(f => f.name.match(/\.(png|jpe?g|gif|webp)$/i));
-              if (imgFile) prod.image_url = imgFile.publicUrl;
-            }
-          }
-        } catch { /* no image in storage */ }
-
-        // Final fallback: use the catalog page image (always available in Supabase)
-        if (!prod.image_url) {
+        // 1. Real product photo (from products.json / Supabase products/ folder)
+        if (SKU_TO_IMAGE[sku]) {
+          prod.image_url = SKU_TO_IMAGE[sku];
+        } else {
+          // 2. Last resort: catalog page image
           const printPage = SKU_TO_PAGE[sku];
           if (printPage) {
             prod.image_url = pageImageUrl(printPage);
           }
         }
+      } else if (prod && !prod.image_url && SKU_TO_IMAGE[sku]) {
+        // primary_image_url or image_cached_url exists but image_url empty — fill it
+        prod.image_url = prod.primary_image_url || prod.image_cached_url || SKU_TO_IMAGE[sku];
       }
 
       cache.current[sku] = prod;

@@ -3,18 +3,12 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { X, Plus, Minus, ShoppingCart, FileText, Package } from 'lucide-react';
 import { SKU_TO_PAGE } from '@/data/catalogPageMapping';
+import { SKU_TO_IMAGE } from '@/data/skuImageMap';
 
 const SUPABASE_URL = 'https://xpgvpzbzmkubahyxwipk.supabase.co/storage/v1/object/public/orbus-assets';
 
-function catalogPageThumb(sku) {
-  const page = SKU_TO_PAGE[sku];
-  if (!page) return null;
-  const pdfPage = page + 2;
-  return `${SUPABASE_URL}/catalog/pages/page-${String(pdfPage).padStart(3, '0')}.jpg`;
-}
-
 function getThumbUrl(item, productCache) {
-  // 1. Stored image_url on the line item (if Base44 schema has it)
+  // 1. Stored image_url on the line item
   if (item.image_url) return item.image_url;
   // 2. From product cache (populated by CatalogQuote's fetchProduct)
   const cached = productCache?.[item.sku];
@@ -22,8 +16,12 @@ function getThumbUrl(item, productCache) {
     const url = cached.primary_image_url || cached.image_cached_url || cached.image_url || cached.thumbnail_url;
     if (url) return url;
   }
-  // 3. Catalog page image (always in Supabase)
-  return catalogPageThumb(item.sku);
+  // 3. Real product photo — 344 products mapped from products.json
+  if (SKU_TO_IMAGE[item.sku]) return SKU_TO_IMAGE[item.sku];
+  // 4. Catalog page as last resort
+  const page = SKU_TO_PAGE[item.sku];
+  if (page) return `${SUPABASE_URL}/catalog/pages/page-${String(page + 2).padStart(3, '0')}.jpg`;
+  return null;
 }
 
 function fmt(n) {
