@@ -225,7 +225,7 @@ export default function Contacts() {
               </p>
               {!searchQuery && (
                 <Button
-                  onClick={() => navigate(createPageUrl('SalesQuoteStart'))}
+                  onClick={() => navigate(createPageUrl('CatalogQuote'))}
                   className="bg-[#e2231a] hover:bg-[#b01b13]"
                 >
                   <Plus className="w-4 h-4 mr-2" />
