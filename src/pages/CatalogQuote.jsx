@@ -783,12 +783,12 @@ function VariantPicker({ spot, products, fetchProduct, onAdd, onClose, hasSessio
   useEffect(() => {
     if (skus.length === 1 && hasSession) {
       const p = products[skus[0]];
-      // Wait until product is loaded (not null placeholder)
       if (p !== null && p !== undefined) {
         onAdd({ sku: skus[0], name: p?.name || spot.name, price: p?.base_price, imageUrl: getImageUrl(p) });
         onClose();
       }
     }
+    // if no session, fall through to render the picker UI below
   }, [products[skus[0]]]);
 
   if (skus.length === 1 && hasSession) {
