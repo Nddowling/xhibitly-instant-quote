@@ -1224,6 +1224,112 @@ export default function CatalogQuote() {
 
 
 
+        {/* LEFT: Floating Edit Toolbar */}
+        <div className="relative flex-shrink-0">
+          {!editMode ? (
+            <div className="flex flex-col items-center gap-1 p-1.5 h-full bg-white border-r border-slate-200">
+              <button
+                onClick={() => setEditMode(true)}
+                title="Edit Hotspots"
+                className="flex flex-col items-center gap-1 p-2.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-all group"
+              >
+                <Edit2 className="w-4 h-4" />
+                <span className="text-[9px] font-medium leading-none">Edit</span>
+              </button>
+              <button
+                onClick={refreshFromDb}
+                title="Refresh from DB"
+                className="flex flex-col items-center gap-1 p-2.5 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-all"
+              >
+                <RefreshCw className="w-4 h-4" />
+                <span className="text-[9px] font-medium leading-none">Sync</span>
+              </button>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center gap-1 p-1.5 h-full bg-white border-r border-slate-200 w-14">
+              <div className="w-full h-px bg-slate-100 my-1" />
+
+              <button
+                onClick={() => setAddingHotspot(a => !a)}
+                title={addingHotspot ? 'Drawing mode active' : 'Draw hotspot box'}
+                className={`flex flex-col items-center gap-1 p-2.5 rounded-lg w-full transition-all
+                  ${addingHotspot ? 'bg-green-500 text-white' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-700'}`}
+              >
+                <Plus className="w-4 h-4" />
+                <span className="text-[9px] font-medium leading-none">{addingHotspot ? 'Draw' : 'Add'}</span>
+              </button>
+
+              {isEdited && (
+                <button
+                  onClick={resetPageHotspots}
+                  title="Reset page hotspots"
+                  className="flex flex-col items-center gap-1 p-2.5 rounded-lg w-full text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  <span className="text-[9px] font-medium leading-none">Reset</span>
+                </button>
+              )}
+
+              <button
+                onClick={rerunWithClaude}
+                disabled={isRerunning}
+                title="Re-run AI detection"
+                className="flex flex-col items-center gap-1 p-2.5 rounded-lg w-full text-purple-500 hover:bg-purple-50 hover:text-purple-700 disabled:opacity-40 transition-all"
+              >
+                {isRerunning ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
+                <span className="text-[9px] font-medium leading-none">AI</span>
+              </button>
+
+              <button
+                onClick={refreshFromDb}
+                title="Sync from database"
+                className="flex flex-col items-center gap-1 p-2.5 rounded-lg w-full text-blue-500 hover:bg-blue-50 hover:text-blue-700 transition-all"
+              >
+                <RefreshCw className="w-4 h-4" />
+                <span className="text-[9px] font-medium leading-none">Sync</span>
+              </button>
+
+              <button
+                onClick={exportHotspots}
+                title="Export JSON"
+                className="flex flex-col items-center gap-1 p-2.5 rounded-lg w-full text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-all"
+              >
+                <Download className="w-4 h-4" />
+                <span className="text-[9px] font-medium leading-none">Export</span>
+              </button>
+
+              <button
+                onClick={saveToDb}
+                title="Save to database"
+                className="flex flex-col items-center gap-1 p-2.5 rounded-lg w-full text-green-600 hover:bg-green-50 transition-all"
+              >
+                <Save className="w-4 h-4" />
+                <span className="text-[9px] font-medium leading-none">Save</span>
+              </button>
+
+              <button
+                onClick={() => shiftAllPageNumbers(-2)}
+                title="Fix -2 page offset"
+                className="flex flex-col items-center gap-1 p-2.5 rounded-lg w-full text-orange-500 hover:bg-orange-50 hover:text-orange-700 transition-all"
+              >
+                <span className="text-[11px] font-black leading-none">-2</span>
+                <span className="text-[9px] font-medium leading-none">Offset</span>
+              </button>
+
+              <div className="flex-1" />
+
+              <button
+                onClick={() => { setEditMode(false); setAddingHotspot(false); }}
+                title="Close edit mode"
+                className="flex flex-col items-center gap-1 p-2.5 rounded-lg w-full bg-blue-600 text-white hover:bg-blue-700 transition-all mb-1"
+              >
+                <X className="w-4 h-4" />
+                <span className="text-[9px] font-medium leading-none">Done</span>
+              </button>
+            </div>
+          )}
+        </div>
+
         {/* CENTER: Catalog Page */}
         <div className="flex-1 overflow-auto p-4 flex justify-center">
           <div className="relative w-full max-w-2xl">
