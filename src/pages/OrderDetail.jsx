@@ -111,6 +111,10 @@ export default function OrderDetail() {
             )}
           </TabsContent>
 
+          <TabsContent value="followup">
+            <FollowUpSection order={order} />
+          </TabsContent>
+
           <TabsContent value="related">
             <RelatedTab order={order} formatPrice={formatPrice} />
           </TabsContent>
