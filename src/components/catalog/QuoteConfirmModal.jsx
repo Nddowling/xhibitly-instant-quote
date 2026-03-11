@@ -11,7 +11,6 @@ function fmt(n) {
 
 export default function QuoteConfirmModal({ order, lineItems, onClose, isPreview = false }) {
   const [copied, setCopied] = useState(false);
-  const [showConcept, setShowConcept] = useState(false);
 
   const shareUrl = order?.share_token
     ? `${window.location.origin}/QuoteView?token=${order.share_token}`
