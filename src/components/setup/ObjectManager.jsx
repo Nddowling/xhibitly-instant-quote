@@ -110,11 +110,9 @@ export default function ObjectManager() {
                 <p className="text-sm text-slate-500 font-mono mt-0.5">{selectedObject.api_name}</p>
                 {selectedObject.description && <p className="text-sm text-slate-500 mt-1">{selectedObject.description}</p>}
               </div>
-              {selectedObject.is_custom && (
-                <Button size="sm" onClick={() => setShowNewField(true)} className="bg-[#e2231a] hover:bg-[#c41e17] text-white gap-1">
-                  <Plus className="w-3.5 h-3.5" /> New Field
-                </Button>
-              )}
+              <Button size="sm" onClick={() => setShowNewField(true)} className="bg-[#e2231a] hover:bg-[#c41e17] text-white gap-1">
+                <Plus className="w-3.5 h-3.5" /> New Field
+              </Button>
             </div>
 
             <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
