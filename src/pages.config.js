@@ -49,7 +49,6 @@
  */
 import BrandVerification from './pages/BrandVerification';
 import CatalogImport from './pages/CatalogImport';
-import CatalogQuote from './pages/CatalogQuote';
 import Confirmation from './pages/Confirmation';
 import ContactDetail from './pages/ContactDetail';
 import Contacts from './pages/Contacts';
@@ -58,27 +57,27 @@ import DesignConfigurator from './pages/DesignConfigurator';
 import Home from './pages/Home';
 import Landing from './pages/Landing';
 import Loading from './pages/Loading';
-import OrderDetail from './pages/OrderDetail';
 import OrderHistory from './pages/OrderHistory';
 import Pipeline from './pages/Pipeline';
 import Product3DManager from './pages/Product3DManager';
 import ProductDetail from './pages/ProductDetail';
 import QuoteRequest from './pages/QuoteRequest';
-import QuoteView from './pages/QuoteView';
+import RecentQuotes from './pages/RecentQuotes';
 import Results from './pages/Results';
 import SalesDashboard from './pages/SalesDashboard';
 import SalesQuoteStart from './pages/SalesQuoteStart';
 import Settings from './pages/Settings';
 import StudentHome from './pages/StudentHome';
 import UserTypeSelection from './pages/UserTypeSelection';
-import RecentQuotes from './pages/RecentQuotes';
+import OrderDetail from './pages/OrderDetail';
+import QuoteView from './pages/QuoteView';
+import CatalogQuote from './pages/CatalogQuote';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "BrandVerification": BrandVerification,
     "CatalogImport": CatalogImport,
-    "CatalogQuote": CatalogQuote,
     "Confirmation": Confirmation,
     "ContactDetail": ContactDetail,
     "Contacts": Contacts,
@@ -87,20 +86,21 @@ export const PAGES = {
     "Home": Home,
     "Landing": Landing,
     "Loading": Loading,
-    "OrderDetail": OrderDetail,
     "OrderHistory": OrderHistory,
     "Pipeline": Pipeline,
     "Product3DManager": Product3DManager,
     "ProductDetail": ProductDetail,
     "QuoteRequest": QuoteRequest,
-    "QuoteView": QuoteView,
+    "RecentQuotes": RecentQuotes,
     "Results": Results,
     "SalesDashboard": SalesDashboard,
     "SalesQuoteStart": SalesQuoteStart,
     "Settings": Settings,
     "StudentHome": StudentHome,
     "UserTypeSelection": UserTypeSelection,
-    "RecentQuotes": RecentQuotes,
+    "OrderDetail": OrderDetail,
+    "QuoteView": QuoteView,
+    "CatalogQuote": CatalogQuote,
 }
 
 export const pagesConfig = {

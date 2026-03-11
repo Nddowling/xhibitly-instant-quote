@@ -1196,6 +1196,38 @@ export default function CatalogQuote() {
 
   const isEdited = !!editedHotspots[currentPage];
 
+  const handleExitEditMode = async () => {
+    const editedPages = Object.keys(editedHotspots);
+    if (editedPages.length > 0) {
+      setIsSyncing(true);
+      try {
+        for (const pageStr of editedPages) {
+          const page = parseInt(pageStr);
+          const spots = editedHotspots[page];
+          const existing = await base44.entities.CatalogHotspot.filter({ page_number: page });
+          if (existing.length > 0) {
+            await base44.entities.CatalogHotspot.update(existing[0].id, { hotspots: spots });
+          } else {
+            await base44.entities.CatalogHotspot.create({ page_number: page, hotspots: spots });
+          }
+        }
+        const dbData = await loadAllDbHotspots();
+        setDbHotspots(dbData);
+        setEditedHotspots({});
+        localStorage.removeItem(LS_KEY);
+        setSyncMsg(`Auto-saved ${editedPages.length} page${editedPages.length > 1 ? 's' : ''} to database`);
+        setTimeout(() => setSyncMsg(null), 3000);
+      } catch (e) {
+        setSyncMsg('Auto-save failed — your edits are still in local storage');
+        setTimeout(() => setSyncMsg(null), 5000);
+      } finally {
+        setIsSyncing(false);
+      }
+    }
+    setEditMode(false);
+    setAddingHotspot(false);
+  };
+
 
 
   return (
