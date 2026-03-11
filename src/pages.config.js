@@ -57,11 +57,13 @@ import DesignConfigurator from './pages/DesignConfigurator';
 import Home from './pages/Home';
 import Landing from './pages/Landing';
 import Loading from './pages/Loading';
+import OrderDetail from './pages/OrderDetail';
 import OrderHistory from './pages/OrderHistory';
 import Pipeline from './pages/Pipeline';
 import Product3DManager from './pages/Product3DManager';
 import ProductDetail from './pages/ProductDetail';
 import QuoteRequest from './pages/QuoteRequest';
+import QuoteView from './pages/QuoteView';
 import RecentQuotes from './pages/RecentQuotes';
 import Results from './pages/Results';
 import SalesDashboard from './pages/SalesDashboard';
@@ -69,8 +71,6 @@ import SalesQuoteStart from './pages/SalesQuoteStart';
 import Settings from './pages/Settings';
 import StudentHome from './pages/StudentHome';
 import UserTypeSelection from './pages/UserTypeSelection';
-import OrderDetail from './pages/OrderDetail';
-import QuoteView from './pages/QuoteView';
 import CatalogQuote from './pages/CatalogQuote';
 import __Layout from './Layout.jsx';
 
@@ -86,11 +86,13 @@ export const PAGES = {
     "Home": Home,
     "Landing": Landing,
     "Loading": Loading,
+    "OrderDetail": OrderDetail,
     "OrderHistory": OrderHistory,
     "Pipeline": Pipeline,
     "Product3DManager": Product3DManager,
     "ProductDetail": ProductDetail,
     "QuoteRequest": QuoteRequest,
+    "QuoteView": QuoteView,
     "RecentQuotes": RecentQuotes,
     "Results": Results,
     "SalesDashboard": SalesDashboard,
@@ -98,8 +100,6 @@ export const PAGES = {
     "Settings": Settings,
     "StudentHome": StudentHome,
     "UserTypeSelection": UserTypeSelection,
-    "OrderDetail": OrderDetail,
-    "QuoteView": QuoteView,
     "CatalogQuote": CatalogQuote,
 }
 
