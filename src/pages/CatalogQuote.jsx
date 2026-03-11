@@ -931,6 +931,8 @@ export default function CatalogQuote() {
   const [activeOrder, setActiveOrder] = useState(null);
   const [lineItems, setLineItems] = useState([]);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [latestPricingResult, setLatestPricingResult] = useState(null);
+  const [generatedPromos, setGeneratedPromos] = useState([]);
 
   useEffect(() => {
     base44.auth.me().then(u => { setUser(u); setShowSessionModal(true); }).catch(() => setShowSessionModal(true));
