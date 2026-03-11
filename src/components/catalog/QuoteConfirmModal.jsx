@@ -32,9 +32,21 @@ export default function QuoteConfirmModal({ order, lineItems, onClose, isPreview
       Total: i.total_price || 0,
     }));
     const grandTotal = lineItems.reduce((s, i) => s + (i.total_price || 0), 0);
-    rows.push({ SKU: '', 'Product Name': '', Category: '', Qty: '', 'Unit Price': 'TOTAL', Total: grandTotal });
+    rows.push({ SKU: '', 'Product Name': 'GRAND TOTAL', Category: '', Qty: '', 'Unit Price': '', Total: grandTotal });
 
     const ws = XLSX.utils.json_to_sheet(rows);
+    const acctFmt = '_($* #,##0.00_);_($* (#,##0.00);_($* "-"??_);_(@_)';
+    const range = XLSX.utils.decode_range(ws['!ref']);
+    for (let R = range.s.r + 1; R <= range.e.r; R++) {
+      const qtyCell = ws[XLSX.utils.encode_cell({ r: R, c: 3 })];
+      if (qtyCell && typeof qtyCell.v === 'number') qtyCell.z = '0';
+      const upCell = ws[XLSX.utils.encode_cell({ r: R, c: 4 })];
+      if (upCell && typeof upCell.v === 'number') upCell.z = acctFmt;
+      const totCell = ws[XLSX.utils.encode_cell({ r: R, c: 5 })];
+      if (totCell && typeof totCell.v === 'number') totCell.z = acctFmt;
+    }
+    ws['!cols'] = [{ wch: 14 }, { wch: 40 }, { wch: 18 }, { wch: 6 }, { wch: 14 }, { wch: 14 }];
+
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, `Quote ${order?.reference_number || ''}`);
     XLSX.writeFile(wb, `Xhibitly_Quote_${order?.reference_number || 'export'}.xlsx`);
