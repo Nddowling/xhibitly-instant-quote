@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
-import { LogOut, FileText, Users, Menu, X, LayoutDashboard, Settings as SettingsIcon, ArrowLeft, BookOpen, ClipboardList } from 'lucide-react';
+import { LogOut, FileText, Users, Menu, X, LayoutDashboard, Settings as SettingsIcon, ArrowLeft, BookOpen, ClipboardList, Tag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ErrorBoundary from './components/ErrorBoundary';
 
