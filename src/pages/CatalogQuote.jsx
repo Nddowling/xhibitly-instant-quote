@@ -1272,7 +1272,7 @@ export default function CatalogQuote() {
 
         {/* Page nav */}
         <div className="flex-1 flex items-center justify-center gap-2">
-          <button onClick={() => goToPage(currentPage - 1)} disabled={currentPage <= 1}
+          <button onClick={() => goToPage(currentPage - 1)} disabled={currentPage <= 0}
             className="p-1.5 rounded-lg hover:bg-slate-100 disabled:opacity-30 text-slate-600">
             <ChevronLeft className="w-5 h-5" />
           </button>
