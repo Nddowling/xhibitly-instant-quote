@@ -1301,53 +1301,7 @@ export default function CatalogQuote() {
       {/* ── 3-column body ── */}
       <div className="flex-1 flex overflow-hidden">
 
-        {/* LEFT: Live Quote Totaler */}
-        <div className="w-64 flex-shrink-0 bg-white border-r border-slate-200 flex flex-col items-center justify-center p-6 relative">
-          <div className="absolute top-0 left-0 right-0 p-4 border-b border-slate-100 bg-slate-50">
-            <h2 className="text-xs font-bold text-slate-500 uppercase tracking-wide text-center">Order Total</h2>
-            {customerName && <p className="text-[11px] text-slate-500 mt-0.5 truncate text-center">{customerName}</p>}
-          </div>
 
-          <div className="mt-12 text-center w-full">
-            <div className="text-4xl font-black text-slate-900 mb-2">
-              {subtotal > 0 ? fmt(subtotal) : hasQuoteItems ? 'TBD' : '$0.00'}
-            </div>
-            <p className="text-sm text-slate-500 mb-6">{itemCount} item{itemCount !== 1 ? 's' : ''}</p>
-
-            {orderItems.length > 0 && (
-              <div className="text-left space-y-1 mb-6 max-h-40 overflow-y-auto">
-                {orderItems.map(item => (
-                  <div key={item.id} className="flex items-center gap-1.5 py-1 border-b border-slate-50 last:border-0">
-                    <div className="flex-1 min-w-0">
-                      <p className="text-[10px] font-medium text-slate-700 truncate">{item.name}</p>
-                      <p className="text-[9px] text-slate-400 font-mono">{item.sku} x{item.qty}</p>
-                    </div>
-                    <p className="text-[10px] font-bold text-slate-800 flex-shrink-0">
-                      {item.price ? fmt(item.price * item.qty) : '—'}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            <Button
-              size="lg"
-              className="w-full bg-[#e2231a] hover:bg-[#b01b13] text-white py-6 text-base font-bold shadow-lg"
-              disabled={orderItems.length === 0 || isGenerating}
-              onClick={handleGenerateImage}
-            >
-              {isGenerating
-                ? <><Loader2 className="w-5 h-5 mr-2 animate-spin" />Generating...</>
-                : 'Generate Booth Concept'}
-            </Button>
-
-            {orderItems.length > 0 && (
-              <button onClick={() => setOrderItems([])} className="w-full text-xs text-slate-400 hover:text-red-500 transition-colors mt-4 py-2">
-                Clear all items
-              </button>
-            )}
-          </div>
-        </div>
 
         {/* CENTER: Catalog Page */}
         <div className="flex-1 overflow-auto p-4 flex justify-center">
