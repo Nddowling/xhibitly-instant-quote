@@ -1290,25 +1290,10 @@ export default function CatalogQuote() {
           )}
         </div>
 
-        {itemCount > 0 && (
-          <div className="flex items-center gap-2 flex-shrink-0">
-            <div className="flex items-center gap-1.5 bg-[#e2231a]/15 text-[#e2231a] px-3 py-1 rounded-full text-xs font-bold border border-[#e2231a]/30">
-              <ShoppingCart className="w-3.5 h-3.5" />
-              {itemCount}
-            </div>
-            <Button
-              size="sm"
-              onClick={() => {
-                sessionStorage.setItem('quoteBuilderData', JSON.stringify({
-                  items: orderItems.map(i => ({ id: i.id, name: i.name, sku: i.sku, qty: i.qty, price: i.price, imageUrl: i.imageUrl })),
-                  customerName,
-                }));
-                navigate(createPageUrl('QuoteBuilder'));
-              }}
-              className="bg-[#e2231a] hover:bg-[#b01b13] text-white text-xs h-8 gap-1.5"
-            >
-              Build Quote <ArrowRight className="w-3.5 h-3.5" />
-            </Button>
+        {lineItems.length > 0 && (
+          <div className="flex items-center gap-1.5 bg-[#e2231a]/15 text-[#e2231a] px-3 py-1 rounded-full text-xs font-bold border border-[#e2231a]/30 flex-shrink-0">
+            <ShoppingCart className="w-3.5 h-3.5" />
+            {lineItems.reduce((s, i) => s + (i.quantity || 0), 0)}
           </div>
         )}
       </div>
