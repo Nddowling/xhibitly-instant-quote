@@ -11,7 +11,7 @@ function fmt(n) {
   return '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
-export default function QuoteConfirmModal({ order, lineItems, onClose, isPreview = false }) {
+export default function QuoteConfirmModal({ order, lineItems, onClose, isPreview = false, generatedPromos = [], appliedRules = [] }) {
   const [copied, setCopied] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
