@@ -766,8 +766,8 @@ function NewHotspotForm({ pageProducts, productCache, autoDetecting, autoDetecte
 }
 
 // ─── Variant picker popup ─────────────────────────────────────────────────────
-function VariantPicker({ spot, products, fetchProduct, onAdd, onClose }) {
-  const skus = spot.groupedSkus || [spot.sku];
+function VariantPicker({ spot, products, fetchProduct, onAdd, onClose, hasSession, onStartSession }) {
+  const skus = spot.groupedSkus?.length > 0 ? spot.groupedSkus : [spot.sku];
 
   // Ensure all variant SKUs are fetched
   useEffect(() => {
@@ -775,7 +775,7 @@ function VariantPicker({ spot, products, fetchProduct, onAdd, onClose }) {
   }, [spot]);
 
   useEffect(() => {
-    if (skus.length === 1) {
+    if (skus.length === 1 && hasSession) {
       const p = products[skus[0]];
       // Wait until product is loaded (not null placeholder)
       if (p !== null && p !== undefined) {
@@ -804,10 +804,16 @@ function VariantPicker({ spot, products, fetchProduct, onAdd, onClose }) {
         <div className="flex items-center justify-between p-4 border-b border-slate-100">
           <div>
             <p className="text-sm font-bold text-slate-900">{spot.name}</p>
-            <p className="text-xs text-slate-500">Choose a size or variant</p>
+            <p className="text-xs text-slate-500">{skus.length > 1 ? 'Choose a size or variant' : 'Product details'}</p>
           </div>
           <button onClick={onClose} className="text-slate-400 hover:text-slate-600"><X className="w-4 h-4" /></button>
         </div>
+        {!hasSession && (
+          <div className="px-4 py-3 bg-amber-50 border-b border-amber-100 flex items-center justify-between gap-3">
+            <p className="text-xs text-amber-700">Start a quote session to add items.</p>
+            <button onClick={onStartSession} className="text-xs font-bold text-[#e2231a] hover:underline whitespace-nowrap">Start Session →</button>
+          </div>
+        )}
         <div className="overflow-y-auto p-3 space-y-1.5">
           {skus.map(sku => {
             const p = products[sku];
@@ -815,7 +821,7 @@ function VariantPicker({ spot, products, fetchProduct, onAdd, onClose }) {
             return (
               <button
                 key={sku}
-                onClick={() => { onAdd({ sku, name: p?.name || sku, price: p?.base_price, imageUrl: imgSrc }); onClose(); }}
+                onClick={() => { if (hasSession) { onAdd({ sku, name: p?.name || sku, price: p?.base_price, imageUrl: imgSrc }); onClose(); } else { onStartSession(); } }}
                 className="w-full flex items-center gap-3 p-2.5 rounded-xl border border-slate-200 hover:border-[#e2231a]/40 hover:bg-[#e2231a]/5 transition-all text-left group"
               >
                 <div className="w-14 h-14 flex-shrink-0 rounded-lg bg-slate-100 overflow-hidden flex items-center justify-center border border-slate-100">
@@ -830,7 +836,7 @@ function VariantPicker({ spot, products, fetchProduct, onAdd, onClose }) {
                   <p className="text-[10px] text-slate-400 mt-0.5 font-mono">{sku}</p>
                   {p?.base_price && <p className="text-xs font-bold text-[#e2231a] mt-0.5">{fmt(p.base_price)}</p>}
                 </div>
-                <Plus className="w-4 h-4 text-[#e2231a] opacity-0 group-hover:opacity-100 flex-shrink-0" />
+                {hasSession && <Plus className="w-4 h-4 text-[#e2231a] opacity-0 group-hover:opacity-100 flex-shrink-0" />}
               </button>
             );
           })}
@@ -1071,14 +1077,18 @@ export default function CatalogQuote() {
   // Hotspot clicked (read mode)
   const handleHotspotClick = async (spot) => {
     setSelectedHotspot(spot);
-    const skus = spot.groupedSkus || [spot.sku];
-    if (skus.length === 1) {
+    const skus = spot.groupedSkus?.length > 0 ? spot.groupedSkus : [spot.sku];
+    // Always show variant picker so the user can see the product and add to quote
+    // (for single-SKU spots the picker auto-adds; for multi-SKU it shows options)
+    if (skus.length === 1 && activeOrder) {
+      // Single SKU + active session: add immediately
       const sku = skus[0];
       await fetchProduct(sku);
       const p = productCache[sku];
       await handleAddToQuote({ sku, name: p?.name || spot.name, price: p?.base_price, imageUrl: getImageUrl(p) });
       setSelectedHotspot(null);
     } else {
+      // Multi-SKU OR no active session: show picker
       setShowVariants(true);
     }
   };
@@ -1158,7 +1168,7 @@ export default function CatalogQuote() {
     <div className="h-screen flex flex-col bg-slate-100 overflow-hidden">
       {/* Session Start Modal */}
       {showSessionModal && (
-        <SessionStartModal user={user} onComplete={handleSessionComplete} />
+        <SessionStartModal user={user} onComplete={handleSessionComplete} onDismiss={() => setShowSessionModal(false)} />
       )}
 
       {/* Quote Confirm Modal */}
@@ -1399,6 +1409,8 @@ export default function CatalogQuote() {
                     spot={selectedHotspot}
                     products={productCache}
                     fetchProduct={fetchProduct}
+                    hasSession={!!activeOrder}
+                    onStartSession={() => { setShowVariants(false); setSelectedHotspot(null); setShowSessionModal(true); }}
                     onAdd={(product) => { handleAddToQuote(product); setShowVariants(false); setSelectedHotspot(null); }}
                     onClose={() => { setShowVariants(false); setSelectedHotspot(null); }}
                   />

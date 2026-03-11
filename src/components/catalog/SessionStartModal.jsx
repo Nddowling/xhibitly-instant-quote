@@ -7,7 +7,7 @@ import { debounce } from 'lodash';
 
 const BOOTH_SIZES = ['10x10', '10x20', '20x20', '20x30', 'island'];
 
-export default function SessionStartModal({ onComplete, user }) {
+export default function SessionStartModal({ onComplete, onDismiss, user }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [selectedClient, setSelectedClient] = useState(null);
@@ -118,7 +118,14 @@ export default function SessionStartModal({ onComplete, user }) {
             <h2 className="text-base font-bold text-white">Start a Quote Session</h2>
             <p className="text-xs text-white/40 mt-0.5">Find or add a customer, then set show details</p>
           </div>
-          <div className="w-8 h-8 bg-[#e2231a] rounded-lg flex items-center justify-center text-white font-black text-xs">XQ</div>
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-[#e2231a] rounded-lg flex items-center justify-center text-white font-black text-xs">XQ</div>
+            {onDismiss && (
+              <button onClick={onDismiss} className="text-white/40 hover:text-white/80 transition-colors ml-1">
+                <X className="w-5 h-5" />
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="p-6 space-y-5 max-h-[80vh] overflow-y-auto">
