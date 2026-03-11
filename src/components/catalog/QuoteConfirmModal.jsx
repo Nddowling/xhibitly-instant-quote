@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { CheckCircle2, Link2, Download, X, FileText, ExternalLink, Send, Loader2 } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import BoothConceptRender from '@/components/catalog/BoothConceptRender';
+import PricingBreakdown from '@/components/pricing/PricingBreakdown';
 import { base44 } from '@/api/base44Client';
 
 function fmt(n) {
