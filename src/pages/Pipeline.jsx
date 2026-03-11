@@ -64,13 +64,11 @@ export default function Pipeline() {
             ['Pending', 'Contacted', 'Quoted', 'Negotiating'].includes(o.status)
           );
         } else if (view === 'followups') {
-          const today = new Date();
-          assignedOrders = assignedOrders.filter(o => {
-            const followUp = o.follow_up_date ? new Date(o.follow_up_date) : null;
-            return followUp && 
-                   followUp.toDateString() === today.toDateString() &&
-                   ['Pending', 'Contacted', 'Quoted', 'Negotiating'].includes(o.status);
-          });
+          const todayStr = new Date().toLocaleDateString('en-CA');
+          assignedOrders = assignedOrders.filter(o =>
+            o.follow_up_date === todayStr &&
+            ['Pending', 'Contacted', 'Quoted', 'Negotiating'].includes(o.status)
+          );
         } else if (view === 'wins') {
           assignedOrders = assignedOrders.filter(o => 
             o.status === 'Confirmed' && 
