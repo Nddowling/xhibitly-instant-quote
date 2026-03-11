@@ -34,7 +34,15 @@ export default function SalesDashboard() {
 
   useEffect(() => {
     loadDashboardData();
-    
+
+    // Real-time subscriptions: refresh when activities or orders change
+    const unsubActivity = base44.entities.Activity.subscribe(() => {
+      loadDashboardData();
+    });
+    const unsubOrder = base44.entities.Order.subscribe(() => {
+      loadDashboardData();
+    });
+
     // Pull-to-refresh handlers
     const handleTouchStart = (e) => {
       if (window.scrollY === 0) {
