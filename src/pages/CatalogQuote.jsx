@@ -525,7 +525,8 @@ function HotspotEditor({ pageNum, spots, onChange, pageProducts, productCache, a
       <img
         src={pageImageUrl(pageNum)}
         alt={`Page ${pageNum}`}
-        className="w-full h-auto rounded-lg shadow-2xl block"
+        className="block rounded-lg shadow-2xl"
+        style={{ maxHeight: 'calc(100vh - 130px)', width: 'auto', maxWidth: '100%' }}
         onLoad={() => setImgLoaded(true)}
         draggable={false}
       />
