@@ -8,9 +8,12 @@ import { PAGE_PRODUCTS, MAX_PAGE, SKU_TO_PAGE } from '@/data/catalogPageMapping'
 import {
   ChevronLeft, ChevronRight, Plus, Minus, X, ShoppingCart,
   FileText, Search, Loader2, ImageOff, Package, Edit2, Save,
-  Download, Trash2, RefreshCw, ArrowRight
+  Download, Trash2, RefreshCw
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import SessionStartModal from '@/components/catalog/SessionStartModal';
+import QuoteSidebar from '@/components/catalog/QuoteSidebar';
+import QuoteConfirmModal from '@/components/catalog/QuoteConfirmModal';
 
 // ─── Claude Vision: detect product within a specific bounding box ─────────────
 async function detectProductInBox(pageNum, box, supabaseUrl) {
