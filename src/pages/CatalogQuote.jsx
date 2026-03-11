@@ -1228,18 +1228,43 @@ export default function CatalogQuote() {
           </div>
         )}
 
-        <div className="flex items-center gap-1">
-          <input
-            type="text"
-            placeholder="Find SKU..."
-            value={searchSku}
-            onChange={e => setSearchSku(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && handleSkuSearch()}
-            className="text-sm border border-slate-200 rounded-lg px-3 py-1.5 w-32 focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30"
-          />
-          <button onClick={handleSkuSearch} className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-500">
-            <Search className="w-4 h-4" />
-          </button>
+        <div className="flex items-center gap-1 relative" ref={searchRef}>
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search name, SKU, category..."
+              value={searchSku}
+              onChange={e => handleProductSearch(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleSkuSearch()}
+              onFocus={() => searchResults.length > 0 && setShowSearchDropdown(true)}
+              onBlur={() => setTimeout(() => setShowSearchDropdown(false), 200)}
+              className="text-sm border border-slate-200 rounded-lg px-3 py-1.5 w-52 focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30"
+            />
+            <button onClick={handleSkuSearch} className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+              <Search className="w-3.5 h-3.5" />
+            </button>
+          </div>
+          {showSearchDropdown && (
+            <div className="absolute top-full left-0 mt-1 w-80 bg-white border border-slate-200 rounded-xl shadow-xl z-50 overflow-hidden max-h-72 overflow-y-auto">
+              {searchResults.map(p => (
+                <button
+                  key={p.id}
+                  onMouseDown={() => handleSearchResultClick(p)}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-slate-50 text-left border-b border-slate-100 last:border-0"
+                >
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-semibold text-slate-800 truncate">{p.name}</p>
+                    <p className="text-[10px] text-slate-400 font-mono">{p.sku} · {p.category}</p>
+                  </div>
+                  {(p.catalog_pages?.[0] || SKU_TO_PAGE[p.sku]) && (
+                    <span className="text-[10px] text-[#e2231a] font-bold flex-shrink-0">
+                      p.{p.catalog_pages?.[0] || SKU_TO_PAGE[p.sku]}
+                    </span>
+                  )}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Page nav */}
