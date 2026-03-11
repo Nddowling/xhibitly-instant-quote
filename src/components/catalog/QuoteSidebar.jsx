@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { X, Plus, Minus, ShoppingCart, FileText, Package } from 'lucide-react';
 import { SKU_TO_PAGE } from '@/data/catalogPageMapping';
 import { SKU_TO_IMAGE } from '@/data/skuImageMap';
+import QuotePricingPanel from '@/components/pricing/QuotePricingPanel';
 
 const SUPABASE_URL = 'https://xpgvpzbzmkubahyxwipk.supabase.co/storage/v1/object/public/orbus-assets';
 
@@ -35,9 +36,27 @@ function ProductThumb({ src }) {
   return <img src={src} alt="" className="w-full h-full object-contain p-0.5" onError={() => setError(true)} />;
 }
 
-export default function QuoteSidebar({ order, lineItems, onLineItemsChange, onCreateQuote, productCache }) {
-  const total = lineItems.reduce((s, i) => s + (i.total_price || 0), 0);
+export default function QuoteSidebar({ order, lineItems, onLineItemsChange, onCreateQuote, productCache, onPricingResult }) {
+  const [rules, setRules] = useState([]);
+  const [dealerSettings, setDealerSettings] = useState(null);
+  const [pricingResult, setPricingResult] = useState(null);
+  const total = pricingResult?.finalTotal || lineItems.reduce((s, i) => s + (i.total_price || 0), 0);
   const itemCount = lineItems.reduce((s, i) => s + (i.quantity || 0), 0);
+
+  useEffect(() => {
+    Promise.all([
+      base44.entities.PricingRule.filter({ is_active: true }),
+      base44.auth.me().then(u => base44.entities.DealerPricingSettings.filter({ user_id: u.id }))
+    ]).then(([r, s]) => {
+      setRules(r || []);
+      setDealerSettings(s?.[0] || null);
+    }).catch(() => {});
+  }, []);
+
+  const handlePricingResult = (result) => {
+    setPricingResult(result);
+    onPricingResult?.(result);
+  };
 
   const updateQty = async (item, delta) => {
     const newQty = Math.max(1, (item.quantity || 1) + delta);
