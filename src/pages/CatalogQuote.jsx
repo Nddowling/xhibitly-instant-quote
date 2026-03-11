@@ -1330,6 +1330,7 @@ export default function CatalogQuote() {
           lineItems={lineItems}
           onClose={() => setShowConfirmModal(false)}
           isPreview={!activeOrder.share_token}
+          generatedPromos={generatedPromos}
         />
       )}
 
