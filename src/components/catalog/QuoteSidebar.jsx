@@ -135,11 +135,22 @@ export default function QuoteSidebar({ order, lineItems, onLineItemsChange, onCr
         ))}
       </div>
 
+      {/* Pricing Panel */}
+      {order && (
+        <QuotePricingPanel
+          order={order}
+          lineItems={lineItems}
+          dealerSettings={dealerSettings}
+          rules={rules}
+          onPricingResult={handlePricingResult}
+        />
+      )}
+
       {/* Footer */}
       <div className="p-3 border-t border-slate-100 space-y-2">
         <div className="flex items-center justify-between">
-          <span className="text-xs text-slate-500">Subtotal</span>
-          <span className="text-sm font-black text-slate-900">{total > 0 ? fmt(total) : '—'}</span>
+          <span className="text-xs text-slate-500">{pricingResult ? 'Quote Total' : 'Subtotal'}</span>
+          <span className="text-sm font-black text-[#e2231a]">{total > 0 ? fmt(total) : '—'}</span>
         </div>
         <Button
           onClick={onCreateQuote}
