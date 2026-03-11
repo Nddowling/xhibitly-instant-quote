@@ -15,6 +15,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import SessionStartModal from '@/components/catalog/SessionStartModal';
 import QuoteSidebar from '@/components/catalog/QuoteSidebar';
 import QuoteConfirmModal from '@/components/catalog/QuoteConfirmModal';
+import { runPricingEngine, generatePromoCode } from '@/components/pricing/pricingEngine';
 
 // ─── Claude Vision: detect product within a specific bounding box ─────────────
 async function detectProductInBox(pageNum, box, supabaseUrl) {
