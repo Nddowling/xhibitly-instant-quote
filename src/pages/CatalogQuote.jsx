@@ -915,6 +915,9 @@ export default function CatalogQuote() {
   const [isRerunning, setIsRerunning] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncMsg, setSyncMsg] = useState(null);
+  const [searchResults, setSearchResults] = useState([]);
+  const [showSearchDropdown, setShowSearchDropdown] = useState(false);
+  const searchRef = useRef(null);
   const { cache: productCache, fetchProduct, tick } = useProductCache();
 
   // ── Session / Quote state ─────────────────────────────────────────────────

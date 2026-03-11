@@ -49,6 +49,7 @@
  */
 import BrandVerification from './pages/BrandVerification';
 import CatalogImport from './pages/CatalogImport';
+import CatalogQuote from './pages/CatalogQuote';
 import Confirmation from './pages/Confirmation';
 import ContactDetail from './pages/ContactDetail';
 import Contacts from './pages/Contacts';
@@ -63,20 +64,20 @@ import Pipeline from './pages/Pipeline';
 import Product3DManager from './pages/Product3DManager';
 import ProductDetail from './pages/ProductDetail';
 import QuoteRequest from './pages/QuoteRequest';
+import QuoteView from './pages/QuoteView';
 import Results from './pages/Results';
 import SalesDashboard from './pages/SalesDashboard';
+import SalesQuoteStart from './pages/SalesQuoteStart';
 import Settings from './pages/Settings';
 import StudentHome from './pages/StudentHome';
 import UserTypeSelection from './pages/UserTypeSelection';
-import QuoteView from './pages/QuoteView';
-import SalesQuoteStart from './pages/SalesQuoteStart';
-import CatalogQuote from './pages/CatalogQuote';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "BrandVerification": BrandVerification,
     "CatalogImport": CatalogImport,
+    "CatalogQuote": CatalogQuote,
     "Confirmation": Confirmation,
     "ContactDetail": ContactDetail,
     "Contacts": Contacts,
@@ -91,14 +92,13 @@ export const PAGES = {
     "Product3DManager": Product3DManager,
     "ProductDetail": ProductDetail,
     "QuoteRequest": QuoteRequest,
+    "QuoteView": QuoteView,
     "Results": Results,
     "SalesDashboard": SalesDashboard,
+    "SalesQuoteStart": SalesQuoteStart,
     "Settings": Settings,
     "StudentHome": StudentHome,
     "UserTypeSelection": UserTypeSelection,
-    "QuoteView": QuoteView,
-    "SalesQuoteStart": SalesQuoteStart,
-    "CatalogQuote": CatalogQuote,
 }
 
 export const pagesConfig = {
