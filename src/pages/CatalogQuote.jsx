@@ -176,7 +176,8 @@ async function loadAllDbHotspots() {
   try {
     const res = await base44.entities.CatalogHotspot.list('page_number', 500);
     const map = {};
-    res.forEach(item => { map[item.page_number] = item.hotspots; });
+    // Always store an array — null/undefined means "explicitly saved as empty"
+    res.forEach(item => { map[item.page_number] = Array.isArray(item.hotspots) ? item.hotspots : []; });
     return map;
   } catch { return {}; }
 }
