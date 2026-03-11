@@ -1206,7 +1206,7 @@ export default function CatalogQuote() {
       try {
         for (const pageStr of editedPages) {
           const page = parseInt(pageStr);
-          const spots = editedHotspots[page];
+          const spots = Array.isArray(editedHotspots[page]) ? editedHotspots[page] : [];
           const existing = await base44.entities.CatalogHotspot.filter({ page_number: page });
           if (existing.length > 0) {
             await base44.entities.CatalogHotspot.update(existing[0].id, { hotspots: spots });
