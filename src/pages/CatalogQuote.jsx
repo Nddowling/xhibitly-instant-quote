@@ -1209,6 +1209,7 @@ export default function CatalogQuote() {
           order={activeOrder}
           lineItems={lineItems}
           onClose={() => setShowConfirmModal(false)}
+          isPreview={!activeOrder.share_token}
         />
       )}
 
