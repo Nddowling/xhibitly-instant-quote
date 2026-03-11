@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { CheckCircle2, Link2, Download, X, FileText, ExternalLink, LayoutPanelLeft, ChevronDown, ChevronUp } from 'lucide-react';
+import { CheckCircle2, Link2, Download, X, FileText, ExternalLink } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import BoothConceptRender from '@/components/catalog/BoothConceptRender';
 
