@@ -173,6 +173,20 @@ export default function QuoteConfirmModal({ order, lineItems, onClose, isPreview
               </a>
             )}
 
+            <Button
+              onClick={submitToQueue}
+              disabled={submitting || submitted}
+              className={`w-full h-10 text-sm font-bold gap-2 ${submitted ? 'bg-green-600 hover:bg-green-600' : 'bg-[#e2231a] hover:bg-[#b01b13]'} text-white`}
+            >
+              {submitting ? (
+                <><Loader2 className="w-4 h-4 animate-spin" /> Submitting…</>
+              ) : submitted ? (
+                <><CheckCircle2 className="w-4 h-4" /> Submitted to Queue</>
+              ) : (
+                <><Send className="w-4 h-4" /> Submit Quote to Queue</>
+              )}
+            </Button>
+
             <Button onClick={onClose} className="w-full bg-[#1a1a1a] hover:bg-black text-white h-10 text-sm font-bold">
               Continue Browsing
             </Button>
