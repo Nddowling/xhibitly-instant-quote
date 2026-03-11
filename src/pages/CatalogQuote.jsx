@@ -1056,10 +1056,9 @@ export default function CatalogQuote() {
     const skus = spot.groupedSkus || [spot.sku];
     if (skus.length === 1) {
       const sku = skus[0];
-      // Ensure product is fetched first so we get the image
       await fetchProduct(sku);
       const p = productCache[sku];
-      addToOrder({ sku, name: p?.name || spot.name, price: p?.base_price, imageUrl: getImageUrl(p) });
+      await handleAddToQuote({ sku, name: p?.name || spot.name, price: p?.base_price, imageUrl: getImageUrl(p) });
       setSelectedHotspot(null);
     } else {
       setShowVariants(true);
