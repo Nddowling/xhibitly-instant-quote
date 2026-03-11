@@ -1132,25 +1132,6 @@ export default function CatalogQuote() {
     }
   };
 
-  // Order management
-  const addToOrder = useCallback((product) => {
-    setOrderItems(prev => {
-      const existing = prev.find(i => i.sku === product.sku);
-      if (existing) return prev.map(i => i.sku === product.sku ? { ...i, qty: i.qty + 1 } : i);
-      return [...prev, { ...product, id: `${product.sku}-${Date.now()}`, qty: 1 }];
-    });
-  }, []);
-
-  const handleQtyChange = (id, delta) =>
-    setOrderItems(prev => prev.map(i => i.id === id ? { ...i, qty: Math.max(1, i.qty + delta) } : i));
-  const handleRemove = (id) => setOrderItems(prev => prev.filter(i => i.id !== id));
-  const handleSizeChange = useCallback((id, size) =>
-    setOrderItems(prev => prev.map(i => i.id === id ? { ...i, selectedSize: size } : i)), []);
-
-  // Totals
-  const subtotal = orderItems.reduce((s, i) => s + (i.price ? i.price * i.qty : 0), 0);
-  const hasQuoteItems = orderItems.some(i => !i.price);
-  const itemCount = orderItems.reduce((s, i) => s + i.qty, 0);
   const isEdited = !!editedHotspots[currentPage];
 
   // Generate booth concept
