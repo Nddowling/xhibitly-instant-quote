@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { X, Search, Building, Loader2, User } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const BOOTH_SIZES = ['10x10', '10x20', '20x20', '20x30', 'island'];
+const BOOTH_SIZES = ['10x10', '10x20', '20x20', '20x30'];
 const BOOTH_TYPES = ['Inline', 'Corner', 'Island'];
 
 export default function SessionStartModal({ onComplete, onDismiss, user }) {
