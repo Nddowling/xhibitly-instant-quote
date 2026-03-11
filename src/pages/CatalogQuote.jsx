@@ -1173,11 +1173,13 @@ export default function CatalogQuote() {
 
   const saveToDb = async () => {
     try {
+      // Ensure we always save a real array (even empty) so DB never stores null
+      const spotsToSave = Array.isArray(currentHotspots) ? currentHotspots : [];
       const existing = await base44.entities.CatalogHotspot.filter({ page_number: currentPage });
       if (existing.length > 0) {
-        await base44.entities.CatalogHotspot.update(existing[0].id, { hotspots: currentHotspots });
+        await base44.entities.CatalogHotspot.update(existing[0].id, { hotspots: spotsToSave });
       } else {
-        await base44.entities.CatalogHotspot.create({ page_number: currentPage, hotspots: currentHotspots });
+        await base44.entities.CatalogHotspot.create({ page_number: currentPage, hotspots: spotsToSave });
       }
       
       setDbHotspots(prev => ({ ...prev, [currentPage]: currentHotspots }));
