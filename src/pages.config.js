@@ -69,8 +69,8 @@ import Settings from './pages/Settings';
 import StudentHome from './pages/StudentHome';
 import UserTypeSelection from './pages/UserTypeSelection';
 import QuoteView from './pages/QuoteView';
-import CatalogQuote from './pages/CatalogQuote';
 import SalesQuoteStart from './pages/SalesQuoteStart';
+import CatalogQuote from './pages/CatalogQuote';
 import __Layout from './Layout.jsx';
 
 
@@ -97,8 +97,8 @@ export const PAGES = {
     "StudentHome": StudentHome,
     "UserTypeSelection": UserTypeSelection,
     "QuoteView": QuoteView,
-    "CatalogQuote": CatalogQuote,
     "SalesQuoteStart": SalesQuoteStart,
+    "CatalogQuote": CatalogQuote,
 }
 
 export const pagesConfig = {

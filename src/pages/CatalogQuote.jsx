@@ -245,11 +245,12 @@ function CatalogPageView({ pageNum, hotspots, onHotspotClick, selectedHotspot })
   const spots = hotspots || [];
 
   return (
-    <div className="relative inline-block w-full">
+    <div className="relative inline-block">
       <img
         src={pageImageUrl(pageNum)}
         alt={`Catalog page ${pageNum}`}
-        className="w-full h-auto rounded-lg shadow-2xl block"
+        className="block rounded-lg shadow-2xl"
+        style={{ maxHeight: 'calc(100vh - 130px)', width: 'auto', maxWidth: '100%' }}
         onLoad={() => setImgLoaded(true)}
         onError={() => setImgError(true)}
       />
@@ -515,7 +516,7 @@ function HotspotEditor({ pageNum, spots, onChange, pageProducts, productCache, a
   return (
     <div
       ref={containerRef}
-      className={`relative inline-block w-full select-none ${adding ? 'cursor-crosshair' : 'cursor-default'}`}
+      className={`relative inline-block select-none ${adding ? 'cursor-crosshair' : 'cursor-default'}`}
       onMouseMove={onMouseMove}
       onMouseUp={onMouseUp}
       onMouseLeave={onMouseUp}
@@ -1369,8 +1370,8 @@ export default function CatalogQuote() {
         </div>
 
         {/* CENTER: Catalog Page */}
-        <div className="flex-1 overflow-auto p-4 flex justify-center">
-          <div className="relative w-full max-w-2xl">
+        <div className="flex-1 overflow-hidden p-3 flex justify-center items-start">
+          <div className="relative w-full max-w-2xl flex flex-col items-center">
             {editMode ? (
               // ── Edit mode: draggable hotspot editor ──
               <HotspotEditor
