@@ -146,9 +146,10 @@ function clamp(v, lo = 0, hi = 1) { return Math.max(lo, Math.min(hi, v)); }
 
 function getImageUrl(p) {
   if (!p) return null;
+  // Static map first — 344 verified working Supabase product photo URLs
+  if (p.sku && SKU_TO_IMAGE[p.sku]) return SKU_TO_IMAGE[p.sku];
   let url = p.primary_image_url || p.image_cached_url || p.image_url || p.thumbnail_url;
   if (!url) return null;
-  
   if (url.startsWith('http') || url.startsWith('data:')) return url;
   if (url.startsWith('/')) return `${SUPABASE_URL}${url}`;
   return `${SUPABASE_URL}/${url}`;
@@ -1013,6 +1014,18 @@ export default function CatalogQuote() {
     setIsSyncing(true);
     setSyncMsg(null);
     try {
+      // Save any pending local edits to DB before reloading so they aren't lost
+      const editedPages = Object.keys(editedHotspots);
+      for (const pageStr of editedPages) {
+        const page = parseInt(pageStr);
+        const spots = Array.isArray(editedHotspots[page]) ? editedHotspots[page] : [];
+        const existing = await base44.entities.CatalogHotspot.filter({ page_number: page });
+        if (existing.length > 0) {
+          await base44.entities.CatalogHotspot.update(existing[0].id, { hotspots: spots });
+        } else {
+          await base44.entities.CatalogHotspot.create({ page_number: page, hotspots: spots });
+        }
+      }
       const dbData = await loadAllDbHotspots();
       const pageCount = Object.keys(dbData).length;
       setDbHotspots(dbData);
