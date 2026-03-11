@@ -7,10 +7,11 @@ import { Wand2, Loader2, RefreshCw, ZoomIn, X } from 'lucide-react';
 const SUPABASE_URL = 'https://xpgvpzbzmkubahyxwipk.supabase.co/storage/v1/object/public/orbus-assets';
 
 function resolveProductImage(item) {
-  if (item.image_url) return item.image_url;
-  if (SKU_TO_IMAGE[item.sku]) return SKU_TO_IMAGE[item.sku];
-  const page = SKU_TO_PAGE?.[item.sku];
-  if (page) return `${SUPABASE_URL}/catalog/pages/page-${String(page + 2).padStart(3, '0')}.jpg`;
+  // Verified product photo FIRST — clean product shot on white bg, never a catalog page scan
+  if (item.sku && SKU_TO_IMAGE[item.sku]) return SKU_TO_IMAGE[item.sku];
+  // Stored URL only if it's a real product photo (contains /products/ path)
+  if (item.image_url && item.image_url.includes('/products/')) return item.image_url;
+  // Skip catalog page images — they show the whole page spread, not the product
   return null;
 }
 

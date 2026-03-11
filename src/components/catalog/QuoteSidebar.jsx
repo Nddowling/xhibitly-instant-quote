@@ -9,17 +9,19 @@ import QuotePricingPanel from '@/components/pricing/QuotePricingPanel';
 const SUPABASE_URL = 'https://xpgvpzbzmkubahyxwipk.supabase.co/storage/v1/object/public/orbus-assets';
 
 function getThumbUrl(item, productCache) {
-  // 1. Stored image_url on the line item
-  if (item.image_url) return item.image_url;
-  // 2. From product cache (populated by CatalogQuote's fetchProduct)
+  // 1. Verified product photo from static map — always wins for known SKUs
+  if (item.sku && SKU_TO_IMAGE[item.sku]) return SKU_TO_IMAGE[item.sku];
+  // 2. Stored image_url on the line item (skip catalog page scans)
+  if (item.image_url && item.image_url.includes('/products/')) return item.image_url;
+  // 3. From product cache (populated by CatalogQuote's fetchProduct)
   const cached = productCache?.[item.sku];
   if (cached) {
     const url = cached.primary_image_url || cached.image_cached_url || cached.image_url || cached.thumbnail_url;
-    if (url) return url;
+    if (url && url.includes('/products/')) return url;
   }
-  // 3. Real product photo — 344 products mapped from products.json
-  if (SKU_TO_IMAGE[item.sku]) return SKU_TO_IMAGE[item.sku];
-  // 4. Catalog page as last resort
+  // 4. Any stored image_url as fallback
+  if (item.image_url) return item.image_url;
+  // 5. Catalog page as last resort
   const page = SKU_TO_PAGE[item.sku];
   if (page) return `${SUPABASE_URL}/catalog/pages/page-${String(page + 2).padStart(3, '0')}.jpg`;
   return null;
