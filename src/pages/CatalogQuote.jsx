@@ -898,11 +898,7 @@ export default function CatalogQuote() {
   const [direction, setDirection] = useState(1);
   const [hotspotData, setHotspotData] = useState({});
   const [dbHotspots, setDbHotspots] = useState({});
-  const [editedHotspots, setEditedHotspots] = useState({}); // localStorage overrides
-  const [orderItems, setOrderItems] = useState([]);
-  const [customerName, setCustomerName] = useState('');
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [generatedImage, setGeneratedImage] = useState(null);
+  const [editedHotspots, setEditedHotspots] = useState({});
   const [searchSku, setSearchSku] = useState('');
   const [selectedHotspot, setSelectedHotspot] = useState(null);
   const [showVariants, setShowVariants] = useState(false);
@@ -910,6 +906,17 @@ export default function CatalogQuote() {
   const [addingHotspot, setAddingHotspot] = useState(false);
   const [isRerunning, setIsRerunning] = useState(false);
   const { cache: productCache, fetchProduct, tick } = useProductCache();
+
+  // ── Session / Quote state ─────────────────────────────────────────────────
+  const [user, setUser] = useState(null);
+  const [showSessionModal, setShowSessionModal] = useState(false);
+  const [activeOrder, setActiveOrder] = useState(null);
+  const [lineItems, setLineItems] = useState([]);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+
+  useEffect(() => {
+    base44.auth.me().then(u => { setUser(u); setShowSessionModal(true); }).catch(() => setShowSessionModal(true));
+  }, []);
 
   // Load hotspot data + localStorage overrides + DB (DB takes priority)
   useEffect(() => {
