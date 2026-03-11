@@ -1076,7 +1076,34 @@ export default function CatalogQuote() {
   const handleSkuSearch = () => {
     const sku = searchSku.trim().toUpperCase();
     const page = SKU_TO_PAGE[sku];
-    if (page) { goToPage(page); setSearchSku(''); }
+    if (page) { goToPage(page); setSearchSku(''); setShowSearchDropdown(false); }
+  };
+
+  const handleProductSearch = async (query) => {
+    setSearchSku(query);
+    if (!query || query.length < 2) { setSearchResults([]); setShowSearchDropdown(false); return; }
+    try {
+      const [byName, bySku, byCategory] = await Promise.all([
+        base44.entities.Product.filter({ name: query }),
+        base44.entities.Product.filter({ sku: query.toUpperCase() }),
+        base44.entities.Product.filter({ category: query }),
+      ]);
+      const combined = [...(byName || []), ...(bySku || []), ...(byCategory || [])];
+      const unique = combined.filter((v, i, a) => a.findIndex(x => x.id === v.id) === i).slice(0, 12);
+      setSearchResults(unique);
+      setShowSearchDropdown(unique.length > 0);
+    } catch { setShowSearchDropdown(false); }
+  };
+
+  const handleSearchResultClick = (product) => {
+    if (product.catalog_pages?.length > 0) {
+      goToPage(product.catalog_pages[0]);
+    } else if (SKU_TO_PAGE[product.sku]) {
+      goToPage(SKU_TO_PAGE[product.sku]);
+    }
+    setSearchSku('');
+    setSearchResults([]);
+    setShowSearchDropdown(false);
   };
 
   // Hotspot clicked (read mode)
