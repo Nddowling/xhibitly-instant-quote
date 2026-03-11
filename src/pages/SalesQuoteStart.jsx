@@ -48,7 +48,11 @@ export default function SalesQuoteStart() {
       // Auto-fill fields if customer found
       if (customerInfo) {
         setCompanyName(prev => prev || customerInfo.company_name || '');
-        setContactName(prev => prev || customerInfo.contact_name || '');
+        if (!firstName && !lastName && customerInfo.contact_name) {
+          const parts = customerInfo.contact_name.trim().split(' ');
+          setFirstName(parts[0] || '');
+          setLastName(parts.slice(1).join(' ') || '');
+        }
         setPhone(prev => prev || customerInfo.phone || '');
       }
     } catch (error) {
@@ -59,7 +63,7 @@ export default function SalesQuoteStart() {
   };
 
   const handleStartNewQuote = () => {
-    // Store customer info for the quote flow
+    const contactName = `${firstName} ${lastName}`.trim();
     const customerData = {
       dealerEmail: email,
       dealerCompany: companyName,
