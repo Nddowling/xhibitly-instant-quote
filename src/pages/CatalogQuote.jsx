@@ -130,6 +130,8 @@ const LS_KEY = 'catalog-hotspot-edits';
 const CATALOG_PAGE_OFFSET = 2;
 
 function pageImageUrl(printPageNum) {
+  // Page 0 = cover (PDF page 1)
+  if (printPageNum === 0) return `${SUPABASE_URL}/catalog/pages/page-001.jpg`;
   const pdfPage = printPageNum + CATALOG_PAGE_OFFSET;
   return `${SUPABASE_URL}/catalog/pages/page-${String(pdfPage).padStart(3, '0')}.jpg`;
 }
