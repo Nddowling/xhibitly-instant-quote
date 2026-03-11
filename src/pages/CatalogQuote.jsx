@@ -918,6 +918,63 @@ export default function CatalogQuote() {
     base44.auth.me().then(u => { setUser(u); setShowSessionModal(true); }).catch(() => setShowSessionModal(true));
   }, []);
 
+  // ── Line items loader ────────────────────────────────────────────────────
+  const refreshLineItems = useCallback(async () => {
+    if (!activeOrder) return;
+    const items = await base44.entities.LineItem.filter({ order_id: activeOrder.id });
+    setLineItems(items || []);
+  }, [activeOrder]);
+
+  useEffect(() => { refreshLineItems(); }, [refreshLineItems]);
+
+  const handleSessionComplete = async (order) => {
+    setActiveOrder(order);
+    setShowSessionModal(false);
+  };
+
+  const handleAddToQuote = useCallback(async (product) => {
+    if (!activeOrder) return;
+    const { sku, name, price, imageUrl } = product;
+    const existing = lineItems.find(i => i.sku === sku);
+    if (existing) {
+      const newQty = (existing.quantity || 1) + 1;
+      await base44.entities.LineItem.update(existing.id, {
+        quantity: newQty,
+        total_price: parseFloat((newQty * (existing.unit_price || 0)).toFixed(2)),
+      });
+    } else {
+      let unitPrice = price;
+      if (!unitPrice) {
+        const prods = await base44.entities.Product.filter({ sku });
+        if (prods?.length > 0) unitPrice = prods[0].base_price || 0;
+      }
+      await base44.entities.LineItem.create({
+        order_id: activeOrder.id,
+        sku: sku || '',
+        product_name: name || sku || '',
+        category: '',
+        quantity: 1,
+        unit_price: parseFloat((unitPrice || 0).toFixed(2)),
+        total_price: parseFloat((unitPrice || 0).toFixed(2)),
+      });
+    }
+    refreshLineItems();
+  }, [activeOrder, lineItems, refreshLineItems]);
+
+  const handleCreateQuote = async () => {
+    if (!activeOrder || lineItems.length === 0) return;
+    const quoted_price = parseFloat(lineItems.reduce((s, i) => s + (i.total_price || 0), 0).toFixed(2));
+    const share_token = crypto.randomUUID();
+    const updated = await base44.entities.Order.update(activeOrder.id, {
+      status: 'Quoted',
+      quoted_price,
+      final_price: quoted_price,
+      share_token,
+    });
+    setActiveOrder({ ...activeOrder, ...updated, share_token, quoted_price });
+    setShowConfirmModal(true);
+  };
+
   // Load hotspot data + localStorage overrides + DB (DB takes priority)
   useEffect(() => {
     // Load JSON fallback and DB hotspots in parallel
