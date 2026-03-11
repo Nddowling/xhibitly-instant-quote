@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { CheckCircle2, Link2, Download, X, FileText, ExternalLink } from 'lucide-react';
+import { CheckCircle2, Link2, Download, X, FileText, ExternalLink, Send, Loader2 } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import BoothConceptRender from '@/components/catalog/BoothConceptRender';
+import { base44 } from '@/api/base44Client';
 
 function fmt(n) {
   if (!n && n !== 0) return '—';
