@@ -9,7 +9,8 @@ import { Switch } from '@/components/ui/switch';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { User, Trash2, Moon, Sun, Shield, Edit, Save, X, Wrench } from 'lucide-react';
+import { User, Trash2, Moon, Sun, Shield, Edit, Save, X, Wrench, Tag } from 'lucide-react';
+import DealerPricingSettingsPanel from '@/components/pricing/DealerPricingSettingsPanel';
 import { motion } from 'framer-motion';
 
 export default function Settings() {
