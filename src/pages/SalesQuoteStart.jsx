@@ -183,16 +183,28 @@ export default function SalesQuoteStart() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="contact" className="text-slate-700 font-medium">
-                    Contact Name
-                  </Label>
+                  <Label htmlFor="firstName" className="text-slate-700 font-medium">First Name</Label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
                     <Input
-                      id="contact"
-                      value={contactName}
-                      onChange={(e) => setContactName(e.target.value)}
-                      placeholder="Contact Name"
+                      id="firstName"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      placeholder="First Name"
+                      className="pl-11 h-12"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="lastName" className="text-slate-700 font-medium">Last Name</Label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
+                    <Input
+                      id="lastName"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                      placeholder="Last Name"
                       className="pl-11 h-12"
                     />
                   </div>
