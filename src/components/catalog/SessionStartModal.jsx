@@ -5,6 +5,7 @@ import { X, Search, Building, Loader2, User } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const BOOTH_SIZES = ['10x10', '10x20', '20x20', '20x30', 'island'];
+const BOOTH_TYPES = ['Inline', 'Corner', 'Island'];
 
 export default function SessionStartModal({ onComplete, onDismiss, user }) {
   const [searchQuery, setSearchQuery] = useState('');
@@ -24,6 +25,7 @@ export default function SessionStartModal({ onComplete, onDismiss, user }) {
     customer_company: '',
     show_name: '',
     booth_size: '10x10',
+    booth_type: 'Inline',
   });
 
   const setField = (k, v) => setForm(p => ({ ...p, [k]: v }));
@@ -113,6 +115,7 @@ export default function SessionStartModal({ onComplete, onDismiss, user }) {
         catalog_session: true,
         show_name: form.show_name,
         booth_size: form.booth_size,
+        booth_type: form.booth_type,
         show_date: new Date().toISOString().split('T')[0],
         customer_name: customerName,
         customer_email: form.customer_email,
@@ -331,6 +334,24 @@ export default function SessionStartModal({ onComplete, onDismiss, user }) {
                     }`}
                   >
                     {s}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <label className="text-[10px] text-slate-500 font-semibold uppercase tracking-wide">Booth Type</label>
+              <div className="flex flex-wrap gap-2 mt-1.5">
+                {BOOTH_TYPES.map(t => (
+                  <button
+                    key={t}
+                    onClick={() => setField('booth_type', t)}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
+                      form.booth_type === t
+                        ? 'bg-[#e2231a] text-white border-[#e2231a]'
+                        : 'bg-white text-slate-600 border-slate-200 hover:border-[#e2231a]/40'
+                    }`}
+                  >
+                    {t}
                   </button>
                 ))}
               </div>
