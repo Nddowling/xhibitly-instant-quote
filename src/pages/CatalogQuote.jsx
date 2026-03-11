@@ -209,8 +209,8 @@ function useProductCache() {
         }
       }
 
-      // Try Supabase storage for image — check product folder directly first, then /image subfolder
-      if (prod && !prod.image_cached_url && !prod.image_url) {
+      // Try Supabase storage for image if no image URL on the entity
+      if (prod && !prod.primary_image_url && !prod.image_cached_url && !prod.image_url) {
         try {
           const imgRes = await base44.functions.invoke('listSupabaseAssets', { path: `products/${sku}` });
           if (imgRes.data?.files?.length > 0) {
@@ -224,7 +224,15 @@ function useProductCache() {
               if (imgFile) prod.image_url = imgFile.publicUrl;
             }
           }
-        } catch { /* no image in storage, fallback to icon */ }
+        } catch { /* no image in storage */ }
+
+        // Final fallback: use the catalog page image (always available in Supabase)
+        if (!prod.image_url) {
+          const printPage = SKU_TO_PAGE[sku];
+          if (printPage) {
+            prod.image_url = pageImageUrl(printPage);
+          }
+        }
       }
 
       cache.current[sku] = prod;
