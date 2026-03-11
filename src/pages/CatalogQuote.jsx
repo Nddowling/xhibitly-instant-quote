@@ -1339,15 +1339,15 @@ export default function CatalogQuote() {
             )}
 
             {/* Variant picker popup */}
-            {!editMode && showVariants && selectedHotspot && (
-              <VariantPicker
-                spot={selectedHotspot}
-                products={productCache}
-                fetchProduct={fetchProduct}
-                onAdd={addToOrder}
-                onClose={() => { setShowVariants(false); setSelectedHotspot(null); }}
-              />
-            )}
+              {!editMode && showVariants && selectedHotspot && (
+                  <VariantPicker
+                    spot={selectedHotspot}
+                    products={productCache}
+                    fetchProduct={fetchProduct}
+                    onAdd={(product) => { handleAddToQuote(product); setShowVariants(false); setSelectedHotspot(null); }}
+                    onClose={() => { setShowVariants(false); setSelectedHotspot(null); }}
+                  />
+                )}
 
             {/* Fallback product chips when no hotspots */}
             {!editMode && !hasHotspots && pageProducts.length > 0 && (
