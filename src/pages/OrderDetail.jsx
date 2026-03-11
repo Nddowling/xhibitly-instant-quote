@@ -8,6 +8,7 @@ import OrderFields from '@/components/order/OrderFields';
 import DesignSection from '@/components/order/DesignSection';
 import LineItemsSection from '@/components/order/LineItemsSection';
 import RelatedTab from '@/components/order/RelatedTab';
+import BoothConceptRender from '@/components/catalog/BoothConceptRender';
 
 export default function OrderDetail() {
   const navigate = useNavigate();
@@ -98,6 +99,12 @@ export default function OrderDetail() {
               <DesignSection boothDesign={boothDesign} />
               <LineItemsSection lineItems={lineItems} products={products} order={order} formatPrice={formatPrice} />
             </div>
+            {lineItems.length > 0 && (
+              <div className="mt-4 bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+                <p className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-4">Booth Concept Rendering</p>
+                <BoothConceptRender order={order} lineItems={lineItems} />
+              </div>
+            )}
           </TabsContent>
 
           <TabsContent value="related">

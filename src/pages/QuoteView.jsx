@@ -3,6 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Download, Printer } from 'lucide-react';
 import * as XLSX from 'xlsx';
+import BoothConceptRender from '@/components/catalog/BoothConceptRender';
 
 function fmt(n) {
   if (!n && n !== 0) return '—';
@@ -131,15 +132,13 @@ export default function QuoteView() {
           </div>
         </div>
 
-        {/* Rendering image */}
-        {order.booth_rendering_url && (
+        {/* Booth Concept Rendering — always shown when there are line items */}
+        {lineItems.length > 0 && (
           <div className="print-break">
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Booth Layout</p>
-            <img
-              src={order.booth_rendering_url}
-              alt="Booth Layout"
-              className="w-full max-h-[300px] object-contain rounded-xl border border-slate-200 bg-slate-50"
-            />
+            <p className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-3">Booth Concept Rendering</p>
+            <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+              <BoothConceptRender order={order} lineItems={lineItems} />
+            </div>
           </div>
         )}
 
