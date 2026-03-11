@@ -8,6 +8,7 @@ import OrderFields from '@/components/order/OrderFields';
 import DesignSection from '@/components/order/DesignSection';
 import LineItemsSection from '@/components/order/LineItemsSection';
 import RelatedTab from '@/components/order/RelatedTab';
+import FollowUpSection from '@/components/order/FollowUpSection';
 import BoothConceptRender from '@/components/catalog/BoothConceptRender';
 
 export default function OrderDetail() {
