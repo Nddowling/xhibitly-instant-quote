@@ -75,6 +75,8 @@ export default function SalesDashboard() {
     window.addEventListener('touchend', handleTouchEnd);
 
     return () => {
+      unsubActivity();
+      unsubOrder();
       window.removeEventListener('touchstart', handleTouchStart);
       window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('touchend', handleTouchEnd);
