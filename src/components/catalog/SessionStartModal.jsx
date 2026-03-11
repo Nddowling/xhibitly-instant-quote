@@ -1,22 +1,24 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import { X, Search, Building, Loader2 } from 'lucide-react';
+import { X, Search, Building, Loader2, User } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { debounce } from 'lodash';
 
 const BOOTH_SIZES = ['10x10', '10x20', '20x20', '20x30', 'island'];
 
 export default function SessionStartModal({ onComplete, onDismiss, user }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const [recentCustomers, setRecentCustomers] = useState([]);
   const [selectedClient, setSelectedClient] = useState(null);
   const [isNewCustomer, setIsNewCustomer] = useState(false);
-  const [searching, setSearching] = useState(false);
   const [starting, setStarting] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const searchRef = useRef(null);
 
   const [form, setForm] = useState({
-    customer_name: '',
+    first_name: '',
+    last_name: '',
     customer_email: '',
     customer_phone: '',
     customer_company: '',
@@ -26,32 +28,54 @@ export default function SessionStartModal({ onComplete, onDismiss, user }) {
 
   const setField = (k, v) => setForm(p => ({ ...p, [k]: v }));
 
-  const searchClients = useCallback(debounce(async (q) => {
-    if (!q || q.length < 2) { setSearchResults([]); return; }
-    setSearching(true);
-    try {
-      const [byEmail, byCompany] = await Promise.all([
-        base44.entities.ClientProfile.filter({ client_email: q }),
-        base44.entities.ClientProfile.filter({ client_company: q }),
-      ]);
-      const combined = [...(byEmail || []), ...(byCompany || [])];
-      const unique = combined.filter((v, i, a) => a.findIndex(x => x.id === v.id) === i);
-      setSearchResults(unique);
-    } catch { setSearchResults([]); }
-    setSearching(false);
-  }, 400), []);
+  // Preload recent customers for instant suggestions
+  useEffect(() => {
+    base44.entities.Order.list('-created_date', 200).then(orders => {
+      const map = new Map();
+      orders.forEach(o => {
+        if (o.customer_email && !map.has(o.customer_email)) {
+          map.set(o.customer_email, {
+            id: o.id,
+            client_email: o.customer_email,
+            client_company: o.customer_company || '',
+            contact_name: o.customer_name || '',
+          });
+        }
+      });
+      setRecentCustomers(Array.from(map.values()));
+    }).catch(() => {});
+  }, []);
 
   const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-    searchClients(e.target.value);
+    const q = e.target.value;
+    setSearchQuery(q);
+    if (!q || q.length < 1) {
+      setSearchResults([]);
+      setShowDropdown(false);
+      return;
+    }
+    const lower = q.toLowerCase();
+    const filtered = recentCustomers.filter(c =>
+      c.client_email?.toLowerCase().includes(lower) ||
+      c.client_company?.toLowerCase().includes(lower) ||
+      c.contact_name?.toLowerCase().includes(lower)
+    ).slice(0, 7);
+    setSearchResults(filtered);
+    setShowDropdown(true);
   };
 
   const selectClient = (cp) => {
     setSelectedClient(cp);
     setSearchResults([]);
+    setShowDropdown(false);
+    setSearchQuery('');
+    const nameParts = (cp.contact_name || '').trim().split(' ');
+    const first = nameParts[0] || '';
+    const last = nameParts.slice(1).join(' ') || '';
     setForm(p => ({
       ...p,
-      customer_name: cp.client_company || '',
+      first_name: first,
+      last_name: last,
       customer_email: cp.client_email || '',
       customer_company: cp.client_company || '',
     }));
@@ -59,11 +83,14 @@ export default function SessionStartModal({ onComplete, onDismiss, user }) {
 
   const clearClient = () => {
     setSelectedClient(null);
-    setForm(p => ({ ...p, customer_name: '', customer_email: '', customer_company: '' }));
+    setForm(p => ({ ...p, first_name: '', last_name: '', customer_email: '', customer_company: '' }));
   };
 
+  const customerName = `${form.first_name} ${form.last_name}`.trim();
+  const canSubmit = customerName && form.customer_email && form.show_name;
+
   const handleStart = async () => {
-    if (!form.customer_name || !form.customer_email || !form.show_name) return;
+    if (!canSubmit) return;
     setStarting(true);
     try {
       if (isNewCustomer) {
@@ -87,7 +114,7 @@ export default function SessionStartModal({ onComplete, onDismiss, user }) {
         show_name: form.show_name,
         booth_size: form.booth_size,
         show_date: new Date().toISOString().split('T')[0],
-        customer_name: form.customer_name,
+        customer_name: customerName,
         customer_email: form.customer_email,
         customer_phone: form.customer_phone,
         customer_company: form.customer_company,
@@ -102,8 +129,6 @@ export default function SessionStartModal({ onComplete, onDismiss, user }) {
     }
     setStarting(false);
   };
-
-  const canSubmit = form.customer_name && form.customer_email && form.show_name;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
@@ -129,39 +154,45 @@ export default function SessionStartModal({ onComplete, onDismiss, user }) {
         </div>
 
         <div className="p-6 space-y-5 max-h-[80vh] overflow-y-auto">
-          {/* Customer section */}
+          {/* Customer Search */}
           {!selectedClient && !isNewCustomer && (
             <div>
               <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide block mb-2">Customer Search</label>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <div className="relative" ref={searchRef}>
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 z-10" />
                 <input
                   value={searchQuery}
                   onChange={handleSearchChange}
-                  placeholder="Search by email or company name..."
+                  onFocus={() => searchResults.length > 0 && setShowDropdown(true)}
+                  onBlur={() => setTimeout(() => setShowDropdown(false), 150)}
+                  placeholder="Type name, email, or company..."
                   className="w-full pl-9 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30"
+                  autoFocus
                 />
-                {searching && <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 animate-spin" />}
+
+                {/* Live suggestion dropdown */}
+                {showDropdown && searchResults.length > 0 && (
+                  <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl z-50 overflow-hidden">
+                    {searchResults.map(cp => (
+                      <button
+                        key={cp.id}
+                        onMouseDown={() => selectClient(cp)}
+                        className="w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-50 text-left border-b border-slate-100 last:border-0 transition-colors"
+                      >
+                        <div className="w-8 h-8 bg-[#e2231a]/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Building className="w-4 h-4 text-[#e2231a]" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-sm font-semibold text-slate-800 truncate">{cp.client_company || cp.client_email}</p>
+                          <p className="text-xs text-slate-400 truncate">{cp.contact_name ? `${cp.contact_name} · ` : ''}{cp.client_email}</p>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
 
-              {searchResults.length > 0 && (
-                <div className="mt-2 border border-slate-200 rounded-xl overflow-hidden shadow-sm">
-                  {searchResults.map(cp => (
-                    <button key={cp.id} onClick={() => selectClient(cp)}
-                      className="w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-50 text-left border-b border-slate-100 last:border-0 transition-colors">
-                      <div className="w-8 h-8 bg-[#e2231a]/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <Building className="w-4 h-4 text-[#e2231a]" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold text-slate-800">{cp.client_company || cp.client_email}</p>
-                        <p className="text-xs text-slate-400">{cp.client_email}</p>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              {searchQuery.length >= 2 && !searching && searchResults.length === 0 && (
+              {searchQuery.length >= 1 && searchResults.length === 0 && (
                 <p className="text-xs text-slate-400 mt-2">
                   No matches.{' '}
                   <button onClick={() => setIsNewCustomer(true)} className="text-[#e2231a] font-semibold hover:underline">
@@ -177,6 +208,7 @@ export default function SessionStartModal({ onComplete, onDismiss, user }) {
             </div>
           )}
 
+          {/* Selected client badge */}
           {selectedClient && (
             <div className="flex items-center gap-3 bg-green-50 border border-green-200 rounded-xl px-4 py-3">
               <Building className="w-4 h-4 text-green-600 flex-shrink-0" />
@@ -190,6 +222,7 @@ export default function SessionStartModal({ onComplete, onDismiss, user }) {
             </div>
           )}
 
+          {/* New customer form */}
           {isNewCustomer && (
             <div className="space-y-3">
               <div className="flex items-center justify-between">
@@ -197,23 +230,77 @@ export default function SessionStartModal({ onComplete, onDismiss, user }) {
                 <button onClick={() => setIsNewCustomer(false)} className="text-xs text-slate-400 hover:text-slate-600">← Back to search</button>
               </div>
               <div className="grid grid-cols-2 gap-3">
-                {[
-                  { key: 'customer_name', label: 'Name *', placeholder: 'Jane Smith', type: 'text' },
-                  { key: 'customer_company', label: 'Company *', placeholder: 'Acme Inc.', type: 'text' },
-                  { key: 'customer_email', label: 'Email *', placeholder: 'jane@acme.com', type: 'email' },
-                  { key: 'customer_phone', label: 'Phone', placeholder: '(555) 000-0000', type: 'tel' },
-                ].map(({ key, label, placeholder, type }) => (
-                  <div key={key}>
-                    <label className="text-[10px] text-slate-500 font-semibold uppercase tracking-wide">{label}</label>
-                    <input
-                      type={type}
-                      value={form[key]}
-                      onChange={e => setField(key, e.target.value)}
-                      placeholder={placeholder}
-                      className="w-full mt-1 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30"
-                    />
-                  </div>
-                ))}
+                <div>
+                  <label className="text-[10px] text-slate-500 font-semibold uppercase tracking-wide">First Name *</label>
+                  <input
+                    value={form.first_name}
+                    onChange={e => setField('first_name', e.target.value)}
+                    placeholder="Jane"
+                    className="w-full mt-1 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] text-slate-500 font-semibold uppercase tracking-wide">Last Name *</label>
+                  <input
+                    value={form.last_name}
+                    onChange={e => setField('last_name', e.target.value)}
+                    placeholder="Smith"
+                    className="w-full mt-1 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] text-slate-500 font-semibold uppercase tracking-wide">Company *</label>
+                  <input
+                    value={form.customer_company}
+                    onChange={e => setField('customer_company', e.target.value)}
+                    placeholder="Acme Inc."
+                    className="w-full mt-1 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] text-slate-500 font-semibold uppercase tracking-wide">Email *</label>
+                  <input
+                    type="email"
+                    value={form.customer_email}
+                    onChange={e => setField('customer_email', e.target.value)}
+                    placeholder="jane@acme.com"
+                    className="w-full mt-1 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30"
+                  />
+                </div>
+                <div className="col-span-2">
+                  <label className="text-[10px] text-slate-500 font-semibold uppercase tracking-wide">Phone</label>
+                  <input
+                    type="tel"
+                    value={form.customer_phone}
+                    onChange={e => setField('customer_phone', e.target.value)}
+                    placeholder="(555) 000-0000"
+                    className="w-full mt-1 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Name fields shown after selecting existing client */}
+          {selectedClient && (
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-[10px] text-slate-500 font-semibold uppercase tracking-wide">First Name</label>
+                <input
+                  value={form.first_name}
+                  onChange={e => setField('first_name', e.target.value)}
+                  placeholder="Jane"
+                  className="w-full mt-1 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30"
+                />
+              </div>
+              <div>
+                <label className="text-[10px] text-slate-500 font-semibold uppercase tracking-wide">Last Name</label>
+                <input
+                  value={form.last_name}
+                  onChange={e => setField('last_name', e.target.value)}
+                  placeholder="Smith"
+                  className="w-full mt-1 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30"
+                />
               </div>
             </div>
           )}

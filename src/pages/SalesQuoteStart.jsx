@@ -14,7 +14,8 @@ export default function SalesQuoteStart() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [companyName, setCompanyName] = useState('');
-  const [contactName, setContactName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [phone, setPhone] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const [searchResults, setSearchResults] = useState(null);
