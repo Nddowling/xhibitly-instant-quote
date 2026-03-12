@@ -276,7 +276,7 @@ function CatalogPageView({ pageNum, hotspots, onHotspotClick, selectedHotspot, o
         return (
           <div
             key={`${spot.sku}-${i}`}
-            onClick={() => onHotspotClick(spot)}
+            onClick={(e) => { e.stopPropagation(); onHotspotClick(spot); }}
             style={{
               position: 'absolute',
               left: `${spot.x * 100}%`,
