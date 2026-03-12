@@ -241,7 +241,7 @@ function useProductCache() {
 }
 
 // ─── Normal catalog page view (read-only hotspot overlays) ───────────────────
-function CatalogPageView({ pageNum, hotspots, onHotspotClick, selectedHotspot }) {
+function CatalogPageView({ pageNum, hotspots, onHotspotClick, selectedHotspot, onPageClick }) {
   const [imgLoaded, setImgLoaded] = useState(false);
   const [imgError, setImgError] = useState(false);
 
@@ -250,7 +250,7 @@ function CatalogPageView({ pageNum, hotspots, onHotspotClick, selectedHotspot })
   const spots = hotspots || [];
 
   return (
-    <div className="relative inline-block">
+    <div className="relative inline-block cursor-pointer" onClick={onPageClick}>
       <img
         src={pageImageUrl(pageNum)}
         alt={`Catalog page ${pageNum}`}
