@@ -1580,6 +1580,7 @@ export default function CatalogQuote() {
                     hotspots={currentHotspots}
                     onHotspotClick={handleHotspotClick}
                     selectedHotspot={selectedHotspot}
+                    onPageClick={() => goToPage(currentPage + 1)}
                   />
                 </motion.div>
               </AnimatePresence>
