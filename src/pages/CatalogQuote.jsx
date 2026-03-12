@@ -1420,7 +1420,7 @@ export default function CatalogQuote() {
 
         {lineItems.length > 0 && (
           <button
-            onClick={() => setShowConfirmModal(true)}
+            onClick={handleCreateQuote}
             className="flex items-center gap-1.5 bg-[#e2231a] text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-[#b01b13] transition-colors flex-shrink-0 shadow-sm"
           >
             <ShoppingCart className="w-3.5 h-3.5" />
