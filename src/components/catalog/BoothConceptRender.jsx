@@ -47,65 +47,92 @@ function aspectRatioDirective(boothW, boothD) {
   return `square-ish composition showing the ${boothW}x${boothD} foot booth from a slightly elevated front angle`;
 }
 
-// ─── Step 1: Claude Vision analyzes product photos → writes the perfect DALL-E prompt
+// ─── Step 1: Build prompt — Claude describes missing-image products; real images seed DALL-E directly
 async function buildRenderingPrompt(order, lineItems) {
   const { w: boothW, d: boothD } = parseBoothSize(order?.booth_size);
   const boothType = order?.booth_type || 'Inline';
   const layoutDesc = boothLayoutDescription(boothW, boothD, boothType);
   const aspectDirective = aspectRatioDirective(boothW, boothD);
 
-  const productImages = lineItems
+  // Split: items with verified cutout images vs items without
+  const itemsWithImages = lineItems.filter(item => resolveProductImage(item));
+  const itemsWithoutImages = lineItems.filter(item => !resolveProductImage(item));
+
+  const seedImages = itemsWithImages
     .map(item => resolveProductImage(item))
-    .filter(Boolean)
-    .slice(0, 10);
+    .slice(0, 8); // DALL-E reference images (passed directly as seeds)
 
   const productList = lineItems.map((item, i) =>
     `${i + 1}. ${item.product_name || item.sku} (SKU: ${item.sku}${item.quantity > 1 ? `, Qty: ${item.quantity}` : ''})`
   ).join('\n');
 
+  // If some products have no images, ask Claude to describe them textually
+  let missingDescriptions = '';
+  if (itemsWithoutImages.length > 0) {
+    const missingList = itemsWithoutImages.map((item, i) =>
+      `${i + 1}. ${item.product_name || item.sku} (SKU: ${item.sku})`
+    ).join('\n');
+
+    const descResponse = await base44.integrations.Core.InvokeLLM({
+      prompt: `You are a trade show exhibit expert. For each of the following Orbus products, write a brief but vivid visual description of what the product looks like physically when assembled at a trade show booth — structure, shape, size, and any typical graphic surface. Be concise (1-2 sentences each).
+
+Products:
+${missingList}
+
+Return a numbered list matching the input order. Just the descriptions, no preamble.`,
+      model: 'claude_sonnet_4_6',
+    });
+    missingDescriptions = `\nPRODUCTS WITHOUT REFERENCE PHOTOS (described from catalog knowledge):\n${descResponse}\n`;
+  }
+
+  // Build the main DALL-E prompt via Claude, using seed image analysis for products that have photos
+  const hasImagesList = itemsWithImages.length > 0
+    ? `\nPRODUCTS WITH REFERENCE PHOTOS (${itemsWithImages.length} cutout images attached — use these as the visual foundation for each product's appearance in the booth):\n${itemsWithImages.map((item, i) => `${i + 1}. ${item.product_name || item.sku} (SKU: ${item.sku})`).join('\n')}`
+    : '';
+
   const response = await base44.integrations.Core.InvokeLLM({
     prompt: `You are a trade show exhibit designer creating a photorealistic 3D rendering brief for a DALL-E image generator.
 
-I'm showing you ${productImages.length} product photos from the Orbus trade show display catalog. These are the EXACT products ordered:
-
+All products in this booth:
 ${productList}
+${hasImagesList}
+${missingDescriptions}
 
-BOOTH SPECS — this is critical for accurate spatial representation:
+BOOTH SPECS — critical for accurate spatial representation:
 - Configuration: ${layoutDesc}
 - Booth type: ${boothType}
 - Total footprint: ${boothW} feet wide × ${boothD} feet deep
 
-Study each product photo and write a single detailed DALL-E image generation prompt. Your prompt MUST include all of these elements:
+${seedImages.length > 0 ? `IMPORTANT: The ${seedImages.length} reference photo(s) attached will be passed directly to DALL-E as seed images. Your prompt must describe these products in a way that reinforces their exact physical appearance from the photos — same frame structure, same graphic panel style, same proportions.` : ''}
 
-1. BOOTH DIMENSIONS & PERSPECTIVE: ${aspectDirective}. The rendering must accurately show the booth is ${boothW} feet wide — a ${boothW}x${boothD} booth is NOT a square box, it is ${boothW === boothD ? 'a perfect square' : `${boothW > boothD ? 'wider than it is deep' : 'deeper than it is wide'}, ${Math.max(boothW, boothD) / Math.min(boothW, boothD)}:1 ratio`}.
+Write a single detailed DALL-E image generation prompt that includes:
 
-2. PRODUCTS WITH GRAPHICS: For each product you see in the photos, describe:
-   - The physical structure (frame type, fabric tension system, counter shape, stand mechanism)
-   - The GRAPHIC PANELS as shown — describe the colors, patterns, design style visible on the display graphics in the product photo (even if they are sample/demo graphics, describe them so the render shows displays with actual printed graphics, not blank white panels)
-   - Exact placement in the booth space
+1. BOOTH DIMENSIONS & PERSPECTIVE: ${aspectDirective}. The booth is ${boothW} feet wide × ${boothD} feet deep.
 
-3. SCENE: Bright professional trade show exhibition hall, clean medium-gray carpet, overhead track lighting with warm spotlights illuminating the booth, white/cream pipe-and-drape background on walls, neighboring booth frames barely visible at edges.
+2. EACH PRODUCT: For each product, describe its physical structure, graphic panel appearance, and exact placement in the booth. For products with reference photos, match them precisely.
 
-4. RENDER STYLE: Photorealistic architectural visualization, 3D render, professional product photography lighting, high detail, no people, shot from eye-level slightly elevated (about 6 feet high), centered on the booth.
+3. SCENE: Professional trade show hall, medium-gray carpet, overhead track lighting, warm spotlights on booth, white pipe-and-drape walls in background.
 
-Return ONLY the image generation prompt — no explanation, no preamble, just the prompt.`,
-    file_urls: productImages,
+4. RENDER STYLE: Photorealistic architectural visualization, 3D render, no people, eye-level slightly elevated (~6 feet), centered on booth.
+
+Return ONLY the DALL-E prompt — no explanation, no preamble.`,
+    file_urls: seedImages.length > 0 ? seedImages : undefined,
     model: 'claude_sonnet_4_6',
-    response_type: 'text',
   });
 
-  return response;
+  return { prompt: response, seedImages };
 }
 
-// ─── Step 2: Generate the photorealistic image from the prompt
+// ─── Step 2: Generate the photorealistic image — seed DALL-E with actual product cutouts
 async function generatePhotoRender(order, lineItems) {
-  const renderPrompt = await buildRenderingPrompt(order, lineItems);
+  const { prompt, seedImages } = await buildRenderingPrompt(order, lineItems);
 
   const result = await base44.integrations.Core.GenerateImage({
-    prompt: renderPrompt,
+    prompt,
+    existing_image_urls: seedImages.length > 0 ? seedImages : undefined,
   });
 
-  return { url: result.url, prompt: renderPrompt };
+  return { url: result.url, prompt };
 }
 
 // ─── Product thumbnail card (for the reference grid, always shown below the render)
