@@ -245,14 +245,24 @@ function useProductCache() {
 function CatalogPageView({ pageNum, hotspots, onHotspotClick, selectedHotspot, onPageClick }) {
   const [imgLoaded, setImgLoaded] = useState(false);
   const [imgError, setImgError] = useState(false);
+  const imgRef = useRef(null);
 
-  useEffect(() => { setImgLoaded(false); setImgError(false); }, [pageNum]);
+  useEffect(() => {
+    setImgLoaded(false);
+    setImgError(false);
+    const img = imgRef.current;
+    if (img?.complete && img.naturalWidth > 0) {
+      setImgLoaded(true);
+    }
+  }, [pageNum]);
 
   const spots = hotspots || [];
 
   return (
     <div className="relative inline-block cursor-pointer" onClick={onPageClick}>
       <img
+        key={pageNum}
+        ref={imgRef}
         src={pageImageUrl(pageNum)}
         alt={`Catalog page ${pageNum}`}
         className="block rounded-lg shadow-2xl"
@@ -410,6 +420,7 @@ function EditHotspotDialog({ spot, pageProducts, productCache, onSave, onCancel 
 // ─── Hotspot Editor (drag to move/resize, add, delete, double-click to edit) ──
 function HotspotEditor({ pageNum, spots, onChange, pageProducts, productCache, adding = false, onAddingChange }) {
   const containerRef = useRef(null);
+  const imgRef = useRef(null);
   const [imgLoaded, setImgLoaded] = useState(false);
   const [drag, setDrag] = useState(null);
   // drag = { type: 'move'|'resize'|'create', idx, startNX, startNY, origSpot, curSpot }
@@ -419,7 +430,13 @@ function HotspotEditor({ pageNum, spots, onChange, pageProducts, productCache, a
   const [autoDetected, setAutoDetected] = useState(null); // { sku, name, groupedSkus }
   const [editingSpot, setEditingSpot] = useState(null); // { idx, spot }
 
-  useEffect(() => { setImgLoaded(false); }, [pageNum]);
+  useEffect(() => {
+    setImgLoaded(false);
+    const img = imgRef.current;
+    if (img?.complete && img.naturalWidth > 0) {
+      setImgLoaded(true);
+    }
+  }, [pageNum]);
 
   const toNorm = (clientX, clientY) => {
     const rect = containerRef.current?.getBoundingClientRect();
@@ -529,6 +546,8 @@ function HotspotEditor({ pageNum, spots, onChange, pageProducts, productCache, a
       onMouseDown={onContainerMouseDown}
     >
       <img
+        key={pageNum}
+        ref={imgRef}
         src={pageImageUrl(pageNum)}
         alt={`Page ${pageNum}`}
         className="block rounded-lg shadow-2xl"
