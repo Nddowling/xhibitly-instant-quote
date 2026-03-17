@@ -196,7 +196,7 @@ export default function Settings() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">Settings</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-2">Settings</h1>
           <p className="text-slate-500 dark:text-slate-400">Manage your account preferences</p>
         </motion.div>
 
@@ -208,7 +208,7 @@ export default function Settings() {
         >
           <Card className="mb-6 dark:bg-slate-900 dark:border-slate-800">
             <CardHeader>
-              <div className="flex items-center gap-3">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
                 <div className="w-12 h-12 bg-[#e2231a]/10 dark:bg-[#e2231a]/20 rounded-full flex items-center justify-center">
                   <User className="w-6 h-6 text-[#e2231a]" />
                 </div>
@@ -306,7 +306,7 @@ export default function Settings() {
                         : 'You will have access to request quotes and view your orders'}
                     </p>
                   </div>
-                  <div className="flex gap-2 pt-2">
+                  <div className="flex flex-col sm:flex-row gap-2 pt-2">
                     <Button
                       onClick={handleSaveProfile}
                       disabled={isSaving}
@@ -334,8 +334,10 @@ export default function Settings() {
                       }}
                       variant="outline"
                       disabled={isSaving}
+                      className="w-full sm:w-auto"
                     >
-                      <X className="w-4 h-4" />
+                      <X className="w-4 h-4 mr-2" />
+                      Cancel
                     </Button>
                   </div>
                 </>
@@ -361,7 +363,7 @@ export default function Settings() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
                   <Label className="text-slate-900 dark:text-white font-medium">Dark Mode</Label>
                   <p className="text-sm text-slate-500 dark:text-slate-400">

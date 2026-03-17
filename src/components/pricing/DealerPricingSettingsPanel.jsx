@@ -55,7 +55,7 @@ export default function DealerPricingSettingsPanel() {
           <div className="relative">
             <input type="number" min={0} max={500} value={settings.default_markup_pct || 0}
               onChange={e => setSettings(s => ({ ...s, default_markup_pct: Number(e.target.value) }))}
-              className="w-full border border-slate-200 rounded-lg px-3 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30" />
+              className="w-full border border-slate-200 rounded-lg px-3 py-2 pr-8 text-base md:text-sm focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30" />
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">%</span>
           </div>
           <div className="mt-2 flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-600">
@@ -69,7 +69,7 @@ export default function DealerPricingSettingsPanel() {
           <div className="relative">
             <input type="number" min={0} max={100} value={settings.max_discount_pct ?? 30}
               onChange={e => setSettings(s => ({ ...s, max_discount_pct: Number(e.target.value) }))}
-              className="w-full border border-slate-200 rounded-lg px-3 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30" />
+              className="w-full border border-slate-200 rounded-lg px-3 py-2 pr-8 text-base md:text-sm focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30" />
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">%</span>
           </div>
         </div>
@@ -77,14 +77,14 @@ export default function DealerPricingSettingsPanel() {
 
       {/* Toggles */}
       <div className="space-y-3 border-t border-slate-100 pt-4">
-        <label className="flex items-center justify-between cursor-pointer">
+        <label className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 cursor-pointer">
           <div>
             <p className="text-sm font-semibold text-slate-700">Show List Prices to Customer</p>
             <p className="text-xs text-slate-400">Display Orbus base prices on the customer quote view</p>
           </div>
           <Switch checked={!!settings.show_list_prices_to_customer} onCheckedChange={v => setSettings(s => ({ ...s, show_list_prices_to_customer: v }))} />
         </label>
-        <label className="flex items-center justify-between cursor-pointer">
+        <label className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 cursor-pointer">
           <div>
             <p className="text-sm font-semibold text-slate-700">Show Savings Summary on Quote</p>
             <p className="text-xs text-slate-400">Show how much the customer is saving vs. list price</p>

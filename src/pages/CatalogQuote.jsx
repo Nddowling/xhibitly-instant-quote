@@ -1332,7 +1332,7 @@ export default function CatalogQuote() {
       )}
 
       {/* ── Top bar ── */}
-      <div className="bg-white border-b border-slate-200 px-4 py-2.5 flex items-center gap-3 flex-shrink-0 shadow-sm">
+      <div className="bg-white border-b border-slate-200 px-3 sm:px-4 py-2.5 flex flex-wrap items-center gap-3 flex-shrink-0 shadow-sm">
         <div className="flex items-center gap-2 flex-shrink-0">
           <div className="w-7 h-7 bg-[#e2231a] rounded-lg flex items-center justify-center">
             <FileText className="w-4 h-4 text-white" />
@@ -1341,7 +1341,7 @@ export default function CatalogQuote() {
         </div>
 
         {activeOrder && (
-          <div className="flex items-center gap-1.5 bg-green-50 border border-green-200 text-green-700 rounded-lg px-2.5 py-1 text-xs font-semibold">
+          <div className="flex items-center gap-1.5 bg-green-50 border border-green-200 text-green-700 rounded-lg px-2.5 py-1 text-xs font-semibold max-w-full sm:max-w-[20rem]">
             <span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block"></span>
             {activeOrder.customer_name || activeOrder.customer_email} · {activeOrder.show_name}
           </div>
@@ -1357,7 +1357,7 @@ export default function CatalogQuote() {
               onKeyDown={e => e.key === 'Enter' && handleSkuSearch()}
               onFocus={() => searchResults.length > 0 && setShowSearchDropdown(true)}
               onBlur={() => setTimeout(() => setShowSearchDropdown(false), 200)}
-              className="text-sm border border-slate-200 rounded-lg px-3 py-1.5 w-52 focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30"
+              className="text-sm border border-slate-200 rounded-lg px-3 py-1.5 w-[min(100%,20rem)] sm:w-52 focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30"
             />
             <button onClick={handleSkuSearch} className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
               <Search className="w-3.5 h-3.5" />
@@ -1387,7 +1387,7 @@ export default function CatalogQuote() {
         </div>
 
         {/* Page nav */}
-        <div className="flex-1 flex items-center justify-center gap-2">
+        <div className="order-3 w-full sm:order-none sm:flex-1 flex items-center justify-center gap-2">
           <button onClick={() => goToPage(currentPage - 1)} disabled={currentPage <= 0}
             className="p-1.5 rounded-lg hover:bg-slate-100 disabled:opacity-30 text-slate-600">
             <ChevronLeft className="w-5 h-5" />
@@ -1435,7 +1435,7 @@ export default function CatalogQuote() {
       )}
 
       {/* ── 3-column body ── */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex flex-col xl:flex-row overflow-hidden">
 
 
 
@@ -1548,7 +1548,7 @@ export default function CatalogQuote() {
         </div>
 
         {/* CENTER: Catalog Page */}
-        <div className="flex-1 overflow-hidden p-3 flex justify-center items-start">
+        <div className="flex-1 overflow-auto p-2 sm:p-3 flex justify-center items-start">
           <div className="relative w-full max-w-2xl flex flex-col items-center">
             {editMode ? (
               // ── Edit mode: draggable hotspot editor ──

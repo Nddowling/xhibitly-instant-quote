@@ -250,10 +250,10 @@ export default function Layout({ children, currentPageName }) {
             {bottomNav.map(({ page, label, icon: Icon }) => (
               <Link key={page} to={createPageUrl(page)} className="flex-1">
                 <button className={`w-full h-full flex flex-col items-center justify-center gap-0.5 transition-colors ${
-                  currentPageName === page || (page === 'Reports' && analyticsActive) ? 'text-[#e2231a]' : 'text-white/35'
+                  currentPageName === page || (page === 'Reports' && analyticsActive) ? 'text-[#e2231a]' : 'text-white/55'
                 }`}>
                   <Icon className="w-5 h-5" />
-                  <span className="text-[9px] font-medium">{label}</span>
+                  <span className="text-[9px] font-medium leading-tight">{label}</span>
                 </button>
               </Link>
             ))}
