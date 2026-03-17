@@ -930,6 +930,7 @@ export default function CatalogQuote() {
   const [showSessionModal, setShowSessionModal] = useState(false);
   const [activeOrder, setActiveOrder] = useState(null);
   const [lineItems, setLineItems] = useState([]);
+  const [showMobileQuote, setShowMobileQuote] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [latestPricingResult, setLatestPricingResult] = useState(null);
   const [generatedPromos, setGeneratedPromos] = useState([]);
@@ -1415,10 +1416,18 @@ export default function CatalogQuote() {
 
 
 
+        <button
+          onClick={() => setShowMobileQuote(true)}
+          className="xl:hidden flex items-center gap-1.5 bg-[#e2231a] text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-[#b01b13] transition-colors flex-shrink-0 shadow-sm"
+        >
+          <ShoppingCart className="w-3.5 h-3.5" />
+          Quote ({lineItems.reduce((s, i) => s + (i.quantity || 0), 0)})
+        </button>
+
         {lineItems.length > 0 && (
           <button
             onClick={handleCreateQuote}
-            className="flex items-center gap-1.5 bg-[#e2231a] text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-[#b01b13] transition-colors flex-shrink-0 shadow-sm"
+            className="hidden xl:flex items-center gap-1.5 bg-[#e2231a] text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-[#b01b13] transition-colors flex-shrink-0 shadow-sm"
           >
             <ShoppingCart className="w-3.5 h-3.5" />
             View Quote ({lineItems.reduce((s, i) => s + (i.quantity || 0), 0)})
@@ -1434,6 +1443,31 @@ export default function CatalogQuote() {
         </div>
       )}
 
+      {/* Mobile quote drawer */}
+      {showMobileQuote && (
+        <div className="xl:hidden fixed inset-x-0 top-14 bottom-14 z-40 bg-black/40" onClick={() => setShowMobileQuote(false)}>
+          <div className="absolute inset-x-0 bottom-0 h-[70vh] bg-white rounded-t-2xl shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200 bg-white">
+              <div className="w-10" />
+              <div className="w-10 h-1 rounded-full bg-slate-300" />
+              <button onClick={() => setShowMobileQuote(false)} className="w-10 h-10 flex items-center justify-center text-slate-500">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="h-[calc(70vh-57px)] overflow-hidden">
+              <QuoteSidebar
+                order={activeOrder}
+                lineItems={lineItems}
+                onLineItemsChange={refreshLineItems}
+                onCreateQuote={handleCreateQuote}
+                productCache={productCache}
+                onPricingResult={setLatestPricingResult}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ── 3-column body ── */}
       <div className="flex-1 flex flex-col xl:flex-row overflow-hidden">
 
@@ -1442,7 +1476,7 @@ export default function CatalogQuote() {
         {/* LEFT: Floating Edit Toolbar */}
         <div className="relative flex-shrink-0">
           {!editMode ? (
-            <div className="flex flex-col items-center gap-1 p-1.5 h-full bg-white border-r border-slate-200">
+            <div className="flex flex-row xl:flex-col items-center gap-1 p-1.5 bg-white border-b xl:border-b-0 xl:border-r border-slate-200">
               <button
                 onClick={() => setEditMode(true)}
                 title="Edit Hotspots"
@@ -1462,7 +1496,7 @@ export default function CatalogQuote() {
               </button>
             </div>
           ) : (
-            <div className="flex flex-col items-center gap-1 p-1.5 h-full bg-white border-r border-slate-200 w-14">
+            <div className="flex flex-row xl:flex-col items-center gap-1 p-1.5 bg-white border-b xl:border-b-0 xl:border-r border-slate-200 w-full xl:w-14 overflow-x-auto">
               <div className="w-full h-px bg-slate-100 my-1" />
 
               <button
@@ -1632,14 +1666,16 @@ export default function CatalogQuote() {
         </div>
 
         {/* RIGHT: Quote Sidebar */}
-        <QuoteSidebar
-          order={activeOrder}
-          lineItems={lineItems}
-          onLineItemsChange={refreshLineItems}
-          onCreateQuote={handleCreateQuote}
-          productCache={productCache}
-          onPricingResult={setLatestPricingResult}
-        />
+        <div className="hidden xl:block">
+          <QuoteSidebar
+            order={activeOrder}
+            lineItems={lineItems}
+            onLineItemsChange={refreshLineItems}
+            onCreateQuote={handleCreateQuote}
+            productCache={productCache}
+            onPricingResult={setLatestPricingResult}
+          />
+        </div>
       </div>
 
 
