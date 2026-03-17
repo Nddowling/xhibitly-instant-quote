@@ -14,6 +14,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import SessionStartModal from '@/components/catalog/SessionStartModal';
 import QuoteSidebar from '@/components/catalog/QuoteSidebar';
+import QuoteSidebarFlyout from '@/components/catalog/QuoteSidebarFlyout';
 import QuoteConfirmModal from '@/components/catalog/QuoteConfirmModal';
 import { runPricingEngine, generatePromoCode } from '@/components/pricing/pricingEngine';
 
@@ -1667,7 +1668,7 @@ export default function CatalogQuote() {
 
         {/* RIGHT: Quote Sidebar */}
         <div className="hidden xl:block">
-          <QuoteSidebar
+          <QuoteSidebarFlyout
             order={activeOrder}
             lineItems={lineItems}
             onLineItemsChange={refreshLineItems}
