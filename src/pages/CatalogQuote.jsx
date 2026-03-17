@@ -1469,14 +1469,14 @@ export default function CatalogQuote() {
       )}
 
       {/* ── 3-column body ── */}
-      <div className="flex-1 flex flex-col xl:flex-row overflow-hidden">
+      <div className="flex-1 flex overflow-hidden">
 
 
 
         {/* LEFT: Floating Edit Toolbar */}
         <div className="relative flex-shrink-0">
           {!editMode ? (
-            <div className="flex flex-row xl:flex-col items-center gap-1 p-1.5 bg-white border-b xl:border-b-0 xl:border-r border-slate-200">
+            <div className="flex flex-col items-center gap-1 p-1.5 h-full bg-white border-r border-slate-200">
               <button
                 onClick={() => setEditMode(true)}
                 title="Edit Hotspots"
@@ -1496,7 +1496,7 @@ export default function CatalogQuote() {
               </button>
             </div>
           ) : (
-            <div className="flex flex-row xl:flex-col items-center gap-1 p-1.5 bg-white border-b xl:border-b-0 xl:border-r border-slate-200 w-full xl:w-14 overflow-x-auto">
+            <div className="flex flex-col items-center gap-1 p-1.5 h-full bg-white border-r border-slate-200 w-14">
               <div className="w-full h-px bg-slate-100 my-1" />
 
               <button
