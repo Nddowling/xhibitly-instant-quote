@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
 import SalesPipelineBoard from '@/components/sales/SalesPipelineBoard';
+import MetricCard from '@/components/dashboard/MetricCard';
 import { 
   TrendingUp, 
   Users, 
@@ -18,7 +19,8 @@ import {
   Clock,
   Target,
   ArrowRight,
-  Plus
+  BookOpen,
+  ClipboardList
 } from 'lucide-react';
 
 export default function SalesDashboard() {
@@ -164,6 +166,11 @@ export default function SalesDashboard() {
 
   // Calculate metrics
   const todayStr = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD in local time
+  const todayLabel = new Date().toLocaleDateString('en-US', {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric'
+  });
   const todayProspects = orders.filter(o =>
     o.follow_up_date === todayStr &&
     ['Pending', 'Contacted', 'Quoted', 'Negotiating'].includes(o.status)
@@ -207,92 +214,102 @@ export default function SalesDashboard() {
       )}
       
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
+          className="mb-6 md:mb-8"
         >
-          <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-1">
-            Welcome back, {user?.full_name?.split(' ')[0] || user?.contact_name?.split(' ')[0]}!
-          </h1>
-          <p className="text-slate-500 dark:text-slate-400">Here's what's happening with your sales today</p>
+          <div className="rounded-[28px] border border-slate-200 bg-white p-5 md:p-7 shadow-sm">
+            <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+              <div className="max-w-3xl">
+                <div className="inline-flex items-center gap-2 rounded-full border border-[#e2231a]/15 bg-[#e2231a]/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#e2231a]">
+                  Broker command center
+                </div>
+                <h1 className="mt-4 text-3xl md:text-4xl font-black tracking-tight text-slate-900">
+                  Welcome back, {user?.full_name?.split(' ')[0] || user?.contact_name?.split(' ')[0]}
+                </h1>
+                <p className="mt-2 text-sm md:text-base text-slate-600">
+                  Keep quotes moving, stay on top of follow-ups, and jump back into the catalog faster.
+                </p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-2.5 lg:justify-end">
+                <Button
+                  onClick={() => navigate(createPageUrl('CatalogQuote'))}
+                  className="bg-[#e2231a] hover:bg-[#b01b13] h-11 rounded-xl px-5"
+                >
+                  <BookOpen className="w-4 h-4 mr-2" />
+                  Open Catalog
+                </Button>
+                <Button
+                  onClick={() => navigate(createPageUrl('Pipeline'))}
+                  variant="outline"
+                  className="h-11 rounded-xl border-slate-200 px-5"
+                >
+                  <ClipboardList className="w-4 h-4 mr-2" />
+                  Review Pipeline
+                </Button>
+              </div>
+            </div>
+
+            <div className="mt-6 grid gap-3 md:grid-cols-3">
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Today</p>
+                <p className="mt-2 text-lg font-bold text-slate-900">{todayLabel}</p>
+                <p className="mt-1 text-sm text-slate-600">{todayProspects.length} follow-up{todayProspects.length === 1 ? '' : 's'} due and {activeOpportunities.length} open opportunities in motion.</p>
+              </div>
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Focus</p>
+                <p className="mt-2 text-lg font-bold text-slate-900">Keep proposals moving</p>
+                <p className="mt-1 text-sm text-slate-600">Jump from the dashboard into the catalog, refine the quote, and send the next client-ready version faster.</p>
+              </div>
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Profile</p>
+                <p className="mt-2 text-lg font-bold text-slate-900">{salesRep?.territory || 'Sales rep workspace'}</p>
+                <p className="mt-1 text-sm text-slate-600">{salesRep?.title || 'Use this workspace to manage deal stages, activity, and next steps.'}</p>
+              </div>
+            </div>
+          </div>
         </motion.div>
 
-        {/* Metrics Cards */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
           className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 mb-6 md:mb-8"
         >
-          <Card 
-            className="cursor-pointer hover:shadow-lg transition-shadow"
+          <MetricCard
+            label="Pipeline Value"
+            value={formatPrice(totalPipelineValue)}
+            note="Open opportunity value"
+            icon={DollarSign}
+            tone="red"
             onClick={() => navigate(createPageUrl('Pipeline'))}
-          >
-            <CardContent className="p-4 md:pt-6">
-              <div className="flex items-center justify-between">
-                <div className="min-w-0">
-                  <p className="text-xs md:text-sm text-slate-500 mb-0.5">Pipeline</p>
-                  <p className="text-lg md:text-2xl font-bold text-slate-900 truncate">{formatPrice(totalPipelineValue)}</p>
-                </div>
-                <div className="w-10 h-10 md:w-12 md:h-12 bg-blue-100 rounded-full flex items-center justify-center shrink-0">
-                  <DollarSign className="w-5 h-5 md:w-6 md:h-6 text-blue-600" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card 
-            className="cursor-pointer hover:shadow-lg transition-shadow"
+          />
+          <MetricCard
+            label="Active Deals"
+            value={activeOpportunities.length}
+            note="Deals still in progress"
+            icon={Target}
+            tone="blue"
             onClick={() => navigate(createPageUrl('Pipeline') + '?view=active')}
-          >
-            <CardContent className="p-4 md:pt-6">
-              <div className="flex items-center justify-between">
-                <div className="min-w-0">
-                  <p className="text-xs md:text-sm text-slate-500 mb-0.5">Active</p>
-                  <p className="text-lg md:text-2xl font-bold text-slate-900">{activeOpportunities.length}</p>
-                </div>
-                <div className="w-10 h-10 md:w-12 md:h-12 bg-yellow-100 rounded-full flex items-center justify-center shrink-0">
-                  <Target className="w-5 h-5 md:w-6 md:h-6 text-yellow-600" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card 
-            className="cursor-pointer hover:shadow-lg transition-shadow"
+          />
+          <MetricCard
+            label="Follow-Ups"
+            value={todayProspects.length}
+            note="Due today"
+            icon={Calendar}
+            tone="amber"
             onClick={() => navigate(createPageUrl('Pipeline') + '?view=followups')}
-          >
-            <CardContent className="p-4 md:pt-6">
-              <div className="flex items-center justify-between">
-                <div className="min-w-0">
-                  <p className="text-xs md:text-sm text-slate-500 mb-0.5">Follow-ups</p>
-                  <p className="text-lg md:text-2xl font-bold text-slate-900">{todayProspects.length}</p>
-                </div>
-                <div className="w-10 h-10 md:w-12 md:h-12 bg-orange-100 rounded-full flex items-center justify-center shrink-0">
-                  <Calendar className="w-5 h-5 md:w-6 md:h-6 text-orange-600" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card 
-            className="cursor-pointer hover:shadow-lg transition-shadow"
+          />
+          <MetricCard
+            label="Wins (30d)"
+            value={recentWins.length}
+            note="Recently confirmed"
+            icon={TrendingUp}
+            tone="green"
             onClick={() => navigate(createPageUrl('Pipeline') + '?view=wins')}
-          >
-            <CardContent className="p-4 md:pt-6">
-              <div className="flex items-center justify-between">
-                <div className="min-w-0">
-                  <p className="text-xs md:text-sm text-slate-500 mb-0.5">Wins (30d)</p>
-                  <p className="text-lg md:text-2xl font-bold text-slate-900">{recentWins.length}</p>
-                </div>
-                <div className="w-10 h-10 md:w-12 md:h-12 bg-green-100 rounded-full flex items-center justify-center shrink-0">
-                  <TrendingUp className="w-5 h-5 md:w-6 md:h-6 text-green-600" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          />
         </motion.div>
 
         <div className="grid lg:grid-cols-3 gap-4 md:gap-6">
@@ -352,9 +369,19 @@ export default function SalesDashboard() {
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-8 text-slate-500">
+                  <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/80 px-6 py-10 text-center">
                     <Clock className="w-12 h-12 mx-auto mb-3 text-slate-300" />
-                    <p>No follow-ups scheduled for today</p>
+                    <p className="text-base font-semibold text-slate-800">No follow-ups scheduled for today</p>
+                    <p className="mt-1 text-sm text-slate-500">Use the catalog to build the next quote or review open opportunities in your pipeline.</p>
+                    <div className="mt-4 flex flex-col sm:flex-row items-center justify-center gap-2.5">
+                      <Button onClick={() => navigate(createPageUrl('CatalogQuote'))} className="bg-[#e2231a] hover:bg-[#b01b13]">
+                        <BookOpen className="w-4 h-4 mr-2" />
+                        Open Catalog
+                      </Button>
+                      <Button onClick={() => navigate(createPageUrl('Pipeline'))} variant="outline">
+                        View Pipeline
+                      </Button>
+                    </div>
                   </div>
                 )}
               </CardContent>
@@ -398,9 +425,10 @@ export default function SalesDashboard() {
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-8 text-slate-500">
+                  <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/80 px-6 py-10 text-center text-slate-500">
                     <CheckCircle2 className="w-12 h-12 mx-auto mb-3 text-slate-300" />
-                    <p className="text-sm">No recent activity</p>
+                    <p className="text-sm font-semibold text-slate-800">No recent activity yet</p>
+                    <p className="mt-1 text-xs text-slate-500">Calls, emails, meetings, and quote updates will show up here.</p>
                   </div>
                 )}
               </CardContent>
