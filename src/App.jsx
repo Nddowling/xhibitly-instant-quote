@@ -8,6 +8,7 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import ExecutiveDashboard from './pages/ExecutiveDashboard';
+import ExecutiveListView from './pages/ExecutiveListView';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -64,6 +65,14 @@ const AuthenticatedApp = () => {
         element={
           <LayoutWrapper currentPageName="ExecutiveDashboard">
             <ExecutiveDashboard />
+          </LayoutWrapper>
+        }
+      />
+      <Route
+        path="/ExecutiveListView"
+        element={
+          <LayoutWrapper currentPageName="ExecutiveListView">
+            <ExecutiveListView />
           </LayoutWrapper>
         }
       />

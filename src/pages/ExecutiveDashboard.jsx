@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
@@ -22,7 +22,6 @@ export default function ExecutiveDashboard() {
   const [orders, setOrders] = useState([]);
   const [brokerInstance, setBrokerInstance] = useState(null);
   const [selectedView, setSelectedView] = useState('active');
-  const detailSectionRef = useRef(null);
 
   useEffect(() => {
     const loadData = async () => {
@@ -72,9 +71,7 @@ export default function ExecutiveDashboard() {
 
   const handleSelectView = (viewKey) => {
     setSelectedView(viewKey);
-    requestAnimationFrame(() => {
-      detailSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
+    navigate(`${createPageUrl('ExecutiveListView')}?preset=${viewKey}`);
   };
 
   const detailConfig = {
@@ -227,13 +224,11 @@ export default function ExecutiveDashboard() {
           </div>
         </div>
 
-        <div ref={detailSectionRef} className="scroll-mt-24">
-          <ExecutiveOrderList
-            title={detailConfig[selectedView].title}
-            subtitle={detailConfig[selectedView].subtitle}
-            orders={detailConfig[selectedView].orders}
-          />
-        </div>
+        <ExecutiveOrderList
+          title={detailConfig[selectedView].title}
+          subtitle={detailConfig[selectedView].subtitle}
+          orders={detailConfig[selectedView].orders}
+        />
 
         {orders.length === 0 && (
           <div className="rounded-3xl border border-dashed border-slate-200 bg-white px-6 py-10 text-center text-slate-500 shadow-sm">
