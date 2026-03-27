@@ -16,6 +16,7 @@ export default function OrderDetail() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const orderId = searchParams.get('id') || searchParams.get('orderId');
+  const returnTo = searchParams.get('returnTo');
 
   const [order, setOrder] = useState(null);
   const [boothDesign, setBoothDesign] = useState(null);
@@ -76,6 +77,14 @@ export default function OrderDetail() {
   const formatPrice = (price) =>
     new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(price || 0);
 
+  const handleBack = () => {
+    if (returnTo) {
+      navigate(returnTo);
+      return;
+    }
+    navigate(-1);
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-[calc(100vh-64px)] bg-slate-50 flex items-center justify-center">
@@ -89,7 +98,12 @@ export default function OrderDetail() {
   return (
     <div className="min-h-[calc(100vh-56px)] md:min-h-[calc(100vh-64px)] bg-slate-50 pb-24 md:pb-10">
       <div className="max-w-6xl mx-auto px-4 md:px-8 pt-5 md:pt-8">
-        <OrderHeader order={order} formatPrice={formatPrice} />
+        <OrderHeader
+          order={order}
+          formatPrice={formatPrice}
+          backLabel={returnTo ? 'Back to filtered results' : 'Back'}
+          onBack={handleBack}
+        />
 
         <Tabs defaultValue="details" className="w-full">
           <TabsList className="mb-4 bg-white border shadow-sm">

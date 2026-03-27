@@ -1,6 +1,7 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
+import { ArrowLeft } from 'lucide-react';
 
 const STATUS_STYLES = {
   'Pending': 'bg-yellow-100 text-yellow-800',
@@ -14,14 +15,24 @@ const STATUS_STYLES = {
   'Cancelled': 'bg-red-100 text-red-800',
 };
 
-export default function OrderHeader({ order, formatPrice }) {
+export default function OrderHeader({ order, formatPrice, backLabel, onBack }) {
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
-      <div>
-        <div className="flex items-center gap-2.5 flex-wrap">
-          <h1 className="text-xl md:text-2xl font-bold text-slate-900">
-            {order.reference_number || 'Order Details'}
-          </h1>
+    <div className="mb-6 space-y-3">
+      {onBack && (
+        <button
+          onClick={onBack}
+          className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          {backLabel || 'Back'}
+        </button>
+      )}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <h1 className="text-xl md:text-2xl font-bold text-slate-900">
+              {order.reference_number || 'Order Details'}
+            </h1>
           <Badge className={`${STATUS_STYLES[order.status] || 'bg-slate-100 text-slate-800'} font-medium text-xs`}>
             {order.status}
           </Badge>
@@ -32,15 +43,16 @@ export default function OrderHeader({ order, formatPrice }) {
           Created {format(new Date(order.created_date), 'MMM d, yyyy')}
         </p>
       </div>
-      <div className="text-left sm:text-right">
-        <div className="text-2xl font-bold text-[#e2231a]">
-          {formatPrice(order.quoted_price)}
-        </div>
-        {order.final_price && order.final_price !== order.quoted_price && (
-          <div className="text-sm text-green-600 font-medium">
-            Final: {formatPrice(order.final_price)}
+        <div className="text-left sm:text-right">
+          <div className="text-2xl font-bold text-[#e2231a]">
+            {formatPrice(order.quoted_price)}
           </div>
-        )}
+          {order.final_price && order.final_price !== order.quoted_price && (
+            <div className="text-sm text-green-600 font-medium">
+              Final: {formatPrice(order.final_price)}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

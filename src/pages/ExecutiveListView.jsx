@@ -262,7 +262,7 @@ export default function ExecutiveListView() {
                 {filteredOrders.map((order) => (
                   <button
                     key={order.id}
-                    onClick={() => navigate(`${createPageUrl('OrderDetail')}?id=${order.id}`)}
+                    onClick={() => navigate(`${createPageUrl('OrderDetail')}?id=${order.id}&returnTo=${encodeURIComponent(`/ExecutiveListView?preset=${preset}`)}`)}
                     className="w-full grid grid-cols-1 lg:grid-cols-[minmax(0,1.4fr)_150px_150px_130px_120px] gap-3 px-5 py-4 text-left hover:bg-slate-50 transition-colors"
                   >
                     <div className="min-w-0">
