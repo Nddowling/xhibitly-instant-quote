@@ -116,11 +116,11 @@ export default function Layout({ children, currentPageName }) {
 
       {showHeader && (
         <header className="bg-[#1a1a1a] text-white shadow-xl fixed top-0 left-0 right-0 z-50 border-b border-white/5" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6">
-            <div className="flex items-center justify-between h-14 md:h-16">
+          <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center gap-4 h-14 md:h-16">
 
               {/* Left: Logo + back */}
-              <div className="flex items-center gap-2 min-w-0">
+              <div className="flex items-center gap-2 min-w-0 shrink-0">
                 {showBackButton && (
                   <button onClick={() => navigate(-1)} className="p-1.5 rounded-lg hover:bg-white/10 text-white/70 hover:text-white transition-colors mr-1 flex-shrink-0">
                     <ArrowLeft className="w-5 h-5" />
@@ -134,10 +134,10 @@ export default function Layout({ children, currentPageName }) {
               </div>
 
               {/* Center: Main nav (desktop) */}
-              <nav className="hidden md:flex items-center gap-0.5">
+              <nav className="hidden md:flex items-center gap-0.5 flex-1 min-w-0 justify-center">
                 {primaryNav.map(({ page, label, icon: Icon }) => (
                   <Link key={page} to={createPageUrl(page)}>
-                    <button className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                    <button className={`flex items-center gap-1.5 px-2.5 lg:px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
                       currentPageName === page ? 'bg-[#e2231a] text-white' : 'text-white/60 hover:text-white hover:bg-white/8'
                     }`}>
                       <Icon className="w-4 h-4" />
@@ -150,7 +150,7 @@ export default function Layout({ children, currentPageName }) {
                 <div className="relative" ref={analyticsRef}>
                   <button
                     onClick={() => setAnalyticsOpen(o => !o)}
-                    className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                    className={`flex items-center gap-1.5 px-2.5 lg:px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
                       analyticsActive ? 'bg-[#e2231a] text-white' : 'text-white/60 hover:text-white hover:bg-white/8'
                     }`}
                   >
@@ -176,7 +176,7 @@ export default function Layout({ children, currentPageName }) {
 
                 {user?.role === 'admin' && adminNav.map(({ page, label, icon: Icon }) => (
                   <Link key={page} to={createPageUrl(page)}>
-                    <button className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                    <button className={`flex items-center gap-1.5 px-2.5 lg:px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
                       currentPageName === page ? 'bg-[#e2231a] text-white' : 'text-white/60 hover:text-white hover:bg-white/8'
                     }`}>
                       <Icon className="w-4 h-4" />
@@ -188,7 +188,7 @@ export default function Layout({ children, currentPageName }) {
                 {/* Setup */}
                 {user?.role === 'admin' && (
                   <Link to={createPageUrl('Setup')}>
-                    <button className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                    <button className={`flex items-center gap-1.5 px-2.5 lg:px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
                       currentPageName === 'Setup' ? 'bg-[#e2231a] text-white' : 'text-white/60 hover:text-white hover:bg-white/8'
                     }`}>
                       <Settings2 className="w-4 h-4" />
@@ -199,8 +199,8 @@ export default function Layout({ children, currentPageName }) {
               </nav>
 
               {/* Right: User + actions */}
-              <div className="flex items-center gap-1 sm:gap-2">
-                <span className="hidden lg:block text-xs text-white/40 mr-1">
+              <div className="flex items-center gap-1 sm:gap-2 shrink-0 ml-auto">
+                <span className="hidden xl:block text-xs text-white/40 mr-1 max-w-[96px] truncate">
                   {user?.full_name?.split(' ')[0] || 'Dealer'}
                 </span>
                 <Link to={createPageUrl('Settings')}>
