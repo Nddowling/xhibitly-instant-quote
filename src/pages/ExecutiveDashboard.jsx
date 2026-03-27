@@ -6,6 +6,7 @@ import { BarChart3, BriefcaseBusiness, CircleCheckBig, CircleX, TrendingUp } fro
 import { ensureBrokerInstance } from '@/lib/brokerInstance';
 import KpiCard from '@/components/executive/KpiCard';
 import ExecutiveStatusBreakdown from '@/components/executive/ExecutiveStatusBreakdown';
+import ExecutiveOrderList from '@/components/executive/ExecutiveOrderList';
 
 const WON_STATUSES = ['Confirmed', 'Delivered', 'Accepted'];
 const LOST_STATUSES = ['Declined', 'Cancelled'];
@@ -20,6 +21,7 @@ export default function ExecutiveDashboard() {
   const [loading, setLoading] = useState(true);
   const [orders, setOrders] = useState([]);
   const [brokerInstance, setBrokerInstance] = useState(null);
+  const [selectedView, setSelectedView] = useState('active');
 
   useEffect(() => {
     const loadData = async () => {
@@ -84,6 +86,29 @@ export default function ExecutiveDashboard() {
     });
   }, [orders]);
 
+  const detailConfig = {
+    active: {
+      title: 'Active Orders',
+      subtitle: 'Open deals currently moving through the broker pipeline',
+      orders: metrics.activeOrders
+    },
+    won: {
+      title: 'Won Orders',
+      subtitle: 'All confirmed, delivered, and accepted business',
+      orders: metrics.wonOrders
+    },
+    lost: {
+      title: 'Lost Orders',
+      subtitle: 'Declined and cancelled opportunities',
+      orders: metrics.lostOrders
+    },
+    closedWon: {
+      title: 'Closed Won Orders',
+      subtitle: 'Orders contributing to closed-won value',
+      orders: metrics.wonOrders
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
@@ -114,35 +139,35 @@ export default function ExecutiveDashboard() {
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <KpiCard label="Active Orders" value={metrics.activeOrders.length} note="Open pipeline opportunities" tone="blue" />
-          <KpiCard label="Pipeline Value" value={fmtMoney(metrics.pipelineValue)} note="Current active order value" tone="red" />
-          <KpiCard label="Won / Lost" value={`${metrics.wonOrders.length} / ${metrics.lostOrders.length}`} note={`Win rate ${metrics.winRate}%`} tone="green" />
-          <KpiCard label="Closed Won Value" value={fmtMoney(metrics.wonValue)} note="Value from won business" tone="amber" />
+          <KpiCard label="Active Orders" value={metrics.activeOrders.length} note="Open pipeline opportunities" tone="blue" onClick={() => setSelectedView('active')} />
+          <KpiCard label="Pipeline Value" value={fmtMoney(metrics.pipelineValue)} note="Current active order value" tone="red" onClick={() => setSelectedView('active')} />
+          <KpiCard label="Won / Lost" value={`${metrics.wonOrders.length} / ${metrics.lostOrders.length}`} note={`Win rate ${metrics.winRate}%`} tone="green" onClick={() => setSelectedView('won')} />
+          <KpiCard label="Closed Won Value" value={fmtMoney(metrics.wonValue)} note="Value from won business" tone="amber" onClick={() => setSelectedView('closedWon')} />
         </div>
 
         <div className="grid gap-4 lg:grid-cols-4">
           <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm lg:col-span-1 space-y-4">
-            <div className="flex items-center gap-3">
+            <button onClick={() => setSelectedView('active')} className="flex items-center gap-3 w-full text-left rounded-2xl p-2 hover:bg-slate-50 transition-colors">
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 text-blue-600"><BriefcaseBusiness className="w-5 h-5" /></div>
               <div>
                 <p className="text-sm font-bold text-slate-900">Active Pipeline</p>
                 <p className="text-xs text-slate-500">Deals in progress</p>
               </div>
-            </div>
-            <div className="flex items-center gap-3">
+            </button>
+            <button onClick={() => setSelectedView('won')} className="flex items-center gap-3 w-full text-left rounded-2xl p-2 hover:bg-slate-50 transition-colors">
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-green-50 text-green-600"><CircleCheckBig className="w-5 h-5" /></div>
               <div>
                 <p className="text-sm font-bold text-slate-900">Won Deals</p>
                 <p className="text-xs text-slate-500">{metrics.wonOrders.length} total won</p>
               </div>
-            </div>
-            <div className="flex items-center gap-3">
+            </button>
+            <button onClick={() => setSelectedView('lost')} className="flex items-center gap-3 w-full text-left rounded-2xl p-2 hover:bg-slate-50 transition-colors">
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-red-50 text-red-600"><CircleX className="w-5 h-5" /></div>
               <div>
                 <p className="text-sm font-bold text-slate-900">Lost Deals</p>
                 <p className="text-xs text-slate-500">{metrics.lostOrders.length} total lost</p>
               </div>
-            </div>
+            </button>
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-50 text-amber-600"><TrendingUp className="w-5 h-5" /></div>
               <div>
@@ -156,6 +181,12 @@ export default function ExecutiveDashboard() {
             <ExecutiveStatusBreakdown rows={breakdownRows} />
           </div>
         </div>
+
+        <ExecutiveOrderList
+          title={detailConfig[selectedView].title}
+          subtitle={detailConfig[selectedView].subtitle}
+          orders={detailConfig[selectedView].orders}
+        />
 
         <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="flex items-center gap-3 mb-4">
