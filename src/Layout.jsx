@@ -4,7 +4,7 @@ import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import {
   LogOut, Users, Menu, X, LayoutDashboard, Settings as SettingsIcon,
-  ArrowLeft, BookOpen, ClipboardList, Tag, BarChart2, ChevronDown, Settings2
+  ArrowLeft, BookOpen, ClipboardList, Tag, BarChart2, ChevronDown, Settings2, ShieldCheck
 } from 'lucide-react';
 import ErrorBoundary from './components/ErrorBoundary';
 
@@ -71,6 +71,10 @@ export default function Layout({ children, currentPageName }) {
     { page: 'Dashboards',    label: 'Dashboards', icon: LayoutDashboard },
   ];
 
+  const adminNav = [
+    { page: 'ExecutiveDashboard', label: 'Executive', icon: ShieldCheck },
+  ];
+
   const analyticsActive = analyticsNav.some(n => n.page === currentPageName) ||
     ['ReportBuilder','ReportView','DashboardView'].includes(currentPageName);
 
@@ -78,6 +82,7 @@ export default function Layout({ children, currentPageName }) {
   const allMobileNav = [
     ...primaryNav,
     ...analyticsNav,
+    ...(user?.role === 'admin' ? adminNav : []),
     { page: 'Setup', label: 'Setup', icon: Settings2 },
   ];
 
@@ -168,6 +173,17 @@ export default function Layout({ children, currentPageName }) {
                     </div>
                   )}
                 </div>
+
+                {user?.role === 'admin' && adminNav.map(({ page, label, icon: Icon }) => (
+                  <Link key={page} to={createPageUrl(page)}>
+                    <button className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                      currentPageName === page ? 'bg-[#e2231a] text-white' : 'text-white/60 hover:text-white hover:bg-white/8'
+                    }`}>
+                      <Icon className="w-4 h-4" />
+                      {label}
+                    </button>
+                  </Link>
+                ))}
 
                 {/* Setup */}
                 {user?.role === 'admin' && (
