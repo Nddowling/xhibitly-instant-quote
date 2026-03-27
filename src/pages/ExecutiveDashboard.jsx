@@ -69,33 +69,15 @@ export default function ExecutiveDashboard() {
     };
   }, [orders]);
 
-  const breakdownRows = useMemo(() => {
-    const groups = [
-      { label: 'Pending', statuses: ['Pending'] },
-      { label: 'Contacted', statuses: ['Contacted'] },
-      { label: 'Quoted', statuses: ['Quoted'] },
-      { label: 'Negotiating', statuses: ['Negotiating'] },
-      { label: 'Production', statuses: ['Ordered', 'In Production', 'Shipped'] },
-      { label: 'Won', statuses: WON_STATUSES },
-      { label: 'Lost', statuses: LOST_STATUSES }
-    ];
-
-    return groups.map((group) => {
-      const items = orders.filter(order => group.statuses.includes(order.status));
-      const value = items.reduce((sum, order) => sum + (order.final_price || order.quoted_price || 0), 0);
-      return {
-        label: group.label,
-        count: items.length,
-        value,
-        share: orders.length ? Math.round((items.length / orders.length) * 100) : 0
-      };
-    });
-  }, [orders]);
-
   const detailConfig = {
     active: {
       title: 'Active Orders',
       subtitle: 'Open deals currently moving through the broker pipeline',
+      orders: metrics.activeOrders
+    },
+    pipelineValue: {
+      title: 'Pipeline Orders',
+      subtitle: 'Orders currently included in active pipeline value',
       orders: metrics.activeOrders
     },
     won: {
@@ -112,8 +94,57 @@ export default function ExecutiveDashboard() {
       title: 'Closed Won Orders',
       subtitle: 'Orders contributing to closed-won value',
       orders: metrics.wonOrders
+    },
+    pending: {
+      title: 'Pending Orders',
+      subtitle: 'Orders currently in pending status',
+      orders: orders.filter(order => ['Pending'].includes(order.status))
+    },
+    contacted: {
+      title: 'Contacted Orders',
+      subtitle: 'Orders currently in contacted status',
+      orders: orders.filter(order => ['Contacted'].includes(order.status))
+    },
+    quoted: {
+      title: 'Quoted Orders',
+      subtitle: 'Orders currently in quoted status',
+      orders: orders.filter(order => ['Quoted'].includes(order.status))
+    },
+    negotiating: {
+      title: 'Negotiating Orders',
+      subtitle: 'Orders currently in negotiating status',
+      orders: orders.filter(order => ['Negotiating'].includes(order.status))
+    },
+    production: {
+      title: 'Production Orders',
+      subtitle: 'Orders in ordered, in production, or shipped stages',
+      orders: orders.filter(order => ['Ordered', 'In Production', 'Shipped'].includes(order.status))
     }
   };
+
+  const breakdownRows = useMemo(() => {
+    const groups = [
+      { label: 'Pending', statuses: ['Pending'], key: 'pending' },
+      { label: 'Contacted', statuses: ['Contacted'], key: 'contacted' },
+      { label: 'Quoted', statuses: ['Quoted'], key: 'quoted' },
+      { label: 'Negotiating', statuses: ['Negotiating'], key: 'negotiating' },
+      { label: 'Production', statuses: ['Ordered', 'In Production', 'Shipped'], key: 'production' },
+      { label: 'Won', statuses: WON_STATUSES, key: 'won' },
+      { label: 'Lost', statuses: LOST_STATUSES, key: 'lost' }
+    ];
+
+    return groups.map((group) => {
+      const items = orders.filter(order => group.statuses.includes(order.status));
+      const value = items.reduce((sum, order) => sum + (order.final_price || order.quoted_price || 0), 0);
+      return {
+        key: group.key,
+        label: group.label,
+        count: items.length,
+        value,
+        share: orders.length ? Math.round((items.length / orders.length) * 100) : 0
+      };
+    });
+  }, [orders, metrics.activeOrders, metrics.wonOrders, metrics.lostOrders]);
 
   if (loading) {
     return (
@@ -146,7 +177,7 @@ export default function ExecutiveDashboard() {
 
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           <KpiCard label="Active Orders" value={metrics.activeOrders.length} note="Open pipeline opportunities" tone="blue" onClick={() => setSelectedView('active')} />
-          <KpiCard label="Pipeline Value" value={fmtMoney(metrics.pipelineValue)} note="Current active order value" tone="red" onClick={() => setSelectedView('active')} />
+          <KpiCard label="Pipeline Value" value={fmtMoney(metrics.pipelineValue)} note="Current active order value" tone="red" onClick={() => setSelectedView('pipelineValue')} />
           <KpiCard label="Won / Lost" value={`${metrics.wonOrders.length} / ${metrics.lostOrders.length}`} note={`Win rate ${metrics.winRate}%`} tone="green" onClick={() => setSelectedView(metrics.wonOrders.length > 0 ? 'won' : 'lost')} />
           <KpiCard label="Closed Won Value" value={fmtMoney(metrics.wonValue)} note="Value from won business" tone="amber" onClick={() => setSelectedView('closedWon')} />
         </div>
@@ -184,7 +215,7 @@ export default function ExecutiveDashboard() {
           </div>
 
           <div className="lg:col-span-3">
-            <ExecutiveStatusBreakdown rows={breakdownRows} />
+            <ExecutiveStatusBreakdown rows={breakdownRows} onRowClick={(row) => setSelectedView(row.key)} />
           </div>
         </div>
 

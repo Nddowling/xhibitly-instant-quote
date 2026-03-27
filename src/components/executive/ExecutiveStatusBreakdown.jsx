@@ -4,7 +4,7 @@ function fmtMoney(value) {
   return '$' + Number(value || 0).toLocaleString('en-US', { maximumFractionDigits: 0 });
 }
 
-export default function ExecutiveStatusBreakdown({ rows }) {
+export default function ExecutiveStatusBreakdown({ rows, onRowClick }) {
   return (
     <div className="rounded-3xl border border-slate-200 bg-white shadow-sm overflow-hidden">
       <div className="border-b border-slate-200 px-5 py-4">
@@ -13,7 +13,11 @@ export default function ExecutiveStatusBreakdown({ rows }) {
       </div>
       <div className="divide-y divide-slate-100">
         {rows.map((row) => (
-          <div key={row.label} className="grid grid-cols-1 md:grid-cols-4 gap-3 px-5 py-4">
+          <button
+            key={row.label}
+            onClick={() => onRowClick?.(row)}
+            className="w-full grid grid-cols-1 md:grid-cols-4 gap-3 px-5 py-4 text-left hover:bg-slate-50 transition-colors"
+          >
             <div>
               <p className="text-sm font-semibold text-slate-900">{row.label}</p>
             </div>
@@ -29,7 +33,7 @@ export default function ExecutiveStatusBreakdown({ rows }) {
               <p className="text-xs uppercase tracking-wide text-slate-400">Share</p>
               <p className="text-sm font-bold text-slate-800">{row.share}%</p>
             </div>
-          </div>
+          </button>
         ))}
       </div>
     </div>
