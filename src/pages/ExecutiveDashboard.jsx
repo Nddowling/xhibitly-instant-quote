@@ -35,7 +35,13 @@ export default function ExecutiveDashboard() {
         const instance = await ensureBrokerInstance(currentUser);
         setBrokerInstance(instance);
         const allOrders = await base44.entities.Order.list('-created_date', 1000);
-        setOrders((allOrders || []).filter(order => order.broker_instance_id === (instance?.id || currentUser.broker_instance_id)));
+        const scopedOrders = (allOrders || []).filter(order => {
+          if (order.broker_instance_id) {
+            return order.broker_instance_id === (instance?.id || currentUser.broker_instance_id);
+          }
+          return order.dealer_email === currentUser.email || order.created_by === currentUser.email;
+        });
+        setOrders(scopedOrders);
       } finally {
         setLoading(false);
       }
@@ -141,27 +147,27 @@ export default function ExecutiveDashboard() {
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           <KpiCard label="Active Orders" value={metrics.activeOrders.length} note="Open pipeline opportunities" tone="blue" onClick={() => setSelectedView('active')} />
           <KpiCard label="Pipeline Value" value={fmtMoney(metrics.pipelineValue)} note="Current active order value" tone="red" onClick={() => setSelectedView('active')} />
-          <KpiCard label="Won / Lost" value={`${metrics.wonOrders.length} / ${metrics.lostOrders.length}`} note={`Win rate ${metrics.winRate}%`} tone="green" onClick={() => setSelectedView('won')} />
+          <KpiCard label="Won / Lost" value={`${metrics.wonOrders.length} / ${metrics.lostOrders.length}`} note={`Win rate ${metrics.winRate}%`} tone="green" onClick={() => setSelectedView(metrics.wonOrders.length > 0 ? 'won' : 'lost')} />
           <KpiCard label="Closed Won Value" value={fmtMoney(metrics.wonValue)} note="Value from won business" tone="amber" onClick={() => setSelectedView('closedWon')} />
         </div>
 
         <div className="grid gap-4 lg:grid-cols-4">
           <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm lg:col-span-1 space-y-4">
-            <button onClick={() => setSelectedView('active')} className="flex items-center gap-3 w-full text-left rounded-2xl p-2 hover:bg-slate-50 transition-colors">
+            <button onClick={() => setSelectedView('active')} className={`flex items-center gap-3 w-full text-left rounded-2xl p-2 transition-colors ${selectedView === 'active' ? 'bg-blue-50' : 'hover:bg-slate-50'}`}>
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 text-blue-600"><BriefcaseBusiness className="w-5 h-5" /></div>
               <div>
                 <p className="text-sm font-bold text-slate-900">Active Pipeline</p>
                 <p className="text-xs text-slate-500">Deals in progress</p>
               </div>
             </button>
-            <button onClick={() => setSelectedView('won')} className="flex items-center gap-3 w-full text-left rounded-2xl p-2 hover:bg-slate-50 transition-colors">
+            <button onClick={() => setSelectedView('won')} className={`flex items-center gap-3 w-full text-left rounded-2xl p-2 transition-colors ${selectedView === 'won' ? 'bg-green-50' : 'hover:bg-slate-50'}`}>
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-green-50 text-green-600"><CircleCheckBig className="w-5 h-5" /></div>
               <div>
                 <p className="text-sm font-bold text-slate-900">Won Deals</p>
                 <p className="text-xs text-slate-500">{metrics.wonOrders.length} total won</p>
               </div>
             </button>
-            <button onClick={() => setSelectedView('lost')} className="flex items-center gap-3 w-full text-left rounded-2xl p-2 hover:bg-slate-50 transition-colors">
+            <button onClick={() => setSelectedView('lost')} className={`flex items-center gap-3 w-full text-left rounded-2xl p-2 transition-colors ${selectedView === 'lost' ? 'bg-red-50' : 'hover:bg-slate-50'}`}>
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-red-50 text-red-600"><CircleX className="w-5 h-5" /></div>
               <div>
                 <p className="text-sm font-bold text-slate-900">Lost Deals</p>
@@ -187,6 +193,12 @@ export default function ExecutiveDashboard() {
           subtitle={detailConfig[selectedView].subtitle}
           orders={detailConfig[selectedView].orders}
         />
+
+        {orders.length === 0 && (
+          <div className="rounded-3xl border border-dashed border-slate-200 bg-white px-6 py-10 text-center text-slate-500 shadow-sm">
+            No current orders were found for this executive workspace yet.
+          </div>
+        )}
 
         <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="flex items-center gap-3 mb-4">
