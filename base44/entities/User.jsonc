@@ -1,0 +1,58 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "company_name": {
+      "type": "string",
+      "description": "Dealer's company name"
+    },
+    "contact_name": {
+      "type": "string",
+      "description": "Primary contact person name"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Contact phone number"
+    },
+    "user_type": {
+      "type": "string",
+      "enum": [
+        "customer",
+        "sales_rep",
+        "admin",
+        "student"
+      ],
+      "default": "customer",
+      "description": "User account type"
+    },
+    "territory": {
+      "type": "string",
+      "description": "Sales territory (for sales reps)"
+    },
+    "is_sales_rep": {
+      "type": "boolean",
+      "default": false,
+      "description": "Quick flag for sales rep identification"
+    },
+    "broker_instance_id": {
+      "type": "string",
+      "description": "Broker workspace this user belongs to"
+    },
+    "broker_role": {
+      "type": "string",
+      "enum": [
+        "owner",
+        "admin",
+        "sales_rep"
+      ],
+      "default": "sales_rep",
+      "description": "Role inside the broker workspace"
+    }
+  },
+  "required": [
+    "company_name",
+    "contact_name",
+    "phone",
+    "territory"
+  ]
+}

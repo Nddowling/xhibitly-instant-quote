@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Search, FileText, ExternalLink, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { ensureBrokerInstance } from '@/lib/brokerInstance';
 
 const STATUSES = ['All', 'Draft', 'Pending', 'Contacted', 'Quoted', 'Negotiating', 'Accepted', 'Confirmed', 'Declined', 'Ordered', 'In Production', 'Shipped', 'Delivered', 'Cancelled'];
 const BOOTH_SIZES = ['All', '10x10', '10x20', '20x20', '20x30', 'island'];
@@ -35,10 +36,18 @@ export default function RecentQuotes() {
   const [boothFilter, setBoothFilter] = useState('All');
 
   useEffect(() => {
-    base44.entities.Order.list('-created_date', 500).then(res => {
-      setOrders(res || []);
-      setLoading(false);
-    }).catch(() => setLoading(false));
+    const loadOrders = async () => {
+      try {
+        const currentUser = await base44.auth.me();
+        const brokerInstance = await ensureBrokerInstance(currentUser);
+        const res = await base44.entities.Order.list('-created_date', 500);
+        setOrders((res || []).filter(order => order.broker_instance_id === (brokerInstance?.id || currentUser.broker_instance_id)));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadOrders();
   }, []);
 
   const filtered = orders.filter(o => {

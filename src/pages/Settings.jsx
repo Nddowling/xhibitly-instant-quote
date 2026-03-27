@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { base44 } from '@/api/base44Client';
@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { User, Trash2, Moon, Sun, Shield, Edit, Save, X, Wrench, Tag } from 'lucide-react';
 import DealerPricingSettingsPanel from '@/components/pricing/DealerPricingSettingsPanel';
 import { motion } from 'framer-motion';
+import { ensureBrokerInstance } from '@/lib/brokerInstance';
 
 export default function Settings() {
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ export default function Settings() {
   const [isSaving, setIsSaving] = useState(false);
   const [isCaching, setIsCaching] = useState(false);
   const [cacheProgress, setCacheProgress] = useState({ total: 0, current: 0, errors: 0 });
+  const [brokerInstance, setBrokerInstance] = useState(null);
   const [editForm, setEditForm] = useState({
     contact_name: '',
     company_name: '',
@@ -38,7 +40,9 @@ export default function Settings() {
   const loadUser = async () => {
     try {
       const currentUser = await base44.auth.me();
-      setUser(currentUser);
+      const instance = await ensureBrokerInstance(currentUser);
+      setUser({ ...currentUser, broker_instance_id: instance?.id || currentUser.broker_instance_id });
+      setBrokerInstance(instance);
       setEditForm({
         contact_name: currentUser.contact_name || currentUser.full_name || '',
         company_name: currentUser.company_name || '',
@@ -345,6 +349,37 @@ export default function Settings() {
             </CardContent>
           </Card>
         </motion.div>
+
+        {brokerInstance && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.18 }}
+          >
+            <Card className="mb-6 dark:bg-slate-900 dark:border-slate-800">
+              <CardHeader>
+                <CardTitle className="dark:text-white">Broker Workspace</CardTitle>
+                <CardDescription className="dark:text-slate-400">
+                  Your isolated broker instance is created automatically on first login
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div>
+                  <Label className="text-slate-500 dark:text-slate-400 text-sm">Workspace Name</Label>
+                  <p className="text-slate-900 dark:text-white font-medium">{brokerInstance.name}</p>
+                </div>
+                <div>
+                  <Label className="text-slate-500 dark:text-slate-400 text-sm">Workspace ID</Label>
+                  <p className="text-slate-900 dark:text-white font-medium break-all">{brokerInstance.id}</p>
+                </div>
+                <div>
+                  <Label className="text-slate-500 dark:text-slate-400 text-sm">My Role</Label>
+                  <p className="text-slate-900 dark:text-white font-medium capitalize">{user?.broker_role || 'owner'}</p>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
 
         {/* Appearance */}
         <motion.div

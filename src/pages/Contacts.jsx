@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
 import { Search, Building2, Mail, Phone, FileText, Plus } from 'lucide-react';
+import { ensureBrokerInstance } from '@/lib/brokerInstance';
 
 export default function Contacts() {
   const navigate = useNavigate();
@@ -28,16 +29,18 @@ export default function Contacts() {
   const loadContacts = async () => {
     try {
       const currentUser = await base44.auth.me();
+      const brokerInstance = await ensureBrokerInstance(currentUser);
       
       if (!currentUser.is_sales_rep) {
         navigate(createPageUrl('QuoteRequest'));
         return;
       }
 
-      setUser(currentUser);
+      setUser({ ...currentUser, broker_instance_id: brokerInstance?.id || currentUser.broker_instance_id });
 
       // Get all orders to extract unique contacts
-      const orders = await base44.entities.Order.list('-created_date', 1000);
+      const allOrders = await base44.entities.Order.list('-created_date', 1000);
+      const orders = (allOrders || []).filter(order => order.broker_instance_id === (brokerInstance?.id || currentUser.broker_instance_id));
       
       // Group orders by customer email to create contact list
       const contactsMap = new Map();

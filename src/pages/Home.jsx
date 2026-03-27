@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { base44 } from '@/api/base44Client';
+import { ensureBrokerInstance } from '@/lib/brokerInstance';
 
 export default function Home() {
   const navigate = useNavigate();
@@ -14,6 +15,8 @@ export default function Home() {
     try {
       const isAuth = await base44.auth.isAuthenticated();
       if (isAuth) {
+        const currentUser = await base44.auth.me();
+        await ensureBrokerInstance(currentUser);
         navigate(createPageUrl('SalesDashboard'));
         return;
       }

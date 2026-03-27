@@ -1,0 +1,37 @@
+{
+  "name": "BrokerMember",
+  "type": "object",
+  "properties": {
+    "broker_instance_id": {
+      "type": "string",
+      "description": "Broker workspace ID"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "Base44 user ID"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Member email"
+    },
+    "member_role": {
+      "type": "string",
+      "enum": [
+        "owner",
+        "admin",
+        "sales_rep"
+      ],
+      "default": "sales_rep"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "broker_instance_id",
+    "user_id",
+    "user_email",
+    "member_role"
+  ]
+}

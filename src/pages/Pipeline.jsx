@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Search, ArrowUpDown, Filter, Calendar, DollarSign, Briefcase, User, Building2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { ensureBrokerInstance } from '@/lib/brokerInstance';
 
 export default function Pipeline() {
   const navigate = useNavigate();
@@ -36,26 +37,29 @@ export default function Pipeline() {
   const loadData = async () => {
     try {
       const currentUser = await base44.auth.me();
+      const brokerInstance = await ensureBrokerInstance(currentUser);
       if (!currentUser?.is_sales_rep) {
         navigate(createPageUrl('QuoteRequest'));
         return;
       }
 
-      setUser(currentUser);
+      setUser({ ...currentUser, broker_instance_id: brokerInstance?.id || currentUser.broker_instance_id });
       
       const [reps] = await Promise.all([
         base44.entities.SalesRep.filter({ user_id: currentUser.id })
       ]);
 
-      if (reps.length > 0) {
-        setSalesRep(reps[0]);
-        let assignedOrders = await base44.entities.Order.filter({ 
-          assigned_sales_rep_id: reps[0].id 
-        });
+      const scopedReps = (reps || []).filter(rep => rep.broker_instance_id === (brokerInstance?.id || currentUser.broker_instance_id));
+
+      if (scopedReps.length > 0) {
+        setSalesRep(scopedReps[0]);
+        const allOrders = await base44.entities.Order.list('-created_date', 200);
+        const brokerOrders = (allOrders || []).filter(order => order.broker_instance_id === (brokerInstance?.id || currentUser.broker_instance_id));
+        let assignedOrders = brokerOrders.filter(order => order.assigned_sales_rep_id === scopedReps[0].id);
         
-        // Demo fallback: if no orders assigned, show all
+        // Demo fallback: if no orders assigned, show broker orders
         if (assignedOrders.length === 0) {
-          assignedOrders = await base44.entities.Order.list('-created_date', 50);
+          assignedOrders = brokerOrders;
         }
 
         // Pre-filter based on view param

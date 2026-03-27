@@ -10,6 +10,7 @@ import LineItemsSection from '@/components/order/LineItemsSection';
 import RelatedTab from '@/components/order/RelatedTab';
 import FollowUpSection from '@/components/order/FollowUpSection';
 import BoothConceptRender from '@/components/catalog/BoothConceptRender';
+import { ensureBrokerInstance } from '@/lib/brokerInstance';
 
 export default function OrderDetail() {
   const navigate = useNavigate();
@@ -32,12 +33,18 @@ export default function OrderDetail() {
 
   const loadOrderDetails = async () => {
     setIsLoading(true);
+    const currentUser = await base44.auth.me();
+    const brokerInstance = await ensureBrokerInstance(currentUser);
     const orderData = await base44.entities.Order.filter({ id: orderId });
     if (!orderData || orderData.length === 0) {
       navigate(-1);
       return;
     }
     const currentOrder = orderData[0];
+    if (currentOrder.broker_instance_id !== (brokerInstance?.id || currentUser.broker_instance_id)) {
+      navigate(-1);
+      return;
+    }
     setOrder(currentOrder);
 
     // Load booth design + line items in parallel

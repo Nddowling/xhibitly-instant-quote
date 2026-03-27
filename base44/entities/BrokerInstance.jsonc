@@ -1,0 +1,40 @@
+{
+  "name": "BrokerInstance",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Broker workspace name"
+    },
+    "slug": {
+      "type": "string",
+      "description": "Unique broker workspace slug"
+    },
+    "owner_user_id": {
+      "type": "string",
+      "description": "First user who created the broker instance"
+    },
+    "owner_email": {
+      "type": "string",
+      "description": "Owner email"
+    },
+    "company_name": {
+      "type": "string",
+      "description": "Broker company name"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "name",
+    "slug",
+    "owner_user_id",
+    "owner_email"
+  ]
+}

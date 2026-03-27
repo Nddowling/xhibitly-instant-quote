@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
 import SalesPipelineBoard from '@/components/sales/SalesPipelineBoard';
 import MetricCard from '@/components/dashboard/MetricCard';
+import { ensureBrokerInstance } from '@/lib/brokerInstance';
 import { 
   TrendingUp, 
   Users, 
@@ -88,45 +89,41 @@ export default function SalesDashboard() {
   const loadDashboardData = async () => {
     try {
       const currentUser = await base44.auth.me();
+      const brokerInstance = await ensureBrokerInstance(currentUser);
       
       if (!currentUser.is_sales_rep) {
         navigate(createPageUrl('QuoteRequest'));
         return;
       }
 
-      setUser(currentUser);
+      setUser({ ...currentUser, broker_instance_id: brokerInstance?.id || currentUser.broker_instance_id });
 
       // Get sales rep profile
       const salesReps = await base44.entities.SalesRep.filter({ user_id: currentUser.id });
-      if (salesReps.length > 0) {
-        setSalesRep(salesReps[0]);
+      const scopedSalesReps = (salesReps || []).filter(rep => (rep.broker_instance_id || '') === (brokerInstance?.id || currentUser.broker_instance_id || ''));
+      if (scopedSalesReps.length > 0) {
+        setSalesRep(scopedSalesReps[0]);
       }
 
-      // Get orders assigned to this rep
-      let repOrders = await base44.entities.Order.filter(
-        { assigned_sales_rep_id: salesReps[0]?.id },
-        '-created_date',
-        50
-      );
+      const allOrders = await base44.entities.Order.list('-created_date', 200);
+      const brokerOrders = (allOrders || []).filter(order => order.broker_instance_id === (brokerInstance?.id || currentUser.broker_instance_id));
+      let repOrders = brokerOrders.filter(order => order.assigned_sales_rep_id === scopedSalesReps[0]?.id);
 
-      // Demo fallback: if no orders assigned to this rep, show all orders
       if (repOrders.length === 0) {
-        repOrders = await base44.entities.Order.list('-created_date', 50);
+        repOrders = brokerOrders;
       }
       setOrders(repOrders);
 
-      // Get recent activities
-      let repActivities = await base44.entities.Activity.filter(
-        { sales_rep_id: salesReps[0]?.id },
-        '-created_date',
-        10
-      );
+      const allActivities = await base44.entities.Activity.list('-created_date', 100);
+      let repActivities = (allActivities || []).filter(activity => activity.broker_instance_id === (brokerInstance?.id || currentUser.broker_instance_id));
 
-      // Demo fallback: if no activities for this rep, show all activities
-      if (repActivities.length === 0) {
-        repActivities = await base44.entities.Activity.list('-created_date', 10);
+      if (scopedSalesReps[0]?.id) {
+        const assignedActivities = repActivities.filter(activity => activity.sales_rep_id === scopedSalesReps[0].id);
+        if (assignedActivities.length > 0) {
+          repActivities = assignedActivities;
+        }
       }
-      setActivities(repActivities);
+      setActivities(repActivities.slice(0, 10));
 
     } catch (e) {
       console.error('Error loading dashboard:', e);
