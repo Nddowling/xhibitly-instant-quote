@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
@@ -22,6 +22,7 @@ export default function ExecutiveDashboard() {
   const [orders, setOrders] = useState([]);
   const [brokerInstance, setBrokerInstance] = useState(null);
   const [selectedView, setSelectedView] = useState('active');
+  const detailSectionRef = useRef(null);
 
   useEffect(() => {
     const loadData = async () => {
@@ -68,6 +69,13 @@ export default function ExecutiveDashboard() {
       winRate
     };
   }, [orders]);
+
+  const handleSelectView = (viewKey) => {
+    setSelectedView(viewKey);
+    requestAnimationFrame(() => {
+      detailSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  };
 
   const detailConfig = {
     active: {
@@ -176,29 +184,29 @@ export default function ExecutiveDashboard() {
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <KpiCard label="Active Orders" value={metrics.activeOrders.length} note="Open pipeline opportunities" tone="blue" onClick={() => setSelectedView('active')} />
-          <KpiCard label="Pipeline Value" value={fmtMoney(metrics.pipelineValue)} note="Current active order value" tone="red" onClick={() => setSelectedView('pipelineValue')} />
-          <KpiCard label="Won / Lost" value={`${metrics.wonOrders.length} / ${metrics.lostOrders.length}`} note={`Win rate ${metrics.winRate}%`} tone="green" onClick={() => setSelectedView(metrics.wonOrders.length > 0 ? 'won' : 'lost')} />
-          <KpiCard label="Closed Won Value" value={fmtMoney(metrics.wonValue)} note="Value from won business" tone="amber" onClick={() => setSelectedView('closedWon')} />
+          <KpiCard label="Active Orders" value={metrics.activeOrders.length} note="Open pipeline opportunities" tone="blue" isActive={selectedView === 'active'} onClick={() => handleSelectView('active')} />
+          <KpiCard label="Pipeline Value" value={fmtMoney(metrics.pipelineValue)} note="Current active order value" tone="red" isActive={selectedView === 'pipelineValue'} onClick={() => handleSelectView('pipelineValue')} />
+          <KpiCard label="Won / Lost" value={`${metrics.wonOrders.length} / ${metrics.lostOrders.length}`} note={`Win rate ${metrics.winRate}%`} tone="green" isActive={selectedView === 'won' || selectedView === 'lost'} onClick={() => handleSelectView(metrics.wonOrders.length > 0 ? 'won' : 'lost')} />
+          <KpiCard label="Closed Won Value" value={fmtMoney(metrics.wonValue)} note="Value from won business" tone="amber" isActive={selectedView === 'closedWon'} onClick={() => handleSelectView('closedWon')} />
         </div>
 
         <div className="grid gap-4 lg:grid-cols-4">
           <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm lg:col-span-1 space-y-4">
-            <button onClick={() => setSelectedView('active')} className={`flex items-center gap-3 w-full text-left rounded-2xl p-2 transition-colors ${selectedView === 'active' ? 'bg-blue-50' : 'hover:bg-slate-50'}`}>
+            <button onClick={() => handleSelectView('active')} className={`flex items-center gap-3 w-full text-left rounded-2xl p-2 transition-colors ${selectedView === 'active' ? 'bg-blue-50' : 'hover:bg-slate-50'}`}>
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 text-blue-600"><BriefcaseBusiness className="w-5 h-5" /></div>
               <div>
                 <p className="text-sm font-bold text-slate-900">Active Pipeline</p>
                 <p className="text-xs text-slate-500">Deals in progress</p>
               </div>
             </button>
-            <button onClick={() => setSelectedView('won')} className={`flex items-center gap-3 w-full text-left rounded-2xl p-2 transition-colors ${selectedView === 'won' ? 'bg-green-50' : 'hover:bg-slate-50'}`}>
+            <button onClick={() => handleSelectView('won')} className={`flex items-center gap-3 w-full text-left rounded-2xl p-2 transition-colors ${selectedView === 'won' ? 'bg-green-50' : 'hover:bg-slate-50'}`}>
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-green-50 text-green-600"><CircleCheckBig className="w-5 h-5" /></div>
               <div>
                 <p className="text-sm font-bold text-slate-900">Won Deals</p>
                 <p className="text-xs text-slate-500">{metrics.wonOrders.length} total won</p>
               </div>
             </button>
-            <button onClick={() => setSelectedView('lost')} className={`flex items-center gap-3 w-full text-left rounded-2xl p-2 transition-colors ${selectedView === 'lost' ? 'bg-red-50' : 'hover:bg-slate-50'}`}>
+            <button onClick={() => handleSelectView('lost')} className={`flex items-center gap-3 w-full text-left rounded-2xl p-2 transition-colors ${selectedView === 'lost' ? 'bg-red-50' : 'hover:bg-slate-50'}`}>
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-red-50 text-red-600"><CircleX className="w-5 h-5" /></div>
               <div>
                 <p className="text-sm font-bold text-slate-900">Lost Deals</p>
@@ -215,15 +223,17 @@ export default function ExecutiveDashboard() {
           </div>
 
           <div className="lg:col-span-3">
-            <ExecutiveStatusBreakdown rows={breakdownRows} onRowClick={(row) => setSelectedView(row.key)} />
+            <ExecutiveStatusBreakdown rows={breakdownRows} onRowClick={(row) => handleSelectView(row.key)} />
           </div>
         </div>
 
-        <ExecutiveOrderList
-          title={detailConfig[selectedView].title}
-          subtitle={detailConfig[selectedView].subtitle}
-          orders={detailConfig[selectedView].orders}
-        />
+        <div ref={detailSectionRef} className="scroll-mt-24">
+          <ExecutiveOrderList
+            title={detailConfig[selectedView].title}
+            subtitle={detailConfig[selectedView].subtitle}
+            orders={detailConfig[selectedView].orders}
+          />
+        </div>
 
         {orders.length === 0 && (
           <div className="rounded-3xl border border-dashed border-slate-200 bg-white px-6 py-10 text-center text-slate-500 shadow-sm">

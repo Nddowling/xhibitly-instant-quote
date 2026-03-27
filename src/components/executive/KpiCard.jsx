@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function KpiCard({ label, value, note, tone = 'slate', onClick }) {
+export default function KpiCard({ label, value, note, tone = 'slate', isActive = false, onClick }) {
   const tones = {
     red: 'border-red-200 bg-red-50 text-red-700',
     green: 'border-green-200 bg-green-50 text-green-700',
@@ -13,7 +13,7 @@ export default function KpiCard({ label, value, note, tone = 'slate', onClick })
     <button
       onClick={onClick}
       disabled={!onClick}
-      className={`rounded-2xl border p-5 shadow-sm text-left w-full ${tones[tone]} ${onClick ? 'hover:shadow-md transition-all cursor-pointer' : 'cursor-default'}`}
+      className={`rounded-2xl border p-5 shadow-sm text-left w-full transition-all ${tones[tone]} ${isActive ? 'ring-2 ring-[#e2231a] shadow-md scale-[1.01]' : ''} ${onClick ? 'hover:shadow-md cursor-pointer' : 'cursor-default'}`}
     >
       <p className="text-xs font-semibold uppercase tracking-[0.16em] opacity-70">{label}</p>
       <p className="mt-3 text-3xl font-black tracking-tight">{value}</p>
