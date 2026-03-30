@@ -1160,7 +1160,11 @@ export default function CatalogQuote() {
   // Navigation
   const goToPage = useCallback((n) => {
     const requestedPage = Number.isFinite(n) ? n : FIRST_VISIBLE_CATALOG_PAGE;
-    const p = Math.max(FIRST_VISIBLE_CATALOG_PAGE, Math.min(requestedPage, MAX_PAGE));
+    let p = Math.max(FIRST_VISIBLE_CATALOG_PAGE, Math.min(requestedPage, MAX_PAGE));
+
+    if (currentPage === 0 && p > 0 && p < 7) p = 7;
+    if (currentPage >= 7 && p > 0 && p < 7) p = 0;
+
     setDirection(p > currentPage ? 1 : -1);
     setCurrentPage(p);
     setPageInput(String(p));
