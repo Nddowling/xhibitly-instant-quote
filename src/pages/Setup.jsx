@@ -12,6 +12,7 @@ import SetupPermissionSets from '@/components/setup/SetupPermissionSets';
 import SetupUsers from '@/components/setup/SetupUsers';
 import SetupSeeder from '@/components/setup/SetupSeeder';
 import HotspotAudit from '@/pages/HotspotAudit';
+import CatalogAudit from '@/pages/CatalogAudit';
 
 const SECTIONS = [
   {
@@ -26,7 +27,8 @@ const SECTIONS = [
   {
     group: 'Catalog Tools',
     items: [
-      { key: 'hotspot-audit',    label: 'Hotspot Audit',    icon: ClipboardCheck, component: HotspotAudit },
+      { key: 'hotspot-audit', label: 'Hotspot Audit', icon: ClipboardCheck, component: HotspotAudit },
+      { key: 'catalog-audit', label: 'Catalog Audit', icon: ClipboardCheck, component: CatalogAudit },
     ]
   },
   {
