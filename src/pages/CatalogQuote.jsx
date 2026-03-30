@@ -5,6 +5,9 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { PAGE_PRODUCTS, MAX_PAGE, SKU_TO_PAGE } from '@/data/catalogPageMapping';
+
+const HIDDEN_CATALOG_PAGES = [1, 2, 3, 4, 5, 6];
+const FIRST_VISIBLE_CATALOG_PAGE = 7;
 import { SKU_TO_IMAGE } from '@/data/skuImageMap';
 import {
   ChevronLeft, ChevronRight, Plus, Minus, X, ShoppingCart,
@@ -926,8 +929,8 @@ function OrderItem({ item, onQtyChange, onRemove, onSizeChange }) {
 // ─── Main Page ────────────────────────────────────────────────────────────────
 export default function CatalogQuote() {
   const navigate = useNavigate();
-  const [currentPage, setCurrentPage] = useState(0);
-  const [pageInput, setPageInput] = useState('0');
+  const [currentPage, setCurrentPage] = useState(FIRST_VISIBLE_CATALOG_PAGE);
+  const [pageInput, setPageInput] = useState(String(FIRST_VISIBLE_CATALOG_PAGE));
   const [direction, setDirection] = useState(1);
   const [hotspotData, setHotspotData] = useState({});
   const [dbHotspots, setDbHotspots] = useState({});
@@ -1156,7 +1159,8 @@ export default function CatalogQuote() {
 
   // Navigation
   const goToPage = useCallback((n) => {
-    const p = Math.max(0, Math.min(n, MAX_PAGE));
+    const requestedPage = Number.isFinite(n) ? n : FIRST_VISIBLE_CATALOG_PAGE;
+    const p = Math.max(FIRST_VISIBLE_CATALOG_PAGE, Math.min(requestedPage, MAX_PAGE));
     setDirection(p > currentPage ? 1 : -1);
     setCurrentPage(p);
     setPageInput(String(p));
@@ -1421,13 +1425,13 @@ export default function CatalogQuote() {
             )}
 
             <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-2xl px-3 py-2 shadow-sm">
-              <button onClick={() => goToPage(currentPage - 1)} disabled={currentPage <= 0}
+              <button onClick={() => goToPage(currentPage - 1)} disabled={currentPage <= FIRST_VISIBLE_CATALOG_PAGE}
                 className="p-1.5 rounded-lg hover:bg-slate-100 disabled:opacity-30 text-slate-600">
                 <ChevronLeft className="w-4 h-4" />
               </button>
               <span className="text-xs text-slate-500">Page</span>
               <input
-                type="number" min={0} max={MAX_PAGE} value={pageInput}
+                type="number" min={FIRST_VISIBLE_CATALOG_PAGE} max={MAX_PAGE} value={pageInput}
                 onChange={handlePageInput}
                 className="w-14 text-center text-sm font-bold bg-transparent focus:outline-none"
               />
@@ -1617,6 +1621,9 @@ export default function CatalogQuote() {
               <div>
                 <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Catalog page</p>
                 <p className="mt-1 text-sm font-bold text-slate-900">Page {currentPage}</p>
+                {HIDDEN_CATALOG_PAGES.length > 0 && (
+                  <p className="mt-1 text-[11px] text-slate-500">Pages 1–6 hidden</p>
+                )}
               </div>
               <div className="text-right">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Status</p>
@@ -1650,7 +1657,7 @@ export default function CatalogQuote() {
                     hotspots={currentHotspots}
                     onHotspotClick={handleHotspotClick}
                     selectedHotspot={selectedHotspot}
-                    onPageClick={() => goToPage(currentPage + 1)}
+                    onPageClick={() => currentPage < MAX_PAGE && goToPage(currentPage + 1)}
                   />
                 </motion.div>
               </AnimatePresence>
