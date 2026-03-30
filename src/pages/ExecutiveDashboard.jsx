@@ -228,6 +228,7 @@ export default function ExecutiveDashboard() {
           title={detailConfig[selectedView].title}
           subtitle={detailConfig[selectedView].subtitle}
           orders={detailConfig[selectedView].orders}
+          preset={selectedView}
         />
 
         {orders.length === 0 && (

@@ -112,11 +112,13 @@ export default function ExecutiveListView() {
   const navigate = useNavigate();
   const urlParams = new URLSearchParams(window.location.search);
   const preset = urlParams.get('preset') || 'active';
+  const companyFilterFromUrl = urlParams.get('company') || '';
   const presetConfig = getPresetConfig(preset);
 
   const [loading, setLoading] = useState(true);
   const [orders, setOrders] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(companyFilterFromUrl);
+
   const [statusFilter, setStatusFilter] = useState('all');
   const [boothFilter, setBoothFilter] = useState('all');
 
@@ -155,6 +157,9 @@ export default function ExecutiveListView() {
       if (!presetConfig.statuses.includes(order.status)) return false;
       if (statusFilter !== 'all' && order.status !== statusFilter) return false;
       if (boothFilter !== 'all' && order.booth_size !== boothFilter) return false;
+      if (companyFilterFromUrl) {
+        return (order.customer_company || order.dealer_company || '') === companyFilterFromUrl;
+      }
       if (!searchQuery) return true;
 
       const q = searchQuery.toLowerCase();
@@ -168,7 +173,7 @@ export default function ExecutiveListView() {
         order.reference_number?.toLowerCase().includes(q)
       );
     });
-  }, [orders, presetConfig, searchQuery, statusFilter, boothFilter]);
+  }, [orders, presetConfig, searchQuery, statusFilter, boothFilter, companyFilterFromUrl]);
 
   const availableStatuses = STATUS_OPTIONS.filter(
     (status) => status === 'all' || presetConfig.statuses.includes(status)
@@ -219,6 +224,7 @@ export default function ExecutiveListView() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-9"
+                  readOnly={!!companyFilterFromUrl}
                 />
               </div>
 
