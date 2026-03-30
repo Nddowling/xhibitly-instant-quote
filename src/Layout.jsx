@@ -58,11 +58,10 @@ export default function Layout({ children, currentPageName }) {
 
   // Primary nav (always visible on desktop)
   const primaryNav = [
-    { page: 'SalesDashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { page: 'Contacts',       label: 'Clients',   icon: Users },
-    { page: 'CatalogQuote',   label: 'Catalog',   icon: BookOpen },
-    { page: 'RecentQuotes',   label: 'Quotes',    icon: ClipboardList },
-    { page: 'PricingRules',   label: 'Pricing',   icon: Tag },
+    { page: 'Contacts',     label: 'Clients', icon: Users },
+    { page: 'CatalogQuote', label: 'Catalog', icon: BookOpen },
+    { page: 'RecentQuotes', label: 'Quotes',  icon: ClipboardList },
+    { page: 'PricingRules', label: 'Pricing', icon: Tag },
   ];
 
   // Analytics dropdown items
