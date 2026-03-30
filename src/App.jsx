@@ -10,6 +10,7 @@ import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import ExecutiveDashboard from './pages/ExecutiveDashboard';
 import ExecutiveListView from './pages/ExecutiveListView';
 import HotspotAudit from './pages/HotspotAudit';
+import CatalogAudit from './pages/CatalogAudit';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -82,6 +83,14 @@ const AuthenticatedApp = () => {
         element={
           <LayoutWrapper currentPageName="HotspotAudit">
             <HotspotAudit />
+          </LayoutWrapper>
+        }
+      />
+      <Route
+        path="/CatalogAudit"
+        element={
+          <LayoutWrapper currentPageName="CatalogAudit">
+            <CatalogAudit />
           </LayoutWrapper>
         }
       />

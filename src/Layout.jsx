@@ -4,7 +4,7 @@ import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import {
   LogOut, Users, Menu, X, LayoutDashboard, Settings as SettingsIcon,
-  ArrowLeft, BookOpen, ClipboardList, Tag, BarChart2, ChevronDown, Settings2, ShieldCheck
+  ArrowLeft, BookOpen, ClipboardList, Tag, BarChart2, ChevronDown, Settings2, ShieldCheck, ListChecks
 } from 'lucide-react';
 import ErrorBoundary from './components/ErrorBoundary';
 
@@ -53,7 +53,7 @@ export default function Layout({ children, currentPageName }) {
 
   const noHeaderPages = ['Loading', 'Home', 'Landing', 'UserTypeSelection', 'QuoteView'];
   const showHeader = !noHeaderPages.includes(currentPageName) && user;
-  const rootPages = ['SalesDashboard', 'Contacts', 'CatalogQuote', 'PricingRules', 'Reports', 'Dashboards', 'Setup', 'ReportBuilder', 'ReportView', 'DashboardView'];
+  const rootPages = ['SalesDashboard', 'Contacts', 'CatalogQuote', 'PricingRules', 'Reports', 'Dashboards', 'Setup', 'ReportBuilder', 'ReportView', 'DashboardView', 'CatalogAudit', 'HotspotAudit'];
   const showBackButton = showHeader && !rootPages.includes(currentPageName);
 
   // Primary nav (always visible on desktop)
@@ -72,7 +72,9 @@ export default function Layout({ children, currentPageName }) {
   ];
 
   const adminNav = [
-    { page: 'ExecutiveDashboard', label: 'Executive', icon: ShieldCheck },
+    { page: 'ExecutiveDashboard', label: 'Executive',     icon: ShieldCheck },
+    { page: 'HotspotAudit',       label: 'Hotspot Audit', icon: ListChecks  },
+    { page: 'CatalogAudit',       label: 'Catalog Audit', icon: ListChecks  },
   ];
 
   const analyticsActive = analyticsNav.some(n => n.page === currentPageName) ||
