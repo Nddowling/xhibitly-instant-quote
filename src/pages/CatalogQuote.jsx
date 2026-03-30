@@ -1172,7 +1172,14 @@ export default function CatalogQuote() {
 
   // Effective hotspots: localStorage edits > DB > JSON fallback
   const baseHotspots = hotspotData[currentPage] || [];
-  const currentHotspots = editedHotspots[currentPage] ?? dbHotspots[currentPage] ?? baseHotspots;
+  const currentHotspots = (editedHotspots[currentPage] ?? dbHotspots[currentPage] ?? baseHotspots).map((spot) => {
+    const groupedSkus = Array.from(new Set((spot.groupedSkus?.length > 0 ? spot.groupedSkus : [spot.sku]).filter(Boolean)));
+    return {
+      ...spot,
+      sku: groupedSkus[0] || spot.sku,
+      groupedSkus,
+    };
+  });
   const hasHotspots = currentHotspots.length > 0;
 
   // Pre-fetch product details only for visible hotspots on the current page
@@ -1261,8 +1268,9 @@ export default function CatalogQuote() {
 
   // Hotspot clicked (read mode)
   const handleHotspotClick = async (spot) => {
-    setSelectedHotspot(spot);
-    const skus = spot.groupedSkus?.length > 0 ? spot.groupedSkus : [spot.sku];
+    const skus = Array.from(new Set((spot.groupedSkus?.length > 0 ? spot.groupedSkus : [spot.sku]).filter(Boolean)));
+    const normalizedSpot = { ...spot, sku: skus[0] || spot.sku, groupedSkus: skus };
+    setSelectedHotspot(normalizedSpot);
     // Always show variant picker so the user can see the product and add to quote
     // (for single-SKU spots the picker auto-adds; for multi-SKU it shows options)
     if (skus.length === 1 && activeOrder) {
