@@ -1621,9 +1621,6 @@ export default function CatalogQuote() {
               <div>
                 <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Catalog page</p>
                 <p className="mt-1 text-sm font-bold text-slate-900">Page {currentPage}</p>
-                {HIDDEN_CATALOG_PAGES.length > 0 && (
-                  <p className="mt-1 text-[11px] text-slate-500">Pages 1–6 hidden</p>
-                )}
               </div>
               <div className="text-right">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Status</p>
