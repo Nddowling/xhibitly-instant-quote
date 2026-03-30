@@ -824,7 +824,7 @@ function NewHotspotForm({ pageProducts, productCache, autoDetecting, autoDetecte
 
 // ─── Variant picker popup ─────────────────────────────────────────────────────
 function VariantPicker({ spot, products, fetchProduct, onAdd, onClose, hasSession, onStartSession }) {
-  const skus = spot.groupedSkus?.length > 0 ? spot.groupedSkus : [spot.sku];
+  const skus = Array.from(new Set((spot.groupedSkus?.length > 0 ? spot.groupedSkus : [spot.sku]).filter(Boolean)));
 
   // Ensure all variant SKUs are fetched
   useEffect(() => {
