@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
 import SalesPipelineBoard from '@/components/sales/SalesPipelineBoard';
 import MetricCard from '@/components/dashboard/MetricCard';
-import { ensureBrokerInstance } from '@/lib/brokerInstance';
+import { loadBrokerContext, scopeItems } from '@/lib/brokerAccess';
 import { 
   TrendingUp, 
   Users, 
@@ -88,25 +88,25 @@ export default function SalesDashboard() {
 
   const loadDashboardData = async () => {
     try {
-      const currentUser = await base44.auth.me();
-      const brokerInstance = await ensureBrokerInstance(currentUser);
-      
-      if (!currentUser.is_sales_rep) {
+      const brokerContext = await loadBrokerContext();
+      const currentUser = brokerContext.user;
+      const brokerId = brokerContext.effectiveBrokerId;
+
+      if (!currentUser.is_sales_rep && currentUser.role !== 'admin') {
         navigate(createPageUrl('QuoteRequest'));
         return;
       }
 
-      setUser({ ...currentUser, broker_instance_id: brokerInstance?.id || currentUser.broker_instance_id });
+      setUser({ ...currentUser, broker_instance_id: brokerId });
 
-      // Get sales rep profile
       const salesReps = await base44.entities.SalesRep.filter({ user_id: currentUser.id });
-      const scopedSalesReps = (salesReps || []).filter(rep => (rep.broker_instance_id || '') === (brokerInstance?.id || currentUser.broker_instance_id || ''));
+      const scopedSalesReps = scopeItems((salesReps || []), brokerId);
       if (scopedSalesReps.length > 0) {
         setSalesRep(scopedSalesReps[0]);
       }
 
       const allOrders = await base44.entities.Order.list('-created_date', 200);
-      const brokerOrders = (allOrders || []).filter(order => order.broker_instance_id === (brokerInstance?.id || currentUser.broker_instance_id));
+      const brokerOrders = scopeItems(allOrders || [], brokerId);
       let repOrders = brokerOrders.filter(order => order.assigned_sales_rep_id === scopedSalesReps[0]?.id);
 
       if (repOrders.length === 0) {
@@ -115,7 +115,7 @@ export default function SalesDashboard() {
       setOrders(repOrders);
 
       const allActivities = await base44.entities.Activity.list('-created_date', 100);
-      let repActivities = (allActivities || []).filter(activity => activity.broker_instance_id === (brokerInstance?.id || currentUser.broker_instance_id));
+      let repActivities = scopeItems(allActivities || [], brokerId);
 
       if (scopedSalesReps[0]?.id) {
         const assignedActivities = repActivities.filter(activity => activity.sales_rep_id === scopedSalesReps[0].id);

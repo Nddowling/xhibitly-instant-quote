@@ -11,6 +11,7 @@ import SetupProfiles from '@/components/setup/SetupProfiles';
 import SetupPermissionSets from '@/components/setup/SetupPermissionSets';
 import SetupUsers from '@/components/setup/SetupUsers';
 import SetupSeeder from '@/components/setup/SetupSeeder';
+import SetupBrokerInstances from '@/components/setup/SetupBrokerInstances';
 import HotspotAudit from '@/pages/HotspotAudit';
 import CatalogAudit from '@/pages/CatalogAudit';
 
@@ -21,6 +22,10 @@ const SECTIONS = [
       { key: 'users',            label: 'Users',            icon: Users,    component: SetupUsers },
       { key: 'profiles',         label: 'Profiles',         icon: Shield,   component: SetupProfiles },
       { key: 'permission-sets',  label: 'Permission Sets',  icon: Key,      component: SetupPermissionSets },
+      { key: 'users',            label: 'Users',            icon: Users,    component: SetupUsers },
+      { key: 'profiles',         label: 'Profiles',         icon: Shield,   component: SetupProfiles },
+      { key: 'permission-sets',  label: 'Permission Sets',  icon: Key,      component: SetupPermissionSets },
+      { key: 'broker-instances', label: 'Broker Workspaces', icon: Layers,  component: SetupBrokerInstances },
       { key: 'seed',             label: 'Initialize Data',  icon: Wrench,   component: SetupSeeder },
     ]
   },

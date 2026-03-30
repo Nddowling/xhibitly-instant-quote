@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
 import { Search, Building2, Mail, Phone, FileText, Plus } from 'lucide-react';
-import { ensureBrokerInstance } from '@/lib/brokerInstance';
+import { loadBrokerContext, scopeItems } from '@/lib/brokerAccess';
 
 export default function Contacts() {
   const navigate = useNavigate();
@@ -28,19 +28,19 @@ export default function Contacts() {
 
   const loadContacts = async () => {
     try {
-      const currentUser = await base44.auth.me();
-      const brokerInstance = await ensureBrokerInstance(currentUser);
-      
-      if (!currentUser.is_sales_rep) {
+      const brokerContext = await loadBrokerContext();
+      const currentUser = brokerContext.user;
+      const brokerId = brokerContext.effectiveBrokerId;
+
+      if (!currentUser.is_sales_rep && currentUser.role !== 'admin') {
         navigate(createPageUrl('QuoteRequest'));
         return;
       }
 
-      setUser({ ...currentUser, broker_instance_id: brokerInstance?.id || currentUser.broker_instance_id });
+      setUser({ ...currentUser, broker_instance_id: brokerId });
 
-      // Get all orders to extract unique contacts
       const allOrders = await base44.entities.Order.list('-created_date', 1000);
-      const orders = (allOrders || []).filter(order => order.broker_instance_id === (brokerInstance?.id || currentUser.broker_instance_id));
+      const orders = scopeItems(allOrders || [], brokerId);
       
       // Group orders by customer email to create contact list
       const contactsMap = new Map();

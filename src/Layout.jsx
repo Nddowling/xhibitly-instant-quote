@@ -53,7 +53,7 @@ export default function Layout({ children, currentPageName }) {
 
   const noHeaderPages = ['Loading', 'Home', 'Landing', 'UserTypeSelection', 'QuoteView'];
   const showHeader = !noHeaderPages.includes(currentPageName) && user;
-  const rootPages = ['SalesDashboard', 'Contacts', 'CatalogQuote', 'PricingRules', 'Reports', 'Dashboards', 'Setup', 'ReportBuilder', 'ReportView', 'DashboardView'];
+  const rootPages = ['SalesDashboard', 'DesignerDashboard', 'Contacts', 'CatalogQuote', 'PricingRules', 'Reports', 'Dashboards', 'Setup', 'ReportBuilder', 'ReportView', 'DashboardView'];
   const showBackButton = showHeader && !rootPages.includes(currentPageName);
 
   // Primary nav (always visible on desktop)
@@ -71,6 +71,7 @@ export default function Layout({ children, currentPageName }) {
   ];
 
   const adminNav = [
+    { page: 'DesignerDashboard', label: 'Umbrella', icon: LayoutDashboard },
     { page: 'ExecutiveDashboard', label: 'Executive', icon: ShieldCheck },
   ];
 

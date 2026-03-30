@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Search, ArrowUpDown, Filter, Calendar, DollarSign, Briefcase, User, Building2 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { ensureBrokerInstance } from '@/lib/brokerInstance';
+import { loadBrokerContext, scopeItems } from '@/lib/brokerAccess';
 
 export default function Pipeline() {
   const navigate = useNavigate();
@@ -36,25 +36,26 @@ export default function Pipeline() {
 
   const loadData = async () => {
     try {
-      const currentUser = await base44.auth.me();
-      const brokerInstance = await ensureBrokerInstance(currentUser);
-      if (!currentUser?.is_sales_rep) {
+      const brokerContext = await loadBrokerContext();
+      const currentUser = brokerContext.user;
+      const brokerId = brokerContext.effectiveBrokerId;
+      if (!currentUser?.is_sales_rep && currentUser.role !== 'admin') {
         navigate(createPageUrl('QuoteRequest'));
         return;
       }
 
-      setUser({ ...currentUser, broker_instance_id: brokerInstance?.id || currentUser.broker_instance_id });
+      setUser({ ...currentUser, broker_instance_id: brokerId });
       
       const [reps] = await Promise.all([
         base44.entities.SalesRep.filter({ user_id: currentUser.id })
       ]);
 
-      const scopedReps = (reps || []).filter(rep => rep.broker_instance_id === (brokerInstance?.id || currentUser.broker_instance_id));
+      const scopedReps = scopeItems((reps || []), brokerId);
 
       if (scopedReps.length > 0) {
         setSalesRep(scopedReps[0]);
         const allOrders = await base44.entities.Order.list('-created_date', 200);
-        const brokerOrders = (allOrders || []).filter(order => order.broker_instance_id === (brokerInstance?.id || currentUser.broker_instance_id));
+        const brokerOrders = scopeItems(allOrders || [], brokerId);
         let assignedOrders = brokerOrders.filter(order => order.assigned_sales_rep_id === scopedReps[0].id);
         
         // Demo fallback: if no orders assigned, show broker orders

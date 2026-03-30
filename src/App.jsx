@@ -11,6 +11,7 @@ import ExecutiveDashboard from './pages/ExecutiveDashboard';
 import ExecutiveListView from './pages/ExecutiveListView';
 import HotspotAudit from './pages/HotspotAudit';
 import CatalogAudit from './pages/CatalogAudit';
+import DesignerDashboard from './pages/DesignerDashboard';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -91,6 +92,14 @@ const AuthenticatedApp = () => {
         element={
           <LayoutWrapper currentPageName="CatalogAudit">
             <CatalogAudit />
+          </LayoutWrapper>
+        }
+      />
+      <Route
+        path="/DesignerDashboard"
+        element={
+          <LayoutWrapper currentPageName="DesignerDashboard">
+            <DesignerDashboard />
           </LayoutWrapper>
         }
       />
