@@ -79,6 +79,7 @@ import Dashboards from './pages/Dashboards';
 import ReportBuilder from './pages/ReportBuilder';
 import ReportView from './pages/ReportView';
 import DashboardView from './pages/DashboardView';
+import LeadsCRM from './pages/LeadsCRM';
 import __Layout from './Layout.jsx';
 
 
@@ -115,6 +116,7 @@ export const PAGES = {
     "ReportBuilder": ReportBuilder,
     "ReportView": ReportView,
     "DashboardView": DashboardView,
+    "LeadsCRM": LeadsCRM,
 }
 
 export const pagesConfig = {
