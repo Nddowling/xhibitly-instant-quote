@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { PAGE_PRODUCTS, MAX_PAGE, SKU_TO_PAGE } from '@/data/catalogPageMapping';
 
 const HIDDEN_CATALOG_PAGES = [1, 2, 3, 4, 5, 6];
-const FIRST_VISIBLE_CATALOG_PAGE = 7;
+const FIRST_VISIBLE_CATALOG_PAGE = 0;
 import { SKU_TO_IMAGE } from '@/data/skuImageMap';
 import {
   ChevronLeft, ChevronRight, Plus, Minus, X, ShoppingCart,
