@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import {
   LayoutGrid, Users, Shield, Key, Database, Settings,
-  ChevronRight, Search, Wrench, BarChart2, Layers
+  ChevronRight, Search, Wrench, BarChart2, Layers, ClipboardCheck
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import ObjectManager from '@/components/setup/ObjectManager';
@@ -11,6 +11,7 @@ import SetupProfiles from '@/components/setup/SetupProfiles';
 import SetupPermissionSets from '@/components/setup/SetupPermissionSets';
 import SetupUsers from '@/components/setup/SetupUsers';
 import SetupSeeder from '@/components/setup/SetupSeeder';
+import HotspotAudit from '@/pages/HotspotAudit';
 
 const SECTIONS = [
   {
@@ -20,6 +21,12 @@ const SECTIONS = [
       { key: 'profiles',         label: 'Profiles',         icon: Shield,   component: SetupProfiles },
       { key: 'permission-sets',  label: 'Permission Sets',  icon: Key,      component: SetupPermissionSets },
       { key: 'seed',             label: 'Initialize Data',  icon: Wrench,   component: SetupSeeder },
+    ]
+  },
+  {
+    group: 'Catalog Tools',
+    items: [
+      { key: 'hotspot-audit',    label: 'Hotspot Audit',    icon: ClipboardCheck, component: HotspotAudit },
     ]
   },
   {
