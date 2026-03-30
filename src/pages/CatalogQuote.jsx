@@ -60,29 +60,40 @@ If you cannot identify a SKU, return an empty string for sku.`;
   };
 }
 
-// ─── Claude Vision hotspot detection (runs via backend integration) ───────────────────────
+// ─── Claude Vision hotspot detection (SKU/table-first for edit mode) ───────────────────────
 async function detectHotspotsWithClaude(pageNum, products, supabaseUrl) {
   const imageUrl = `${supabaseUrl}/catalog/pages/page-${String(pageNum + 2).padStart(3, '0')}.jpg`;
 
-  const productList = products && products.length > 0
+  const knownProducts = products && products.length > 0
     ? products.map(p => `- ${p.sku}: "${p.name}" (${p.category})${p.isPrimary ? ' [FEATURED]' : ''}`).join('\n')
-    : "Extract all product SKUs and names visible on the page (especially from tables).";
+    : 'No known product list provided for this page.';
 
-  const prompt = `This is page ${pageNum} of the Orbus Exhibitor's Handbook trade show display catalog.
+  const prompt = `You are analyzing page ${pageNum} of the Orbus Exhibitor's Handbook trade show display catalog.
 
-Products on this page:
-${productList}
+IMPORTANT: In edit mode, do NOT look for product photos or product images first.
+Your main job is to find printed SKU groups, SKU tables, and table sections that list products.
 
-Return a JSON array of bounding boxes for each product's primary visual/photo area. Rules:
-- Size variants sharing ONE image → ONE box, list all SKUs in groupedSkus
-- Separate product images → separate boxes
-- If products are only listed in a table, draw ONE box around the table (or relevant section) and list all those SKUs in groupedSkus
-- x, y = top-left corner, normalized 0–1 (0,0 = top-left)
-- width, height = normalized 0–1
-- Tight boxes around product photos or tables`;
+Known products for this page:
+${knownProducts}
+
+Return hotspot boxes using these rules exactly:
+- Find SKU tables, SKU lists, and grouped SKU sections first.
+- Create ONE hotspot box per table or per clearly separated SKU section.
+- Do NOT create one hotspot per individual row when those rows belong to the same visible table block.
+- If a single table contains multiple related SKUs, return ONE hotspot with all of them in groupedSkus.
+- Only create separate boxes when there are clearly separate tables or separate SKU groups on the page.
+- Prefer matching groupedSkus to the known products list above when possible.
+- sku should be the first SKU in groupedSkus.
+- name should describe the table/group, using the printed heading or a short useful label.
+- x, y, width, height must be normalized 0 to 1.
+- Boxes should tightly cover the table or SKU section, not the whole page.
+- If the page has both image areas and SKU tables, prioritize the SKU tables.
+- Ignore decorative graphics and lifestyle imagery.
+
+The goal is that each hotspot opens a selectable list of SKUs exactly like the current grouped SKU picker UI.`;
 
   const response = await base44.integrations.Core.InvokeLLM({
-    prompt: prompt,
+    prompt,
     file_urls: [imageUrl],
     model: "claude_sonnet_4_6",
     response_json_schema: {
@@ -109,21 +120,39 @@ Return a JSON array of bounding boxes for each product's primary visual/photo ar
     }
   });
 
-  // Handle LLM sometimes wrapping result in an extra "response" key
   const hotspots = response?.hotspots ?? response?.response?.hotspots ?? [];
   if (!Array.isArray(hotspots)) {
     console.warn('[Re-run AI] Unexpected response shape:', response);
     return [];
   }
-  return hotspots.map(item => ({
-    sku: item.sku || products[0]?.sku,
-    name: item.name || '',
-    x: Math.max(0, Math.min(1, Number(item.x) || 0)),
-    y: Math.max(0, Math.min(1, Number(item.y) || 0)),
-    width: Math.max(0.05, Math.min(1, Number(item.width) || 0.5)),
-    height: Math.max(0.05, Math.min(1, Number(item.height) || 0.5)),
-    groupedSkus: Array.isArray(item.groupedSkus) ? item.groupedSkus : [item.sku],
-  }));
+
+  const knownSkuSet = new Set((products || []).map(p => p.sku));
+
+  return hotspots
+    .map(item => {
+      const rawGrouped = Array.isArray(item.groupedSkus) ? item.groupedSkus : [];
+      const normalizedGrouped = rawGrouped
+        .map(sku => String(sku || '').trim().toUpperCase())
+        .filter(Boolean)
+        .filter((sku, index, arr) => arr.indexOf(sku) === index);
+
+      const matchedGrouped = normalizedGrouped.filter(sku => knownSkuSet.size === 0 || knownSkuSet.has(sku));
+      const groupedSkus = matchedGrouped.length > 0 ? matchedGrouped : normalizedGrouped;
+      const primarySku = groupedSkus[0] || String(item.sku || '').trim().toUpperCase() || products[0]?.sku || '';
+
+      if (!primarySku || groupedSkus.length === 0) return null;
+
+      return {
+        sku: primarySku,
+        name: item.name || primarySku,
+        x: Math.max(0, Math.min(1, Number(item.x) || 0)),
+        y: Math.max(0, Math.min(1, Number(item.y) || 0)),
+        width: Math.max(0.05, Math.min(1, Number(item.width) || 0.5)),
+        height: Math.max(0.05, Math.min(1, Number(item.height) || 0.5)),
+        groupedSkus,
+      };
+    })
+    .filter(Boolean);
 }
 
 // ─── Config ─────────────────────────────────────────────────────────────────
@@ -1270,7 +1299,7 @@ export default function CatalogQuote() {
       const spots = await detectHotspotsWithClaude(currentPage, pageProducts, SUPABASE_URL);
       console.log('[Re-run AI] Got', spots.length, 'hotspots');
       if (spots.length === 0) {
-        alert('AI returned 0 hotspots for this page. Check console for details.');
+        alert('AI found no SKU tables or grouped SKU sections on this page.');
       }
       handleHotspotsChange(spots);
     } catch (err) {
@@ -1579,7 +1608,7 @@ export default function CatalogQuote() {
               <button
                 onClick={rerunWithClaude}
                 disabled={isRerunning}
-                title="Re-run AI detection"
+                title="Re-analyze SKU tables"
                 className="flex flex-col items-center gap-1 p-2.5 rounded-lg w-full text-purple-500 hover:bg-purple-50 hover:text-purple-700 disabled:opacity-40 transition-all"
               >
                 {isRerunning ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
