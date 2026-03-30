@@ -5,9 +5,7 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { PAGE_PRODUCTS, MAX_PAGE, SKU_TO_PAGE } from '@/data/catalogPageMapping';
-
-const HIDDEN_CATALOG_PAGES = [1, 2, 3, 4, 5, 6];
-const FIRST_VISIBLE_CATALOG_PAGE = 0;
+import { FIRST_VISIBLE_CATALOG_PAGE, normalizeCatalogPage } from '@/components/catalog/catalogPageUtils';
 import { SKU_TO_IMAGE } from '@/data/skuImageMap';
 import {
   ChevronLeft, ChevronRight, Plus, Minus, X, ShoppingCart,
@@ -1148,23 +1146,15 @@ export default function CatalogQuote() {
   const currentHotspots = editedHotspots[currentPage] ?? dbHotspots[currentPage] ?? baseHotspots;
   const hasHotspots = currentHotspots.length > 0;
 
-  // Pre-fetch product details for all SKUs on current page
+  // Pre-fetch product details only for visible hotspots on the current page
   useEffect(() => {
-    const skus = new Set([
-      ...pageProducts.map(p => p.sku),
-      ...currentHotspots.flatMap(h => h.groupedSkus || [h.sku]),
-    ]);
+    const skus = new Set(currentHotspots.flatMap(h => h.groupedSkus || [h.sku]));
     skus.forEach(sku => fetchProduct(sku));
-  }, [currentPage, currentHotspots, fetchProduct]);
+  }, [currentHotspots, fetchProduct]);
 
   // Navigation
   const goToPage = useCallback((n) => {
-    const requestedPage = Number.isFinite(n) ? n : FIRST_VISIBLE_CATALOG_PAGE;
-    let p = Math.max(FIRST_VISIBLE_CATALOG_PAGE, Math.min(requestedPage, MAX_PAGE));
-
-    if (currentPage === 0 && p > 0 && p < 7) p = 7;
-    if (currentPage >= 7 && p > 0 && p < 7) p = 0;
-
+    const p = normalizeCatalogPage(n, currentPage, MAX_PAGE);
     setDirection(p > currentPage ? 1 : -1);
     setCurrentPage(p);
     setPageInput(String(p));
@@ -1180,20 +1170,36 @@ export default function CatalogQuote() {
   };
 
   const handleSkuSearch = () => {
-    const sku = searchSku.trim().toUpperCase();
-    const page = SKU_TO_PAGE[sku];
-    if (page) { goToPage(page); setSearchSku(''); setShowSearchDropdown(false); }
+    const query = searchSku.trim();
+    if (!query) return;
+
+    const page = /^\d+$/.test(query) ? Number(query) : SKU_TO_PAGE[query.toUpperCase()];
+    if (Number.isFinite(page)) {
+      goToPage(page);
+      setSearchSku('');
+      setShowSearchDropdown(false);
+    }
   };
 
   const searchDebounceRef = useRef(null);
 
+  useEffect(() => () => {
+    if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+  }, []);
+
   const handleProductSearch = (query) => {
     setSearchSku(query);
-    if (!query || query.length < 2) { setSearchResults([]); setShowSearchDropdown(false); return; }
+    const trimmed = query.trim();
+
+    if (!trimmed || trimmed.length < 2 || /^\d+$/.test(trimmed)) {
+      setSearchResults([]);
+      setShowSearchDropdown(false);
+      return;
+    }
 
     clearTimeout(searchDebounceRef.current);
     searchDebounceRef.current = setTimeout(async () => {
-      const regex = { $regex: query, $options: 'i' };
+      const regex = { $regex: trimmed, $options: 'i' };
       try {
         const [byName, bySku] = await Promise.all([
           base44.entities.Product.filter({ name: regex }),
@@ -1203,7 +1209,9 @@ export default function CatalogQuote() {
         const unique = combined.filter((v, i, a) => a.findIndex(x => x.id === v.id) === i).slice(0, 15);
         setSearchResults(unique);
         setShowSearchDropdown(unique.length > 0);
-      } catch { setShowSearchDropdown(false); }
+      } catch {
+        setShowSearchDropdown(false);
+      }
     }, 400);
   };
 
