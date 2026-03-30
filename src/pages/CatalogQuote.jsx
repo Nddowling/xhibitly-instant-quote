@@ -1165,8 +1165,12 @@ export default function CatalogQuote() {
 
   const handlePageInput = (e) => {
     setPageInput(e.target.value);
-    const n = parseInt(e.target.value);
+  };
+
+  const handlePageInputSubmit = () => {
+    const n = parseInt(pageInput, 10);
     if (!isNaN(n) && n >= 0) goToPage(n);
+    else setPageInput(String(currentPage));
   };
 
   const handleSkuSearch = () => {
@@ -1445,6 +1449,13 @@ export default function CatalogQuote() {
               <input
                 type="number" min={FIRST_VISIBLE_CATALOG_PAGE} max={MAX_PAGE} value={pageInput}
                 onChange={handlePageInput}
+                onBlur={handlePageInputSubmit}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handlePageInputSubmit();
+                  }
+                }}
                 className="w-14 text-center text-sm font-bold bg-transparent focus:outline-none"
               />
               <span className="text-xs text-slate-400">/ {MAX_PAGE}</span>
