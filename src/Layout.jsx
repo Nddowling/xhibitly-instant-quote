@@ -138,7 +138,7 @@ export default function Layout({ children, currentPageName }) {
                 {primaryNav.map(({ page, label, icon: Icon }) => (
                   <Link key={page} to={createPageUrl(page)}>
                     <button className={`flex items-center gap-1.5 px-2.5 lg:px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
-                      currentPageName === page ? 'bg-[#e2231a] text-white' : 'text-white/60 hover:text-white hover:bg-white/8'
+                      currentPageName === page ? 'bg-white/10 text-white' : 'text-white/60 hover:text-white hover:bg-white/8'
                     }`}>
                       <Icon className="w-4 h-4" />
                       {label}
