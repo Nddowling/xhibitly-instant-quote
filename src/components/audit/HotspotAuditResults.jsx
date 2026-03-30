@@ -23,6 +23,7 @@ export default function HotspotAuditResults({ results }) {
           <PackageSearch className="w-4 h-4 text-[#e2231a]" />
           <h3 className="text-sm font-bold text-slate-900">Missing products</h3>
         </div>
+        {results.pageNumber && <p className="text-xs text-slate-500 mb-3">Page {results.pageNumber}</p>}
         {missingProducts.length ? (
           <div className="space-y-2">
             {missingProducts.map((item) => (
