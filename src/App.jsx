@@ -9,6 +9,7 @@ import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import ExecutiveDashboard from './pages/ExecutiveDashboard';
 import ExecutiveListView from './pages/ExecutiveListView';
+import HotspotAudit from './pages/HotspotAudit';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -73,6 +74,14 @@ const AuthenticatedApp = () => {
         element={
           <LayoutWrapper currentPageName="ExecutiveListView">
             <ExecutiveListView />
+          </LayoutWrapper>
+        }
+      />
+      <Route
+        path="/HotspotAudit"
+        element={
+          <LayoutWrapper currentPageName="HotspotAudit">
+            <HotspotAudit />
           </LayoutWrapper>
         }
       />
