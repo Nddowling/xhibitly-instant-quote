@@ -63,7 +63,7 @@ export default function HotspotAudit() {
       <div className="max-w-6xl mx-auto space-y-4">
         <div className="rounded-3xl border border-slate-200 bg-white p-5 md:p-6 shadow-sm">
           <h1 className="text-2xl font-black text-slate-900">Hotspot Audit</h1>
-          <p className="text-sm text-slate-600 mt-2">Scan the full catalog, review pages that need fixes, and approve updates one page at a time.</p>
+          <p className="text-sm text-slate-600 mt-2">Scan the full catalog and review product coverage, page mappings, SKU issues, and whether each item has a real product image or only a fallback image.</p>
           <div className="flex flex-col sm:flex-row gap-3 mt-5">
             <Button onClick={runFullAudit} disabled={loading} className="bg-[#e2231a] hover:bg-[#b01b13]">
               {loading ? 'Auditing catalog…' : 'Audit Entire Catalog'}

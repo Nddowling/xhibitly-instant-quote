@@ -1,8 +1,26 @@
 import { PAGE_PRODUCTS, MAX_PAGE } from '@/data/catalogPageMapping';
+import { SKU_TO_IMAGE } from '@/data/skuImageMap';
 
 export function normalizeHotspot(spot) {
   const groupedSkus = Array.from(new Set((spot.groupedSkus?.length ? spot.groupedSkus : [spot.sku]).filter(Boolean)));
   return { ...spot, groupedSkus, sku: groupedSkus[0] || spot.sku };
+}
+
+function getImageAudit(product) {
+  const imageUrl = product?.primary_image_url || product?.image_cached_url || product?.image_url || SKU_TO_IMAGE[product?.sku] || '';
+  const lower = String(imageUrl || '').toLowerCase();
+  const hasImage = Boolean(imageUrl);
+  const isDefaultImage = lower.includes('/placeholder/') || lower.includes('product_can_be_recycled') || lower.includes('exhb-catalog-cover-spread-26') || lower.includes('hqdefault');
+  const isCatalogPageFallback = lower.includes('/catalog/pages/page-');
+  const hasRealProductImage = hasImage && !isDefaultImage && !isCatalogPageFallback;
+
+  return {
+    imageUrl,
+    hasImage,
+    hasRealProductImage,
+    isDefaultImage,
+    isCatalogPageFallback,
+  };
 }
 
 export function buildPageAudit(pageNumber, hotspots = []) {
@@ -10,6 +28,9 @@ export function buildPageAudit(pageNumber, hotspots = []) {
   const normalizedHotspots = hotspots.map(normalizeHotspot);
   const coveredSkuSet = new Set(normalizedHotspots.flatMap((spot) => spot.groupedSkus));
   const missingProducts = knownProducts.filter((product) => !coveredSkuSet.has(product.sku));
+  const productsWithImageIssues = knownProducts
+    .map((product) => ({ ...product, ...getImageAudit(product) }))
+    .filter((product) => !product.hasRealProductImage);
 
   const skuCounts = {};
   normalizedHotspots.forEach((spot) => {
@@ -40,7 +61,12 @@ export function buildPageAudit(pageNumber, hotspots = []) {
     missingProducts,
     mismatchedHotspots,
     duplicateCoverage,
-    hasIssues: missingProducts.length > 0 || mismatchedHotspots.length > 0 || duplicateCoverage.length > 0,
+    productsWithImageIssues,
+    hasIssues:
+      missingProducts.length > 0 ||
+      mismatchedHotspots.length > 0 ||
+      duplicateCoverage.length > 0 ||
+      productsWithImageIssues.length > 0,
   };
 }
 

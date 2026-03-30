@@ -29,7 +29,7 @@ export default function CatalogAuditSummary({ summary, selectedPage, onSelectPag
               >
                 <p className="text-sm font-bold text-slate-900">Page {page.pageNumber}</p>
                 <p className="text-xs text-slate-600 mt-1">
-                  {page.missingProducts.length} missing · {page.mismatchedHotspots.length} mismatched · {page.duplicateCoverage.length} duplicate
+                  {page.missingProducts.length} missing · {page.mismatchedHotspots.length} mismatched · {page.duplicateCoverage.length} duplicate · {page.productsWithImageIssues.length} image
                 </p>
               </button>
             ))}

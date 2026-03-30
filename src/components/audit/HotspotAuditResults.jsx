@@ -4,8 +4,8 @@ import { AlertTriangle, CheckCircle2, PackageSearch } from 'lucide-react';
 export default function HotspotAuditResults({ results }) {
   if (!results) return null;
 
-  const { missingProducts = [], mismatchedHotspots = [], duplicateCoverage = [] } = results;
-  const hasIssues = missingProducts.length || mismatchedHotspots.length || duplicateCoverage.length;
+  const { missingProducts = [], mismatchedHotspots = [], duplicateCoverage = [], productsWithImageIssues = [] } = results;
+  const hasIssues = missingProducts.length || mismatchedHotspots.length || duplicateCoverage.length || productsWithImageIssues.length;
 
   return (
     <div className="space-y-4">
@@ -63,6 +63,23 @@ export default function HotspotAuditResults({ results }) {
             ))}
           </div>
         ) : <p className="text-sm text-slate-500">No duplicate hotspot coverage found.</p>}
+      </section>
+
+      <section className="rounded-2xl border border-slate-200 bg-white p-4">
+        <h3 className="text-sm font-bold text-slate-900 mb-3">Image file issues</h3>
+        {productsWithImageIssues.length ? (
+          <div className="space-y-2">
+            {productsWithImageIssues.map((item) => (
+              <div key={item.sku} className="rounded-xl border border-slate-200 p-3">
+                <p className="text-xs font-bold text-slate-900">{item.sku}</p>
+                <p className="text-xs text-slate-600 mt-1">{item.name}</p>
+                <p className="text-xs text-slate-500 mt-2">
+                  {!item.hasImage ? 'No image found.' : item.isDefaultImage ? 'Using a default or generic image.' : item.isCatalogPageFallback ? 'Using a catalog page image instead of a product image.' : 'Needs image review.'}
+                </p>
+              </div>
+            ))}
+          </div>
+        ) : <p className="text-sm text-slate-500">No image file issues found.</p>}
       </section>
     </div>
   );
