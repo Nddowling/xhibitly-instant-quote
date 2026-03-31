@@ -69,8 +69,8 @@ export default function DesignerDashboard() {
       <div className="max-w-7xl mx-auto space-y-6">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-black text-slate-900">Designer Umbrella Dashboard</h1>
-            <p className="text-slate-600 mt-1">View and switch between isolated broker workspaces.</p>
+            <h1 className="text-3xl font-black text-slate-900">Global Admin Dashboard</h1>
+            <p className="text-slate-600 mt-1">Switch between orgs, review isolated workspaces, and drill into a selected org safely.</p>
           </div>
           <BrokerWorkspaceSwitcher
             brokerInstances={brokerInstances}
@@ -99,8 +99,8 @@ export default function DesignerDashboard() {
               <InfoRow label="Status" value={activeBroker?.status || '-'} />
             </div>
             <div className="flex flex-wrap gap-2 pt-2">
-              <Button onClick={() => navigate(createPageUrl('Setup'))} variant="outline">Manage Brokers</Button>
-              <Button onClick={() => navigate(createPageUrl('SalesDashboard'))} className="bg-[#e2231a] hover:bg-[#b01b13]">Open Broker View</Button>
+              <Button onClick={() => navigate(createPageUrl('Setup'))} variant="outline">Open Org Setup</Button>
+              <Button onClick={() => navigate(createPageUrl('SalesDashboard'))} className="bg-[#e2231a] hover:bg-[#b01b13]">Open Selected Org</Button>
             </div>
           </CardContent>
         </Card>

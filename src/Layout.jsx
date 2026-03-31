@@ -107,12 +107,13 @@ export default function Layout({ children, currentPageName }) {
     { page: 'Dashboards',    label: 'Dashboards', icon: LayoutDashboard },
   ];
 
-  const canSeeUmbrella = ['admin', 'designer'].includes(user?.role);
+  const isGlobalAdmin = user?.email === 'ndowling970@gmail.com';
+  const canSeeGlobalAdmin = isGlobalAdmin;
   const canSeeExecutive = ['admin', 'broker'].includes(user?.role);
   const canSeeSetup = ['admin', 'designer'].includes(user?.role);
 
   const adminNav = [
-    ...(canSeeUmbrella ? [{ page: 'DesignerDashboard', label: 'Umbrella', icon: LayoutDashboard }] : []),
+    ...(canSeeGlobalAdmin ? [{ page: 'DesignerDashboard', label: 'Global Admin', icon: LayoutDashboard }] : []),
     ...(canSeeExecutive ? [{ page: 'ExecutiveDashboard', label: 'Executive', icon: ShieldCheck }] : []),
   ];
 
@@ -120,9 +121,9 @@ export default function Layout({ children, currentPageName }) {
     ['ReportBuilder','ReportView','DashboardView'].includes(currentPageName);
 
   const settingsNav = [
-    { page: 'Settings', label: 'User Details', icon: SettingsIcon },
-    ...(canSeeUmbrella ? [{ page: 'DesignerDashboard', label: 'Umbrella', icon: LayoutDashboard }] : []),
-    ...(canSeeSetup ? [{ page: 'Setup', label: 'Setup', icon: Settings2 }] : []),
+    { page: 'Settings', label: 'My Settings', icon: SettingsIcon },
+    ...(canSeeGlobalAdmin ? [{ page: 'DesignerDashboard', label: 'Global Admin', icon: LayoutDashboard }] : []),
+    ...(canSeeSetup ? [{ page: 'Setup', label: 'Org Setup', icon: Settings2 }] : []),
   ];
 
   // Mobile: all nav items flat

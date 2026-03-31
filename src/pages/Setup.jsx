@@ -20,10 +20,10 @@ const SECTIONS = [
   {
     group: 'Administration',
     items: [
-      { key: 'users',            label: 'Users',            icon: Users,    component: SetupUsers },
-      { key: 'profiles',         label: 'Profiles',         icon: Shield,   component: SetupProfiles },
-      { key: 'permission-sets',  label: 'Permission Sets',  icon: Key,      component: SetupPermissionSets },
-      { key: 'broker-instances', label: 'Broker Workspaces', icon: Layers,  component: SetupBrokerInstances },
+      { key: 'users',            label: 'Org Users',            icon: Users,    component: SetupUsers },
+      { key: 'profiles',         label: 'Org Profiles',         icon: Shield,   component: SetupProfiles },
+      { key: 'permission-sets',  label: 'Org Permission Sets',  icon: Key,      component: SetupPermissionSets },
+      { key: 'broker-instances', label: 'Org Workspaces', icon: Layers,  component: SetupBrokerInstances },
       { key: 'data-loader',      label: 'Data Loader',      icon: Upload,   component: SetupDataLoader },
       { key: 'crm-connectors',   label: 'CRM Connectors',   icon: PlugZap,  component: SetupCrmConnectors },
       { key: 'seed',             label: 'Initialize Data',  icon: Wrench,   component: SetupSeeder },
@@ -65,7 +65,7 @@ export default function Setup() {
             <div className="w-7 h-7 bg-[#e2231a] rounded-lg flex items-center justify-center">
               <Settings className="w-4 h-4 text-white" />
             </div>
-            <span className="font-bold text-slate-900 text-sm">Setup</span>
+            <span className="font-bold text-slate-900 text-sm">Org Setup</span>
           </div>
           <div className="relative">
             <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
