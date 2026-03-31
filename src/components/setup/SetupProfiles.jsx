@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { BUILT_IN_OBJECTS } from '@/components/utils/reportEngine';
-import { Plus, Shield, Lock, Save, Sparkles } from 'lucide-react';
+import { Plus, Shield, Lock, Save, Sparkles, Copy, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -15,6 +15,8 @@ export default function SetupProfiles() {
   const [tab, setTab] = useState('objects');
   const [dirty, setDirty] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [cloneName, setCloneName] = useState('');
+  const [showCloneDialog, setShowCloneDialog] = useState(false);
 
   useEffect(() => { loadProfiles(); }, []);
 
@@ -87,6 +89,35 @@ export default function SetupProfiles() {
     setSelected(p);
   };
 
+  const openCloneDialog = () => {
+    if (!selected) return;
+    setCloneName(`${selected.name || 'Profile'} Copy`);
+    setShowCloneDialog(true);
+  };
+
+  const handleCloneProfile = async () => {
+    if (!selected || !cloneName.trim()) return;
+    const { id, created_date, updated_date, created_by, ...profileData } = selected;
+    const cloned = await base44.entities.Profile.create({
+      ...profileData,
+      name: cloneName.trim(),
+      is_system: false,
+    });
+    setShowCloneDialog(false);
+    setCloneName('');
+    await loadProfiles();
+    setSelected(cloned);
+    setDirty(false);
+  };
+
+  const handleDeleteProfile = async () => {
+    if (!selected) return;
+    await base44.entities.Profile.delete(selected.id);
+    setSelected(null);
+    setDirty(false);
+    loadProfiles();
+  };
+
   const objects = Object.keys(BUILT_IN_OBJECTS);
 
   return (
@@ -133,12 +164,18 @@ export default function SetupProfiles() {
                 </div>
                 {selected.is_system && <Badge variant="outline" className="text-xs mt-1">System Profile</Badge>}
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap justify-end">
                 {selected.name?.toLowerCase() === 'designer' && (
                   <Button onClick={grantDesignerAccess} variant="outline" size="sm" className="gap-1">
                     <Sparkles className="w-3.5 h-3.5" /> Full Access
                   </Button>
                 )}
+                <Button onClick={openCloneDialog} variant="outline" size="sm" className="gap-1">
+                  <Copy className="w-3.5 h-3.5" /> Clone
+                </Button>
+                <Button onClick={handleDeleteProfile} variant="outline" size="sm" className="gap-1 text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700">
+                  <Trash2 className="w-3.5 h-3.5" /> Delete
+                </Button>
                 {dirty && <span className="text-xs text-amber-600">Unsaved changes</span>}
                 <Button onClick={handleSave} disabled={saving || !dirty} size="sm" className="bg-[#e2231a] hover:bg-[#c41e17] text-white gap-1">
                   <Save className="w-3.5 h-3.5" /> {saving ? 'Saving...' : 'Save'}
@@ -221,6 +258,27 @@ export default function SetupProfiles() {
           </div>
         )}
       </div>
+
+      {showCloneDialog && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+            <div className="flex items-center gap-2 mb-4">
+              <Copy className="w-4 h-4 text-slate-500" />
+              <h3 className="text-lg font-semibold text-slate-900">Clone Profile</h3>
+            </div>
+            <div className="space-y-3">
+              <label className="text-sm font-medium text-slate-700 block">New profile name</label>
+              <Input value={cloneName} onChange={e => setCloneName(e.target.value)} placeholder="Enter cloned profile name" />
+            </div>
+            <div className="flex justify-end gap-2 mt-5">
+              <Button variant="ghost" onClick={() => setShowCloneDialog(false)}>Cancel</Button>
+              <Button onClick={handleCloneProfile} disabled={!cloneName.trim()} className="bg-[#e2231a] hover:bg-[#c41e17] text-white">
+                Create Clone
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
