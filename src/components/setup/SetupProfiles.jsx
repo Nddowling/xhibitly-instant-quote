@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { BUILT_IN_OBJECTS } from '@/components/utils/reportEngine';
-import { Plus, Shield, Lock, Save, X, ChevronLeft } from 'lucide-react';
+import { Plus, Shield, Lock, Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -32,6 +32,17 @@ export default function SetupProfiles() {
         ...(s.object_permissions || {}),
         [obj]: { ...(s.object_permissions?.[obj] || {}), [action]: val }
       }
+    }));
+    setDirty(true);
+  };
+
+  const toggleAllObjPerm = (action, val) => {
+    setSelected(s => ({
+      ...s,
+      object_permissions: objects.reduce((acc, obj) => ({
+        ...acc,
+        [obj]: { ...(s.object_permissions?.[obj] || {}), [action]: val }
+      }), { ...(s.object_permissions || {}) })
     }));
     setDirty(true);
   };
@@ -95,13 +106,19 @@ export default function SetupProfiles() {
         ) : (
           <div className="p-6">
             <div className="flex items-center justify-between mb-4">
-              <div>
-                <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
                   {selected.is_system && <Lock className="w-4 h-4 text-slate-400" />}
-                  <input value={selected.name} onChange={e => { setSelected(s => ({ ...s, name: e.target.value })); setDirty(true); }}
+                  <h2 className="text-xl font-bold text-slate-900">Profile Details</h2>
+                </div>
+                <div className="max-w-md">
+                  <Input
+                    value={selected.name || ''}
+                    onChange={e => { setSelected(s => ({ ...s, name: e.target.value })); setDirty(true); }}
                     disabled={selected.is_system}
-                    className="bg-transparent font-bold text-xl text-slate-900 focus:outline-none focus:border-b border-slate-300 disabled:cursor-default" />
-                </h2>
+                    placeholder="Profile name"
+                  />
+                </div>
                 {selected.is_system && <Badge variant="outline" className="text-xs mt-1">System Profile</Badge>}
               </div>
               <div className="flex items-center gap-2">
@@ -129,7 +146,18 @@ export default function SetupProfiles() {
                     <tr className="bg-slate-50 border-b border-slate-200">
                       <th className="text-left px-4 py-2.5 font-semibold text-slate-600">Object</th>
                       {ACTIONS.map(a => (
-                        <th key={a} className="text-center px-4 py-2.5 font-semibold text-slate-600 capitalize">{a}</th>
+                        <th key={a} className="text-center px-4 py-2.5 font-semibold text-slate-600 capitalize">
+                          <div className="flex flex-col items-center gap-1">
+                            <span>{a}</span>
+                            <input
+                              type="checkbox"
+                              checked={objects.length > 0 && objects.every(obj => selected.object_permissions?.[obj]?.[a] === true)}
+                              onChange={e => toggleAllObjPerm(a, e.target.checked)}
+                              disabled={selected.is_system}
+                              className="w-4 h-4 accent-[#e2231a]"
+                            />
+                          </div>
+                        </th>
                       ))}
                     </tr>
                   </thead>

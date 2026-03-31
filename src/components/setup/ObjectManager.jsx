@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { getAllObjects, getObjectFields, createCustomObject, createCustomField } from '@/components/utils/metadataEngine';
+import { getAllObjects, getObjectFields, createCustomObject, createCustomField, buildCustomObjectApiName, buildHistoryObjectApiName } from '@/components/utils/metadataEngine';
 import { Plus, Database, Search, Lock, Pencil, Trash2, X, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -89,7 +89,10 @@ export default function ObjectManager() {
                 <span className="font-medium block truncate">{obj.label}</span>
                 <span className="text-xs text-slate-400 truncate block">{obj.api_name}</span>
               </div>
-              {!obj.is_custom && <Badge variant="outline" className="text-[9px] px-1 py-0 flex-shrink-0">Built-in</Badge>}
+              <div className="flex items-center gap-1 flex-shrink-0">
+                {!obj.is_custom && <Badge variant="outline" className="text-[9px] px-1 py-0">Built-in</Badge>}
+                {obj.is_history_object && <Badge variant="outline" className="text-[9px] px-1 py-0">History</Badge>}
+              </div>
             </button>
           ))}
         </div>
@@ -109,6 +112,9 @@ export default function ObjectManager() {
                 <h2 className="text-xl font-bold text-slate-900">{selectedObject.label}</h2>
                 <p className="text-sm text-slate-500 font-mono mt-0.5">{selectedObject.api_name}</p>
                 {selectedObject.description && <p className="text-sm text-slate-500 mt-1">{selectedObject.description}</p>}
+                {selectedObject.history_object_api_name && (
+                  <p className="text-xs text-slate-400 mt-2">History Object: <span className="font-mono">{selectedObject.history_object_api_name}</span></p>
+                )}
               </div>
               <Button size="sm" onClick={() => setShowNewField(true)} className="bg-[#e2231a] hover:bg-[#c41e17] text-white gap-1">
                 <Plus className="w-3.5 h-3.5" /> New Field
@@ -173,8 +179,14 @@ export default function ObjectManager() {
                 Allow in Report Builder
               </label>
               {newObj.label && (
-                <p className="text-xs text-slate-400">API name: <span className="font-mono">{newObj.label.split(/\s+/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('')}__c</span></p>
+                <div className="space-y-1 text-xs text-slate-400">
+                  <p>API name: <span className="font-mono">{buildCustomObjectApiName(newObj.label)}</span></p>
+                  <p>History object: <span className="font-mono">{buildHistoryObjectApiName(buildCustomObjectApiName(newObj.label))}</span></p>
+                </div>
               )}
+              <div className="rounded-lg bg-slate-50 border border-slate-200 p-3 text-xs text-slate-600">
+                New objects automatically include system fields like Record ID, Created Date, Created By, Last Edited Date, and Last Edited By, plus a dedicated history object.
+              </div>
             </div>
             <div className="flex gap-2 mt-5">
               <Button onClick={handleCreateObject} disabled={!newObj.label} className="flex-1 bg-[#e2231a] hover:bg-[#c41e17] text-white">Create Object</Button>
