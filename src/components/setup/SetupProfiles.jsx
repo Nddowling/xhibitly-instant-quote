@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { BUILT_IN_OBJECTS } from '@/components/utils/reportEngine';
-import { Plus, Shield, Lock, Save } from 'lucide-react';
+import { Plus, Shield, Lock, Save, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -63,6 +63,19 @@ export default function SetupProfiles() {
     loadProfiles();
   };
 
+  const grantDesignerAccess = () => {
+    if (!selected) return;
+    setSelected(s => ({
+      ...s,
+      object_permissions: objects.reduce((acc, obj) => ({
+        ...acc,
+        [obj]: { read: true, create: true, edit: true, delete: true }
+      }), {}),
+      page_access: ['*'],
+    }));
+    setDirty(true);
+  };
+
   const createProfile = async () => {
     const p = await base44.entities.Profile.create({
       name: 'New Profile',
@@ -115,13 +128,17 @@ export default function SetupProfiles() {
                   <Input
                     value={selected.name || ''}
                     onChange={e => { setSelected(s => ({ ...s, name: e.target.value })); setDirty(true); }}
-                    disabled={selected.is_system}
                     placeholder="Profile name"
                   />
                 </div>
                 {selected.is_system && <Badge variant="outline" className="text-xs mt-1">System Profile</Badge>}
               </div>
               <div className="flex items-center gap-2">
+                {selected.name?.toLowerCase() === 'designer' && (
+                  <Button onClick={grantDesignerAccess} variant="outline" size="sm" className="gap-1">
+                    <Sparkles className="w-3.5 h-3.5" /> Full Access
+                  </Button>
+                )}
                 {dirty && <span className="text-xs text-amber-600">Unsaved changes</span>}
                 <Button onClick={handleSave} disabled={saving || !dirty} size="sm" className="bg-[#e2231a] hover:bg-[#c41e17] text-white gap-1">
                   <Save className="w-3.5 h-3.5" /> {saving ? 'Saving...' : 'Save'}
@@ -153,7 +170,6 @@ export default function SetupProfiles() {
                               type="checkbox"
                               checked={objects.length > 0 && objects.every(obj => selected.object_permissions?.[obj]?.[a] === true)}
                               onChange={e => toggleAllObjPerm(a, e.target.checked)}
-                              disabled={selected.is_system}
                               className="w-4 h-4 accent-[#e2231a]"
                             />
                           </div>
@@ -170,7 +186,6 @@ export default function SetupProfiles() {
                             <input type="checkbox"
                               checked={selected.object_permissions?.[obj]?.[action] === true}
                               onChange={e => toggleObjPerm(obj, action, e.target.checked)}
-                              disabled={selected.is_system}
                               className="w-4 h-4 accent-[#e2231a]"
                             />
                           </td>
@@ -190,8 +205,8 @@ export default function SetupProfiles() {
                     <label key={page} className="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
                       <input type="checkbox"
                         checked={(selected.page_access || []).includes(page) || (selected.page_access || []).includes('*')}
-                        onChange={() => !selected.is_system && togglePageAccess(page)}
-                        disabled={selected.is_system || (selected.page_access || []).includes('*')}
+                        onChange={() => togglePageAccess(page)}
+                        disabled={(selected.page_access || []).includes('*')}
                         className="w-4 h-4 accent-[#e2231a]"
                       />
                       {page}
