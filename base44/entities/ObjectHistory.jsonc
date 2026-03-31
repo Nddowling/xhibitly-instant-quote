@@ -1,0 +1,62 @@
+{
+  "name": "ObjectHistory",
+  "type": "object",
+  "properties": {
+    "entity_name": {
+      "type": "string",
+      "description": "Entity that changed"
+    },
+    "entity_id": {
+      "type": "string",
+      "description": "Record ID that changed"
+    },
+    "record_name": {
+      "type": "string",
+      "description": "Friendly record label"
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "create",
+        "update"
+      ],
+      "description": "Change event type"
+    },
+    "field_api_name": {
+      "type": "string",
+      "description": "Changed field API name"
+    },
+    "field_label": {
+      "type": "string",
+      "description": "Changed field label"
+    },
+    "old_value": {
+      "type": "string",
+      "description": "Previous value"
+    },
+    "new_value": {
+      "type": "string",
+      "description": "New value"
+    },
+    "event_time": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the change happened"
+    },
+    "event_by": {
+      "type": "string",
+      "description": "Who made the change"
+    },
+    "event_action": {
+      "type": "string",
+      "description": "Human readable action"
+    }
+  },
+  "required": [
+    "entity_name",
+    "entity_id",
+    "event_type",
+    "field_api_name",
+    "event_time"
+  ]
+}

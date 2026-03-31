@@ -28,7 +28,7 @@ export async function getAllObjects() {
     label: def.label,
     label_plural: def.label,
     is_custom: false,
-    allow_reports: true,
+    allow_reports: def.allow_reports !== false,
   }));
   return [...builtIn, ...customObjects.map(o => ({ ...o, is_custom: true }))];
 }
