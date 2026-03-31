@@ -75,7 +75,7 @@ export default function QuoteSidebar({ order, lineItems, onLineItemsChange, onCr
   };
 
   return (
-    <div className="w-full h-full min-h-0 flex-shrink-0 bg-white flex flex-col overflow-hidden">
+    <div className="w-full h-full min-h-0 flex-1 flex-shrink-0 bg-white flex flex-col overflow-y-auto overscroll-contain">
       <div className="border-b border-slate-200 bg-white px-3 py-3 flex-shrink-0">
         <div className="flex items-start gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#e2231a]/10 text-[#e2231a]">
