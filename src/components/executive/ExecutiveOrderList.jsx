@@ -22,7 +22,7 @@ export default function ExecutiveOrderList({ title, subtitle, orders, preset }) 
           {orders.map((order) => (
             <button
               key={order.id}
-              onClick={() => navigate(`${createPageUrl('ExecutiveListView')}?preset=${preset || 'active'}&company=${encodeURIComponent(order.customer_company || order.dealer_company || '')}`)}
+              onClick={() => navigate(`${createPageUrl('OrderDetail')}?id=${order.id}&returnTo=${encodeURIComponent(`${createPageUrl('ExecutiveListView')}?preset=${preset || 'active'}`)}`)}
               className="w-full grid grid-cols-1 md:grid-cols-5 gap-3 px-5 py-4 text-left hover:bg-slate-50 transition-colors"
             >
               <div>

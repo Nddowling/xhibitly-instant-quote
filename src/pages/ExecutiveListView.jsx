@@ -7,12 +7,46 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, Filter, BriefcaseBusiness, ArrowLeft } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Search, Filter, ArrowLeft, Settings2, X } from 'lucide-react';
 
 const WON_STATUSES = ['Confirmed', 'Delivered', 'Accepted'];
 const LOST_STATUSES = ['Declined', 'Cancelled'];
 const ACTIVE_STATUSES = ['Pending', 'Contacted', 'Quoted', 'Negotiating', 'Ordered', 'In Production', 'Shipped'];
 const STATUS_OPTIONS = ['all', 'Pending', 'Contacted', 'Quoted', 'Negotiating', 'Ordered', 'In Production', 'Shipped', 'Accepted', 'Confirmed', 'Delivered', 'Declined', 'Cancelled'];
+const ORDER_FIELD_OPTIONS = [
+  { value: 'customer_company', label: 'Customer Company' },
+  { value: 'customer_name', label: 'Customer Name' },
+  { value: 'customer_email', label: 'Customer Email' },
+  { value: 'dealer_company', label: 'Dealer Company' },
+  { value: 'dealer_name', label: 'Dealer Name' },
+  { value: 'reference_number', label: 'Reference Number' },
+  { value: 'status', label: 'Status' },
+  { value: 'show_name', label: 'Show Name' },
+  { value: 'show_date', label: 'Show Date' },
+  { value: 'booth_size', label: 'Booth Size' },
+  { value: 'booth_type', label: 'Booth Type' },
+  { value: 'selected_tier', label: 'Tier' },
+  { value: 'quoted_price', label: 'Quoted Price' },
+  { value: 'final_price', label: 'Final Price' },
+  { value: 'probability', label: 'Probability' },
+  { value: 'expected_close_date', label: 'Expected Close Date' },
+  { value: 'follow_up_date', label: 'Follow Up Date' },
+  { value: 'assigned_sales_rep_id', label: 'Assigned Sales Rep' },
+];
+const DEFAULT_COLUMNS = ['customer_company', 'customer_name', 'status', 'show_name', 'booth_size', 'final_price'];
+const DEFAULT_FILTERS = [
+  { id: 'status', field: 'status', value: 'all' },
+  { id: 'booth_size', field: 'booth_size', value: 'all' },
+];
 
 function fmtMoney(value) {
   return '$' + Number(value || 0).toLocaleString('en-US', { maximumFractionDigits: 0 });
@@ -118,9 +152,9 @@ export default function ExecutiveListView() {
   const [loading, setLoading] = useState(true);
   const [orders, setOrders] = useState([]);
   const [searchQuery, setSearchQuery] = useState(companyFilterFromUrl);
-
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [boothFilter, setBoothFilter] = useState('all');
+  const [activeFilters, setActiveFilters] = useState(DEFAULT_FILTERS);
+  const [selectedColumns, setSelectedColumns] = useState(DEFAULT_COLUMNS);
+  const [isCustomizeOpen, setIsCustomizeOpen] = useState(false);
 
   useEffect(() => {
     const loadOrders = async () => {
@@ -142,7 +176,9 @@ export default function ExecutiveListView() {
 
         setOrders(scopedOrders);
         if (presetConfig.statuses.length === 1) {
-          setStatusFilter(presetConfig.statuses[0]);
+          setActiveFilters(prev => prev.map((filter) =>
+            filter.field === 'status' ? { ...filter, value: presetConfig.statuses[0] } : filter
+          ));
         }
       } finally {
         setLoading(false);
@@ -155,8 +191,13 @@ export default function ExecutiveListView() {
   const filteredOrders = useMemo(() => {
     return orders.filter((order) => {
       if (!presetConfig.statuses.includes(order.status)) return false;
-      if (statusFilter !== 'all' && order.status !== statusFilter) return false;
-      if (boothFilter !== 'all' && order.booth_size !== boothFilter) return false;
+
+      const passesFilters = activeFilters.every((filter) => {
+        if (!filter.value || filter.value === 'all') return true;
+        return String(order?.[filter.field] || '') === String(filter.value);
+      });
+      if (!passesFilters) return false;
+
       if (companyFilterFromUrl) {
         return (order.customer_company || order.dealer_company || '') === companyFilterFromUrl;
       }
@@ -173,12 +214,62 @@ export default function ExecutiveListView() {
         order.reference_number?.toLowerCase().includes(q)
       );
     });
-  }, [orders, presetConfig, searchQuery, statusFilter, boothFilter, companyFilterFromUrl]);
+  }, [orders, presetConfig, searchQuery, activeFilters, companyFilterFromUrl]);
 
   const availableStatuses = STATUS_OPTIONS.filter(
     (status) => status === 'all' || presetConfig.statuses.includes(status)
   );
   const boothSizes = ['all', '10x10', '10x20', '20x20', '20x30', 'island'];
+  const fieldValueOptions = useMemo(() => {
+    return ORDER_FIELD_OPTIONS.reduce((acc, field) => {
+      const values = Array.from(new Set((orders || []).map((order) => order?.[field.value]).filter(Boolean)));
+      acc[field.value] = values.sort((a, b) => String(a).localeCompare(String(b)));
+      return acc;
+    }, {});
+  }, [orders]);
+
+  const toggleColumn = (field) => {
+    setSelectedColumns((prev) => {
+      if (prev.includes(field)) {
+        return prev.filter((item) => item !== field);
+      }
+      if (prev.length >= 10) {
+        return prev;
+      }
+      return [...prev, field];
+    });
+  };
+
+  const updateFilter = (id, key, value) => {
+    setActiveFilters((prev) => prev.map((filter) => {
+      if (filter.id !== id) return filter;
+      if (key === 'field') {
+        return { ...filter, field: value, value: 'all' };
+      }
+      return { ...filter, [key]: value };
+    }));
+  };
+
+  const addFilter = () => {
+    const nextField = ORDER_FIELD_OPTIONS.find((option) => !activeFilters.some((filter) => filter.field === option.value))?.value || ORDER_FIELD_OPTIONS[0].value;
+    setActiveFilters((prev) => [...prev, { id: crypto.randomUUID(), field: nextField, value: 'all' }]);
+  };
+
+  const removeFilter = (id) => {
+    setActiveFilters((prev) => prev.filter((filter) => filter.id !== id));
+  };
+
+  const renderFieldValue = (order, field) => {
+    const value = order?.[field];
+    if (!value) return '—';
+    if (field === 'status') {
+      return <Badge className={`${getStatusBadgeStyle(value)} border-0 inline-flex`}>{value}</Badge>;
+    }
+    if (['quoted_price', 'final_price'].includes(field)) return fmtMoney(value);
+    if (['show_date', 'expected_close_date', 'follow_up_date'].includes(field)) return new Date(value).toLocaleDateString();
+    if (field === 'probability') return `${value}%`;
+    return String(value);
+  };
 
   if (loading) {
     return (
@@ -215,8 +306,8 @@ export default function ExecutiveListView() {
         </div>
 
         <Card>
-          <CardContent className="p-4 md:p-5">
-            <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_220px_180px]">
+          <CardContent className="p-4 md:p-5 space-y-4">
+            <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <Input
@@ -228,33 +319,104 @@ export default function ExecutiveListView() {
                 />
               </div>
 
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger>
-                  <Filter className="w-4 h-4 mr-2" />
-                  <SelectValue placeholder="Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  {availableStatuses.map((status) => (
-                    <SelectItem key={status} value={status}>
-                      {status === 'all' ? 'All statuses' : status}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Dialog open={isCustomizeOpen} onOpenChange={setIsCustomizeOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="gap-2">
+                    <Settings2 className="w-4 h-4" />
+                    Customize View
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-3xl">
+                  <DialogHeader>
+                    <DialogTitle>Edit list view</DialogTitle>
+                  </DialogHeader>
+                  <div className="grid gap-6 lg:grid-cols-2">
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-sm font-semibold text-slate-900">Filters</h3>
+                        <Button type="button" variant="outline" size="sm" onClick={addFilter}>Add filter</Button>
+                      </div>
+                      <div className="space-y-3">
+                        {activeFilters.map((filter) => {
+                          const options = filter.field === 'status'
+                            ? availableStatuses
+                            : filter.field === 'booth_size'
+                              ? boothSizes
+                              : ['all', ...(fieldValueOptions[filter.field] || [])];
+                          return (
+                            <div key={filter.id} className="grid gap-2 rounded-xl border border-slate-200 p-3">
+                              <div className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]">
+                                <Select value={filter.field} onValueChange={(value) => updateFilter(filter.id, 'field', value)}>
+                                  <SelectTrigger>
+                                    <Filter className="w-4 h-4 mr-2" />
+                                    <SelectValue placeholder="Field" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {ORDER_FIELD_OPTIONS.map((field) => (
+                                      <SelectItem key={field.value} value={field.value}>{field.label}</SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                                <Select value={String(filter.value || 'all')} onValueChange={(value) => updateFilter(filter.id, 'value', value)}>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Value" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {options.map((option) => (
+                                      <SelectItem key={String(option)} value={String(option)}>
+                                        {option === 'all' ? 'Any value' : String(option)}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                                <Button type="button" variant="ghost" size="icon" onClick={() => removeFilter(filter.id)}>
+                                  <X className="w-4 h-4" />
+                                </Button>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
 
-              <Select value={boothFilter} onValueChange={setBoothFilter}>
-                <SelectTrigger>
-                  <BriefcaseBusiness className="w-4 h-4 mr-2" />
-                  <SelectValue placeholder="Booth size" />
-                </SelectTrigger>
-                <SelectContent>
-                  {boothSizes.map((size) => (
-                    <SelectItem key={size} value={size}>
-                      {size === 'all' ? 'All booth sizes' : size}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-sm font-semibold text-slate-900">Columns</h3>
+                        <span className="text-xs text-slate-500">{selectedColumns.length}/10 selected</span>
+                      </div>
+                      <div className="grid gap-2 sm:grid-cols-2">
+                        {ORDER_FIELD_OPTIONS.map((field) => {
+                          const checked = selectedColumns.includes(field.value);
+                          const disabled = !checked && selectedColumns.length >= 10;
+                          return (
+                            <label key={field.value} className={`flex items-center gap-3 rounded-xl border p-3 ${disabled ? 'opacity-50' : 'cursor-pointer'} border-slate-200`}>
+                              <Checkbox
+                                checked={checked}
+                                disabled={disabled}
+                                onCheckedChange={() => toggleColumn(field.value)}
+                              />
+                              <span className="text-sm text-slate-700">{field.label}</span>
+                            </label>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              {activeFilters.map((filter) => {
+                const fieldLabel = ORDER_FIELD_OPTIONS.find((item) => item.value === filter.field)?.label || filter.field;
+                const valueLabel = filter.value === 'all' ? 'Any' : filter.value;
+                return (
+                  <div key={filter.id} className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs text-slate-600">
+                    <span className="font-semibold">{fieldLabel}:</span>
+                    <span>{valueLabel}</span>
+                  </div>
+                );
+              })}
             </div>
           </CardContent>
         </Card>
@@ -268,28 +430,19 @@ export default function ExecutiveListView() {
                 {filteredOrders.map((order) => (
                   <button
                     key={order.id}
-                    onClick={() => navigate(`${createPageUrl('OrderDetail')}?id=${order.id}&returnTo=${encodeURIComponent(`/ExecutiveListView?preset=${preset}`)}`)}
-                    className="w-full grid grid-cols-1 lg:grid-cols-[minmax(0,1.4fr)_150px_150px_130px_120px] gap-3 px-5 py-4 text-left hover:bg-slate-50 transition-colors"
+                    onClick={() => navigate(`${createPageUrl('OrderDetail')}?id=${order.id}&returnTo=${encodeURIComponent(`${createPageUrl('ExecutiveListView')}?preset=${preset}`)}`)}
+                    className="w-full px-5 py-4 text-left hover:bg-slate-50 transition-colors"
                   >
-                    <div className="min-w-0">
-                      <p className="text-sm font-semibold text-slate-900 truncate">{order.customer_company || order.dealer_company || order.customer_name || 'Untitled Order'}</p>
-                      <p className="text-xs text-slate-500 mt-1 truncate">{order.customer_name || order.dealer_name || order.customer_email || 'No contact'}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs uppercase tracking-wide text-slate-400">Status</p>
-                      <Badge className={`${getStatusBadgeStyle(order.status)} mt-1 border-0`}>{order.status || 'Draft'}</Badge>
-                    </div>
-                    <div>
-                      <p className="text-xs uppercase tracking-wide text-slate-400">Show</p>
-                      <p className="text-sm font-bold text-slate-800 mt-1">{order.show_name || '—'}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs uppercase tracking-wide text-slate-400">Booth</p>
-                      <p className="text-sm font-bold text-slate-800 mt-1">{order.booth_size || '—'}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs uppercase tracking-wide text-slate-400">Value</p>
-                      <p className="text-sm font-bold text-slate-800 mt-1">{fmtMoney(order.final_price || order.quoted_price || 0)}</p>
+                    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+                      {selectedColumns.map((field) => {
+                        const fieldLabel = ORDER_FIELD_OPTIONS.find((item) => item.value === field)?.label || field;
+                        return (
+                          <div key={field} className="min-w-0">
+                            <p className="text-xs uppercase tracking-wide text-slate-400">{fieldLabel}</p>
+                            <div className="mt-1 text-sm font-medium text-slate-900">{renderFieldValue(order, field)}</div>
+                          </div>
+                        );
+                      })}
                     </div>
                   </button>
                 ))}
