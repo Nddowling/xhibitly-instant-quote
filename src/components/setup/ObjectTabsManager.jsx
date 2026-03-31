@@ -25,8 +25,16 @@ export default function ObjectTabsManager({ brokerInstanceId = null, compact = f
         ? base44.entities.ObjectTab.filter({ broker_instance_id: brokerInstanceId, is_active: true }, 'sort_order', 100)
         : base44.entities.ObjectTab.filter({ is_active: true }, 'sort_order', 100),
     ]);
+
+    const normalizedTabs = (allTabs || []).map(tab => ({
+      id: tab.id,
+      ...tab,
+      ...(tab.data || {}),
+    }));
+
     setObjects(allObjects || []);
-    setTabs(allTabs || []);
+    setTabs(normalizedTabs);
+
     if (!selectedApiName && allObjects?.length) {
       setSelectedApiName(allObjects[0].api_name);
     }
@@ -35,6 +43,7 @@ export default function ObjectTabsManager({ brokerInstanceId = null, compact = f
   const handleAdd = async () => {
     const objectDef = objects.find(object => object.api_name === selectedApiName);
     if (!objectDef) return;
+
     const existing = tabs.find(tab => tab.object_api_name === selectedApiName);
     if (existing) return;
 
