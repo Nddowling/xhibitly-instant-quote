@@ -112,38 +112,57 @@ export default function QuoteSidebar({ order, lineItems, onLineItemsChange, onCr
               Click highlighted products in the catalog to start building this client proposal.
             </p>
           </div>
-        ) : lineItems.map(item => (
-          <div key={item.id} className="bg-white border border-slate-200 rounded-2xl p-3 shadow-sm">
-            <div className="flex items-start gap-3">
-              <div className="w-12 h-12 flex-shrink-0 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center overflow-hidden">
-                <ProductThumb src={getThumbUrl(item, productCache)} />
+        ) : (
+          lineItems.map(item => {
+            const finalUnit = item.final_unit_price ?? item.unit_price;
+            const finalTotal = item.final_total_price ?? item.total_price;
+            const listUnit = item.list_unit_price ?? item.unit_price;
+            const markupAmount = Math.max(0, (finalUnit || 0) - (listUnit || 0) + (item.rule_discount_amount || 0));
+
+            return (
+              <div key={item.id} className="bg-white border border-slate-200 rounded-2xl p-3 shadow-sm">
+                <div className="flex items-start gap-3">
+                  <div className="w-14 h-14 flex-shrink-0 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center overflow-hidden">
+                    <ProductThumb src={getThumbUrl(item, productCache)} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-bold text-slate-900 leading-tight line-clamp-2">{item.product_name}</p>
+                    <p className="text-[10px] text-slate-400 font-mono mt-1">{item.sku}</p>
+                    {item.category && <p className="text-[10px] text-slate-400 mt-0.5">{item.category}</p>}
+                  </div>
+                  <button onClick={() => removeItem(item)} className="text-slate-300 hover:text-red-400 transition-colors flex-shrink-0 p-0.5">
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+
+                <div className="mt-3 grid grid-cols-2 gap-x-3 gap-y-1 rounded-xl bg-slate-50 px-3 py-2 text-[10px] border border-slate-100">
+                  <span className="text-slate-500">List</span>
+                  <span className="text-right font-semibold text-slate-700">{listUnit > 0 ? fmt(listUnit) : '—'}</span>
+                  <span className="text-slate-500">Markup</span>
+                  <span className="text-right font-semibold text-slate-700">{markupAmount > 0 ? fmt(markupAmount) : '—'}</span>
+                  <span className="text-slate-500">Final each</span>
+                  <span className="text-right font-semibold text-slate-900">{finalUnit > 0 ? fmt(finalUnit) : '—'}</span>
+                </div>
+
+                <div className="flex items-center justify-between mt-3 pt-3 border-t border-slate-100">
+                  <div className="flex items-center gap-1.5 rounded-full bg-slate-100 p-1">
+                    <button onClick={() => updateQty(item, -1)} className="w-6 h-6 rounded-full bg-white hover:bg-slate-200 flex items-center justify-center transition-colors shadow-sm">
+                      <Minus className="w-3 h-3 text-slate-600" />
+                    </button>
+                    <span className="text-xs font-bold w-6 text-center text-slate-700">{item.quantity}</span>
+                    <button onClick={() => updateQty(item, 1)} className="w-6 h-6 rounded-full bg-white hover:bg-slate-200 flex items-center justify-center transition-colors shadow-sm">
+                      <Plus className="w-3 h-3 text-slate-600" />
+                    </button>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[10px] text-slate-400">Line total</p>
+                    <p className="text-sm font-black text-slate-900">{finalTotal > 0 ? fmt(finalTotal) : '—'}</p>
+                  </div>
+                </div>
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-bold text-slate-900 leading-tight line-clamp-2">{item.product_name}</p>
-                <p className="text-[10px] text-slate-400 font-mono mt-1">{item.sku}</p>
-                {item.category && <p className="text-[10px] text-slate-400 mt-0.5">{item.category}</p>}
-              </div>
-              <button onClick={() => removeItem(item)} className="text-slate-300 hover:text-red-400 transition-colors flex-shrink-0 p-0.5">
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-            <div className="flex items-center justify-between mt-3 pt-3 border-t border-slate-100">
-              <div className="flex items-center gap-1.5 rounded-full bg-slate-100 p-1">
-                <button onClick={() => updateQty(item, -1)} className="w-6 h-6 rounded-full bg-white hover:bg-slate-200 flex items-center justify-center transition-colors shadow-sm">
-                  <Minus className="w-3 h-3 text-slate-600" />
-                </button>
-                <span className="text-xs font-bold w-6 text-center text-slate-700">{item.quantity}</span>
-                <button onClick={() => updateQty(item, 1)} className="w-6 h-6 rounded-full bg-white hover:bg-slate-200 flex items-center justify-center transition-colors shadow-sm">
-                  <Plus className="w-3 h-3 text-slate-600" />
-                </button>
-              </div>
-              <div className="text-right">
-                {item.unit_price > 0 && <p className="text-[10px] text-slate-400">{fmt(item.unit_price)} each</p>}
-                <p className="text-sm font-black text-slate-900">{item.unit_price > 0 ? fmt(item.total_price) : '—'}</p>
-              </div>
-            </div>
-          </div>
-        ))}
+            );
+          })
+        )}
       </div>
 
       {order && (
