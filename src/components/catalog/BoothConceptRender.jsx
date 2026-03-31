@@ -21,7 +21,7 @@ function getGridCols(boothW, itemCount) {
   return Math.min(itemCount, 3);
 }
 
-// ─── Categorize products into booth zones based on name/SKU patterns ───────────
+// ─── Categorize products into booth zones ─────────────────────────────────────
 function categorizeProducts(lineItems) {
   const backWall = [];
   const bannerStands = [];
@@ -32,28 +32,22 @@ function categorizeProducts(lineItems) {
     const name = (item.product_name || item.sku || '').toLowerCase();
     const sku = (item.sku || '').toLowerCase();
 
-    // Tension fabric displays, backwalls, large format displays
     if (
       /pegasus|formulate|embrace|panoramic|backwall|waveline|lumiere|vector frame|infinite|hop|cove/.test(name) ||
       /pgsus|fml|emb|pan|wvl|lmr|hop|cove/.test(sku)
     ) {
       backWall.push(item);
-    }
-    // Retractable banner stands, roll-up stands
-    else if (
+    } else if (
       /orient|banner stand|retract|roll.?up|blade|spring/.test(name) ||
       /^ont|^bld|^rst|^spr/.test(sku)
     ) {
       bannerStands.push(item);
-    }
-    // Counter displays, kiosks, pedestals
-    else if (
+    } else if (
       /counter|kiosk|pedestal|podium|reception/.test(name) ||
       /-ct\b|ksk|ped/.test(sku)
     ) {
       counters.push(item);
-    }
-    else {
+    } else {
       accessories.push(item);
     }
   }
@@ -61,168 +55,162 @@ function categorizeProducts(lineItems) {
   return { backWall, bannerStands, counters, accessories };
 }
 
-// ─── Build spatial layout description for the DALL-E prompt ──────────────────
-function buildSpatialLayout(boothW, boothD, boothType, zones) {
+// ─── Derive exact pixel-accurate placement instructions from zones ─────────────
+function buildPlacementInstructions(boothW, boothD, boothType, zones, imageIndexMap) {
   const { backWall, bannerStands, counters, accessories } = zones;
   const type = (boothType || 'Inline').toLowerCase();
-  const lines = [];
+  const instructions = [];
 
   // Booth shell
   if (type === 'island') {
-    lines.push(`A ${boothW}x${boothD} foot island booth open on all four sides, visible from every direction. No back wall — products arranged around a central open structure.`);
+    instructions.push(`BOOTH SHELL: ${boothW}x${boothD} foot island booth — open on all 4 sides, no back wall, visible from every direction.`);
   } else if (type === 'corner') {
-    lines.push(`A ${boothW}x${boothD} foot corner booth with two open aisle-facing sides meeting at a 90-degree corner. Back walls on two sides form an L-shape.`);
+    instructions.push(`BOOTH SHELL: ${boothW}x${boothD} foot corner booth — back wall along the left and rear sides (L-shape), two aisle-facing open sides.`);
   } else {
-    lines.push(`A ${boothW}x${boothD} foot inline trade show booth viewed from the aisle. The back wall spans the full ${boothW} feet in width. The booth is ${boothD} feet deep from back wall to aisle edge. Open front.`);
+    instructions.push(`BOOTH SHELL: ${boothW}x${boothD} foot inline booth viewed from the aisle. Single unbroken back wall spanning the full ${boothW} feet wide. ${boothD} feet deep. Open front facing viewer.`);
   }
 
-  // Back wall products
+  // Back wall — spans full width
   if (backWall.length > 0) {
-    const desc = backWall.map(item => {
-      const qty = item.quantity > 1 ? ` (${item.quantity} panels/units side by side)` : '';
-      return `${item.product_name || item.sku}${qty}`;
-    }).join(' + ');
-    lines.push(`BACK WALL: ${desc} — mounted flush against the back wall, spanning the full width. The graphic panels display a clean branded design with neutral colors.`);
+    for (const item of backWall) {
+      const qty = item.quantity || 1;
+      const ref = imageIndexMap[item.sku] ? ` [Reference photo ${imageIndexMap[item.sku]}]` : '';
+      const panelDesc = qty > 1
+        ? `${qty} identical panels arranged side-by-side to span the full back wall width`
+        : `filling the full ${boothW}-foot back wall width`;
+      instructions.push(`BACK WALL — ${item.product_name || item.sku}${ref}: ${panelDesc}. ` +
+        `The fabric tension graphic panels display a clean, professional, solid-color gradient design in deep navy blue and white — NO text, logos, or imagery copied from the reference photo. The hardware frame (aluminum extrusions, feet) must match the reference photo exactly.`);
+    }
   }
 
-  // Banner stands — distribute symmetrically left/right of center
+  // Banner stands — explicit left/right/center positioning
   if (bannerStands.length > 0) {
-    // Expand by quantity
     const expanded = [];
     for (const item of bannerStands) {
       for (let q = 0; q < (item.quantity || 1); q++) expanded.push(item);
     }
     const total = expanded.length;
-    if (total === 1) {
-      lines.push(`FLOOR STANDING: 1x ${expanded[0].product_name || expanded[0].sku} — positioned slightly off-center toward the aisle, in front of the back wall.`);
-    } else if (total === 2) {
-      lines.push(`FLOOR STANDING: ${expanded[0].product_name || expanded[0].sku} on the far left side of the booth + ${expanded[1].product_name || expanded[1].sku} on the far right side of the booth, flanking the back wall.`);
-    } else {
-      const positions = ['far left', 'center-left', 'center', 'center-right', 'far right'].slice(0, Math.min(total, 5));
-      const placed = expanded.slice(0, positions.length).map((item, i) => `${item.product_name || item.sku} at ${positions[i]}`).join(', ');
-      lines.push(`FLOOR STANDING (${total} units): ${placed} — evenly spaced across the booth width, in front of the back wall.`);
-    }
+    const positions = total === 1
+      ? ['centered slightly in front of the back wall']
+      : total === 2
+      ? ['far left side of booth', 'far right side of booth']
+      : total === 3
+      ? ['far left', 'center', 'far right']
+      : total === 4
+      ? ['far left', 'left of center', 'right of center', 'far right']
+      : ['leftmost', 'left', 'center', 'right', 'rightmost'].slice(0, total);
+
+    expanded.forEach((item, i) => {
+      const ref = imageIndexMap[item.sku] ? ` [Reference photo ${imageIndexMap[item.sku]}]` : '';
+      instructions.push(`FLOOR STANDING (${i + 1}/${total}) — ${item.product_name || item.sku}${ref}: ` +
+        `positioned at ${positions[i]}, standing upright on floor, in front of the back wall. ` +
+        `The retractable graphic panel displays a clean professional solid-color design — do NOT copy the graphics from the reference photo, show neutral branded panels. Hardware/frame must match the reference photo exactly.`);
+    });
   }
 
-  // Counters / pedestals — front-center
+  // Counters — front center
   if (counters.length > 0) {
-    const desc = counters.map(item => `${item.quantity > 1 ? item.quantity + 'x ' : ''}${item.product_name || item.sku}`).join(', ');
-    lines.push(`FRONT CENTER: ${desc} — positioned at the front of the booth near the aisle edge, centered.`);
+    counters.forEach((item, i) => {
+      const ref = imageIndexMap[item.sku] ? ` [Reference photo ${imageIndexMap[item.sku]}]` : '';
+      instructions.push(`FRONT CENTER (${i + 1}) — ${item.product_name || item.sku}${ref}: ` +
+        `positioned at the front edge of the booth, centered, near the aisle. ` +
+        `The display panels show a clean neutral branded design — do NOT copy reference photo graphics. Hardware must match the reference.`);
+    });
   }
 
   // Accessories
   if (accessories.length > 0) {
-    const desc = accessories.map(item => item.product_name || item.sku).join(', ');
-    lines.push(`ADDITIONAL ELEMENTS: ${desc} — placed naturally within the booth.`);
+    accessories.forEach(item => {
+      const ref = imageIndexMap[item.sku] ? ` [Reference photo ${imageIndexMap[item.sku]}]` : '';
+      instructions.push(`ADDITIONAL — ${item.product_name || item.sku}${ref}: placed naturally within the booth space.`);
+    });
   }
 
-  return lines.join('\n\n');
+  return instructions.join('\n\n');
 }
 
-// ─── Step 1: Claude Vision analyzes product STRUCTURE only (ignore graphics) ──
-async function analyzeProductStructures(lineItems) {
-  const itemsWithImages = lineItems.filter(item => resolveProductImage(item));
-  if (itemsWithImages.length === 0) return {};
-
-  const imageUrls = itemsWithImages.map(item => resolveProductImage(item));
-  const productList = itemsWithImages.map((item, i) =>
-    `Image ${i + 1}: ${item.product_name || item.sku} (SKU: ${item.sku})`
-  ).join('\n');
-
-  const response = await base44.integrations.Core.InvokeLLM({
-    prompt: `You are a trade show exhibit expert analyzing product photos to extract their PHYSICAL STRUCTURE ONLY.
-
-For each product image, describe ONLY its physical form factor — the hardware, frame, structure, and dimensions. Completely IGNORE any graphics, branding, logos, colors, or printed designs shown on the graphic panels in the photos (those are sample demo graphics, not real).
-
-Products shown (one image per product):
-${productList}
-
-For each product, provide a brief physical description in this format:
-[Product Name]: [physical structure — frame type, shape, height, width, panel count, how it stands/mounts, any hardware visible]
-
-Focus on: aluminum frame, fabric tension mechanism, retractable cassette, base/feet type, number of panels, approximate dimensions. Ignore all graphic content.`,
-    file_urls: imageUrls,
-    model: 'claude_sonnet_4_6',
-  });
-
-  // Map each item's SKU to its physical description
-  const descMap = {};
-  const lines = (response || '').split('\n').filter(l => l.trim());
-  for (let i = 0; i < itemsWithImages.length; i++) {
-    const item = itemsWithImages[i];
-    // Try to find matching line
-    const match = lines.find(l =>
-      l.toLowerCase().includes((item.product_name || item.sku).toLowerCase().slice(0, 10)) ||
-      l.toLowerCase().includes(item.sku.toLowerCase().slice(0, 6)) ||
-      l.startsWith(`${i + 1}.`) || l.startsWith(`Image ${i + 1}`)
-    );
-    descMap[item.sku] = match || `${item.product_name || item.sku}: trade show display product`;
-  }
-  return descMap;
-}
-
-// ─── Step 2: Build the DALL-E image generation prompt ────────────────────────
+// ─── Core render prompt builder ───────────────────────────────────────────────
 async function buildRenderingPrompt(order, lineItems) {
   const { w: boothW, d: boothD } = parseBoothSize(order?.booth_size);
   const boothType = order?.booth_type || 'Inline';
   const zones = categorizeProducts(lineItems);
-  const spatialLayout = buildSpatialLayout(boothW, boothD, boothType, zones);
 
-  // Aspect ratio instruction
+  // Collect reference images — one per unique SKU, max 8
+  const seen = new Set();
+  const referenceImages = [];
+  const imageIndexMap = {}; // sku → 1-based index
+
+  for (const item of lineItems) {
+    if (seen.has(item.sku)) continue;
+    const url = resolveProductImage(item);
+    if (url) {
+      seen.add(item.sku);
+      referenceImages.push({ item, url });
+      imageIndexMap[item.sku] = referenceImages.length;
+    }
+  }
+
+  // Build reference legend for the prompt
+  const refLegend = referenceImages.length > 0
+    ? `REFERENCE PHOTOS PROVIDED (${referenceImages.length} images attached):\n` +
+      referenceImages.map((r, i) =>
+        `  Photo ${i + 1}: ${r.item.product_name || r.item.sku} (SKU: ${r.item.sku}) — use this photo to accurately reproduce the physical hardware structure, frame shape, base/feet, and proportions ONLY. DO NOT copy any printed graphics, text, logos, colors, or imagery visible on the graphic panels in this photo.`
+      ).join('\n')
+    : '';
+
+  // Aspect ratio
   const ratio = boothW / boothD;
-  const aspectDirective = ratio >= 2
-    ? `Extreme wide-angle panoramic view, the entire back wall spans the full width of the frame`
-    : ratio >= 1.5
-    ? `Wide landscape view, the back wall stretches across the full frame width`
-    : `Front-facing view, slightly elevated eye level (~6 feet high), centered on booth`;
+  const cameraDirective = ratio >= 2
+    ? `Ultra-wide camera, low horizontal angle, back wall spans full image width`
+    : `Wide-angle lens, slightly elevated eye level (~5.5 feet from floor), centered on booth, booth fills the full frame`;
 
-  // Get physical structure descriptions from product photos
-  const structureMap = await analyzeProductStructures(lineItems);
-
-  // Build per-product structure summary
-  const productStructures = lineItems.map(item => {
-    const struct = structureMap[item.sku] || `${item.product_name || item.sku}`;
-    const qty = item.quantity > 1 ? ` ×${item.quantity}` : '';
-    return `- ${struct}${qty}`;
-  }).join('\n');
+  const placementInstructions = buildPlacementInstructions(boothW, boothD, boothType, zones, imageIndexMap);
 
   const prompt = await base44.integrations.Core.InvokeLLM({
-    prompt: `You are a professional trade show exhibit visualizer. Write a single photorealistic DALL-E image generation prompt for the following booth setup.
+    prompt: `You are a professional trade show exhibit render artist creating a precise DALL-E / gpt-image-1 image generation prompt. Your job is to write a single detailed, technically accurate prompt that will produce a photorealistic visualization of a specific trade show booth build.
 
-BOOTH LAYOUT:
-${spatialLayout}
+${refLegend}
 
-PRODUCT PHYSICAL STRUCTURES (hardware/form only — ignore any sample graphics described):
-${productStructures}
+EXACT PRODUCT PLACEMENT — follow these instructions precisely, one product at a time:
+${placementInstructions}
 
-GRAPHIC PANEL STYLE: All graphic panels should appear as clean, professionally printed panels with solid color backgrounds and minimal modern typography — no specific branding, logos, or imagery. Light neutral tones preferred (white, light gray, one subtle accent color).
+GRAPHIC PANEL APPEARANCE (critical):
+All printed graphic panels throughout the booth — on the back wall display, banner stands, and any other displays — must show a clean, professional, modern design using only neutral colors: deep navy blue or charcoal as the base with white accents, or a clean white/light gray gradient. Use subtle geometric shapes or soft gradients. Do NOT render any text, logos, brand names, imagery, people, or specific graphic designs. The panels should look like they have been printed with a sophisticated placeholder design ready for customization.
 
-RENDERING REQUIREMENTS:
-- ${aspectDirective}
-- Photorealistic 3D architectural visualization
-- Professional trade show convention center hall: light gray carpet floor, high ceiling with suspended track lighting and warm spotlights aimed at the booth
-- White pipe-and-drape curtain walls visible in background behind the booth
+SCENE & ENVIRONMENT:
+- Professional trade show convention center interior
+- Medium-gray commercial carpet floor
+- High ceiling (15+ feet) with exposed industrial structure
+- Overhead track lighting with warm halogen spotlights aimed at the booth
+- White pipe-and-drape curtain walls forming the backdrop behind and to the sides
+- Clean, open aisle space in front of the booth
 - No people in the scene
-- Sharp product edges, accurate proportions, realistic shadows and reflections
 
-CRITICAL ACCURACY RULES:
-- Show EXACTLY the number of each product as specified (quantities above are precise)
-- Place products in the exact spatial positions described in BOOTH LAYOUT
-- The back wall products must fill the back of the booth completely
-- Do not add, remove, or substitute any products
+CAMERA & RENDER QUALITY:
+- ${cameraDirective}
+- Photorealistic architectural visualization quality
+- Accurate shadows and soft directional lighting from overhead spots
+- Sharp product edges with realistic material textures (aluminum, fabric, carpet)
+- Professional product photography composition
 
-Return ONLY the DALL-E prompt — no explanation, no preamble, no quotes around it.`,
+Write ONLY the final image generation prompt — no explanation, no preamble, no quotes around it. The prompt must be specific enough that a generative model produces the exact booth configuration described above.`,
+    file_urls: referenceImages.length > 0 ? referenceImages.map(r => r.url) : undefined,
     model: 'claude_sonnet_4_6',
   });
 
-  return prompt;
+  return { prompt, referenceImages };
 }
 
-// ─── Step 3: Generate the image — text-to-image only (no seed images) ─────────
+// ─── Generate the image — pass reference photos so model knows hardware shapes ─
 async function generatePhotoRender(order, lineItems) {
-  const prompt = await buildRenderingPrompt(order, lineItems);
+  const { prompt, referenceImages } = await buildRenderingPrompt(order, lineItems);
 
-  const result = await base44.integrations.Core.GenerateImage({ prompt });
+  // Pass reference images so the model can use them for hardware structure accuracy.
+  // The prompt explicitly instructs the model to use structure/shape only, not copy graphics.
+  const result = await base44.integrations.Core.GenerateImage({
+    prompt,
+    existing_image_urls: referenceImages.length > 0 ? referenceImages.map(r => r.url) : undefined,
+  });
 
   return { url: result.url, prompt };
 }
@@ -279,9 +267,9 @@ export default function BoothConceptRender({ order, lineItems = [], onRenderingS
   const handleGenerate = async () => {
     setIsGenerating(true);
     setGenError(null);
-    setGenStep('Analyzing product structures…');
+    setGenStep('Mapping booth layout…');
     try {
-      setGenStep('Claude is mapping booth layout…');
+      setGenStep('Building photorealistic render…');
       const { url } = await generatePhotoRender(order, lineItems);
 
       setRenderUrl(url);
@@ -303,7 +291,7 @@ export default function BoothConceptRender({ order, lineItems = [], onRenderingS
   return (
     <div className="space-y-4">
 
-      {/* ── Photorealistic render ── */}
+      {/* ── Render result ── */}
       {renderUrl && (
         <div className="rounded-xl border border-slate-200 overflow-hidden shadow-sm bg-white">
           <div className="px-4 py-2.5 bg-[#1a1a1a] flex items-center justify-between">
@@ -312,19 +300,10 @@ export default function BoothConceptRender({ order, lineItems = [], onRenderingS
               Photorealistic Booth Concept
             </span>
             <div className="flex items-center gap-2">
-              <button
-                onClick={() => setLightboxOpen(true)}
-                className="text-white/50 hover:text-white transition-colors"
-                title="View full size"
-              >
+              <button onClick={() => setLightboxOpen(true)} className="text-white/50 hover:text-white transition-colors" title="View full size">
                 <ZoomIn className="w-4 h-4" />
               </button>
-              <button
-                onClick={handleGenerate}
-                disabled={isGenerating}
-                className="text-white/50 hover:text-white transition-colors"
-                title="Regenerate"
-              >
+              <button onClick={handleGenerate} disabled={isGenerating} className="text-white/50 hover:text-white transition-colors" title="Regenerate">
                 <RefreshCw className="w-3.5 h-3.5" />
               </button>
             </div>
@@ -337,7 +316,7 @@ export default function BoothConceptRender({ order, lineItems = [], onRenderingS
           />
           <div className="px-4 py-2 bg-slate-50 border-t border-slate-100">
             <p className="text-[10px] text-slate-400">
-              {boothW}' × {boothD}' {boothType} · {lineItems.length} product{lineItems.length !== 1 ? 's' : ''} · AI-generated concept — actual products may vary
+              {boothW}' × {boothD}' {boothType} · {lineItems.length} product{lineItems.length !== 1 ? 's' : ''} · AI-generated concept — graphic panels shown with placeholder design
             </p>
           </div>
         </div>
@@ -360,7 +339,7 @@ export default function BoothConceptRender({ order, lineItems = [], onRenderingS
         </button>
         {!renderUrl && !isGenerating && (
           <p className="text-[10px] text-slate-400 text-center">
-            AI maps your {lineItems.length} product{lineItems.length !== 1 ? 's' : ''} to a spatial booth layout, then generates a photorealistic 3D concept render
+            AI maps your {lineItems.length} selected product{lineItems.length !== 1 ? 's' : ''} to a spatial booth layout and renders a photorealistic concept
           </p>
         )}
         {genError && (
@@ -379,10 +358,7 @@ export default function BoothConceptRender({ order, lineItems = [], onRenderingS
             <span className="text-[9px] text-white/70 font-bold">{boothW}' × {boothD}' {boothType}</span>
           </div>
           <div className="p-3 bg-gradient-to-b from-slate-100 to-slate-200">
-            <div
-              className="grid gap-2"
-              style={{ gridTemplateColumns: `repeat(${gridCols}, minmax(0, 1fr))` }}
-            >
+            <div className="grid gap-2" style={{ gridTemplateColumns: `repeat(${gridCols}, minmax(0, 1fr))` }}>
               {lineItems.map((item, i) => (
                 <ProductCard key={item.id || i} item={item} />
               ))}
@@ -396,14 +372,8 @@ export default function BoothConceptRender({ order, lineItems = [], onRenderingS
 
       {/* ── Lightbox ── */}
       {lightboxOpen && renderUrl && (
-        <div
-          className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4"
-          onClick={() => setLightboxOpen(false)}
-        >
-          <button
-            onClick={() => setLightboxOpen(false)}
-            className="absolute top-4 right-4 text-white/60 hover:text-white"
-          >
+        <div className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4" onClick={() => setLightboxOpen(false)}>
+          <button onClick={() => setLightboxOpen(false)} className="absolute top-4 right-4 text-white/60 hover:text-white">
             <X className="w-6 h-6" />
           </button>
           <img
