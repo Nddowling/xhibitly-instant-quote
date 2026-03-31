@@ -1,51 +1,117 @@
 /**
  * generateBoothRender.ts
  *
- * Calls GPT Image 1.5 directly with multi-image reference composition.
- * Uses product reference photos for hardware structure accuracy while
- * rendering neutral placeholder graphics on all display panels.
+ * Generates a photorealistic booth concept render using Luma AI Photon-1.
+ * Passes up to 4 product reference photos via image_ref for hardware/graphic accuracy.
+ * Polls until the generation completes and returns the image URL.
  *
  * Body:
- *   prompt: string          — the detailed booth render prompt from Claude
- *   reference_urls: string[] — product photo URLs (max 10) for structure reference
+ *   prompt: string           — detailed booth layout prompt from Claude
+ *   reference_urls: string[] — product photo URLs (up to 4 used as image_ref)
  *
  * Returns:
- *   { url: string }          — base64 data URL or storage URL of rendered image
+ *   { url: string }          — Luma CDN URL of the completed render
  */
 
-const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY') ?? '';
+// @ts-ignore — Deno runtime, types not available in VS Code
+const LUMAAI_API_KEY = Deno.env.get('LUMAAI_API_KEY') ?? '';
+
+const LUMA_BASE = 'https://api.lumalabs.ai/dream-machine/v1';
+const MODEL = 'photon-1';
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
 };
 
-async function fetchImageAsBase64(url: string): Promise<{ b64: string; mime: string } | null> {
-  try {
-    const res = await fetch(url, {
-      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; booth-render/1.0)' },
-    });
-    if (!res.ok) return null;
-    const buf = await res.arrayBuffer();
-    const bytes = new Uint8Array(buf);
-    let binary = '';
-    for (let i = 0; i < bytes.byteLength; i++) binary += String.fromCharCode(bytes[i]);
-    const b64 = btoa(binary);
-    const ct = res.headers.get('content-type') || 'image/jpeg';
-    const mime = ct.split(';')[0].trim();
-    return { b64, mime };
-  } catch {
-    return null;
+// ─── Create a generation via Luma REST API ────────────────────────────────────
+async function createGeneration(prompt: string, referenceUrls: string[]): Promise<string> {
+  // image_ref: up to 4 product photos, weighted by position (first = strongest)
+  const imageRef = referenceUrls.slice(0, 4).map((url, i) => ({
+    url,
+    weight: i === 0 ? 0.85 : i === 1 ? 0.75 : 0.65,
+  }));
+
+  const body: Record<string, unknown> = {
+    prompt,
+    model: MODEL,
+    aspect_ratio: '16:9', // landscape — best for booth visualization
+  };
+
+  if (imageRef.length > 0) {
+    body.image_ref = imageRef;
   }
+
+  const res = await fetch(`${LUMA_BASE}/generations/image`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${LUMAAI_API_KEY}`,
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
+
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`Luma create failed (${res.status}): ${err}`);
+  }
+
+  const data = await res.json() as { id: string };
+  return data.id;
 }
 
+// ─── Poll until completed or failed ──────────────────────────────────────────
+async function pollGeneration(id: string, timeoutMs = 90_000): Promise<string> {
+  const start = Date.now();
+  const INTERVAL = 4_000; // 4 second poll interval
+
+  while (Date.now() - start < timeoutMs) {
+    await new Promise(r => setTimeout(r, INTERVAL));
+
+    const res = await fetch(`${LUMA_BASE}/generations/${id}`, {
+      headers: {
+        'Authorization': `Bearer ${LUMAAI_API_KEY}`,
+        'Accept': 'application/json',
+      },
+    });
+
+    if (!res.ok) continue;
+
+    const gen = await res.json() as {
+      state: string;
+      assets?: { image?: string };
+      failure_reason?: string;
+    };
+
+    if (gen.state === 'completed') {
+      const url = gen.assets?.image;
+      if (!url) throw new Error('Luma returned completed state but no image URL');
+      return url;
+    }
+
+    if (gen.state === 'failed') {
+      throw new Error(`Luma generation failed: ${gen.failure_reason || 'unknown reason'}`);
+    }
+
+    // state is 'dreaming' or 'queued' — keep polling
+  }
+
+  throw new Error('Luma generation timed out after 90 seconds');
+}
+
+// ─── Main handler ─────────────────────────────────────────────────────────────
+// @ts-ignore — Deno runtime
 Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: CORS });
   }
 
-  if (!OPENAI_API_KEY) {
-    return Response.json({ error: 'OPENAI_API_KEY not configured' }, { status: 500, headers: CORS });
+  if (!LUMAAI_API_KEY) {
+    return Response.json(
+      { error: 'LUMAAI_API_KEY not configured — add it to Base44 environment variables' },
+      { status: 500, headers: CORS }
+    );
   }
 
   let body: { prompt?: string; reference_urls?: string[] };
@@ -61,59 +127,18 @@ Deno.serve(async (req: Request) => {
     return Response.json({ error: 'prompt is required' }, { status: 400, headers: CORS });
   }
 
-  // Download reference images and encode as base64 for gpt-image-1 multi-image input
-  const imageInputs: Array<{ type: 'image_url'; image_url: { url: string } }> = [];
-
-  for (const url of reference_urls.slice(0, 10)) {
-    const img = await fetchImageAsBase64(url);
-    if (img) {
-      imageInputs.push({
-        type: 'image_url',
-        image_url: { url: `data:${img.mime};base64,${img.b64}` },
-      });
-    }
-  }
-
   try {
-    const res = await fetch('https://api.openai.com/v1/images/generations', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${OPENAI_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'gpt-image-1',
-        prompt: imageInputs.length > 0
-          ? `${prompt}\n\n[${imageInputs.length} product reference photo(s) provided — reproduce each product's hardware AND graphic panel design faithfully as shown in its reference photo]`
-          : prompt,
-        n: 1,
-        size: '1024x1024',
-        quality: 'high',
-        // gpt-image-1 returns base64 by default
-        response_format: 'b64_json',
-      }),
-    });
+    console.log(`[generateBoothRender] Creating Luma generation | refs: ${reference_urls.length}`);
+    const id = await createGeneration(prompt, reference_urls);
 
-    if (!res.ok) {
-      const err = await res.text();
-      console.error('OpenAI error:', err);
-      return Response.json({ error: `OpenAI API error: ${res.status}` }, { status: 502, headers: CORS });
-    }
+    console.log(`[generateBoothRender] Polling generation ${id}...`);
+    const imageUrl = await pollGeneration(id);
 
-    const data = await res.json();
-    const b64Image = data?.data?.[0]?.b64_json;
-
-    if (!b64Image) {
-      return Response.json({ error: 'No image returned from OpenAI' }, { status: 502, headers: CORS });
-    }
-
-    // Return as data URL — client can display it directly
-    const imageUrl = `data:image/png;base64,${b64Image}`;
-
+    console.log(`[generateBoothRender] Done: ${imageUrl}`);
     return Response.json({ url: imageUrl }, { headers: CORS });
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : String(e);
-    console.error('generateBoothRender error:', msg);
+    console.error('[generateBoothRender] Error:', msg);
     return Response.json({ error: msg }, { status: 500, headers: CORS });
   }
 });
