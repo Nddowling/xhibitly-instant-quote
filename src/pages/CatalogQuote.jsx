@@ -1624,7 +1624,7 @@ export default function CatalogQuote() {
       )}
 
       {/* ── 3-column body ── */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex overflow-visible">
 
 
 
