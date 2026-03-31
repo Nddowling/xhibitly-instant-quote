@@ -34,11 +34,16 @@ export async function ensureBrokerInstance(user) {
   const existingMemberships = await base44.entities.BrokerMember.filter({ user_id: user.id });
   if (existingMemberships?.length > 0) {
     const membership = existingMemberships[0];
-    const instances = await base44.entities.BrokerInstance.filter({ id: membership.broker_instance_id });
+    const brokerInstanceId = membership.broker_instance_id || membership.data?.broker_instance_id;
+    const memberRole = membership.member_role || membership.data?.member_role;
+    const instances = brokerInstanceId
+      ? await base44.entities.BrokerInstance.filter({ id: brokerInstanceId })
+      : [];
+
     if (instances?.length > 0) {
       await base44.auth.updateMe({
-        broker_instance_id: membership.broker_instance_id,
-        broker_role: membership.member_role
+        broker_instance_id: brokerInstanceId,
+        broker_role: memberRole
       });
       return instances[0];
     }
