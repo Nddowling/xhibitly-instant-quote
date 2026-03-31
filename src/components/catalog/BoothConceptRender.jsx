@@ -217,7 +217,7 @@ async function generatePhotoRender(order, lineItems) {
 
     if (!result?.url) throw new Error('No URL returned');
   } catch (fnErr) {
-    console.warn('GPT Image 1.5 function failed, falling back to built-in GenerateImage:', fnErr?.message);
+    console.warn('Luma render function failed, falling back to built-in GenerateImage:', fnErr?.message);
     // Fallback to Base44's built-in image generation if the function isn't deployed yet
     const fallback = await base44.integrations.Core.GenerateImage({
       prompt,
