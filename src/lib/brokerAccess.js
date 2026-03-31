@@ -27,7 +27,26 @@ export function scopeItems(items, brokerInstanceId, field = 'broker_instance_id'
 }
 
 export async function loadAllBrokerInstances() {
-  return await base44.entities.BrokerInstance.list('name', 500);
+  const user = await base44.auth.me();
+  const isGlobalAdmin = user?.email === 'ndowling970@gmail.com';
+
+  if (isGlobalAdmin) {
+    return await base44.entities.BrokerInstance.list('name', 500);
+  }
+
+  const memberships = await base44.entities.BrokerMember.filter({ user_id: user.id }, 'broker_instance_id', 500);
+  const brokerIds = [...new Set((memberships || []).map((item) => item.broker_instance_id).filter(Boolean))];
+
+  if (user?.broker_instance_id && !brokerIds.includes(user.broker_instance_id)) {
+    brokerIds.push(user.broker_instance_id);
+  }
+
+  if (brokerIds.length === 0) {
+    return [];
+  }
+
+  const allBrokers = await base44.entities.BrokerInstance.list('name', 500);
+  return (allBrokers || []).filter((broker) => brokerIds.includes(broker.id));
 }
 
 export async function setActiveBrokerInstance(brokerInstanceId) {
