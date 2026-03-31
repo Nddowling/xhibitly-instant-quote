@@ -39,7 +39,7 @@ async function fetchImageAsBase64(url: string): Promise<{ b64: string; mime: str
   }
 }
 
-Deno.serve(async (req) => {
+Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: CORS });
   }
@@ -74,12 +74,6 @@ Deno.serve(async (req) => {
     }
   }
 
-  // Build the message content — text prompt + reference images
-  const content: Array<Record<string, unknown>> = [
-    { type: 'text', text: prompt },
-    ...imageInputs,
-  ];
-
   try {
     const res = await fetch('https://api.openai.com/v1/images/generations', {
       method: 'POST',
@@ -90,7 +84,7 @@ Deno.serve(async (req) => {
       body: JSON.stringify({
         model: 'gpt-image-1',
         prompt: imageInputs.length > 0
-          ? `${prompt}\n\n[${imageInputs.length} product reference photo(s) provided above — use for hardware structure only, do not copy any graphics from them]`
+          ? `${prompt}\n\n[${imageInputs.length} product reference photo(s) provided — reproduce each product's hardware AND graphic panel design faithfully as shown in its reference photo]`
           : prompt,
         n: 1,
         size: '1024x1024',

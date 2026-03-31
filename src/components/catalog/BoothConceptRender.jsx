@@ -79,7 +79,7 @@ function buildPlacementInstructions(boothW, boothD, boothType, zones, imageIndex
         ? `${qty} identical panels arranged side-by-side to span the full back wall width`
         : `filling the full ${boothW}-foot back wall width`;
       instructions.push(`BACK WALL — ${item.product_name || item.sku}${ref}: ${panelDesc}. ` +
-        `The fabric tension graphic panels display a clean, professional, solid-color gradient design in deep navy blue and white — NO text, logos, or imagery copied from the reference photo. The hardware frame (aluminum extrusions, feet) must match the reference photo exactly.`);
+        `Reproduce the graphic panel design exactly as it appears in the reference photo — same colors, layout, imagery style, and visual treatment. The hardware frame (aluminum extrusions, feet, base) must also match the reference photo exactly.`);
     }
   }
 
@@ -104,7 +104,7 @@ function buildPlacementInstructions(boothW, boothD, boothType, zones, imageIndex
       const ref = imageIndexMap[item.sku] ? ` [Reference photo ${imageIndexMap[item.sku]}]` : '';
       instructions.push(`FLOOR STANDING (${i + 1}/${total}) — ${item.product_name || item.sku}${ref}: ` +
         `positioned at ${positions[i]}, standing upright on floor, in front of the back wall. ` +
-        `The retractable graphic panel displays a clean professional solid-color design — do NOT copy the graphics from the reference photo, show neutral branded panels. Hardware/frame must match the reference photo exactly.`);
+        `Reproduce the graphic panel design exactly as shown in the reference photo — same colors, imagery, and visual style. Hardware (cassette base, retractable mechanism, feet) must match the reference photo exactly.`);
     });
   }
 
@@ -114,7 +114,7 @@ function buildPlacementInstructions(boothW, boothD, boothType, zones, imageIndex
       const ref = imageIndexMap[item.sku] ? ` [Reference photo ${imageIndexMap[item.sku]}]` : '';
       instructions.push(`FRONT CENTER (${i + 1}) — ${item.product_name || item.sku}${ref}: ` +
         `positioned at the front edge of the booth, centered, near the aisle. ` +
-        `The display panels show a clean neutral branded design — do NOT copy reference photo graphics. Hardware must match the reference.`);
+        `Reproduce the graphic panel design exactly as shown in the reference photo — same colors, imagery, and visual style. Hardware must match the reference photo exactly.`);
     });
   }
 
@@ -154,7 +154,7 @@ async function buildRenderingPrompt(order, lineItems) {
   const refLegend = referenceImages.length > 0
     ? `REFERENCE PHOTOS PROVIDED (${referenceImages.length} images attached):\n` +
       referenceImages.map((r, i) =>
-        `  Photo ${i + 1}: ${r.item.product_name || r.item.sku} (SKU: ${r.item.sku}) — use this photo to accurately reproduce the physical hardware structure, frame shape, base/feet, and proportions ONLY. DO NOT copy any printed graphics, text, logos, colors, or imagery visible on the graphic panels in this photo.`
+        `  Photo ${i + 1}: ${r.item.product_name || r.item.sku} (SKU: ${r.item.sku}) — reproduce this product faithfully: match the hardware structure (frame, base, feet, mechanism) AND the graphic panel design (colors, imagery, visual style) exactly as shown.`
       ).join('\n')
     : '';
 
@@ -175,7 +175,7 @@ EXACT PRODUCT PLACEMENT — follow these instructions precisely, one product at 
 ${placementInstructions}
 
 GRAPHIC PANEL APPEARANCE (critical):
-All printed graphic panels throughout the booth — on the back wall display, banner stands, and any other displays — must show a clean, professional, modern design using only neutral colors: deep navy blue or charcoal as the base with white accents, or a clean white/light gray gradient. Use subtle geometric shapes or soft gradients. Do NOT render any text, logos, brand names, imagery, people, or specific graphic designs. The panels should look like they have been printed with a sophisticated placeholder design ready for customization.
+Each product's graphic panels must display the design shown in its reference photo — reproduce the colors, imagery, visual style, and overall graphic treatment faithfully. Each product has its own distinct graphic: do not apply one product's graphic to another product. The goal is for the render to look like a real booth with professionally printed, fully-designed graphics already on the displays.
 
 SCENE & ENVIRONMENT:
 - Professional trade show convention center interior
