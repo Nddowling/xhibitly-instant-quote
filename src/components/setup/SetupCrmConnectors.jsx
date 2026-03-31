@@ -17,12 +17,6 @@ const CONNECTORS = [
     description: 'Connect HubSpot contacts, companies, and deals for quoting workflows.',
     status: 'ready',
   },
-  {
-    key: 'monday',
-    name: 'Monday CRM',
-    description: 'Monday CRM is not available as a native Base44 connector right now.',
-    status: 'unavailable',
-  },
 ];
 
 export default function SetupCrmConnectors() {
@@ -72,7 +66,6 @@ export default function SetupCrmConnectors() {
         <CardContent className="text-sm text-slate-600 space-y-2">
           <p>• Shared admin connectors are best when your internal team is using one connected CRM account.</p>
           <p>• Salesforce and HubSpot are available as native Base44 connectors.</p>
-          <p>• Monday CRM is not currently available as a native Base44 connector.</p>
         </CardContent>
       </Card>
     </div>
