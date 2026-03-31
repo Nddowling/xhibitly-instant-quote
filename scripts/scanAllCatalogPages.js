@@ -36,14 +36,18 @@ const HOTSPOTS_PATH = path.join(__dirname, '../src/data/catalogHotspots.json');
 const SCAN_LOG_PATH = path.join(__dirname, '../orbus_catalog/catalog_scan_log.json');
 const TEMP_DIR      = '/tmp/catalog_scan_pages';
 
-const TOTAL_PAGES = 220;
+// The PDF has 2 unnumbered pages before print page 1 (cover + symbol key).
+// All data is stored using PRINT page numbers (1–218).
+// To render a print page from the PDF: PDF_PAGE = PRINT_PAGE + PAGE_OFFSET
+const PAGE_OFFSET  = 2;
+const TOTAL_PRINT_PAGES = 218;
 
 // ── Flags ─────────────────────────────────────────────────────────────────────
 const SCAN_ALL  = process.argv.includes('--all');
 const DRY_RUN   = process.argv.includes('--dry-run');
 const SINGLE_PAGE = (() => { const i = process.argv.indexOf('--page'); return i >= 0 ? parseInt(process.argv[i+1]) : null; })();
 const FROM_PAGE   = (() => { const i = process.argv.indexOf('--from'); return i >= 0 ? parseInt(process.argv[i+1]) : 1; })();
-const TO_PAGE     = (() => { const i = process.argv.indexOf('--to');   return i >= 0 ? parseInt(process.argv[i+1]) : TOTAL_PAGES; })();
+const TO_PAGE     = (() => { const i = process.argv.indexOf('--to');   return i >= 0 ? parseInt(process.argv[i+1]) : TOTAL_PRINT_PAGES; })();
 
 // ── Load current state ────────────────────────────────────────────────────────
 const mappingData = JSON.parse(readFileSync(MAPPING_PATH, 'utf-8'));
@@ -58,20 +62,20 @@ const alreadyScannedPages = new Set(Object.keys(scanLog).map(Number));
 mkdirSync(TEMP_DIR, { recursive: true });
 
 // ── Determine pages to scan ───────────────────────────────────────────────────
+// All page numbers below are PRINT page numbers (1–218)
 let pagesToScan;
 if (SINGLE_PAGE) {
   pagesToScan = [SINGLE_PAGE];
 } else {
   pagesToScan = Array.from({ length: TO_PAGE - FROM_PAGE + 1 }, (_, i) => i + FROM_PAGE);
   if (!SCAN_ALL) {
-    // Skip pages already in mapping AND already scanned (no products found)
     pagesToScan = pagesToScan.filter(p => !alreadyMappedPages.has(p) && !alreadyScannedPages.has(p));
   }
 }
 
 console.log(`\n🔍 Full Catalog Scanner — 2026 Edition`);
 console.log(`   PDF: ${PDF_PATH}`);
-console.log(`   Total catalog pages: ${TOTAL_PAGES}`);
+console.log(`   Total print pages: ${TOTAL_PRINT_PAGES} (PDF has ${TOTAL_PRINT_PAGES + PAGE_OFFSET}, offset=${PAGE_OFFSET})`);
 console.log(`   Already mapped pages: ${alreadyMappedPages.size}`);
 console.log(`   Already scanned (no product): ${alreadyScannedPages.size}`);
 console.log(`   Pages to scan now: ${pagesToScan.length}`);
@@ -84,17 +88,18 @@ if (pagesToScan.length === 0) {
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
-function getPageImageBase64(pageNum) {
-  const padded = String(pageNum).padStart(3, '0');
+function getPageImageBase64(printPageNum) {
+  const pdfPageNum = printPageNum + PAGE_OFFSET;
+  const padded = String(pdfPageNum).padStart(3, '0');
   const prefix = `${TEMP_DIR}/scan-p${padded}`;
   const output = `${prefix}-${padded}.jpg`;
   if (!existsSync(output)) {
     execSync(
-      `pdftoppm -r 120 -f ${pageNum} -l ${pageNum} -jpeg -jpegopt quality=82 "${PDF_PATH}" "${prefix}"`,
+      `pdftoppm -r 120 -f ${pdfPageNum} -l ${pdfPageNum} -jpeg -jpegopt quality=82 "${PDF_PATH}" "${prefix}"`,
       { stdio: 'pipe' }
     );
   }
-  if (!existsSync(output)) throw new Error(`pdftoppm failed for page ${pageNum}`);
+  if (!existsSync(output)) throw new Error(`pdftoppm failed for PDF page ${pdfPageNum} (print page ${printPageNum})`);
   return readFileSync(output).toString('base64');
 }
 

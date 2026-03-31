@@ -27,4 +27,29 @@ dist-ssr
 *.sln
 *.sw?
 
-.env
+# Local tool configs (not part of project)
+.claude/
+.sfdx/
+
+# Generated catalog artifacts
+catalog-sync-report.json
+catalog-audit-report.json
+
+# Downloaded/extracted catalog assets (large, reproducible)
+orbus_catalog/downloads/
+orbus_catalog/images/
+orbus_catalog/brochures/
+orbus_catalog/temp_cad/
+orbus_catalog/other/
+orbus_catalog/templates/
+orbus_catalog/scrape_log.txt
+orbus_catalog/*.bak-*
+
+# Backup files
+scripts/*.bak-*
+
+# Unrelated sub-projects
+ransomware-simulator/
+
+# Functions (local serverless dev)
+functions/
