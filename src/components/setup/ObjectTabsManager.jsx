@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { getAllObjects } from '@/components/utils/metadataEngine';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Plus, Trash2 } from 'lucide-react';
 
@@ -10,19 +9,21 @@ function buildRoutePath(apiName) {
   return `/objects/${apiName}`;
 }
 
-export default function ObjectTabsManager() {
+export default function ObjectTabsManager({ brokerInstanceId = null, compact = false }) {
   const [objects, setObjects] = useState([]);
   const [tabs, setTabs] = useState([]);
   const [selectedApiName, setSelectedApiName] = useState('');
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [brokerInstanceId]);
 
   const loadData = async () => {
     const [allObjects, allTabs] = await Promise.all([
       getAllObjects(),
-      base44.entities.ObjectTab.list('sort_order', 100),
+      brokerInstanceId
+        ? base44.entities.ObjectTab.filter({ broker_instance_id: brokerInstanceId, is_active: true }, 'sort_order', 100)
+        : base44.entities.ObjectTab.filter({ is_active: true }, 'sort_order', 100),
     ]);
     setObjects(allObjects || []);
     setTabs(allTabs || []);
@@ -43,6 +44,7 @@ export default function ObjectTabsManager() {
       route_path: buildRoutePath(objectDef.api_name),
       sort_order: (tabs[tabs.length - 1]?.sort_order || 0) + 10,
       is_active: true,
+      broker_instance_id: brokerInstanceId,
     });
     loadData();
   };
@@ -55,7 +57,7 @@ export default function ObjectTabsManager() {
   const availableObjects = objects.filter(object => !tabs.some(tab => tab.object_api_name === object.api_name));
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+    <div className={`rounded-2xl border border-slate-200 bg-white shadow-sm ${compact ? 'p-4' : 'p-5'}`}>
       <div className="flex items-center justify-between gap-3 mb-4">
         <div>
           <h3 className="text-base font-semibold text-slate-900">Header Object Tabs</h3>

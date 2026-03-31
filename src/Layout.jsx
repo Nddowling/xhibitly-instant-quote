@@ -4,26 +4,33 @@ import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import {
   LogOut, Users, Menu, X, LayoutDashboard, Settings as SettingsIcon,
-  ArrowLeft, BookOpen, ClipboardList, Tag, BarChart2, ChevronDown, Settings2, ShieldCheck, Briefcase
+  ArrowLeft, BookOpen, ClipboardList, Tag, BarChart2, ChevronDown, Settings2, ShieldCheck, Briefcase, FolderKanban
 } from 'lucide-react';
 import ErrorBoundary from './components/ErrorBoundary';
+import HeaderTabEditor from '@/components/layout/HeaderTabEditor';
 
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [analyticsOpen, setAnalyticsOpen] = useState(false);
+  const [workspaceOpen, setWorkspaceOpen] = useState(false);
   const [objectTabs, setObjectTabs] = useState([]);
   const analyticsRef = useRef(null);
+  const workspaceRef = useRef(null);
   const navigate = useNavigate();
 
-  useEffect(() => { checkAuth(); initDarkMode(); loadObjectTabs(); }, [currentPageName]);
+  useEffect(() => { checkAuth(); initDarkMode(); }, [currentPageName]);
+  useEffect(() => { if (user) loadObjectTabs(); }, [user?.broker_instance_id, currentPageName]);
   useEffect(() => { setMobileMenuOpen(false); }, [currentPageName]);
 
   useEffect(() => {
     const handler = (e) => {
       if (analyticsRef.current && !analyticsRef.current.contains(e.target)) {
         setAnalyticsOpen(false);
+      }
+      if (workspaceRef.current && !workspaceRef.current.contains(e.target)) {
+        setWorkspaceOpen(false);
       }
     };
     document.addEventListener('mousedown', handler);
@@ -54,7 +61,11 @@ export default function Layout({ children, currentPageName }) {
 
   const loadObjectTabs = async () => {
     try {
-      const tabs = await base44.entities.ObjectTab.filter({ is_active: true }, 'sort_order', 50);
+      if (!user?.broker_instance_id) {
+        setObjectTabs([]);
+        return;
+      }
+      const tabs = await base44.entities.ObjectTab.filter({ broker_instance_id: user.broker_instance_id, is_active: true }, 'sort_order', 50);
       setObjectTabs(tabs || []);
     } catch {
       setObjectTabs([]);
@@ -79,6 +90,11 @@ export default function Layout({ children, currentPageName }) {
     label: tab.label,
     icon: Briefcase,
   }));
+
+  const workspaceNav = [
+    ...objectNav,
+    ...primaryNav,
+  ];
 
   // Analytics dropdown items
   const analyticsNav = [
@@ -152,25 +168,38 @@ export default function Layout({ children, currentPageName }) {
 
               {/* Center: Main nav (desktop) */}
               <nav className="hidden md:flex items-center gap-0.5 flex-1 min-w-0 justify-center">
-                {primaryNav.map(({ page, label, icon: Icon }) => (
-                  <Link key={page} to={createPageUrl(page)}>
-                    <button className="flex items-center gap-1.5 px-2.5 lg:px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap text-white/60 hover:text-white hover:bg-white/8">
-                      <Icon className="w-4 h-4" />
-                      {label}
-                    </button>
-                  </Link>
-                ))}
-
-                {objectNav.map(({ page, label, icon: Icon }) => (
-                  <Link key={page} to={page}>
-                    <button className={`flex items-center gap-1.5 px-2.5 lg:px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
-                      window.location.pathname === page ? 'bg-[#e2231a] text-white' : 'text-white/60 hover:text-white hover:bg-white/8'
-                    }`}>
-                      <Icon className="w-4 h-4" />
-                      {label}
-                    </button>
-                  </Link>
-                ))}
+                <div className="relative" ref={workspaceRef}>
+                  <button
+                    onClick={() => setWorkspaceOpen(o => !o)}
+                    className={`flex items-center gap-1.5 px-2.5 lg:px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
+                      objectNav.some(n => window.location.pathname === n.page) || primaryNav.some(n => currentPageName === n.page) || currentPageName === 'PricingRules'
+                        ? 'bg-white/10 text-white'
+                        : 'text-white/60 hover:text-white hover:bg-white/8'
+                    }`}
+                  >
+                    <FolderKanban className="w-4 h-4" />
+                    Workspace
+                    <ChevronDown className={`w-3 h-3 transition-transform ${workspaceOpen ? 'rotate-180' : ''}`} />
+                  </button>
+                  {workspaceOpen && (
+                    <div className="absolute top-full left-0 mt-1 w-56 bg-[#222] rounded-xl border border-white/10 shadow-2xl overflow-hidden z-50">
+                      {workspaceNav.map(({ page, label, icon: Icon }) => {
+                        const href = page.startsWith('/') ? page : createPageUrl(page);
+                        const isActive = currentPageName === page || window.location.pathname === page;
+                        return (
+                          <Link key={`${page}-${label}`} to={href} onClick={() => setWorkspaceOpen(false)}>
+                            <div className={`flex items-center gap-2.5 px-3 py-2.5 text-sm transition-colors ${
+                              isActive ? 'bg-[#e2231a]/20 text-white' : 'text-white/70 hover:bg-white/8 hover:text-white'
+                            }`}>
+                              <Icon className="w-4 h-4" />
+                              {label}
+                            </div>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
 
                 {/* Analytics dropdown */}
                 <div className="relative" ref={analyticsRef}>
@@ -229,6 +258,7 @@ export default function Layout({ children, currentPageName }) {
                 <span className="hidden xl:block text-xs text-white/40 mr-1 max-w-[96px] truncate">
                   {user?.full_name?.split(' ')[0] || 'Dealer'}
                 </span>
+                <HeaderTabEditor brokerInstanceId={user?.broker_instance_id} />
                 <Link to={createPageUrl('Settings')}>
                   <button className="p-2 rounded-lg hover:bg-white/8 text-white/50 hover:text-white transition-colors">
                     <SettingsIcon className="w-4 h-4" />
