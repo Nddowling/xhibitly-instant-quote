@@ -1469,7 +1469,7 @@ export default function CatalogQuote() {
       )}
 
       {/* ── Top bar ── */}
-      <div className="bg-white/95 backdrop-blur border-b border-slate-200 px-3 sm:px-4 py-2.5 flex-shrink-0 shadow-sm">
+      <div className="relative z-40 bg-white/95 backdrop-blur border-b border-slate-200 px-3 sm:px-4 py-2.5 flex-shrink-0 shadow-sm">
         <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between lg:gap-3">
           <div className="flex items-center gap-3 min-w-0 lg:flex-[1.2]">
             <div className="w-10 h-10 bg-[#e2231a] rounded-2xl flex items-center justify-center shadow-lg shadow-[#e2231a]/20 flex-shrink-0">
