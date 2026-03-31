@@ -35,10 +35,11 @@ export async function loadAllBrokerInstances() {
   }
 
   const memberships = await base44.entities.BrokerMember.filter({ user_id: user.id }, 'broker_instance_id', 500);
-  const brokerIds = [...new Set((memberships || []).map((item) => item.broker_instance_id).filter(Boolean))];
+  const brokerIds = [...new Set((memberships || []).map((item) => item.broker_instance_id || item.data?.broker_instance_id).filter(Boolean))];
 
-  if (user?.broker_instance_id && !brokerIds.includes(user.broker_instance_id)) {
-    brokerIds.push(user.broker_instance_id);
+  const fallbackBrokerId = user?.broker_instance_id || user?.active_broker_instance_id;
+  if (fallbackBrokerId && !brokerIds.includes(fallbackBrokerId)) {
+    brokerIds.push(fallbackBrokerId);
   }
 
   if (brokerIds.length === 0) {
