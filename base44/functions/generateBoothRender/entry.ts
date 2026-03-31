@@ -1,358 +1,119 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.18';
+/**
+ * generateBoothRender.ts
+ *
+ * Calls GPT Image 1.5 directly with multi-image reference composition.
+ * Uses product reference photos for hardware structure accuracy while
+ * rendering neutral placeholder graphics on all display panels.
+ *
+ * Body:
+ *   prompt: string          — the detailed booth render prompt from Claude
+ *   reference_urls: string[] — product photo URLs (max 10) for structure reference
+ *
+ * Returns:
+ *   { url: string }          — base64 data URL or storage URL of rendered image
+ */
 
-Deno.serve(async (req) => {
-    try {
-        const base44 = createClientFromRequest(req);
-        const user = await base44.auth.me();
-        
-        if (!user) {
-            return Response.json({ error: 'Unauthorized' }, { status: 401 });
-        }
+const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY') ?? '';
 
-        const { booth_design_id, force_new } = await req.json();
-        
-        if (!booth_design_id) {
-            return Response.json({ error: 'booth_design_id is required' }, { status: 400 });
-        }
+const CORS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
 
-        const design = await base44.entities.BoothDesign.get(booth_design_id);
-        if (!design) {
-            return Response.json({ error: 'Design not found' }, { status: 404 });
-        }
+async function fetchImageAsBase64(url: string): Promise<{ b64: string; mime: string } | null> {
+  try {
+    const res = await fetch(url, {
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; booth-render/1.0)' },
+    });
+    if (!res.ok) return null;
+    const buf = await res.arrayBuffer();
+    const bytes = new Uint8Array(buf);
+    let binary = '';
+    for (let i = 0; i < bytes.byteLength; i++) binary += String.fromCharCode(bytes[i]);
+    const b64 = btoa(binary);
+    const ct = res.headers.get('content-type') || 'image/jpeg';
+    const mime = ct.split(';')[0].trim();
+    return { b64, mime };
+  } catch {
+    return null;
+  }
+}
 
-        const skus = design.product_skus || [];
-        if (skus.length === 0) {
-            return Response.json({ error: 'No products in the booth design yet' }, { status: 400 });
-        }
+Deno.serve(async (req: Request) => {
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { headers: CORS });
+  }
 
-        // ── Fetch full product records ──────────────────────────────────────
-        const skuCounts = skus.reduce((acc, sku) => {
-            acc[sku] = (acc[sku] || 0) + 1;
-            return acc;
-        }, {});
+  if (!OPENAI_API_KEY) {
+    return Response.json({ error: 'OPENAI_API_KEY not configured' }, { status: 500, headers: CORS });
+  }
 
-        const products = [];
-        for (const [skuOrName, count] of Object.entries(skuCounts)) {
-            // First try resolving by exact SKU
-            let matches = await base44.entities.Product.filter({ sku: skuOrName });
-            
-            // If not found, try resolving by exact Name (since the UI might pass names)
-            if (matches.length === 0) {
-                matches = await base44.entities.Product.filter({ name: skuOrName });
-            }
+  let body: { prompt?: string; reference_urls?: string[] };
+  try {
+    body = await req.json();
+  } catch {
+    return Response.json({ error: 'Invalid JSON body' }, { status: 400, headers: CORS });
+  }
 
-            // Fallback to case-insensitive name match if still not found
-            if (matches.length === 0) {
-                const allProds = await base44.entities.Product.list();
-                const found = allProds.find(p => p.name?.toLowerCase() === skuOrName.toLowerCase() || p.sku?.toLowerCase() === skuOrName.toLowerCase());
-                if (found) matches = [found];
-            }
+  const { prompt, reference_urls = [] } = body;
 
-            if (matches.length > 0) {
-                products.push({ ...matches[0], quantity: count });
-            }
-        }
+  if (!prompt) {
+    return Response.json({ error: 'prompt is required' }, { status: 400, headers: CORS });
+  }
 
-        if (products.length === 0) {
-            return Response.json({ error: 'Could not resolve any products from SKUs' }, { status: 400 });
-        }
+  // Download reference images and encode as base64 for gpt-image-1 multi-image input
+  const imageInputs: Array<{ type: 'image_url'; image_url: { url: string } }> = [];
 
-        // ── Collect reference images ────────────────────────────────────────
-        const uniqueImageUrls = new Set();
-
-        for (const p of products) {
-            if (p.image_url) {
-                uniqueImageUrls.add(p.image_url);
-            }
-        }
-        
-        const referenceImageUrls = Array.from(uniqueImageUrls);
-
-        let existingRender = design.design_image_url || null;
-        if (force_new) {
-            existingRender = null;
-        }
-        if (existingRender) {
-            referenceImageUrls.push(existingRender);
-        }
-
-        // ── Build booth size description ────────────────────────────────────
-        const sizeDescriptions = {
-            '10x10': 'a 10-foot wide by 10-foot deep square trade show booth (100 square feet)',
-            '10x20': 'a 10-foot wide by 20-foot deep rectangular trade show booth (200 square feet)',
-            '20x20': 'a 20-foot wide by 20-foot deep square island trade show booth (400 square feet)',
-        };
-        const sizeDesc = sizeDescriptions[design.booth_size] || `a ${design.booth_size} trade show booth`;
-
-        // ── Build explicit product manifest ────────────────────────────────
-        const productManifest = products.map((p, i) => {
-            const parts = [`${i + 1}. ${p.quantity}x ${p.name}`];
-            if (p.category) parts.push(`(${p.category})`);
-            if (p.description) parts.push(`— ${p.description.slice(0, 120)}`);
-            return parts.join(' ');
-        }).join('\n');
-
-        const productNameList = products.map(p => `${p.quantity}x ${p.name}`).join(', ');
-        const productCount = products.reduce((sum, p) => sum + p.quantity, 0);
-
-        // ── Ensure Brand Data ──────────────────────────────────────────────
-        if (!design.brand_identity && design.brand_name) {
-            try {
-                // Try to treat brand_name as domain, append .com if needed for better success chance
-                // Clean the brand name first (trim whitespace)
-                const cleanBrandName = design.brand_name.trim();
-                
-                // Try to treat brand_name as domain, append .com if needed for better success chance
-                const domainCandidate = cleanBrandName.includes('.') ? cleanBrandName : `${cleanBrandName.replace(/\s+/g, '')}.com`;
-                
-                const brandRes = await base44.functions.invoke('fetchBrandData', { 
-                    website_url: domainCandidate 
-                });
-                
-                if (brandRes.data && brandRes.data.brand) {
-                    design.brand_identity = brandRes.data.brand;
-                    
-                    // Save back to design so we don't fetch again
-                    await base44.entities.BoothDesign.update(design.id, {
-                        brand_identity: design.brand_identity
-                    });
-                }
-            } catch (e) {
-                console.warn('Failed to auto-fetch brand data:', e);
-                // Continue without brand identity
-            }
-        }
-
-        // ── Build branding context ─────────────────────────────────────────
-        const brandColor = design.brand_identity?.primary_color;
-        
-        // Use custom brand_name from the design if it exists, otherwise fall back to identity
-        const brandName = design.brand_name || design.brand_identity?.company_name || design.brand_identity?.name || '';
-        const brandLogo = design.brand_identity?.logo_url;
-        
-        let brandingNote = '';
-        if (brandName && brandColor && brandLogo) {
-            brandingNote = `CRITICAL BRANDING: Every fabric surface, backwall, banner, and display panel MUST show the brand name "${brandName}" in large, bold text using brand color ${brandColor}. Apply the logo (see reference images) prominently on the main backwall. All graphics must be cohesive and clearly branded with "${brandName}".`;
-        } else if (brandName && brandColor) {
-            brandingNote = `CRITICAL BRANDING: Every fabric surface, backwall, banner, and display panel MUST show the brand name "${brandName}" in large, bold text using brand color ${brandColor}.`;
-        } else if (brandName) {
-            brandingNote = `CRITICAL BRANDING: Every fabric surface, backwall, banner, and display panel MUST prominently feature the brand name "${brandName}" in large, bold text.`;
-        } else {
-            brandingNote = 'Use neutral professional branding on displays.';
-        }
-        
-        if (brandLogo) {
-            referenceImageUrls.unshift(brandLogo);
-        }
-
-        const companyNote = design.brand_identity?.industry && !brandName
-            ? `The exhibiting company is in the "${design.brand_identity.industry}" industry. Their branding should align with this industry.`
-            : '';
-
-        let layoutNote = '';
-        if (design.scene_json) {
-            try {
-                const scene = JSON.parse(design.scene_json);
-                if (scene && scene.items && scene.items.length > 0) {
-                    const itemDescriptions = scene.items.map(item => {
-                        return `- ${item.name || item.sku} at X=${Math.round(item.x * 10) / 10}ft, Y=${Math.round(item.y * 10) / 10}ft, rotated ${item.rot || 0}°`;
-                    }).join('\n');
-                    layoutNote = `CRITICAL SPATIAL LAYOUT (STRICT ADHERENCE REQUIRED):
-The booth is ${scene.booth.w_ft}ft wide (X axis) by ${scene.booth.d_ft}ft deep (Y axis).
-Coordinate System: (0,0) is the front-left corner. X increases to the right. Y increases to the back.
-You MUST place the items EXACTLY at these coordinates:
-${itemDescriptions}
-
-RULES FOR PLACEMENT:
-1. Objects must be placed PRECISELY at the specified X,Y coordinates.
-2. Orientation must match the specified rotation angle.
-3. Do NOT rearrange items for aesthetics. The layout is fixed.
-4. Empty space in the layout MUST remain empty in the render.`;
-                }
-            } catch (e) {
-                console.warn('Could not parse scene_json', e);
-            }
-        }
-
-        if (!layoutNote) {
-            layoutNote = design.layout_instructions
-                ? `LAYOUT INSTRUCTIONS: The user has requested the following placement: "${design.layout_instructions}". You MUST follow these positioning rules strictly.`
-                : 'Arrange the products naturally within the booth boundary. Larger items (backwalls, fabric structures) at the rear; counters and stands toward the front.';
-        } else if (design.layout_instructions) {
-            layoutNote += `\n\nADDITIONAL INSTRUCTIONS: "${design.layout_instructions}"`;
-        }
-
-        // ── Compose the prompt ─────────────────────────────────────────────
-        let prompt;
-
-        if (existingRender) {
-            // ITERATIVE MODE — anchor to previous image and only change product set
-            prompt = `PHOTOGRAPHIC DOCUMENTATION UPDATE: Update the existing booth photo (last reference image) to show ONLY the inventory listed below. This is product inventory verification - accuracy is critical.
-
-BOOTH SPACE: ${sizeDesc} - empty except for listed items.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-COMPLETE INVENTORY (${productCount} items total):
-${productManifest}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-REFERENCE IMAGES: Product photos shown first, existing booth photo shown last.
-
-MANDATORY RULES - NO EXCEPTIONS:
-✓ Show ONLY the ${productCount} items listed above - nothing else
-✓ ${layoutNote}
-✓ Keep exact camera angle, perspective, floor, and lighting from existing render
-✓ Apply branding ONLY to products that exist in the inventory above
-${brandingNote ? `✓ Branding: ${brandingNote.replace('Every fabric surface, backwall, banner, and display panel', 'Only the fabric surfaces and display panels in the inventory')}` : ''}
-
-✗ REMOVE any items from previous render NOT in current inventory
-✗ NO chairs, tables, plants, people, extra signage, or unlisted decor
-✗ NO additional counters, stands, or display elements beyond what's listed
-✗ NO carpet/flooring unless explicitly listed in inventory
-✗ Empty space must remain empty - do not fill gaps
-
-This is inventory documentation: ${productNameList} only.`;
-
-        } else {
-            // FIRST RENDER — build from scratch using product reference images
-            prompt = `PHOTOGRAPHIC DOCUMENTATION TASK: Create a photorealistic architectural photo documenting the exact contents of a trade show booth. This is inventory verification - accuracy is critical.
-
-BOOTH SPACE: ${sizeDesc}.
-FLOOR: Plain concrete convention center floor (unless flooring listed in inventory).
-LIGHTING: Bright, even convention center overhead lighting.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-COMPLETE BOOTH INVENTORY (${productCount} items):
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-${productManifest}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-END OF INVENTORY - NOTHING ELSE EXISTS IN THIS BOOTH
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-SPATIAL PLACEMENT (EXACT COORDINATES REQUIRED):
-${layoutNote}
-
-BRANDING APPLICATION:
-${brandingNote ? `${brandingNote.replace('Every fabric surface, backwall, banner, and display panel MUST', 'Apply the brand to fabric surfaces and display panels that exist in the inventory. They must')}` : 'No branding required.'}
-${companyNote ? `${companyNote}` : ''}
-IMPORTANT: Apply branding ONLY to products that exist in the inventory above. Do NOT create extra branded surfaces, backwalls, or display panels that are not listed.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-CRITICAL CONSTRAINTS (100% ACCURACY REQUIRED):
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-✓ SHOW EXACTLY: ${productNameList}
-✓ TOTAL COUNT: ${productCount} items (count them)
-✓ EXACT POSITIONS: Follow coordinate system precisely
-✓ EMPTY SPACE: Areas without products must be visibly empty
-✓ REFERENCE IMAGES: Use provided photos to match product appearance exactly
-
-✗ FORBIDDEN - DO NOT ADD:
-  - NO people, staff, or visitors
-  - NO chairs or seating (unless listed above)
-  - NO plants, flowers, or greenery
-  - NO extra tables or counters beyond inventory
-  - NO additional banners or signage beyond inventory
-  - NO carpet, rugs, or floor graphics (unless listed)
-  - NO extra lighting equipment or spotlights
-  - NO promotional materials, brochures, or giveaways
-  - NO drinks, food, or refreshments
-  - NO tablets, screens, or monitors (unless listed)
-  - NO decorative elements or props
-  - NO extra display stands or pedestals
-  - NO background exhibitors or neighboring booths with content
-  - NO extra backwalls or fabric walls (unless listed)
-
-✗ DO NOT "fill empty space" - sparse booths are acceptable and expected
-✗ DO NOT "improve the layout" - use exact coordinates provided
-✗ DO NOT add items "to make it look better" or "balance the composition"
-✗ DO NOT create additional branded surfaces not in inventory
-
-FRAMING: Straight-on architectural photo from the front of the booth, showing the full ${design.booth_size} space. Clean, professional documentation style.
-
-This is a precise inventory verification photograph showing: ${productNameList} - NOTHING ELSE.`;
-        }
-
-        // ── Build 3D Scene Data ────────────────────────────────────────────
-        // Parse booth dimensions
-        const [w_ft, d_ft] = design.booth_size.split('x').map(n => parseInt(n) || 10);
-
-        // Build scene items from products
-        let sceneItems = [];
-
-        // Check if we have existing layout from scene_json
-        let existingLayout = null;
-        if (design.scene_json) {
-            try {
-                const parsed = JSON.parse(design.scene_json);
-                if (parsed && parsed.items && parsed.items.length > 0) {
-                    existingLayout = parsed.items;
-                }
-            } catch (e) {
-                console.warn('Could not parse scene_json', e);
-            }
-        }
-
-        // Build items list
-        let itemId = 0;
-        for (const product of products) {
-            for (let i = 0; i < product.quantity; i++) {
-                // Find existing layout position if available
-                const existingItem = existingLayout?.find(item =>
-                    item.sku === product.sku || item.name === product.name
-                );
-
-                sceneItems.push({
-                    id: `item-${itemId++}`,
-                    sku: product.sku,
-                    name: product.name,
-                    category: product.category,
-                    description: product.description,
-                    imageUrl: product.image_cached_url || product.image_url,
-                    modelUrl: product.model_glb_url || null,
-                    // Use existing position or default to center
-                    x: existingItem?.x || w_ft / 2,
-                    y: existingItem?.y || d_ft / 2,
-                    w: existingItem?.w || 3,
-                    d: existingItem?.d || 1,
-                    h: existingItem?.h || 7,
-                    rot: existingItem?.rot || 0,
-                    isFlooring: product.category?.toLowerCase().includes('flooring') ||
-                               product.category?.toLowerCase().includes('carpet') || false,
-                });
-            }
-        }
-
-        // Build 3D scene manifest
-        const sceneData = {
-            booth: {
-                w_ft,
-                d_ft,
-                type: design.booth_type || 'inline',
-            },
-            items: sceneItems,
-        };
-
-        // ── Save scene data back to design ────────────────────────────────
-        const updatedDesign = await base44.entities.BoothDesign.update(booth_design_id, {
-            scene_json: JSON.stringify(sceneData),
-            render_generated_at: new Date().toISOString(),
-        });
-
-        return Response.json({
-            success: true,
-            render_mode: '3d',
-            scene: sceneData,
-            brand_identity: design.brand_identity,
-            brand_name: brandName,
-            booth_size: design.booth_size,
-            booth_type: design.booth_type || 'inline',
-            products_rendered: products.map(p => ({ sku: p.sku, name: p.name, quantity: p.quantity })),
-            mode: existingLayout ? 'layout_preserved' : 'auto_layout',
-        });
-
-    } catch (error) {
-        console.error(error);
-        return Response.json({ error: error.message }, { status: 500 });
+  for (const url of reference_urls.slice(0, 10)) {
+    const img = await fetchImageAsBase64(url);
+    if (img) {
+      imageInputs.push({
+        type: 'image_url',
+        image_url: { url: `data:${img.mime};base64,${img.b64}` },
+      });
     }
+  }
+
+  try {
+    const res = await fetch('https://api.openai.com/v1/images/generations', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${OPENAI_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'gpt-image-1',
+        prompt: imageInputs.length > 0
+          ? `${prompt}\n\n[${imageInputs.length} product reference photo(s) provided — reproduce each product's hardware AND graphic panel design faithfully as shown in its reference photo]`
+          : prompt,
+        n: 1,
+        size: '1024x1024',
+        quality: 'high',
+        // gpt-image-1 returns base64 by default
+        response_format: 'b64_json',
+      }),
+    });
+
+    if (!res.ok) {
+      const err = await res.text();
+      console.error('OpenAI error:', err);
+      return Response.json({ error: `OpenAI API error: ${res.status}` }, { status: 502, headers: CORS });
+    }
+
+    const data = await res.json();
+    const b64Image = data?.data?.[0]?.b64_json;
+
+    if (!b64Image) {
+      return Response.json({ error: 'No image returned from OpenAI' }, { status: 502, headers: CORS });
+    }
+
+    // Return as data URL — client can display it directly
+    const imageUrl = `data:image/png;base64,${b64Image}`;
+
+    return Response.json({ url: imageUrl }, { headers: CORS });
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : String(e);
+    console.error('generateBoothRender error:', msg);
+    return Response.json({ error: msg }, { status: 500, headers: CORS });
+  }
 });
