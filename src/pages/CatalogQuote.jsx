@@ -984,6 +984,7 @@ export default function CatalogQuote() {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [latestPricingResult, setLatestPricingResult] = useState(null);
   const [generatedPromos, setGeneratedPromos] = useState([]);
+  const rulesResCacheRef = useRef([]);
 
   useEffect(() => {
     base44.auth.me().then(u => { setUser(u); setShowSessionModal(true); }).catch(() => setShowSessionModal(true));
@@ -1039,6 +1040,7 @@ export default function CatalogQuote() {
 
   const handleCreateQuote = async () => {
     if (!activeOrder || lineItems.length === 0) return;
+    setShowConfirmModal(false);
 
     // Load pricing rules + dealer settings
     const [rulesRes, dealerSettingsRes] = await Promise.all([
@@ -1046,6 +1048,7 @@ export default function CatalogQuote() {
       base44.auth.me().then(u => base44.entities.DealerPricingSettings.filter({ user_id: u.id })),
     ]);
     const rules = rulesRes || [];
+    rulesResCacheRef.current = rules;
     const dealerSettings = dealerSettingsRes?.[0] || null;
 
     // Use latest pricing result from sidebar if available, otherwise re-run
@@ -1406,6 +1409,7 @@ export default function CatalogQuote() {
           onClose={() => setShowConfirmModal(false)}
           isPreview={!activeOrder.share_token}
           generatedPromos={generatedPromos}
+          appliedRules={rulesResCacheRef.current}
         />
       )}
 

@@ -42,7 +42,7 @@ export default function QuoteSidebar({ order, lineItems, onLineItemsChange, onCr
   const [rules, setRules] = useState([]);
   const [dealerSettings, setDealerSettings] = useState(null);
   const [pricingResult, setPricingResult] = useState(null);
-  const total = pricingResult?.finalTotal || lineItems.reduce((s, i) => s + (i.total_price || 0), 0);
+  const total = pricingResult?.finalTotal ?? lineItems.reduce((s, i) => s + (i.total_price || 0), 0);
   const itemCount = lineItems.reduce((s, i) => s + (i.quantity || 0), 0);
 
   useEffect(() => {

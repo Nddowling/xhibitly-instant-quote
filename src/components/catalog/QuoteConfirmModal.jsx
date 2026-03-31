@@ -98,6 +98,8 @@ export default function QuoteConfirmModal({ order, lineItems, onClose, isPreview
     if (shareUrl) window.open(shareUrl + '&print=1', '_blank');
   };
 
+  if (!order) return null;
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl overflow-hidden" style={{ maxHeight: '95vh' }}>
