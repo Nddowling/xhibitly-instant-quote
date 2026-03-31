@@ -5,8 +5,8 @@ import { Badge } from '@/components/ui/badge';
 import { Link2, PlugZap, Building2 } from 'lucide-react';
 
 const CONNECTOR_LINKS = {
-  salesforce: 'https://docs.base44.com',
-  hubspot: 'https://docs.base44.com',
+  salesforce: '/Setup',
+  hubspot: '/Setup',
 };
 
 const CONNECTORS = [
