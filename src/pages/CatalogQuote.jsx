@@ -1505,6 +1505,9 @@ export default function CatalogQuote() {
                     onMouseDown={() => handleSearchResultClick(p)}
                     className="w-full flex items-center gap-3 px-3 py-3 hover:bg-slate-50 text-left border-b border-slate-100 last:border-0"
                   >
+                    <div className="w-14 h-14 flex-shrink-0 rounded-lg bg-slate-100 overflow-hidden flex items-center justify-center border border-slate-100">
+                      <ProductImage src={getImageUrl(p)} alt={p.name} className="w-full h-full object-contain p-1" fallbackClassName="w-5 h-5 text-slate-300" />
+                    </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-semibold text-slate-800 truncate">{p.name}</p>
                       <p className="text-[10px] text-slate-400 font-mono">{p.sku} · {p.category}</p>
