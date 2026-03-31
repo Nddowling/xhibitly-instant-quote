@@ -1,8 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 import { Search, ChevronRight } from 'lucide-react';
 
 export default function ObjectListPage({ objectApiName, title }) {
@@ -29,7 +30,26 @@ export default function ObjectListPage({ objectApiName, title }) {
   }, [records, search]);
 
   const getPrimaryLabel = (record) => {
-    return record.name || record.full_name || record.label || record.record_name || record.reference_number || record.email || record.code || record.id;
+    return record.name || record.full_name || record.label || record.record_name || record.reference_number || record.email || record.code || record.sku || record.id;
+  };
+
+  const getSecondaryLabel = (record) => {
+    if (objectApiName === 'Product') {
+      return [record.sku, record.category, record.product_line].filter(Boolean).join(' • ') || record.id;
+    }
+    return record.email || record.phone || record.website || record.object_api_name || record.id;
+  };
+
+  const handleRecordClick = (record) => {
+    if (objectApiName === 'Product') {
+      navigate(`/ProductDetail?id=${record.id}`);
+      return;
+    }
+    if (objectApiName === 'Order') {
+      navigate(`/OrderDetail?id=${record.id}`);
+      return;
+    }
+    navigate(`/setup?object=${objectApiName}&record=${record.id}`);
   };
 
   return (
@@ -52,14 +72,22 @@ export default function ObjectListPage({ objectApiName, title }) {
         ) : (
           <div className="grid gap-3">
             {filteredRecords.map((record) => (
-              <Card key={record.id} className="hover:border-[#e2231a]/40 hover:shadow-md transition-all">
+              <Card key={record.id} className="hover:border-[#e2231a]/40 hover:shadow-md transition-all cursor-pointer" onClick={() => handleRecordClick(record)}>
                 <CardContent className="p-4 flex items-center justify-between gap-4">
                   <div className="min-w-0">
-                    <p className="font-semibold text-slate-900 truncate">{getPrimaryLabel(record)}</p>
-                    <p className="text-sm text-slate-500 truncate">{record.email || record.phone || record.website || record.object_api_name || record.id}</p>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <p className="font-semibold text-slate-900 truncate">{getPrimaryLabel(record)}</p>
+                      {objectApiName === 'Product' && record.is_active !== undefined && (
+                        <Badge variant="outline" className="text-[10px]">{record.is_active ? 'Active' : 'Inactive'}</Badge>
+                      )}
+                    </div>
+                    <p className="text-sm text-slate-500 truncate">{getSecondaryLabel(record)}</p>
                   </div>
                   <button
-                    onClick={() => navigate(`/setup?object=${objectApiName}&record=${record.id}`)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRecordClick(record);
+                    }}
                     className="text-slate-400 hover:text-[#e2231a] transition-colors"
                   >
                     <ChevronRight className="w-5 h-5" />
