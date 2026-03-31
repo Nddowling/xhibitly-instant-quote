@@ -15,9 +15,11 @@ export default function Layout({ children, currentPageName }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [analyticsOpen, setAnalyticsOpen] = useState(false);
   const [workspaceOpen, setWorkspaceOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [objectTabs, setObjectTabs] = useState([]);
   const analyticsRef = useRef(null);
   const workspaceRef = useRef(null);
+  const settingsRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => { checkAuth(); initDarkMode(); }, [currentPageName]);
@@ -31,6 +33,9 @@ export default function Layout({ children, currentPageName }) {
       }
       if (workspaceRef.current && !workspaceRef.current.contains(e.target)) {
         setWorkspaceOpen(false);
+      }
+      if (settingsRef.current && !settingsRef.current.contains(e.target)) {
+        setSettingsOpen(false);
       }
     };
     document.addEventListener('mousedown', handler);
@@ -113,6 +118,12 @@ export default function Layout({ children, currentPageName }) {
 
   const analyticsActive = analyticsNav.some(n => n.page === currentPageName) ||
     ['ReportBuilder','ReportView','DashboardView'].includes(currentPageName);
+
+  const settingsNav = [
+    { page: 'Settings', label: 'User Details', icon: SettingsIcon },
+    ...(canSeeUmbrella ? [{ page: 'DesignerDashboard', label: 'Umbrella', icon: LayoutDashboard }] : []),
+    ...(canSeeSetup ? [{ page: 'Setup', label: 'Setup', icon: Settings2 }] : []),
+  ];
 
   // Mobile: all nav items flat
   const allMobileNav = [
@@ -244,17 +255,6 @@ export default function Layout({ children, currentPageName }) {
                   </Link>
                 ))}
 
-                {/* Setup */}
-                {canSeeSetup && (
-                  <Link to={createPageUrl('Setup')}>
-                    <button className={`flex items-center gap-1.5 px-2.5 lg:px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
-                      currentPageName === 'Setup' ? 'bg-[#e2231a] text-white' : 'text-white/60 hover:text-white hover:bg-white/8'
-                    }`}>
-                      <Settings2 className="w-4 h-4" />
-                      Setup
-                    </button>
-                  </Link>
-                )}
               </nav>
 
               {/* Right: User + actions */}
@@ -263,11 +263,28 @@ export default function Layout({ children, currentPageName }) {
                   {user?.full_name?.split(' ')[0] || 'Dealer'}
                 </span>
                 <HeaderTabEditor brokerInstanceId={user?.broker_instance_id} />
-                <Link to={createPageUrl('Settings')}>
-                  <button className="p-2 rounded-lg hover:bg-white/8 text-white/50 hover:text-white transition-colors">
+                <div className="relative" ref={settingsRef}>
+                  <button
+                    onClick={() => setSettingsOpen(o => !o)}
+                    className={`p-2 rounded-lg transition-colors ${settingsOpen || ['Settings', 'Setup', 'DesignerDashboard'].includes(currentPageName) ? 'bg-white/8 text-white' : 'text-white/50 hover:bg-white/8 hover:text-white'}`}
+                  >
                     <SettingsIcon className="w-4 h-4" />
                   </button>
-                </Link>
+                  {settingsOpen && (
+                    <div className="absolute top-full right-0 mt-1 w-48 bg-[#222] rounded-xl border border-white/10 shadow-2xl overflow-hidden z-50">
+                      {settingsNav.map(({ page, label, icon: Icon }) => (
+                        <Link key={page} to={createPageUrl(page)} onClick={() => setSettingsOpen(false)}>
+                          <div className={`flex items-center gap-2.5 px-3 py-2.5 text-sm transition-colors ${
+                            currentPageName === page ? 'bg-[#e2231a]/20 text-white' : 'text-white/70 hover:bg-white/8 hover:text-white'
+                          }`}>
+                            <Icon className="w-4 h-4" />
+                            {label}
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
                 <button onClick={handleLogout} className="p-2 rounded-lg hover:bg-white/8 text-white/50 hover:text-white transition-colors hidden sm:block">
                   <LogOut className="w-4 h-4" />
                 </button>
@@ -299,12 +316,16 @@ export default function Layout({ children, currentPageName }) {
                   );
                 })}
                 <div className="h-px bg-white/5 my-2" />
-                <Link to={createPageUrl('Settings')} onClick={() => setMobileMenuOpen(false)}>
-                  <div className="flex items-center gap-3 px-3 py-3 rounded-xl text-white/50 hover:bg-white/5 hover:text-white">
-                    <SettingsIcon className="w-5 h-5" />
-                    <span className="font-medium">Settings</span>
-                  </div>
-                </Link>
+                {settingsNav.map(({ page, label, icon: ItemIcon }) => (
+                  <Link key={`mobile-${page}`} to={createPageUrl(page)} onClick={() => setMobileMenuOpen(false)}>
+                    <div className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-all ${
+                      currentPageName === page ? 'bg-[#e2231a]/15 text-white' : 'text-white/50 hover:bg-white/5 hover:text-white'
+                    }`}>
+                      <ItemIcon className="w-5 h-5" />
+                      <span className="font-medium">{label}</span>
+                    </div>
+                  </Link>
+                ))}
                 <button onClick={handleLogout} className="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-white/50 hover:bg-white/5 hover:text-white">
                   <LogOut className="w-5 h-5" />
                   <span className="font-medium">Log Out</span>

@@ -17,7 +17,7 @@ export default function Home() {
       if (isAuth) {
         const currentUser = await base44.auth.me();
         await ensureBrokerInstance(currentUser);
-        navigate(createPageUrl('SalesDashboard'));
+        navigate(createPageUrl(currentUser?.role === 'designer' ? 'DesignerDashboard' : 'SalesDashboard'));
         return;
       }
     } catch (e) {}
