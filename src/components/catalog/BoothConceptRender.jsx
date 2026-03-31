@@ -31,9 +31,14 @@ function categorizeProducts(lineItems) {
   for (const item of lineItems) {
     const name = (item.product_name || item.sku || '').toLowerCase();
     const sku = (item.sku || '').toLowerCase();
+    const accessoryOnly = /case|cases|carry bag|carrybag|bag|shipping case|transport case|roller bag/.test(name);
+
+    if (accessoryOnly) {
+      continue;
+    }
 
     if (
-      /pegasus|formulate|embrace|panoramic|backwall|waveline|lumiere|vector frame|infinite|hop|cove/.test(name) ||
+      /pegasus|formulate|embrace|panoramic|back wall|backwall|waveline|lumiere|vector frame|infinite|hop|cove/.test(name) ||
       /pgsus|fml|emb|pan|wvl|lmr|hop|cove/.test(sku)
     ) {
       backWall.push(item);
@@ -135,14 +140,18 @@ function buildPlacementInstructions(boothW, boothD, boothType, zones, imageIndex
 async function buildRenderingPrompt(order, lineItems) {
   const { w: boothW, d: boothD } = parseBoothSize(order?.booth_size);
   const boothType = order?.booth_type || 'Inline';
-  const zones = categorizeProducts(lineItems);
+  const renderableLineItems = lineItems.filter(item => {
+    const name = (item.product_name || item.sku || '').toLowerCase();
+    return !/case|cases|carry bag|carrybag|bag|shipping case|transport case|roller bag/.test(name);
+  });
+  const zones = categorizeProducts(renderableLineItems);
 
   // Collect reference images — one per unique SKU, max 8
   const seen = new Set();
   const referenceImages = [];
   const imageIndexMap = {}; // sku → 1-based index
 
-  for (const item of lineItems) {
+  for (const item of renderableLineItems) {
     if (seen.has(item.sku)) continue;
     const url = resolveProductImage(item);
     if (url) {

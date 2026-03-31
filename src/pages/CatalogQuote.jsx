@@ -187,6 +187,40 @@ function getImageUrl(p) {
   return `${SUPABASE_URL}/${url}`;
 }
 
+function normalizeSearchText(value) {
+  return String(value || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function getProductTagging(product) {
+  const text = normalizeSearchText([
+    product?.sku,
+    product?.name,
+    product?.description,
+    product?.category,
+    product?.subcategory,
+    product?.product_line,
+    Array.isArray(product?.features) ? product.features.join(' ') : ''
+  ].join(' '));
+
+  const tags = [];
+
+  if (/back wall|backwall|backdrop|wall display|fabric wall|display wall/.test(text)) tags.push('back wall');
+  if (/banner stand|retractable|retractor|roll up|popup banner|blade lite/.test(text)) tags.push('banner stand');
+  if (/counter|podium|kiosk|reception/.test(text)) tags.push('counter');
+  if (/case|cases|carry bag|carrybag|bag|shipping case|transport case|roller bag/.test(text)) tags.push('case');
+
+  return {
+    text,
+    tags,
+    isAccessoryOnly: tags.includes('case'),
+    excludeFromRenderPrompt: tags.includes('case'),
+  };
+}
+
 function ProductImage({ src, alt, className = "w-full h-full object-contain", fallbackClassName = "w-5 h-5 text-slate-300" }) {
   const [error, setError] = useState(false);
   if (!src || error) return <Package className={fallbackClassName} />;
@@ -1244,18 +1278,39 @@ export default function CatalogQuote() {
     searchDebounceRef.current = setTimeout(async () => {
       const regex = { $regex: trimmed, $options: 'i' };
       try {
-        const [byName, bySku] = await Promise.all([
+        const [byName, bySku, byCategory, bySubcategory, byDescription] = await Promise.all([
           base44.entities.Product.filter({ name: regex }),
           base44.entities.Product.filter({ sku: regex }),
+          base44.entities.Product.filter({ category: regex }),
+          base44.entities.Product.filter({ subcategory: regex }),
+          base44.entities.Product.filter({ description: regex }),
         ]);
-        const combined = [...(byName || []), ...(bySku || [])];
-        const unique = combined.filter((v, i, a) => a.findIndex(x => x.id === v.id) === i).slice(0, 15);
-        setSearchResults(unique);
-        setShowSearchDropdown(unique.length > 0);
+        const normalizedQuery = normalizeSearchText(trimmed);
+        const combined = [...(byName || []), ...(bySku || []), ...(byCategory || []), ...(bySubcategory || []), ...(byDescription || [])];
+        const unique = combined.filter((v, i, a) => a.findIndex(x => x.id === v.id) === i);
+        const ranked = unique
+          .map(product => {
+            const tagging = getProductTagging(product);
+            const text = tagging.text;
+            const score = [
+              text.includes(normalizedQuery) ? 100 : 0,
+              tagging.tags.some(tag => tag.includes(normalizedQuery) || normalizedQuery.includes(tag)) ? 60 : 0,
+              normalizeSearchText(product?.name).includes(normalizedQuery) ? 40 : 0,
+              normalizeSearchText(product?.category).includes(normalizedQuery) ? 20 : 0,
+              normalizeSearchText(product?.subcategory).includes(normalizedQuery) ? 20 : 0,
+            ].reduce((sum, n) => sum + n, 0);
+            return { product, score };
+          })
+          .filter(item => item.score > 0)
+          .sort((a, b) => b.score - a.score)
+          .slice(0, 15)
+          .map(item => item.product);
+        setSearchResults(ranked);
+        setShowSearchDropdown(ranked.length > 0);
       } catch {
         setShowSearchDropdown(false);
       }
-    }, 400);
+    }, 250);
   };
 
   const handleSearchResultClick = (product) => {
@@ -1453,6 +1508,9 @@ export default function CatalogQuote() {
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-semibold text-slate-800 truncate">{p.name}</p>
                       <p className="text-[10px] text-slate-400 font-mono">{p.sku} · {p.category}</p>
+                      {getProductTagging(p).tags.length > 0 && (
+                        <p className="text-[10px] text-slate-500 mt-0.5">{getProductTagging(p).tags.join(' · ')}</p>
+                      )}
                     </div>
                     {(p.catalog_pages?.[0] || SKU_TO_PAGE[p.sku]) && (
                       <span className="text-[10px] text-[#e2231a] font-bold flex-shrink-0">
@@ -1681,16 +1739,6 @@ export default function CatalogQuote() {
         {/* CENTER: Catalog Page */}
         <div className="flex-1 min-w-0 overflow-auto p-2 sm:p-2.5 flex justify-center items-start">
           <div className="relative w-full max-w-4xl flex flex-col items-center">
-            <div className="mb-2 flex w-full items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white/90 px-4 py-2.5 shadow-sm">
-              <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Catalog page</p>
-                <p className="mt-1 text-sm font-bold text-slate-900">Page {currentPage}</p>
-              </div>
-              <div className="text-right">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Status</p>
-                <p className="mt-1 text-sm font-bold text-slate-900">{hasHotspots ? `${currentHotspots.length} hotspot${currentHotspots.length === 1 ? '' : 's'}` : 'No hotspots yet'}</p>
-              </div>
-            </div>
             {editMode ? (
               // ── Edit mode: draggable hotspot editor ──
               <HotspotEditor
