@@ -23,6 +23,10 @@
       "type": "boolean",
       "default": true,
       "description": "Whether the tab is visible"
+    },
+    "broker_instance_id": {
+      "type": "string",
+      "description": "Broker workspace this toolbar configuration belongs to"
     }
   },
   "required": [

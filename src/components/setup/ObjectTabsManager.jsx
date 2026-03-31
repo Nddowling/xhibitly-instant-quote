@@ -46,6 +46,7 @@ export default function ObjectTabsManager({ brokerInstanceId = null, compact = f
 
     const existing = tabs.find(tab => tab.object_api_name === selectedApiName);
     if (existing) return;
+    if (!brokerInstanceId) return;
 
     await base44.entities.ObjectTab.create({
       object_api_name: objectDef.api_name,
@@ -70,7 +71,7 @@ export default function ObjectTabsManager({ brokerInstanceId = null, compact = f
       <div className="flex items-center justify-between gap-3 mb-4">
         <div>
           <h3 className="text-base font-semibold text-slate-900">Header Object Tabs</h3>
-          <p className="text-sm text-slate-500">Add or remove object tabs shown in the top header.</p>
+          <p className="text-sm text-slate-500">Add or remove object tabs shown in the top header for this org.</p>
         </div>
       </div>
 

@@ -70,7 +70,8 @@ export default function Layout({ children, currentPageName }) {
         setObjectTabs([]);
         return;
       }
-      const tabs = await base44.entities.ObjectTab.filter({ broker_instance_id: user.broker_instance_id, is_active: true }, 'sort_order', 50);
+      const activeBrokerId = user?.active_broker_instance_id || user?.broker_instance_id;
+      const tabs = await base44.entities.ObjectTab.filter({ broker_instance_id: activeBrokerId, is_active: true }, 'sort_order', 50);
       setObjectTabs(tabs || []);
     } catch {
       setObjectTabs([]);
