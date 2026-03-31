@@ -78,6 +78,7 @@ export default function RecentQuotes() {
           }
           return order.dealer_email === currentUser.email || order.created_by === currentUser.email;
         });
+        scopedOrders.sort((a, b) => new Date(b.created_date || 0).getTime() - new Date(a.created_date || 0).getTime());
         setOrders(scopedOrders);
       } finally {
         setLoading(false);
@@ -307,7 +308,7 @@ export default function RecentQuotes() {
                   {filtered.map((order) => (
                     <tr
                       key={order.id}
-                      onClick={() => navigate(`${createPageUrl('OrderDetail')}?id=${order.id}`)}
+                      onClick={() => navigate(`${createPageUrl('OrderDetail')}?id=${order.id}&returnTo=${encodeURIComponent(window.location.pathname + window.location.search)}`)}
                       className="cursor-pointer border-b border-slate-100 hover:bg-slate-50"
                     >
                       {selectedColumns.map((field) => (
