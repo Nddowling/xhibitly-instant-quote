@@ -1,0 +1,1327 @@
+[
+  {
+    "sku": "VF-R-03",
+    "category": "Vector Frame Master Light Boxes & Banners",
+    "name": "Rectangle 03 Banner"
+  },
+  {
+    "sku": "VF-LB-R-03",
+    "category": "Vector Frame Master Light Boxes & Banners",
+    "name": "Rectangle 03 Light Box"
+  },
+  {
+    "sku": "VF-R-04",
+    "category": "Vector Frame Master Light Boxes & Banners",
+    "name": "Rectangle 04 Banner"
+  },
+  {
+    "sku": "VF-LB-R-04",
+    "category": "Vector Frame Master Light Boxes & Banners",
+    "name": "Rectangle 04 Light Box"
+  },
+  {
+    "sku": "VY-1-BG",
+    "category": "Voyager Folding Panels",
+    "name": "Mini Kit Bag"
+  },
+  {
+    "sku": "VY-2-BG",
+    "category": "Voyager Folding Panels",
+    "name": "Maxi Kit Bag"
+  },
+  {
+    "sku": "VY-3-BG",
+    "category": "Voyager Folding Panels",
+    "name": "Mega Kit Bag"
+  },
+  {
+    "sku": "VY-4-BG",
+    "category": "Voyager Folding Panels",
+    "name": "Supreme Kit Bag"
+  },
+  {
+    "sku": "VY-5-BG",
+    "category": "Voyager Folding Panels",
+    "name": "Monster Kit Bag"
+  },
+  {
+    "sku": "HOP-DIM01-3X3FG-S",
+    "category": "Hopup Tension Fabric Dimension Kits",
+    "name": "Kit 01 - 7 1/2' full height straight backwall kit"
+  },
+  {
+    "sku": "HOP-DIM02-3X3FG-S",
+    "category": "Hopup Tension Fabric Dimension Kits",
+    "name": "Kit 02 - 7 1/2' full height straight backwall kit with counter"
+  },
+  {
+    "sku": "HOP-DIM03-4X3FGE-S",
+    "category": "Hopup Tension Fabric Dimension Kits",
+    "name": "Kit 03 - 10' full height straight backwall kit with accessory counter"
+  },
+  {
+    "sku": "HOP-DIM04-4X3FGE-S",
+    "category": "Hopup Tension Fabric Dimension Kits",
+    "name": "Kit 04 - 10' full height straight backwall kit with standoff counter"
+  },
+  {
+    "sku": "HOP-LITE-3X3-FG-S",
+    "category": "Hopup Lite Tension Fabric",
+    "name": "Hopup Lite 7 1/2' full height front graphic"
+  },
+  {
+    "sku": "HOP-LITE-3X3-FGE-S",
+    "category": "Hopup Lite Tension Fabric",
+    "name": "Hopup Lite 7 1/2' full height front graphic endcap"
+  },
+  {
+    "sku": "HOP-LITE-4X3-FG-S",
+    "category": "Hopup Lite Tension Fabric",
+    "name": "Hopup Lite 10' full height front graphic"
+  },
+  {
+    "sku": "HOP-LITE-4X3-FGE-S",
+    "category": "Hopup Lite Tension Fabric",
+    "name": "Hopup Lite 10' full height front graphic endcap"
+  },
+  {
+    "sku": "EMB-1X1FG-S",
+    "category": "Embrace Push-Fit Tension Fabric",
+    "name": "2 1/2' tabletop"
+  },
+  {
+    "sku": "EMB-1X1FGE-S",
+    "category": "Embrace Push-Fit Tension Fabric",
+    "name": "2 1/2' tabletop"
+  },
+  {
+    "sku": "EMB-2X1FG-S",
+    "category": "Embrace Push-Fit Tension Fabric",
+    "name": "5' tabletop"
+  },
+  {
+    "sku": "EMB-2X1FGE-S",
+    "category": "Embrace Push-Fit Tension Fabric",
+    "name": "5' tabletop"
+  },
+  {
+    "sku": "EMB-2X2FG-S",
+    "category": "Embrace Push-Fit Tension Fabric",
+    "name": "5' tabletop"
+  },
+  {
+    "sku": "EMB-2X2FGE-S",
+    "category": "Embrace Push-Fit Tension Fabric",
+    "name": "5' tabletop"
+  },
+  {
+    "sku": "EMB-3X2FG-S",
+    "category": "Embrace Push-Fit Tension Fabric",
+    "name": "7 1/2' tabletop"
+  },
+  {
+    "sku": "EMB-3X2FGE-S",
+    "category": "Embrace Push-Fit Tension Fabric",
+    "name": "7 1/2' tabletop"
+  },
+  {
+    "sku": "EMB-1X3FG-S",
+    "category": "Embrace Push-Fit Tension Fabric",
+    "name": "2 1/2' full height"
+  },
+  {
+    "sku": "EMB-1X3FGE-S",
+    "category": "Embrace Push-Fit Tension Fabric",
+    "name": "2 1/2' full height"
+  },
+  {
+    "sku": "EMB-2X3FG-S",
+    "category": "Embrace Push-Fit Tension Fabric",
+    "name": "5' full height"
+  },
+  {
+    "sku": "EMB-2X3FGE-S",
+    "category": "Embrace Push-Fit Tension Fabric",
+    "name": "5' full height"
+  },
+  {
+    "sku": "EMB-3X3FG-S",
+    "category": "Embrace Push-Fit Tension Fabric",
+    "name": "7 1/2' full height"
+  },
+  {
+    "sku": "EMB-3X3FGE-S",
+    "category": "Embrace Push-Fit Tension Fabric",
+    "name": "7 1/2' full height"
+  },
+  {
+    "sku": "EMB-3X4FG-S",
+    "category": "Embrace Push-Fit Tension Fabric",
+    "name": "7 1/2' extra tall"
+  },
+  {
+    "sku": "EMB-3X4FGE-S",
+    "category": "Embrace Push-Fit Tension Fabric",
+    "name": "7 1/2' extra tall"
+  },
+  {
+    "sku": "EMB-4X3FG-S",
+    "category": "Embrace Push-Fit Tension Fabric",
+    "name": "10' full height"
+  },
+  {
+    "sku": "EMB-4X3FGE-S",
+    "category": "Embrace Push-Fit Tension Fabric",
+    "name": "10' full height"
+  },
+  {
+    "sku": "EMB-4X4FG-S",
+    "category": "Embrace Push-Fit Tension Fabric",
+    "name": "10' extra tall"
+  },
+  {
+    "sku": "EMB-4X4FGE-S",
+    "category": "Embrace Push-Fit Tension Fabric",
+    "name": "10' extra tall"
+  },
+  {
+    "sku": "EMB-5X3FG-S",
+    "category": "Embrace Push-Fit Tension Fabric",
+    "name": "12 1/4' full height"
+  },
+  {
+    "sku": "EMB-5X3FGE-S",
+    "category": "Embrace Push-Fit Tension Fabric",
+    "name": "12 1/4' full height"
+  },
+  {
+    "sku": "EMB-6X3FG-S",
+    "category": "Embrace Push-Fit Tension Fabric",
+    "name": "15' wide"
+  },
+  {
+    "sku": "EMB-6X3FGE-S",
+    "category": "Embrace Push-Fit Tension Fabric",
+    "name": "15' wide"
+  },
+  {
+    "sku": "EMB-8X3FG-S",
+    "category": "Embrace Push-Fit Tension Fabric",
+    "name": "20' wide"
+  },
+  {
+    "sku": "EMB-8X3FGE-S",
+    "category": "Embrace Push-Fit Tension Fabric",
+    "name": "20' wide"
+  },
+  {
+    "sku": "EMB-12X3FG-S",
+    "category": "Embrace Push-Fit Tension Fabric",
+    "name": "30' wide"
+  },
+  {
+    "sku": "EMB-12X3FGE-S",
+    "category": "Embrace Push-Fit Tension Fabric",
+    "name": "30' wide"
+  },
+  {
+    "sku": "EMB-EXT-SHLF-K-1",
+    "category": "Embrace Push-Fit Tension Fabric Accessories",
+    "name": "Embrace Shelving"
+  },
+  {
+    "sku": "EMB-BRIDGE-CONNECTOR",
+    "category": "Embrace Push-Fit Tension Fabric Accessories",
+    "name": "Embrace Bridge Connector"
+  },
+  {
+    "sku": "EMB-BRIDGE-LT",
+    "category": "Embrace Push-Fit Tension Fabric Accessories",
+    "name": "Embrace Bridge Light/Light Kit"
+  },
+  {
+    "sku": "EMB-BRIDGE-LT-KIT",
+    "category": "Embrace Push-Fit Tension Fabric Accessories",
+    "name": "Embrace Bridge Light/Light Kit"
+  },
+  {
+    "sku": "EMB-LITE-3X3FG-S",
+    "category": "Embrace Lite Push-Fit Tension Fabric",
+    "name": "Embrace Lite 7 1/2' full height fabric graphic"
+  },
+  {
+    "sku": "EMB-LITE-3X3FGE-S",
+    "category": "Embrace Lite Push-Fit Tension Fabric",
+    "name": "Embrace Lite 7 1/2' full height fabric graphic end caps"
+  },
+  {
+    "sku": "EMB-LITE-4X3FG-S",
+    "category": "Embrace Lite Push-Fit Tension Fabric",
+    "name": "Embrace Lite 10' full height fabric graphic"
+  },
+  {
+    "sku": "EMB-LITE-4X3FGE-S",
+    "category": "Embrace Lite Push-Fit Tension Fabric",
+    "name": "Embrace Lite 10' full height fabric graphic end caps"
+  },
+  {
+    "sku": "COY-KKG-1X1-C",
+    "category": "Coyote Popup Display Systems",
+    "name": "4'w tabletop"
+  },
+  {
+    "sku": "COY-KKG-2X1-C",
+    "category": "Coyote Popup Display Systems",
+    "name": "6'w tabletop"
+  },
+  {
+    "sku": "COY-KKG-2X2-C",
+    "category": "Coyote Popup Display Systems",
+    "name": "6'w tabletop"
+  },
+  {
+    "sku": "COY-KKG-3X2-C",
+    "category": "Coyote Popup Display Systems",
+    "name": "8'w tabletop"
+  },
+  {
+    "sku": "COY-KKG-2X3-C",
+    "category": "Coyote Popup Display Systems",
+    "name": "6'w full height slim-line display system"
+  },
+  {
+    "sku": "COY-KKG-3X3-C",
+    "category": "Coyote Popup Display Systems",
+    "name": "8'w full height standard display system"
+  },
+  {
+    "sku": "COY-KKG-4X3-C",
+    "category": "Coyote Popup Display Systems",
+    "name": "10'w full height standard display system"
+  },
+  {
+    "sku": "COY-IS-CK",
+    "category": "Coyote Popup Display Systems",
+    "name": "internal shelf kit"
+  },
+  {
+    "sku": "COY-MM",
+    "category": "Coyote Popup Display Systems",
+    "name": "monitor mount"
+  },
+  {
+    "sku": "OCX-C2C-G",
+    "category": "Coyote Popup Display Systems",
+    "name": "OCX roll wrap"
+  },
+  {
+    "sku": "OCX-SW-G",
+    "category": "Coyote Popup Display Systems",
+    "name": "OCX stretch wrap"
+  },
+  {
+    "sku": "TRP2-1-S/B",
+    "category": "Trappa Snap Frames",
+    "name": "Trappa Poster Frame 8.5\"w x 11\"h insert"
+  },
+  {
+    "sku": "TRP2-2-S/B",
+    "category": "Trappa Snap Frames",
+    "name": "Trappa Poster Frame 11\"w x 14\"h insert"
+  },
+  {
+    "sku": "TRP2-11-S/B",
+    "category": "Trappa Snap Frames",
+    "name": "Trappa Poster Frame 11\"w x 17\"h insert"
+  },
+  {
+    "sku": "TRP2-12-S/B",
+    "category": "Trappa Snap Frames",
+    "name": "Trappa Poster Frame 12\"w x 18\"h insert"
+  },
+  {
+    "sku": "TRP2-4-S/B",
+    "category": "Trappa Snap Frames",
+    "name": "Trappa Poster Frame 16\"w x 20\"h insert"
+  },
+  {
+    "sku": "TRP2-5-S/B",
+    "category": "Trappa Snap Frames",
+    "name": "Trappa Poster Frame 20\"w x 24\"h insert"
+  },
+  {
+    "sku": "TRP2-6-S/B",
+    "category": "Trappa Snap Frames",
+    "name": "Trappa Poster Frame 24\"w x 36\"h insert"
+  },
+  {
+    "sku": "TRP2-7-S/B",
+    "category": "Trappa Snap Frames",
+    "name": "Trappa Poster Frame 22\"w x 28\"h insert"
+  },
+  {
+    "sku": "TRP2-8-S/B",
+    "category": "Trappa Snap Frames",
+    "name": "Trappa Poster Frame 24\"w x 30\"h insert"
+  },
+  {
+    "sku": "TRP2-9-S/B",
+    "category": "Trappa Snap Frames",
+    "name": "Trappa Poster Frame 30\"w x 40\"h insert"
+  },
+  {
+    "sku": "TRP2-10-S/B",
+    "category": "Trappa Snap Frames",
+    "name": "Trappa Poster Frame 18\"w x 24\"h insert"
+  },
+  {
+    "sku": "LED-SNAP-03-2",
+    "category": "Trappa Snap Frames",
+    "name": "Trappa Light Box 24\"w x 36\"h"
+  },
+  {
+    "sku": "LED-SNAP-04-2",
+    "category": "Trappa Snap Frames",
+    "name": "Trappa Light Box 30\"w x 40\"h"
+  },
+  {
+    "sku": "LED-SNAP-05-2",
+    "category": "Trappa Snap Frames",
+    "name": "Trappa Light Box 36\"w x 48\"h"
+  },
+  {
+    "sku": "FMLT-ESS-STT-01",
+    "category": "Formulate Essential",
+    "name": "Formulate Essential Tabletop 8' Straight"
+  },
+  {
+    "sku": "FMLT-ESS-S08-01",
+    "category": "Formulate Essential",
+    "name": "Formulate Essential 8' Straight Display"
+  },
+  {
+    "sku": "FMLT-ESS-S10-01",
+    "category": "Formulate Essential 10' Displays",
+    "name": "10' straight Formulate Essential display"
+  },
+  {
+    "sku": "FMLT-E-SC10-01",
+    "category": "Formulate Essential 10' Displays",
+    "name": "10' serpentine curved Formulate Essential display"
+  },
+  {
+    "sku": "FMLT-ESS-SC10-01",
+    "category": "Formulate Essential 10' Displays",
+    "name": "Serpentine Curved Formulate Essential display"
+  },
+  {
+    "sku": "KIT 01",
+    "category": "Formulate Designer Series 30'",
+    "name": "30' Formulate Designer Series Kit 01"
+  },
+  {
+    "sku": "KIT 03",
+    "category": "Formulate Designer Series 30'",
+    "name": "30' Formulate Designer Series Kit 03"
+  },
+  {
+    "sku": "KIT 04",
+    "category": "Formulate Designer Series 30'",
+    "name": "30' Formulate Designer Series Kit 04"
+  },
+  {
+    "sku": "ESS-RNG-0802-2",
+    "category": "Formulate Essential Hanging Structures",
+    "name": "Essential Hanging Ring 8' dia. x 2'h"
+  },
+  {
+    "sku": "ESS-RNG-0803-2",
+    "category": "Formulate Essential Hanging Structures",
+    "name": "Essential Hanging Ring 8' dia. x 3'h"
+  },
+  {
+    "sku": "ESS-RNG-0804-2",
+    "category": "Formulate Essential Hanging Structures",
+    "name": "Essential Hanging Ring 8' dia. x 4'h"
+  },
+  {
+    "sku": "ESS-RNG-1002-2",
+    "category": "Formulate Essential Hanging Structures",
+    "name": "Essential Hanging Ring 10' dia. x 2'h"
+  },
+  {
+    "sku": "ESS-RNG-1003-2",
+    "category": "Formulate Essential Hanging Structures",
+    "name": "Essential Hanging Ring 10' dia. x 3'h"
+  },
+  {
+    "sku": "ESS-RNG-1004-2",
+    "category": "Formulate Essential Hanging Structures",
+    "name": "Essential Hanging Ring 10' dia. x 4'h"
+  },
+  {
+    "sku": "ESS-RNG-1202-2",
+    "category": "Formulate Essential Hanging Structures",
+    "name": "Essential Hanging Ring 12' dia. x 2'h"
+  },
+  {
+    "sku": "ESS-RNG-1203-2",
+    "category": "Formulate Essential Hanging Structures",
+    "name": "Essential Hanging Ring 12' dia. x 3'h"
+  },
+  {
+    "sku": "ESS-RNG-1204-2",
+    "category": "Formulate Essential Hanging Structures",
+    "name": "Essential Hanging Ring 12' dia. x 4'h"
+  },
+  {
+    "sku": "ESS-SQU-0802-2",
+    "category": "Formulate Essential Hanging Structures",
+    "name": "Essential Hanging Square 8'w x 2'h"
+  },
+  {
+    "sku": "ESS-SQU-0803-2",
+    "category": "Formulate Essential Hanging Structures",
+    "name": "Essential Hanging Square 8'w x 3'h"
+  },
+  {
+    "sku": "ESS-SQU-0804-2",
+    "category": "Formulate Essential Hanging Structures",
+    "name": "Essential Hanging Square 8'w x 4'h"
+  },
+  {
+    "sku": "ESS-SQU-1002-2",
+    "category": "Formulate Essential Hanging Structures",
+    "name": "Essential Hanging Square 10'w x 2'h"
+  },
+  {
+    "sku": "ESS-SQU-1003-2",
+    "category": "Formulate Essential Hanging Structures",
+    "name": "Essential Hanging Square 10'w x 3'h"
+  },
+  {
+    "sku": "ESS-SQU-1004-2",
+    "category": "Formulate Essential Hanging Structures",
+    "name": "Essential Hanging Square 10'w x 4'h"
+  },
+  {
+    "sku": "ESS-SQU-1202-2",
+    "category": "Formulate Essential Hanging Structures",
+    "name": "Essential Hanging Square 12'w x 2'h"
+  },
+  {
+    "sku": "ESS-SQU-1203-2",
+    "category": "Formulate Essential Hanging Structures",
+    "name": "Essential Hanging Square 12'w x 3'h"
+  },
+  {
+    "sku": "ESS-SQU-1204-2",
+    "category": "Formulate Essential Hanging Structures",
+    "name": "Essential Hanging Square 12'w x 4'h"
+  },
+  {
+    "sku": "CUBE-2X2",
+    "category": "Formulate Hanging & Architectural Structures",
+    "name": "Formulate Cube"
+  },
+  {
+    "sku": "KIT 09",
+    "category": "Hybrid Pro Modular 20' Exhibit Kits",
+    "name": "20' Exhibit Kit with illuminated walls"
+  },
+  {
+    "sku": "KIT 10",
+    "category": "Hybrid Pro Modular 20' Exhibit Kits",
+    "name": "20' Exhibit Kit"
+  },
+  {
+    "sku": "KIT 11",
+    "category": "Hybrid Pro Modular 20' Exhibit Kits",
+    "name": "20' Exhibit Kit with illuminated wall"
+  },
+  {
+    "sku": "KIT 13",
+    "category": "Hybrid Pro Modular 20' Exhibit Kits",
+    "name": "20' Exhibit Kit"
+  },
+  {
+    "sku": "KIT 14",
+    "category": "Hybrid Pro Modular 20' Exhibit Kits",
+    "name": "20' Exhibit Kit"
+  },
+  {
+    "sku": "KIT 15",
+    "category": "Hybrid Pro Modular 20' Exhibit Kits",
+    "name": "20' Exhibit Kit"
+  },
+  {
+    "sku": "HP-K-17-B",
+    "category": "Hybrid Pro Modular 20'x20' Island Exhibit Kits",
+    "name": "Kit 17B - 15'9\" tall 20' x 20' island display without standalone foreground kiosk"
+  },
+  {
+    "sku": "COUNTER 01",
+    "category": "Hybrid Pro Modular Counters",
+    "name": "White laminate cabinet with fabric graphic on the front, opaque or backlit"
+  },
+  {
+    "sku": "COUNTER 12",
+    "category": "Hybrid Pro Modular Counters",
+    "name": "White laminate cabinet with vinyl graphic (-01-B) or fabric graphic (-12), available opaque or backlit"
+  },
+  {
+    "sku": "COUNTER 02",
+    "category": "Hybrid Pro Modular Counters",
+    "name": "White laminate cabinet with fabric graphic on the front, opaque or backlit"
+  },
+  {
+    "sku": "COUNTER 09",
+    "category": "Hybrid Pro Modular Counters",
+    "name": "White laminate cabinet with UV graphic on the front, opaque or backlit"
+  },
+  {
+    "sku": "COUNTER 10",
+    "category": "Hybrid Pro Modular Counters",
+    "name": "White laminate cabinet with UV graphic on the front, opaque or backlit"
+  },
+  {
+    "sku": "COUNTER 13",
+    "category": "Hybrid Pro Modular Counters",
+    "name": "4ft wide, open white laminate counter, 47.25\"w x 39.37\"h x 23.15\"d"
+  },
+  {
+    "sku": "COUNTER 19",
+    "category": "Hybrid Pro Modular Counters",
+    "name": "Sleek and stylish laminated wood counter, 43.31\"w x 39.37\"h x 23.23\"d"
+  },
+  {
+    "sku": "COUNTER 20",
+    "category": "Hybrid Pro Modular Counters",
+    "name": "Sleek and stylish laminated wood counter, 29.53\"w x 39.37\"h x 23.23\"d"
+  },
+  {
+    "sku": "HPC-08",
+    "category": "Hybrid Pro Modular Closets",
+    "name": "Closet 08"
+  },
+  {
+    "sku": "KIT 02",
+    "category": "Vector Frame 10' Master Exhibit Kits",
+    "name": "Vector Frame 10' Master Exhibit Kit 02"
+  },
+  {
+    "sku": "VF-K-02A",
+    "category": "Vector Frame 10' Master Exhibit Kits",
+    "name": "Kit 02"
+  },
+  {
+    "sku": "VF-K-09A",
+    "category": "Vector Frame 10' Master Exhibit Kits",
+    "name": "Kit 09"
+  },
+  {
+    "sku": "VF-K-10A",
+    "category": "Vector Frame 10' Master Exhibit Kits",
+    "name": "Kit 10"
+  },
+  {
+    "sku": "VF-K-05A",
+    "category": "Vector Frame Master Exhibit Kits",
+    "name": "Kit 05"
+  },
+  {
+    "sku": "VF-K-08A",
+    "category": "Vector Frame Master Exhibit Kits",
+    "name": "Kit 08"
+  },
+  {
+    "sku": "VF-K-17",
+    "category": "Vector Frame Master Exhibit Kits",
+    "name": "Kit 17"
+  },
+  {
+    "sku": "VF-K-19A",
+    "category": "Vector Frame 20' Master Exhibit Kits",
+    "name": "Kit 19"
+  },
+  {
+    "sku": "VF-K-22A",
+    "category": "Vector Frame 20' Master Exhibit Kits",
+    "name": "Kit 22"
+  },
+  {
+    "sku": "VF-K-26",
+    "category": "Vector Frame 20' Master Exhibit Kits",
+    "name": "Kit 26"
+  },
+  {
+    "sku": "VF-K-27",
+    "category": "Vector Frame 20' Master Exhibit Kits",
+    "name": "Kit 27"
+  },
+  {
+    "sku": "OR-SM-MB",
+    "category": "Orbital Express Truss Accessories",
+    "name": "Opti-Mount 1 Truss Monitor Mount (23\"-42\" LCD, 50 lbs max)"
+  },
+  {
+    "sku": "OR-M-MB",
+    "category": "Orbital Express Truss Accessories",
+    "name": "Opti-Mount 2 Truss Monitor Mount (32\"-55\" LCD, 80 lbs max)"
+  },
+  {
+    "sku": "OR-LG-MB",
+    "category": "Orbital Express Truss Accessories",
+    "name": "Opti-Mount 3 Truss Monitor Mount (37\"-70\" LCD, 150 lbs max)"
+  },
+  {
+    "sku": "OR-TC01",
+    "category": "Orbital Express Truss",
+    "name": "Rectangle Truss Counter"
+  },
+  {
+    "sku": "OR-TC02",
+    "category": "Orbital Express Truss",
+    "name": "Oval Truss Counter"
+  },
+  {
+    "sku": "OR-TC03",
+    "category": "Orbital Express Truss",
+    "name": "Racetrack Truss Counter"
+  },
+  {
+    "sku": "OR-TC04",
+    "category": "Orbital Express Truss",
+    "name": "Curve Truss Counter"
+  },
+  {
+    "sku": "OR-24/36/46-MP",
+    "category": "Orbital Express Truss",
+    "name": "Wire Rack"
+  },
+  {
+    "sku": "OR-36/46-SP",
+    "category": "Orbital Express Truss",
+    "name": "Hanging Rack"
+  },
+  {
+    "sku": "OR-24/36/46-SST",
+    "category": "Orbital Express Truss",
+    "name": "Wire/Hanging Rack Connector"
+  },
+  {
+    "sku": "OR-24-MP-M",
+    "category": "Orbital Express Truss",
+    "name": "Wire Rack mount to verticals"
+  },
+  {
+    "sku": "VF-MK-01-SS",
+    "category": "Kiosks",
+    "name": "Monitor Kiosk 01 (Single-Sided)"
+  },
+  {
+    "sku": "VF-MK-01-DS",
+    "category": "Kiosks",
+    "name": "Monitor Kiosk 01 (Double-Sided)"
+  },
+  {
+    "sku": "ZD-1-B",
+    "category": "Literature Racks & Accessories",
+    "name": "Zedup 1 (Black)"
+  },
+  {
+    "sku": "ZD-1-S",
+    "category": "Literature Racks & Accessories",
+    "name": "Zedup 1 (Silver)"
+  },
+  {
+    "sku": "ZD-LITE",
+    "category": "Literature Racks & Accessories",
+    "name": "Zedup Lite"
+  },
+  {
+    "sku": "OASIS",
+    "category": "Literature Racks & Accessories",
+    "name": "Oasis"
+  },
+  {
+    "sku": "MFY-SS-K-01-W/B/S",
+    "category": "MODify Single Sided Kits",
+    "name": "Kit 01 - Single Sided Merchandise Display"
+  },
+  {
+    "sku": "MFY-SS-K-02-W/B/S",
+    "category": "MODify Single Sided Kits",
+    "name": "Kit 02 - Single Sided Merchandise Display with Slatwall"
+  },
+  {
+    "sku": "MFY-SS-K-03-W/B/S",
+    "category": "MODify Single Sided Kits",
+    "name": "Kit 03 - Single Sided Merchandise Display with Two Slatwall Panels"
+  },
+  {
+    "sku": "MFY-SS-K-04-W/B/S",
+    "category": "MODify Single Sided",
+    "name": "Kit 04 Single Sided Merchandise Display with Three Slatwall Panels"
+  },
+  {
+    "sku": "MFY-SS-K-05-W/B/S",
+    "category": "MODify Single Sided Kits",
+    "name": "KIT 05 Single Sided Merchandise Display"
+  },
+  {
+    "sku": "MFY-DS-K-01-W/B/S",
+    "category": "MODify Double Sided Kits",
+    "name": "Kit 01 Double Sided Merchandise Display"
+  },
+  {
+    "sku": "MFY-DS-K-02-W/B/S",
+    "category": "MODify Double Sided Kits",
+    "name": "KIT 02 Double Sided Merchandise Display"
+  },
+  {
+    "sku": "MFY-DS-K-03-W/B/S",
+    "category": "MODify Double Sided Kits",
+    "name": "KIT 03 Double Sided Merchandise Display"
+  },
+  {
+    "sku": "MFY-DS-K-04-W/B/S",
+    "category": "MODify Double Sided Kits",
+    "name": "KIT 04 Double Sided Slatwall Merchandise Display 110\"W x 96\"H x 37.5\"D"
+  },
+  {
+    "sku": "MFY-GN-K-01-W/B/S",
+    "category": "MODify Gondolas",
+    "name": "KIT 01 Gondola Retail Display 76.5\"W x 72\"H x 37.5\"D"
+  },
+  {
+    "sku": "MFY-GN-K-02-W/B/S",
+    "category": "MODify Gondolas",
+    "name": "KIT 02 Gondola Retail Display 76.5\"W x 96\"H x 28.5\"D"
+  },
+  {
+    "sku": "MFY-GN-K-03-W/B/S",
+    "category": "MODify Gondolas",
+    "name": "KIT 03 Gondola Retail Display 39\"W x 61.5\"H x 37.5\"D"
+  },
+  {
+    "sku": "MFY-4S-K-01-W/B/S",
+    "category": "MODify Four Sided Towers",
+    "name": "KIT 01 Four Sided Backlit Retail Tower"
+  },
+  {
+    "sku": "MFY-4S-K-02-W/B/S",
+    "category": "MODify Four Sided Towers",
+    "name": "Four Sided Retail Tower w/ Square Header"
+  },
+  {
+    "sku": "MFY-4S-K-03-W/B/S",
+    "category": "MODify",
+    "name": "Kit 03 Four Sided Arch Retail Display"
+  },
+  {
+    "sku": "MFY-PED-01A",
+    "category": "MODify Accent Furniture",
+    "name": "Modify Pedestal 16\"W x 47.5\"H x 16\"D w/ topper"
+  },
+  {
+    "sku": "MFY-PED-02A",
+    "category": "MODify Accent Furniture",
+    "name": "Modify Pedestal 16\"W x 35.5\"H x 16\"D w/ topper"
+  },
+  {
+    "sku": "BLD-LT-1500-1",
+    "category": "Blade Lite",
+    "name": "Blade Lite 1500 - 59\" wide x 60\"-83.25\" height"
+  },
+  {
+    "sku": "ONT-800-S/B-4",
+    "category": "Orient Banner Stands",
+    "name": "Orient 1 - 31.5\" width banner stand"
+  },
+  {
+    "sku": "ONT-920-S/B-4",
+    "category": "Orient Banner Stands",
+    "name": "Orient 1 - 35.5\" width banner stand"
+  },
+  {
+    "sku": "ONT-1000-S/B-4",
+    "category": "Orient Banner Stands",
+    "name": "Orient 1 - 39.5\" width banner stand"
+  },
+  {
+    "sku": "ONT-800-DBL-S-4",
+    "category": "Orient Banner Stands",
+    "name": "Orient 2 - 31.5\" width double-sided banner stand"
+  },
+  {
+    "sku": "ONT-850-DW",
+    "category": "Orient Banner Stands",
+    "name": "Orient Organic - 33.5\" width maple woodgrain base banner stand"
+  },
+  {
+    "sku": "PAC-800-S-2",
+    "category": "Banner Stands - Standard Retractable",
+    "name": "Pacific Banner Stand 31.5\" wide"
+  },
+  {
+    "sku": "PAC-920-S-2",
+    "category": "Banner Stands - Standard Retractable",
+    "name": "Pacific Banner Stand 35.5\" wide"
+  },
+  {
+    "sku": "PAC-1000-S-2",
+    "category": "Banner Stands - Standard Retractable",
+    "name": "Pacific Banner Stand 39.25\" wide"
+  },
+  {
+    "sku": "CN-24-S/B",
+    "category": "Banner Stands - Standard Retractable",
+    "name": "Contender Banner Stand 23.5\" wide"
+  },
+  {
+    "sku": "CN-30-S/B",
+    "category": "Banner Stands - Standard Retractable",
+    "name": "Contender Banner Stand 29.5\" wide"
+  },
+  {
+    "sku": "CN-36-S/B",
+    "category": "Banner Stands - Standard Retractable",
+    "name": "Contender Banner Stand 35.5\" wide"
+  },
+  {
+    "sku": "CN-48-B",
+    "category": "Banner Stands - Standard Retractable",
+    "name": "Contender Banner Stand 47.5\" wide"
+  },
+  {
+    "sku": "BCD-600-S-1",
+    "category": "Banner Stands - Premium Retractable",
+    "name": "Barracuda 23.5\" wide x 66.5\"-83\" height banner stand"
+  },
+  {
+    "sku": "BCD-920-S-1",
+    "category": "Banner Stands - Premium Retractable",
+    "name": "Barracuda 35.5\" wide x 60\"-83\" height banner stand"
+  },
+  {
+    "sku": "BCD-1200-S-1",
+    "category": "Banner Stands - Premium Retractable",
+    "name": "Barracuda 47.25\" wide x 60\"-83\" height banner stand"
+  },
+  {
+    "sku": "MSQT-800-B",
+    "category": "Mosquito Banner Stands",
+    "name": "Mosquito 800 - 31.5\" wide retractable banner stand (black base)"
+  },
+  {
+    "sku": "MSQT-GIANT-920-S",
+    "category": "Banner Stands - Economy Retractable",
+    "name": "Giant Mosquito"
+  },
+  {
+    "sku": "PHX-850-S",
+    "category": "Banner Stands - Economy Retractable",
+    "name": "Phoenix banner stand, 33.5\" wide x 79\" height"
+  },
+  {
+    "sku": "PHX-400-S",
+    "category": "Banner Stands - Economy Retractable",
+    "name": "Phoenix Mini banner stand, 15.5\" wide, 16.5\"-31.5\" height"
+  },
+  {
+    "sku": "BREZ-1-S",
+    "category": "Banner Stands - Economy Retractable",
+    "name": "Breeze retractable tabletop banner stand, 8.375\" wide x 11.75\" height"
+  },
+  {
+    "sku": "STLLR-TBLD",
+    "category": "Banner Stands - Economy Retractable",
+    "name": "Stellar retractable tabletop banner stand, 11\" wide x 17\" height"
+  },
+  {
+    "sku": "MOD-FRM-13-M-TL",
+    "category": "Formulate & Modulate Backwall Displays",
+    "name": "Banner 13"
+  },
+  {
+    "sku": "MOD-FRM-14-M-TL",
+    "category": "Formulate & Modulate Backwall Displays",
+    "name": "Banner 14"
+  },
+  {
+    "sku": "BLZ-2010-S/B/W",
+    "category": "BLAZE Freestanding Light Boxes",
+    "name": "Blaze 2010"
+  },
+  {
+    "sku": "BLZ-3010-S/B/W",
+    "category": "BLAZE Freestanding Light Boxes",
+    "name": "Blaze 3010"
+  },
+  {
+    "sku": "BLZ-W-3010-S/B/W-F",
+    "category": "BLAZE Wall Mounted Light Boxes",
+    "name": "Blaze Wall 3010"
+  },
+  {
+    "sku": "TNT-E-3X3-SQ-3",
+    "category": "Zoom Popup Tents",
+    "name": "10' Economy (Steel) Hardware only kit"
+  },
+  {
+    "sku": "ZM-TNT-3MX3M-CAN-(COLOR)",
+    "category": "Zoom Popup Tents",
+    "name": "10' Economy (Steel) Stock canopy only"
+  },
+  {
+    "sku": "TNT-3X3-CAN-G",
+    "category": "Zoom Popup Tents",
+    "name": "10' Economy (Steel) Printed canopy only"
+  },
+  {
+    "sku": "TNT-3X3-HLF-K-G",
+    "category": "Zoom Popup Tents",
+    "name": "10' Economy (Steel) Half wall kit"
+  },
+  {
+    "sku": "ZM-TNT-3MX6M-CAN-(COLOR)-3",
+    "category": "Zoom Popup Tents",
+    "name": "20' Standard (Aluminum) Stock canopy only"
+  },
+  {
+    "sku": "ZM-TNT-3MX6M-CAN-G",
+    "category": "Zoom Popup Tents",
+    "name": "20' Standard (Aluminum) Printed canopy only"
+  },
+  {
+    "sku": "TNT-E-1.5-FRM-SQ-3",
+    "category": "Zoom Popup Tents",
+    "name": "5' Economy (Steel) Hardware only kit"
+  },
+  {
+    "sku": "TNT-E-1.5-SQ-2-G",
+    "category": "Zoom Popup Tents",
+    "name": "5' Economy (Steel) Kit with canopy"
+  },
+  {
+    "sku": "TNT-1.5-CAN-G",
+    "category": "Zoom Popup Tents",
+    "name": "5' Economy (Steel) Printed canopy only"
+  },
+  {
+    "sku": "PBFL301-B",
+    "category": "Popup Bar Collapsible Counter",
+    "name": "popup bar large"
+  },
+  {
+    "sku": "ZOOM-FLX-XL-E",
+    "category": "Zoom Flex Flags",
+    "name": "extra large flag - edge"
+  },
+  {
+    "sku": "C-BRC-72X36-PS-G-W",
+    "category": "Outdoor Signage",
+    "name": "Barricade Cover 72\"w x 36\"h Power Stretch"
+  },
+  {
+    "sku": "C-BRC-72X36-OD-GDBL",
+    "category": "Outdoor Signage",
+    "name": "Barricade Cover 72\"w x 36\"h Outdoor Canvas"
+  },
+  {
+    "sku": "C-BRC-97X36-PS-G-W",
+    "category": "Outdoor Signage",
+    "name": "Barricade Cover 97\"w x 36\"h Power Stretch"
+  },
+  {
+    "sku": "C-BRC-97X36-OD-GDBL",
+    "category": "Outdoor Signage",
+    "name": "Barricade Cover 97\"w x 36\"h Outdoor Canvas"
+  },
+  {
+    "sku": "BRKAWAY-POLES",
+    "category": "Outdoor Signage",
+    "name": "Breakaway Banner Poles"
+  },
+  {
+    "sku": "BREAKAWAY-SM-G",
+    "category": "Outdoor Signage",
+    "name": "Breakaway Banner Small Graphic 96\"w x 48\"h"
+  },
+  {
+    "sku": "BREAKAWAY-M-G",
+    "category": "Outdoor Signage",
+    "name": "Breakaway Banner Medium Graphic 116.5\"w x 96\"h"
+  },
+  {
+    "sku": "BREAKAWAY-LG-G",
+    "category": "Outdoor Signage",
+    "name": "Breakaway Banner Large Graphic 144\"w x 96\"h"
+  },
+  {
+    "sku": "CONTOUR-01-G",
+    "category": "Outdoor Displays",
+    "name": "Contour Arrow Up"
+  },
+  {
+    "sku": "CONTOUR-02-G",
+    "category": "Outdoor Displays",
+    "name": "Contour Arrow Side"
+  },
+  {
+    "sku": "CONTOUR-03-G",
+    "category": "Outdoor Displays",
+    "name": "Contour Wave 1"
+  },
+  {
+    "sku": "CONTOUR-04-G",
+    "category": "Outdoor Displays",
+    "name": "Contour Bottle"
+  },
+  {
+    "sku": "CONTOUR-05-G",
+    "category": "Outdoor Displays",
+    "name": "Contour Circle"
+  },
+  {
+    "sku": "CONTOUR-06-G",
+    "category": "Outdoor Displays",
+    "name": "Contour Wave 2"
+  },
+  {
+    "sku": "PKWY-S-SPN-3",
+    "category": "Outdoor Signage",
+    "name": "Parkway Single Span Street Pole Banner"
+  },
+  {
+    "sku": "PKWY-D-SPN-3",
+    "category": "Outdoor Signage",
+    "name": "Parkway Double Span Street Pole Banner"
+  },
+  {
+    "sku": "RND-TBL-T-30X30",
+    "category": "Table Throws & Runners",
+    "name": "Round Table Throw 30\" dia., 30\"h draped"
+  },
+  {
+    "sku": "RND-TBL-FT-30X30",
+    "category": "Table Throws & Runners",
+    "name": "Round Table Throw 30\" dia., 30\"h fitted"
+  },
+  {
+    "sku": "RND-TBL-SW-30X30",
+    "category": "Table Throws & Runners",
+    "name": "Round Table Throw 30\" dia., 30\"h stretch"
+  },
+  {
+    "sku": "RND-TBL-T-30X42",
+    "category": "Table Throws & Runners",
+    "name": "Round Table Throw 30\" dia., 42\"h draped"
+  },
+  {
+    "sku": "RND-TBL-FT-30X42",
+    "category": "Table Throws & Runners",
+    "name": "Round Table Throw 30\" dia., 42\"h fitted"
+  },
+  {
+    "sku": "RND-TBL-SW-30X42",
+    "category": "Table Throws & Runners",
+    "name": "Round Table Throw 30\" dia., 42\"h stretch"
+  },
+  {
+    "sku": "RND-TBL-T-48X30",
+    "category": "Table Throws & Runners",
+    "name": "Round Table Throw 48\" dia., 30\"h draped"
+  },
+  {
+    "sku": "RND-TBL-FT-48X30",
+    "category": "Table Throws & Runners",
+    "name": "Round Table Throw 48\" dia., 30\"h fitted"
+  },
+  {
+    "sku": "RND-TBL-T-60X30",
+    "category": "Table Throws & Runners",
+    "name": "Round Table Throw 60\" dia., 30\"h draped"
+  },
+  {
+    "sku": "RND-TBL-FT-60X30",
+    "category": "Table Throws & Runners",
+    "name": "Round Table Throw 60\" dia., 30\"h fitted"
+  },
+  {
+    "sku": "EMB-BL-2X2-S",
+    "category": "Embrace Push-Fit Tension Fabric Backlit",
+    "name": "5' tabletop Backlit Embrace"
+  },
+  {
+    "sku": "MOD-30-02-M-TL",
+    "category": "Modulate Magnetic Reconfigurable Kits",
+    "name": "30' Inline Modulate Magnetic Display"
+  },
+  {
+    "sku": "MOD-20-02-M-TL",
+    "category": "Modulate Magnetic Reconfigurable Kits",
+    "name": "20' Inline Modulate Magnetic Display"
+  },
+  {
+    "sku": "MOD-10-04-M-TL",
+    "category": "Modulate Magnetic Reconfigurable Kits",
+    "name": "10' Inline Modulate Magnetic Display"
+  },
+  {
+    "sku": "MOD-20-01-M-TL",
+    "category": "Modulate Magnetic Reconfigurable Kits",
+    "name": "20' Inline Display - Kit includes banners 3, 6, 5, 6"
+  },
+  {
+    "sku": "MOD-10-01-M-TL",
+    "category": "Modulate Magnetic Reconfigurable Kits",
+    "name": "10' Inline Display - Kit includes banners 4, 6, 3"
+  },
+  {
+    "sku": "MOD-10-02-M-TL",
+    "category": "Modulate Magnetic Reconfigurable Kits",
+    "name": "10' Inline Display - Kit includes banners 6, 4, 3"
+  },
+  {
+    "sku": "MOD-20-03-M-TL",
+    "category": "Modulate Magnetic Reconfigurable Kits",
+    "name": "20' Inline Display - Kit includes banners 11, 10, 7, 10, 11"
+  },
+  {
+    "sku": "MOD-10-05-M-TL",
+    "category": "Modulate Magnetic Reconfigurable Kits",
+    "name": "10' Inline Display - Kit includes banners 11, 10, 11"
+  },
+  {
+    "sku": "MOD-10-06-M-TL",
+    "category": "Modulate Magnetic Reconfigurable Kits",
+    "name": "10' Inline Display - Kit includes banners 9 & 10"
+  },
+  {
+    "sku": "FMLT-WL03-L/R",
+    "category": "Formulate Master Accents",
+    "name": "Accent 03 - Choice of right-hand or left-hand arm tables, no table, top and bottom printed infill panels; fits a medium sized monitor"
+  },
+  {
+    "sku": "FMLT-WBWA-04C-L/R",
+    "category": "Formulate Master Backwall Accents",
+    "name": "Backwall Accent 04"
+  },
+  {
+    "sku": "FMLT-10FT-EXT-3",
+    "category": "Formulate Master Height Extenders",
+    "name": "8' / 10' Straight"
+  },
+  {
+    "sku": "FMLT-10FT-EXT-3-HC",
+    "category": "Formulate Master Height Extenders",
+    "name": "8' Horizontal Curved"
+  },
+  {
+    "sku": "FMLT-10FT-EXT-4-HC",
+    "category": "Formulate Master Height Extenders",
+    "name": "10' Horizontal Curved"
+  },
+  {
+    "sku": "FMLT-10FT-EXT-5",
+    "category": "Formulate Master Height Extenders",
+    "name": "20' Straight"
+  },
+  {
+    "sku": "FMLT-10FT-EXT-7-HC",
+    "category": "Formulate Master Height Extenders",
+    "name": "20' Horizontal Curved"
+  },
+  {
+    "sku": "FMLT-BL-WSS3-01",
+    "category": "Formulate Master Backlit Kits",
+    "name": "3' Backlit kit"
+  },
+  {
+    "sku": "FMLT-BL-WSS5-01",
+    "category": "Formulate Master Backlit Kits",
+    "name": "5' Backlit kit"
+  },
+  {
+    "sku": "FMLT-BL-WSS8-01",
+    "category": "Formulate Master Backlit Kits",
+    "name": "8' Backlit kit"
+  },
+  {
+    "sku": "CFAB-K-11",
+    "category": "Formulate Fusion 20' x 20' Island Exhibit Kits",
+    "name": "Kit 11 - 20' x 20' Island Exhibit Kit"
+  },
+  {
+    "sku": "OR-K-ON1",
+    "category": "Orbital Express Truss 20'x20' Island Kits",
+    "name": "Onyx 20'x20' Island Kit"
+  },
+  {
+    "sku": "OR-K-HC15",
+    "category": "Orbital Express Truss Hercules Kits",
+    "name": "Hercules 12"
+  },
+  {
+    "sku": "FMLT-CHRG-CNTR-01-G",
+    "category": "Counters & Charging Stations",
+    "name": "Charging Counter"
+  },
+  {
+    "sku": "PAD21-04",
+    "category": "Freestanding Tablet Stands",
+    "name": "Universal Tablet Stand"
+  },
+  {
+    "sku": "FREESTANDING-SPLIT-MM",
+    "category": "Kiosks",
+    "name": "Freestanding Portable Monitor Kiosk"
+  },
+  {
+    "sku": "TP1",
+    "category": "Sign Stands",
+    "name": "Trappa Post TP1"
+  },
+  {
+    "sku": "TP2",
+    "category": "Sign Stands",
+    "name": "Trappa Post TP2"
+  },
+  {
+    "sku": "UNI-LT-CLP30",
+    "category": "Lighting",
+    "name": "universal light clamp kit"
+  },
+  {
+    "sku": "UNI-LT-CLP50",
+    "category": "Lighting",
+    "name": "universal light clamp kit with bracket"
+  },
+  {
+    "sku": "OC-HOP",
+    "category": "Cases",
+    "name": "Hopup-Medium Wheeled Case"
+  },
+  {
+    "sku": "MFY-TBL-01-W/B/S",
+    "category": "MODify Accent Furniture",
+    "name": "Modify Nesting Table 56\"W x 36\"H x 30\"D"
+  },
+  {
+    "sku": "MFY-TBL-02-W/B/S",
+    "category": "MODify Accent Furniture",
+    "name": "Modify Nesting Table 48\"W x 30\"H x 24\"D"
+  },
+  {
+    "sku": "MFY-TBL-03-W/B/S",
+    "category": "MODify Accent Furniture",
+    "name": "Modify Nesting Table 34\"W x 36\"H x 30\"D"
+  },
+  {
+    "sku": "MFY-TBL-04-W/B/S",
+    "category": "MODify Accent Furniture",
+    "name": "Modify Nesting Table 27\"W x 30\"H x 24\"D"
+  }
+]
