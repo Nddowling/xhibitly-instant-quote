@@ -1,0 +1,262 @@
+{
+  "name": "Order",
+  "type": "object",
+  "properties": {
+    "reference_number": {
+      "type": "string"
+    },
+    "dealer_id": {
+      "type": "string"
+    },
+    "dealer_email": {
+      "type": "string"
+    },
+    "dealer_company": {
+      "type": "string"
+    },
+    "dealer_name": {
+      "type": "string"
+    },
+    "dealer_phone": {
+      "type": "string"
+    },
+    "client_profile_id": {
+      "type": "string"
+    },
+    "website_url": {
+      "type": "string"
+    },
+    "booth_size": {
+      "type": "string",
+      "enum": [
+        "10x10",
+        "10x20",
+        "20x20",
+        "20x30",
+        "island"
+      ]
+    },
+    "booth_type": {
+      "type": "string",
+      "enum": [
+        "Inline",
+        "Corner",
+        "Island"
+      ],
+      "default": "Inline"
+    },
+    "show_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "show_name": {
+      "type": "string"
+    },
+    "customer_name": {
+      "type": "string"
+    },
+    "customer_email": {
+      "type": "string"
+    },
+    "customer_phone": {
+      "type": "string"
+    },
+    "customer_company": {
+      "type": "string"
+    },
+    "booth_rendering_url": {
+      "type": "string"
+    },
+    "share_token": {
+      "type": "string"
+    },
+    "catalog_session": {
+      "type": "boolean",
+      "default": false
+    },
+    "selected_booth_design_id": {
+      "type": "string"
+    },
+    "selected_tier": {
+      "type": "string",
+      "enum": [
+        "Modular",
+        "Hybrid",
+        "Custom"
+      ]
+    },
+    "quoted_price": {
+      "type": "number"
+    },
+    "final_price": {
+      "type": "number"
+    },
+    "discount_amount": {
+      "type": "number",
+      "default": 0
+    },
+    "discount_reason": {
+      "type": "string"
+    },
+    "dealer_markup_pct": {
+      "type": "number",
+      "default": 0,
+      "description": "Dealer's margin % over list price"
+    },
+    "customer_discount_pct": {
+      "type": "number",
+      "default": 0,
+      "description": "% discount given to customer"
+    },
+    "promo_code_applied": {
+      "type": "string",
+      "description": "Promo code applied to this order"
+    },
+    "applied_rule_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "IDs of pricing rules that fired"
+    },
+    "list_price_total": {
+      "type": "number",
+      "description": "Sum of Orbus base prices before adjustments"
+    },
+    "markup_amount": {
+      "type": "number",
+      "description": "Dollar amount added via markup"
+    },
+    "rule_discount_amount": {
+      "type": "number",
+      "description": "Dollar amount discounted by rules"
+    },
+    "customer_discount_amount": {
+      "type": "number",
+      "description": "Dollar amount discounted by customer discount"
+    },
+    "promo_discount_amount": {
+      "type": "number",
+      "description": "Dollar amount discounted by promo code"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Draft",
+        "Pending",
+        "Contacted",
+        "Quoted",
+        "Negotiating",
+        "Accepted",
+        "Confirmed",
+        "Declined",
+        "Ordered",
+        "In Production",
+        "Shipped",
+        "Delivered",
+        "Cancelled"
+      ],
+      "default": "Pending"
+    },
+    "status_history": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "assigned_sales_rep_id": {
+      "type": "string"
+    },
+    "sales_rep_commission": {
+      "type": "number",
+      "default": 0
+    },
+    "probability": {
+      "type": "number",
+      "default": 50
+    },
+    "expected_close_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "win_reason": {
+      "type": "string"
+    },
+    "lost_reason": {
+      "type": "string"
+    },
+    "competitor": {
+      "type": "string"
+    },
+    "internal_notes": {
+      "type": "string"
+    },
+    "customer_notes": {
+      "type": "string"
+    },
+    "follow_up_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "instant_quote",
+        "sales_rep",
+        "website",
+        "referral",
+        "trade_show",
+        "other"
+      ],
+      "default": "instant_quote"
+    },
+    "contract_url": {
+      "type": "string"
+    },
+    "current_revision_id": {
+      "type": "string"
+    },
+    "contract_signed_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "deposit_amount": {
+      "type": "number",
+      "default": 0
+    },
+    "deposit_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "production_start_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "ship_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "delivery_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "shipping_address": {
+      "type": "object"
+    },
+    "selected_services": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "account_id": {
+      "type": "string",
+      "description": "Related Account record"
+    }
+  },
+  "required": [
+    "dealer_email",
+    "booth_size",
+    "show_date"
+  ]
+}

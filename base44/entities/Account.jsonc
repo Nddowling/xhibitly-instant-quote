@@ -1,0 +1,41 @@
+{
+  "name": "Account",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Account name"
+    },
+    "website": {
+      "type": "string",
+      "description": "Company website"
+    },
+    "industry": {
+      "type": "string",
+      "description": "Industry or market"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Main account phone"
+    },
+    "billing_address": {
+      "type": "string",
+      "description": "Billing or office address"
+    },
+    "description": {
+      "type": "string",
+      "description": "Internal account notes"
+    },
+    "broker_instance_id": {
+      "type": "string",
+      "description": "Broker workspace scope"
+    },
+    "owner_user_id": {
+      "type": "string",
+      "description": "Account owner user id"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

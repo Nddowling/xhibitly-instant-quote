@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { getAllObjects, getObjectFields, createCustomObject, createCustomField, buildCustomObjectApiName, buildHistoryObjectApiName } from '@/components/utils/metadataEngine';
-import { Plus, Database, Search, Lock, Pencil, Trash2, X, ChevronRight } from 'lucide-react';
+import { Plus, Database, Search, Lock, Trash2, X, History, TableProperties } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 const FIELD_TYPES = ['text','number','currency','date','datetime','checkbox','picklist','multi_picklist','textarea','email','phone','url','lookup','formula'];
 
@@ -12,6 +13,7 @@ export default function ObjectManager() {
   const [objects, setObjects] = useState([]);
   const [selectedObject, setSelectedObject] = useState(null);
   const [fields, setFields] = useState([]);
+  const [historyRecords, setHistoryRecords] = useState([]);
   const [search, setSearch] = useState('');
   const [showNewObject, setShowNewObject] = useState(false);
   const [showNewField, setShowNewField] = useState(false);
@@ -27,8 +29,12 @@ export default function ObjectManager() {
 
   const selectObject = async (obj) => {
     setSelectedObject(obj);
-    const f = await getObjectFields(obj.api_name);
+    const [f, h] = await Promise.all([
+      getObjectFields(obj.api_name),
+      base44.entities.ObjectHistory.filter({ entity_name: obj.api_name }, '-event_time', 50),
+    ]);
     setFields(f);
+    setHistoryRecords(h || []);
   };
 
   const handleCreateObject = async () => {
@@ -121,42 +127,74 @@ export default function ObjectManager() {
               </Button>
             </div>
 
-            <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="bg-slate-50 border-b border-slate-200">
-                    <th className="text-left px-4 py-2.5 font-semibold text-slate-600">Label</th>
-                    <th className="text-left px-4 py-2.5 font-semibold text-slate-600">API Name</th>
-                    <th className="text-left px-4 py-2.5 font-semibold text-slate-600">Type</th>
-                    <th className="text-left px-4 py-2.5 font-semibold text-slate-600">Required</th>
-                    <th className="px-4 py-2.5 w-12" />
-                  </tr>
-                </thead>
-                <tbody>
-                  {fields.map((field, i) => (
-                    <tr key={field.api_name} className={`border-b border-slate-100 ${i % 2 === 0 ? '' : 'bg-slate-50/50'}`}>
-                      <td className="px-4 py-2.5 font-medium text-slate-800 flex items-center gap-2">
-                        {field.is_system && <Lock className="w-3 h-3 text-slate-400" />}
-                        {field.label}
-                        {field.help_text && <span className="text-xs text-slate-400 font-normal">— {field.help_text}</span>}
-                      </td>
-                      <td className="px-4 py-2.5 text-slate-500 font-mono text-xs">{field.api_name}</td>
-                      <td className="px-4 py-2.5">
-                        <Badge variant="outline" className="text-xs capitalize">{field.field_type}</Badge>
-                      </td>
-                      <td className="px-4 py-2.5 text-slate-500">{field.is_required ? '✓' : '—'}</td>
-                      <td className="px-4 py-2.5">
-                        {!field.is_system && (
-                          <button onClick={() => handleDeleteField(field)} className="text-slate-300 hover:text-red-500 transition-colors">
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <Accordion type="multiple" defaultValue={["fields", "history"]} className="space-y-4">
+              <AccordionItem value="fields" className="rounded-xl border border-slate-200 bg-white px-0 overflow-hidden">
+                <AccordionTrigger className="px-4 py-3 text-sm font-semibold text-slate-800 hover:no-underline">
+                  <div className="flex items-center gap-2"><TableProperties className="w-4 h-4" /> Fields</div>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="bg-slate-50 border-b border-slate-200">
+                        <th className="text-left px-4 py-2.5 font-semibold text-slate-600">Label</th>
+                        <th className="text-left px-4 py-2.5 font-semibold text-slate-600">API Name</th>
+                        <th className="text-left px-4 py-2.5 font-semibold text-slate-600">Type</th>
+                        <th className="text-left px-4 py-2.5 font-semibold text-slate-600">Required</th>
+                        <th className="px-4 py-2.5 w-12" />
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {fields.map((field, i) => (
+                        <tr key={field.api_name} className={`border-b border-slate-100 ${i % 2 === 0 ? '' : 'bg-slate-50/50'}`}>
+                          <td className="px-4 py-2.5 font-medium text-slate-800 flex items-center gap-2">
+                            {field.is_system && <Lock className="w-3 h-3 text-slate-400" />}
+                            {field.label}
+                            {field.help_text && <span className="text-xs text-slate-400 font-normal">— {field.help_text}</span>}
+                          </td>
+                          <td className="px-4 py-2.5 text-slate-500 font-mono text-xs">{field.api_name}</td>
+                          <td className="px-4 py-2.5">
+                            <Badge variant="outline" className="text-xs capitalize">{field.field_type}</Badge>
+                          </td>
+                          <td className="px-4 py-2.5 text-slate-500">{field.is_required ? '✓' : '—'}</td>
+                          <td className="px-4 py-2.5">
+                            {!field.is_system && (
+                              <button onClick={() => handleDeleteField(field)} className="text-slate-300 hover:text-red-500 transition-colors">
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="history" className="rounded-xl border border-slate-200 bg-white px-0 overflow-hidden">
+                <AccordionTrigger className="px-4 py-3 text-sm font-semibold text-slate-800 hover:no-underline">
+                  <div className="flex items-center gap-2"><History className="w-4 h-4" /> History</div>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="divide-y divide-slate-100">
+                    {historyRecords.length === 0 ? (
+                      <div className="px-4 py-6 text-sm text-slate-500">No history records yet.</div>
+                    ) : historyRecords.map((record) => (
+                      <div key={record.id} className="px-4 py-3">
+                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+                          <div>
+                            <p className="text-sm font-medium text-slate-900">{record.field_label || record.field_api_name}</p>
+                            <p className="text-xs text-slate-500">{record.old_value || '—'} → {record.new_value || '—'}</p>
+                          </div>
+                          <div className="text-xs text-slate-500">
+                            {record.event_by || 'Unknown'} • {record.event_time ? new Date(record.event_time).toLocaleString() : '—'}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </div>
         )}
       </div>

@@ -4,7 +4,7 @@ import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import {
   LogOut, Users, Menu, X, LayoutDashboard, Settings as SettingsIcon,
-  ArrowLeft, BookOpen, ClipboardList, Tag, BarChart2, ChevronDown, Settings2, ShieldCheck
+  ArrowLeft, BookOpen, ClipboardList, Tag, BarChart2, ChevronDown, Settings2, ShieldCheck, Briefcase
 } from 'lucide-react';
 import ErrorBoundary from './components/ErrorBoundary';
 
@@ -13,10 +13,11 @@ export default function Layout({ children, currentPageName }) {
   const [isLoading, setIsLoading] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [analyticsOpen, setAnalyticsOpen] = useState(false);
+  const [objectTabs, setObjectTabs] = useState([]);
   const analyticsRef = useRef(null);
   const navigate = useNavigate();
 
-  useEffect(() => { checkAuth(); initDarkMode(); }, [currentPageName]);
+  useEffect(() => { checkAuth(); initDarkMode(); loadObjectTabs(); }, [currentPageName]);
   useEffect(() => { setMobileMenuOpen(false); }, [currentPageName]);
 
   useEffect(() => {
@@ -51,6 +52,15 @@ export default function Layout({ children, currentPageName }) {
 
   const handleLogout = () => base44.auth.logout(createPageUrl('Home'));
 
+  const loadObjectTabs = async () => {
+    try {
+      const tabs = await base44.entities.ObjectTab.filter({ is_active: true }, 'sort_order', 50);
+      setObjectTabs(tabs || []);
+    } catch {
+      setObjectTabs([]);
+    }
+  };
+
   const noHeaderPages = ['Loading', 'Home', 'Landing', 'UserTypeSelection', 'QuoteView'];
   const showHeader = !noHeaderPages.includes(currentPageName) && user;
   const rootPages = ['SalesDashboard', 'DesignerDashboard', 'Contacts', 'CatalogQuote', 'PricingRules', 'Reports', 'Dashboards', 'Setup', 'ReportBuilder', 'ReportView', 'DashboardView'];
@@ -63,6 +73,12 @@ export default function Layout({ children, currentPageName }) {
     { page: 'RecentQuotes', label: 'Quotes',  icon: ClipboardList },
     { page: 'PricingRules', label: 'Pricing', icon: Tag },
   ];
+
+  const objectNav = objectTabs.map(tab => ({
+    page: tab.route_path,
+    label: tab.label,
+    icon: Briefcase,
+  }));
 
   // Analytics dropdown items
   const analyticsNav = [
@@ -81,6 +97,7 @@ export default function Layout({ children, currentPageName }) {
   // Mobile: all nav items flat
   const allMobileNav = [
     ...primaryNav,
+    ...objectNav,
     ...analyticsNav,
     ...(user?.role === 'admin' ? adminNav : []),
     { page: 'Setup', label: 'Setup', icon: Settings2 },
@@ -138,6 +155,17 @@ export default function Layout({ children, currentPageName }) {
                 {primaryNav.map(({ page, label, icon: Icon }) => (
                   <Link key={page} to={createPageUrl(page)}>
                     <button className="flex items-center gap-1.5 px-2.5 lg:px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap text-white/60 hover:text-white hover:bg-white/8">
+                      <Icon className="w-4 h-4" />
+                      {label}
+                    </button>
+                  </Link>
+                ))}
+
+                {objectNav.map(({ page, label, icon: Icon }) => (
+                  <Link key={page} to={page}>
+                    <button className={`flex items-center gap-1.5 px-2.5 lg:px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
+                      window.location.pathname === page ? 'bg-[#e2231a] text-white' : 'text-white/60 hover:text-white hover:bg-white/8'
+                    }`}>
                       <Icon className="w-4 h-4" />
                       {label}
                     </button>
@@ -220,17 +248,22 @@ export default function Layout({ children, currentPageName }) {
           {mobileMenuOpen && (
             <div className="md:hidden bg-[#111] border-t border-white/5">
               <div className="px-4 py-3 space-y-1">
-                {allMobileNav.map(({ page, label, icon: Icon }) => (
-                  <Link key={page} to={createPageUrl(page)} onClick={() => setMobileMenuOpen(false)}>
-                    <div className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-all ${
-                      currentPageName === page ? 'bg-[#e2231a]/15 text-white' : 'text-white/60 hover:bg-white/5 hover:text-white'
-                    }`}>
-                      <Icon className="w-5 h-5 flex-shrink-0" />
-                      <span className="font-medium">{label}</span>
-                      {currentPageName === page && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-[#e2231a]" />}
-                    </div>
-                  </Link>
-                ))}
+                {allMobileNav.map((item) => {
+                  const href = item.page.startsWith('/') ? item.page : createPageUrl(item.page);
+                  const isActive = currentPageName === item.page || window.location.pathname === item.page;
+                  const ItemIcon = item.icon;
+                  return (
+                    <Link key={item.page} to={href} onClick={() => setMobileMenuOpen(false)}>
+                      <div className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-all ${
+                        isActive ? 'bg-[#e2231a]/15 text-white' : 'text-white/60 hover:bg-white/5 hover:text-white'
+                      }`}>
+                        <ItemIcon className="w-5 h-5 flex-shrink-0" />
+                        <span className="font-medium">{item.label}</span>
+                        {isActive && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-[#e2231a]" />}
+                      </div>
+                    </Link>
+                  );
+                })}
                 <div className="h-px bg-white/5 my-2" />
                 <Link to={createPageUrl('Settings')} onClick={() => setMobileMenuOpen(false)}>
                   <div className="flex items-center gap-3 px-3 py-3 rounded-xl text-white/50 hover:bg-white/5 hover:text-white">

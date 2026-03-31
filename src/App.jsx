@@ -12,6 +12,8 @@ import ExecutiveListView from './pages/ExecutiveListView';
 import HotspotAudit from './pages/HotspotAudit';
 import CatalogAudit from './pages/CatalogAudit';
 import DesignerDashboard from './pages/DesignerDashboard';
+import Accounts from './pages/Accounts';
+import ObjectRecords from './pages/ObjectRecords';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -100,6 +102,22 @@ const AuthenticatedApp = () => {
         element={
           <LayoutWrapper currentPageName="DesignerDashboard">
             <DesignerDashboard />
+          </LayoutWrapper>
+        }
+      />
+      <Route
+        path="/Accounts"
+        element={
+          <LayoutWrapper currentPageName="Accounts">
+            <Accounts />
+          </LayoutWrapper>
+        }
+      />
+      <Route
+        path="/objects/:objectApiName"
+        element={
+          <LayoutWrapper currentPageName="ObjectRecords">
+            <ObjectRecords />
           </LayoutWrapper>
         }
       />

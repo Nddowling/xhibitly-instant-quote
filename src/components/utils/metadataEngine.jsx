@@ -29,6 +29,7 @@ export async function getAllObjects() {
     label_plural: def.label,
     is_custom: false,
     allow_reports: def.allow_reports !== false,
+    history_object_api_name: 'ObjectHistory',
   }));
   return [...builtIn, ...customObjects.map(o => ({ ...o, is_custom: true }))];
 }

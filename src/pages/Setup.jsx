@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import ObjectManager from '@/components/setup/ObjectManager';
+import ObjectTabsManager from '@/components/setup/ObjectTabsManager';
 import SetupProfiles from '@/components/setup/SetupProfiles';
 import SetupPermissionSets from '@/components/setup/SetupPermissionSets';
 import SetupUsers from '@/components/setup/SetupUsers';
@@ -40,6 +41,7 @@ const SECTIONS = [
     group: 'Object Manager',
     items: [
       { key: 'object-manager',   label: 'Object Manager',   icon: Database, component: ObjectManager },
+      { key: 'object-tabs',      label: 'Object Tabs',      icon: LayoutGrid, component: ObjectTabsManager },
     ]
   },
 ];

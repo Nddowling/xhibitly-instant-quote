@@ -1,6 +1,49 @@
 import { base44 } from '@/api/base44Client';
 
 export const BUILT_IN_OBJECTS = {
+  Account: {
+    label: 'Accounts',
+    allow_reports: true,
+    fields: {
+      id: { label: 'Record ID', type: 'text' },
+      created_date: { label: 'Created Date', type: 'datetime' },
+      created_by: { label: 'Created By', type: 'text' },
+      updated_date: { label: 'Last Edited Date', type: 'datetime' },
+      name: { label: 'Account Name', type: 'text' },
+      website: { label: 'Website', type: 'url' },
+      industry: { label: 'Industry', type: 'text' },
+      phone: { label: 'Phone', type: 'phone' },
+      broker_instance_id: { label: 'Broker Workspace', type: 'text' }
+    }
+  },
+  Contact: {
+    label: 'Contacts',
+    allow_reports: true,
+    fields: {
+      id: { label: 'Record ID', type: 'text' },
+      created_date: { label: 'Created Date', type: 'datetime' },
+      created_by: { label: 'Created By', type: 'text' },
+      updated_date: { label: 'Last Edited Date', type: 'datetime' },
+      full_name: { label: 'Full Name', type: 'text' },
+      email: { label: 'Email', type: 'email' },
+      phone: { label: 'Phone', type: 'phone' },
+      title: { label: 'Title', type: 'text' },
+      broker_instance_id: { label: 'Broker Workspace', type: 'text' }
+    }
+  },
+  AccountContact: {
+    label: 'Account Contacts',
+    allow_reports: true,
+    fields: {
+      id: { label: 'Record ID', type: 'text' },
+      created_date: { label: 'Created Date', type: 'datetime' },
+      created_by: { label: 'Created By', type: 'text' },
+      account_id: { label: 'Account ID', type: 'text' },
+      contact_id: { label: 'Contact ID', type: 'text' },
+      role: { label: 'Role', type: 'text' },
+      is_primary: { label: 'Primary', type: 'checkbox' }
+    }
+  },
   Product: {
     label: 'Products',
     allow_reports: true,
@@ -41,7 +84,22 @@ export const BUILT_IN_OBJECTS = {
       dealer_company: { label: 'Dealer Company', type: 'text' },
       assigned_sales_rep_id: { label: 'Assigned Sales Rep', type: 'text' },
       dealer_markup_pct: { label: 'Markup %', type: 'number' },
-      customer_discount_pct: { label: 'Customer Discount %', type: 'number' }
+      customer_discount_pct: { label: 'Customer Discount %', type: 'number' },
+      account_id: { label: 'Account ID', type: 'text' }
+    }
+  },
+  ObjectTab: {
+    label: 'Object Tabs',
+    allow_reports: true,
+    fields: {
+      id: { label: 'Record ID', type: 'text' },
+      created_date: { label: 'Created Date', type: 'datetime' },
+      created_by: { label: 'Created By', type: 'text' },
+      object_api_name: { label: 'Object API Name', type: 'text' },
+      label: { label: 'Label', type: 'text' },
+      route_path: { label: 'Route Path', type: 'text' },
+      sort_order: { label: 'Sort Order', type: 'number' },
+      is_active: { label: 'Active', type: 'checkbox' }
     }
   },
   LineItem: {

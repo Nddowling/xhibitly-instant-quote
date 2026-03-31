@@ -1,0 +1,27 @@
+{
+  "name": "AccountContact",
+  "type": "object",
+  "properties": {
+    "account_id": {
+      "type": "string",
+      "description": "Linked account id"
+    },
+    "contact_id": {
+      "type": "string",
+      "description": "Linked contact id"
+    },
+    "role": {
+      "type": "string",
+      "description": "Relationship role"
+    },
+    "is_primary": {
+      "type": "boolean",
+      "default": false,
+      "description": "Primary contact for the account"
+    }
+  },
+  "required": [
+    "account_id",
+    "contact_id"
+  ]
+}
