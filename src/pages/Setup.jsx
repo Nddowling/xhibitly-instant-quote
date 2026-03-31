@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
 import {
   LayoutGrid, Users, Shield, Key, Database, Settings,
-  ChevronRight, Search, Wrench, BarChart2, Layers, ClipboardCheck
+  ChevronRight, Search, Wrench, Layers, ClipboardCheck, Upload, PlugZap
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import ObjectManager from '@/components/setup/ObjectManager';
@@ -13,6 +11,8 @@ import SetupPermissionSets from '@/components/setup/SetupPermissionSets';
 import SetupUsers from '@/components/setup/SetupUsers';
 import SetupSeeder from '@/components/setup/SetupSeeder';
 import SetupBrokerInstances from '@/components/setup/SetupBrokerInstances';
+import SetupDataLoader from '@/components/setup/SetupDataLoader';
+import SetupCrmConnectors from '@/components/setup/SetupCrmConnectors';
 import HotspotAudit from '@/pages/HotspotAudit';
 import CatalogAudit from '@/pages/CatalogAudit';
 
@@ -27,6 +27,8 @@ const SECTIONS = [
       { key: 'profiles',         label: 'Profiles',         icon: Shield,   component: SetupProfiles },
       { key: 'permission-sets',  label: 'Permission Sets',  icon: Key,      component: SetupPermissionSets },
       { key: 'broker-instances', label: 'Broker Workspaces', icon: Layers,  component: SetupBrokerInstances },
+      { key: 'data-loader',      label: 'Data Loader',      icon: Upload,   component: SetupDataLoader },
+      { key: 'crm-connectors',   label: 'CRM Connectors',   icon: PlugZap,  component: SetupCrmConnectors },
       { key: 'seed',             label: 'Initialize Data',  icon: Wrench,   component: SetupSeeder },
     ]
   },
@@ -47,7 +49,7 @@ const SECTIONS = [
 ];
 
 export default function Setup() {
-  const [activeKey, setActiveKey] = useState('users');
+  const [activeKey, setActiveKey] = useState('data-loader');
   const [search, setSearch] = useState('');
 
   const allItems = SECTIONS.flatMap(s => s.items);
