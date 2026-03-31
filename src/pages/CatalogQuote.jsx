@@ -1463,7 +1463,7 @@ export default function CatalogQuote() {
 
           <div className="flex flex-wrap lg:flex-nowrap items-center gap-2 lg:justify-end">
             {activeOrder ? (
-              <div className="hidden xl:flex items-center gap-2 rounded-2xl border border-green-200 bg-green-50 px-3 py-2 text-xs font-semibold text-green-700 max-w-[20rem]">
+              <div className="hidden 2xl:flex items-center gap-2 rounded-2xl border border-green-200 bg-green-50 px-3 py-2 text-xs font-semibold text-green-700 max-w-[20rem]">
                 <span className="w-2 h-2 rounded-full bg-green-500 inline-block flex-shrink-0"></span>
                 <span className="truncate">{activeOrder.customer_name || activeOrder.customer_email} · {activeOrder.show_name || 'Show not set'}{activeOrder.booth_size ? ` · ${activeOrder.booth_size}` : ''}</span>
               </div>
@@ -1503,13 +1503,13 @@ export default function CatalogQuote() {
             </div>
 
             {hasHotspots && !editMode && (
-              <Badge className="hidden xl:inline-flex bg-[#e2231a]/10 text-[#e2231a] text-[10px] rounded-full px-3 py-1">{currentHotspots.length} hotspots</Badge>
+              <Badge className="hidden 2xl:inline-flex bg-[#e2231a]/10 text-[#e2231a] text-[10px] rounded-full px-3 py-1">{currentHotspots.length} hotspots</Badge>
             )}
-            {isEdited && <Badge className="hidden xl:inline-flex bg-amber-100 text-amber-700 text-[10px] rounded-full px-3 py-1">unsaved edits</Badge>}
+            {isEdited && <Badge className="hidden 2xl:inline-flex bg-amber-100 text-amber-700 text-[10px] rounded-full px-3 py-1">unsaved edits</Badge>}
 
             <button
               onClick={() => setShowMobileQuote(true)}
-              className="xl:hidden flex items-center gap-1.5 bg-[#e2231a] text-white px-3.5 py-2 rounded-xl text-xs font-bold hover:bg-[#b01b13] transition-colors shadow-sm"
+              className="lg:hidden flex items-center gap-1.5 bg-[#e2231a] text-white px-3.5 py-2 rounded-xl text-xs font-bold hover:bg-[#b01b13] transition-colors shadow-sm"
             >
               <ShoppingCart className="w-3.5 h-3.5" />
               Quote ({lineItems.reduce((s, i) => s + (i.quantity || 0), 0)})
@@ -1518,7 +1518,7 @@ export default function CatalogQuote() {
             {lineItems.length > 0 && (
               <button
                 onClick={handleCreateQuote}
-                className="hidden xl:flex items-center gap-1.5 bg-[#e2231a] text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-[#b01b13] transition-colors shadow-sm"
+                className="hidden 2xl:flex items-center gap-1.5 bg-[#e2231a] text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-[#b01b13] transition-colors shadow-sm"
               >
                 <ShoppingCart className="w-4 h-4" />
                 Review Quote ({lineItems.reduce((s, i) => s + (i.quantity || 0), 0)})
@@ -1538,7 +1538,7 @@ export default function CatalogQuote() {
 
       {/* Mobile quote drawer */}
       {showMobileQuote && (
-        <div className="xl:hidden fixed inset-x-0 top-14 bottom-14 z-40 bg-black/40" onClick={() => setShowMobileQuote(false)}>
+        <div className="lg:hidden fixed inset-x-0 top-14 bottom-14 z-40 bg-black/40" onClick={() => setShowMobileQuote(false)}>
           <div className="absolute inset-x-0 bottom-0 h-[70vh] bg-white rounded-t-2xl shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200 bg-white">
               <div className="w-10" />
@@ -1675,7 +1675,7 @@ export default function CatalogQuote() {
         </div>
 
         {/* CENTER: Catalog Page */}
-        <div className="flex-1 overflow-auto p-2 sm:p-2.5 flex justify-center items-start">
+        <div className="flex-1 min-w-0 overflow-auto p-2 sm:p-2.5 flex justify-center items-start">
           <div className="relative w-full max-w-4xl flex flex-col items-center">
             <div className="mb-2 flex w-full items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white/90 px-4 py-2.5 shadow-sm">
               <div>
@@ -1769,7 +1769,7 @@ export default function CatalogQuote() {
         </div>
 
         {/* RIGHT: Quote Sidebar */}
-        <div className="hidden xl:block xl:w-[20rem] 2xl:w-[22rem] xl:flex-shrink-0 border-l border-slate-200 bg-white">
+        <div className="hidden lg:block lg:w-[18rem] xl:w-[20rem] 2xl:w-[22rem] lg:flex-shrink-0 border-l border-slate-200 bg-white">
           <QuoteSidebar
             order={activeOrder}
             lineItems={lineItems}
