@@ -75,8 +75,8 @@ export default function QuoteSidebar({ order, lineItems, onLineItemsChange, onCr
   };
 
   return (
-    <div className="w-full xl:w-80 h-full flex-shrink-0 bg-white xl:border-l border-slate-200 flex flex-col overflow-hidden">
-      <div className="border-b border-slate-200 bg-white px-4 py-4">
+    <div className="w-full h-full flex-shrink-0 bg-white flex flex-col overflow-hidden">
+      <div className="border-b border-slate-200 bg-white px-3 py-3">
         <div className="flex items-start gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#e2231a]/10 text-[#e2231a]">
             <ShoppingCart className="w-5 h-5" />
@@ -103,7 +103,7 @@ export default function QuoteSidebar({ order, lineItems, onLineItemsChange, onCr
         )}
       </div>
 
-      <div className="flex-1 overflow-y-auto p-3 space-y-2.5 bg-slate-50/70">
+      <div className="flex-1 overflow-y-auto p-2.5 space-y-2 bg-slate-50/70">
         {lineItems.length === 0 ? (
           <div className="rounded-3xl border border-dashed border-slate-200 bg-white px-5 py-10 text-center shadow-sm">
             <ShoppingCart className="w-8 h-8 text-slate-200 mx-auto mb-3" />
@@ -120,22 +120,22 @@ export default function QuoteSidebar({ order, lineItems, onLineItemsChange, onCr
             const markupAmount = Math.max(0, (finalUnit || 0) - (listUnit || 0) + (item.rule_discount_amount || 0));
 
             return (
-              <div key={item.id} className="bg-white border border-slate-200 rounded-2xl p-3 shadow-sm">
+              <div key={item.id} className="bg-white border border-slate-200 rounded-xl p-2.5 shadow-sm">
                 <div className="flex items-start gap-3">
-                  <div className="w-14 h-14 flex-shrink-0 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center overflow-hidden">
+                  <div className="w-12 h-12 flex-shrink-0 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center overflow-hidden">
                     <ProductThumb src={getThumbUrl(item, productCache)} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-bold text-slate-900 leading-tight line-clamp-2">{item.product_name}</p>
-                    <p className="text-[10px] text-slate-400 font-mono mt-1">{item.sku}</p>
-                    {item.category && <p className="text-[10px] text-slate-400 mt-0.5">{item.category}</p>}
+                    <p className="text-[11px] font-bold text-slate-900 leading-tight line-clamp-2">{item.product_name}</p>
+                    <p className="text-[9px] text-slate-400 font-mono mt-0.5">{item.sku}</p>
+                    {item.category && <p className="text-[9px] text-slate-400 mt-0.5 line-clamp-1">{item.category}</p>}
                   </div>
                   <button onClick={() => removeItem(item)} className="text-slate-300 hover:text-red-400 transition-colors flex-shrink-0 p-0.5">
                     <X className="w-4 h-4" />
                   </button>
                 </div>
 
-                <div className="mt-3 grid grid-cols-2 gap-x-3 gap-y-1 rounded-xl bg-slate-50 px-3 py-2 text-[10px] border border-slate-100">
+                <div className="mt-2.5 grid grid-cols-2 gap-x-2 gap-y-1 rounded-lg bg-slate-50 px-2.5 py-2 text-[9px] border border-slate-100">
                   <span className="text-slate-500">List</span>
                   <span className="text-right font-semibold text-slate-700">{listUnit > 0 ? fmt(listUnit) : '—'}</span>
                   <span className="text-slate-500">Markup</span>
@@ -144,7 +144,7 @@ export default function QuoteSidebar({ order, lineItems, onLineItemsChange, onCr
                   <span className="text-right font-semibold text-slate-900">{finalUnit > 0 ? fmt(finalUnit) : '—'}</span>
                 </div>
 
-                <div className="flex items-center justify-between mt-3 pt-3 border-t border-slate-100">
+                <div className="flex items-center justify-between mt-2.5 pt-2.5 border-t border-slate-100">
                   <div className="flex items-center gap-1.5 rounded-full bg-slate-100 p-1">
                     <button onClick={() => updateQty(item, -1)} className="w-6 h-6 rounded-full bg-white hover:bg-slate-200 flex items-center justify-center transition-colors shadow-sm">
                       <Minus className="w-3 h-3 text-slate-600" />
@@ -175,7 +175,7 @@ export default function QuoteSidebar({ order, lineItems, onLineItemsChange, onCr
         />
       )}
 
-      <div className="p-4 border-t border-slate-200 bg-white space-y-3">
+      <div className="p-3 border-t border-slate-200 bg-white space-y-2.5">
         <div className="rounded-2xl border border-slate-200 bg-slate-50 px-3.5 py-3 flex items-center justify-between">
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">{pricingResult ? 'Quote Total' : 'Current Subtotal'}</p>

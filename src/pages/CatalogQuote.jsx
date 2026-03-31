@@ -1769,7 +1769,7 @@ export default function CatalogQuote() {
         </div>
 
         {/* RIGHT: Quote Sidebar */}
-        <div className="hidden xl:block xl:w-[25rem] xl:flex-shrink-0 border-l border-slate-200 bg-white">
+        <div className="hidden xl:block xl:w-[20rem] 2xl:w-[22rem] xl:flex-shrink-0 border-l border-slate-200 bg-white">
           <QuoteSidebar
             order={activeOrder}
             lineItems={lineItems}

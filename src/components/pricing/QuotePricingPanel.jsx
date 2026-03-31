@@ -68,7 +68,7 @@ export default function QuotePricingPanel({
   if (lineItems.length === 0) return null;
 
   return (
-    <div className="border-t border-slate-200 bg-slate-50">
+    <div className="border-t border-slate-200 bg-slate-50/90">
       <button
         onClick={() => setOpen(o => !o)}
         className="w-full flex items-center justify-between px-3 py-2.5 text-xs font-bold text-slate-600 hover:text-slate-900 transition-colors"
@@ -78,9 +78,9 @@ export default function QuotePricingPanel({
       </button>
 
       {open && (
-        <div className="px-3 pb-3 space-y-3">
+        <div className="px-2.5 pb-2.5 space-y-2.5">
           {/* Markup + Discount */}
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 gap-2">
             <div>
               <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide block mb-1">Markup %</label>
               <div className="relative">
