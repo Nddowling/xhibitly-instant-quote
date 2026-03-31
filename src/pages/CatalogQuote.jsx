@@ -1314,10 +1314,15 @@ export default function CatalogQuote() {
   };
 
   const handleSearchResultClick = (product) => {
-    if (product.catalog_pages?.length > 0) {
-      goToPage(product.catalog_pages[0]);
-    } else if (SKU_TO_PAGE[product.sku]) {
-      goToPage(SKU_TO_PAGE[product.sku]);
+    const mappedPage = SKU_TO_PAGE[product.sku];
+    const catalogPage = Array.isArray(product.catalog_pages)
+      ? product.catalog_pages.find(page => Number.isFinite(page) && page >= FIRST_VISIBLE_CATALOG_PAGE)
+      : null;
+
+    if (mappedPage) {
+      goToPage(mappedPage);
+    } else if (catalogPage) {
+      goToPage(catalogPage);
     }
     setSearchSku('');
     setSearchResults([]);
