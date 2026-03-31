@@ -102,9 +102,12 @@ export default function Layout({ children, currentPageName }) {
     { page: 'Dashboards',    label: 'Dashboards', icon: LayoutDashboard },
   ];
 
+  const canSeeUmbrella = ['admin', 'designer'].includes(user?.role);
+  const canSeeExecutive = ['admin', 'broker'].includes(user?.role);
+
   const adminNav = [
-    { page: 'DesignerDashboard', label: 'Umbrella', icon: LayoutDashboard },
-    { page: 'ExecutiveDashboard', label: 'Executive', icon: ShieldCheck },
+    ...(canSeeUmbrella ? [{ page: 'DesignerDashboard', label: 'Umbrella', icon: LayoutDashboard }] : []),
+    ...(canSeeExecutive ? [{ page: 'ExecutiveDashboard', label: 'Executive', icon: ShieldCheck }] : []),
   ];
 
   const analyticsActive = analyticsNav.some(n => n.page === currentPageName) ||
@@ -115,8 +118,8 @@ export default function Layout({ children, currentPageName }) {
     ...primaryNav,
     ...objectNav,
     ...analyticsNav,
-    ...(user?.role === 'admin' ? adminNav : []),
-    { page: 'Setup', label: 'Setup', icon: Settings2 },
+    ...adminNav,
+    ...(user?.role === 'admin' ? [{ page: 'Setup', label: 'Setup', icon: Settings2 }] : []),
   ];
 
   // Bottom mobile nav (5 max)
@@ -229,7 +232,7 @@ export default function Layout({ children, currentPageName }) {
                   )}
                 </div>
 
-                {user?.role === 'admin' && adminNav.map(({ page, label, icon: Icon }) => (
+                {adminNav.map(({ page, label, icon: Icon }) => (
                   <Link key={page} to={createPageUrl(page)}>
                     <button className={`flex items-center gap-1.5 px-2.5 lg:px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
                       currentPageName === page ? 'bg-[#e2231a] text-white' : 'text-white/60 hover:text-white hover:bg-white/8'
