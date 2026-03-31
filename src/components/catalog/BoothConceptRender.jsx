@@ -76,9 +76,10 @@ function buildPlacementInstructions(boothW, boothD, boothType, zones, imageIndex
       const qty = item.quantity || 1;
       const ref = imageIndexMap[item.sku] ? ` [Reference photo ${imageIndexMap[item.sku]}]` : '';
       const panelDesc = qty > 1
-        ? `${qty} identical panels arranged side-by-side to span the full back wall width`
-        : `filling the full ${boothW}-foot back wall width`;
+        ? `show exactly ${qty} units arranged side-by-side across the back wall`
+        : `show exactly 1 unit on the back wall`;
       instructions.push(`BACK WALL — ${item.product_name || item.sku}${ref}: ${panelDesc}. ` +
+        `Do not add duplicate panels, extra wings, side pieces, matching accessories, or additional display structures beyond the exact quoted quantity. ` +
         `Reproduce the graphic panel design exactly as it appears in the reference photo — same colors, layout, imagery style, and visual treatment. The hardware frame (aluminum extrusions, feet, base) must also match the reference photo exactly.`);
     }
   }
@@ -103,7 +104,7 @@ function buildPlacementInstructions(boothW, boothD, boothType, zones, imageIndex
     expanded.forEach((item, i) => {
       const ref = imageIndexMap[item.sku] ? ` [Reference photo ${imageIndexMap[item.sku]}]` : '';
       instructions.push(`FLOOR STANDING (${i + 1}/${total}) — ${item.product_name || item.sku}${ref}: ` +
-        `positioned at ${positions[i]}, standing upright on floor, in front of the back wall. ` +
+        `positioned at ${positions[i]}, standing upright on floor, in front of the back wall. Show exactly 1 unit here and do not add any extra matching banner stands or duplicate displays. ` +
         `Reproduce the graphic panel design exactly as shown in the reference photo — same colors, imagery, and visual style. Hardware (cassette base, retractable mechanism, feet) must match the reference photo exactly.`);
     });
   }
@@ -113,7 +114,7 @@ function buildPlacementInstructions(boothW, boothD, boothType, zones, imageIndex
     counters.forEach((item, i) => {
       const ref = imageIndexMap[item.sku] ? ` [Reference photo ${imageIndexMap[item.sku]}]` : '';
       instructions.push(`FRONT CENTER (${i + 1}) — ${item.product_name || item.sku}${ref}: ` +
-        `positioned at the front edge of the booth, centered, near the aisle. ` +
+        `positioned at the front edge of the booth, centered, near the aisle. Show exactly 1 counter here and do not add any extra counters, tables, kiosks, or reception pieces. ` +
         `Reproduce the graphic panel design exactly as shown in the reference photo — same colors, imagery, and visual style. Hardware must match the reference photo exactly.`);
     });
   }
@@ -122,7 +123,8 @@ function buildPlacementInstructions(boothW, boothD, boothType, zones, imageIndex
   if (accessories.length > 0) {
     accessories.forEach(item => {
       const ref = imageIndexMap[item.sku] ? ` [Reference photo ${imageIndexMap[item.sku]}]` : '';
-      instructions.push(`ADDITIONAL — ${item.product_name || item.sku}${ref}: placed naturally within the booth space.`);
+      const qty = item.quantity || 1;
+      instructions.push(`ADDITIONAL — ${item.product_name || item.sku}${ref}: show exactly ${qty} unit${qty === 1 ? '' : 's'} placed naturally within the booth space, with no extra matching accessories or duplicate items.`);
     });
   }
 
@@ -176,6 +178,9 @@ ${placementInstructions}
 
 GRAPHIC PANEL APPEARANCE (critical):
 Each product's graphic panels must display the design shown in its reference photo — reproduce the colors, imagery, visual style, and overall graphic treatment faithfully. Each product has its own distinct graphic: do not apply one product's graphic to another product. The goal is for the render to look like a real booth with professionally printed, fully-designed graphics already on the displays.
+
+QUANTITY CONTROL (critical):
+Render only the exact products and quantities listed in the placement instructions. Do not invent, infer, auto-complete, mirror, duplicate, or add any extra exhibit elements, side panels, shelving, kiosks, counters, monitors, tables, chairs, hanging signs, architectural features, or branded accessories unless they are explicitly listed in the quote. If the quote contains 3 items, the final booth must visibly contain only those 3 quoted items.
 
 SCENE & ENVIRONMENT:
 - Professional trade show convention center interior
