@@ -17,13 +17,14 @@ export default function Layout({ children, currentPageName }) {
   const [workspaceOpen, setWorkspaceOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [objectTabs, setObjectTabs] = useState([]);
+  const [activeOrgName, setActiveOrgName] = useState('');
   const analyticsRef = useRef(null);
   const workspaceRef = useRef(null);
   const settingsRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => { checkAuth(); initDarkMode(); }, [currentPageName]);
-  useEffect(() => { if (user) loadObjectTabs(); }, [user?.broker_instance_id, currentPageName]);
+  useEffect(() => { if (user) { loadObjectTabs(); loadActiveOrgName(); } }, [user?.broker_instance_id, user?.active_broker_instance_id, currentPageName]);
   useEffect(() => { setMobileMenuOpen(false); }, [currentPageName]);
 
   useEffect(() => {
@@ -75,6 +76,20 @@ export default function Layout({ children, currentPageName }) {
       setObjectTabs(tabs || []);
     } catch {
       setObjectTabs([]);
+    }
+  };
+
+  const loadActiveOrgName = async () => {
+    try {
+      const activeBrokerId = user?.active_broker_instance_id || user?.broker_instance_id;
+      if (!activeBrokerId) {
+        setActiveOrgName('');
+        return;
+      }
+      const brokers = await base44.entities.BrokerInstance.filter({ id: activeBrokerId }, 'name', 1);
+      setActiveOrgName(brokers?.[0]?.name || brokers?.[0]?.company_name || '');
+    } catch {
+      setActiveOrgName('');
     }
   };
 
@@ -176,9 +191,16 @@ export default function Layout({ children, currentPageName }) {
                     <ArrowLeft className="w-5 h-5" />
                   </button>
                 )}
-                <Link to={createPageUrl('SalesDashboard')} className="flex items-center gap-2.5 shrink-0">
+                <Link to={createPageUrl('SalesDashboard')} className="flex items-center gap-2.5 shrink-0 min-w-0">
                   <div className="w-7 h-7 bg-[#e2231a] rounded-lg flex items-center justify-center font-black text-xs flex-shrink-0">EH</div>
-                  <span className="text-sm font-bold tracking-tight whitespace-nowrap hidden sm:block">The Exhibitors' Handbook</span>
+                  <div className="hidden sm:flex items-center gap-2 min-w-0">
+                    <span className="text-sm font-bold tracking-tight whitespace-nowrap">The Exhibitors' Handbook</span>
+                    {activeOrgName && (
+                      <span className="text-xs text-white/60 border border-white/10 rounded-full px-2 py-0.5 truncate max-w-[220px]">
+                        {activeOrgName}
+                      </span>
+                    )}
+                  </div>
                   <span className="text-xs text-white/30 border border-white/10 rounded-full px-2 py-0.5 hidden xl:block">Dealer Portal</span>
                 </Link>
               </div>
