@@ -4,6 +4,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Link2, PlugZap, Building2 } from 'lucide-react';
 
+const CONNECTOR_LINKS = {
+  salesforce: 'https://docs.base44.com',
+  hubspot: 'https://docs.base44.com',
+};
+
 const CONNECTORS = [
   {
     key: 'salesforce',
@@ -49,9 +54,14 @@ export default function SetupCrmConnectors() {
                   This one will need a custom integration later if you want to add it.
                 </div>
               )}
-              <Button disabled className="w-full gap-2 bg-[#e2231a] hover:bg-[#c41e17] text-white disabled:opacity-60">
-                <PlugZap className="w-4 h-4" />
-                {connector.status === 'ready' ? 'Authorize from chat' : 'Native connector unavailable'}
+              <Button
+                asChild
+                className="w-full gap-2 bg-[#e2231a] hover:bg-[#c41e17] text-white"
+              >
+                <a href={CONNECTOR_LINKS[connector.key]} target="_blank" rel="noreferrer">
+                  <PlugZap className="w-4 h-4" />
+                  Open connector setup
+                </a>
               </Button>
             </CardContent>
           </Card>

@@ -104,6 +104,7 @@ export default function Layout({ children, currentPageName }) {
 
   const canSeeUmbrella = ['admin', 'designer'].includes(user?.role);
   const canSeeExecutive = ['admin', 'broker'].includes(user?.role);
+  const canSeeSetup = ['admin', 'designer'].includes(user?.role);
 
   const adminNav = [
     ...(canSeeUmbrella ? [{ page: 'DesignerDashboard', label: 'Umbrella', icon: LayoutDashboard }] : []),
@@ -119,7 +120,7 @@ export default function Layout({ children, currentPageName }) {
     ...objectNav,
     ...analyticsNav,
     ...adminNav,
-    ...(user?.role === 'admin' ? [{ page: 'Setup', label: 'Setup', icon: Settings2 }] : []),
+    ...(canSeeSetup ? [{ page: 'Setup', label: 'Setup', icon: Settings2 }] : []),
   ];
 
   // Bottom mobile nav (5 max)
@@ -244,7 +245,7 @@ export default function Layout({ children, currentPageName }) {
                 ))}
 
                 {/* Setup */}
-                {user?.role === 'admin' && (
+                {canSeeSetup && (
                   <Link to={createPageUrl('Setup')}>
                     <button className={`flex items-center gap-1.5 px-2.5 lg:px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
                       currentPageName === 'Setup' ? 'bg-[#e2231a] text-white' : 'text-white/60 hover:text-white hover:bg-white/8'
