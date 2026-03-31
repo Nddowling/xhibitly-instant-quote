@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -42,14 +43,14 @@ export default function ObjectListPage({ objectApiName, title }) {
 
   const handleRecordClick = (record) => {
     if (objectApiName === 'Product') {
-      navigate(`/ProductDetail?id=${record.id}`);
+      navigate(`${createPageUrl('ProductDetail')}?id=${record.id}`);
       return;
     }
     if (objectApiName === 'Order') {
-      navigate(`/OrderDetail?id=${record.id}`);
+      navigate(`${createPageUrl('OrderDetail')}?id=${record.id}`);
       return;
     }
-    navigate(`/setup?object=${objectApiName}&record=${record.id}`);
+    navigate(`${createPageUrl('Setup')}?object=${objectApiName}&record=${record.id}`);
   };
 
   return (
