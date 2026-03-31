@@ -1,0 +1,342 @@
+{
+  "VF-R-03": {
+    "method": "prefix-2",
+    "parent": "VF-R-01"
+  },
+  "VF-LB-R-03": {
+    "method": "prefix-3",
+    "parent": "VF-LB-R-01"
+  },
+  "VF-R-04": {
+    "method": "prefix-2",
+    "parent": "VF-R-01"
+  },
+  "VF-LB-R-04": {
+    "method": "prefix-3",
+    "parent": "VF-LB-R-01"
+  },
+  "VY-1-BG": {
+    "method": "transform",
+    "parent": "VY-1"
+  },
+  "VY-2-BG": {
+    "method": "transform",
+    "parent": "VY-2"
+  },
+  "VY-3-BG": {
+    "method": "transform",
+    "parent": "VY-3"
+  },
+  "VY-4-BG": {
+    "method": "transform",
+    "parent": "VY-4"
+  },
+  "VY-5-BG": {
+    "method": "transform",
+    "parent": "VY-5"
+  },
+  "EMB-1X1FG-S": {
+    "method": "transform",
+    "parent": "EMB-1X1-S"
+  },
+  "EMB-1X1FGE-S": {
+    "method": "transform",
+    "parent": "EMB-1X1-S"
+  },
+  "EMB-2X1FG-S": {
+    "method": "transform",
+    "parent": "EMB-2X1-S"
+  },
+  "EMB-2X1FGE-S": {
+    "method": "transform",
+    "parent": "EMB-2X1-S"
+  },
+  "EMB-2X2FG-S": {
+    "method": "transform",
+    "parent": "EMB-2X2-S"
+  },
+  "EMB-2X2FGE-S": {
+    "method": "transform",
+    "parent": "EMB-2X2-S"
+  },
+  "EMB-3X2FG-S": {
+    "method": "transform",
+    "parent": "EMB-3X2-S"
+  },
+  "EMB-3X2FGE-S": {
+    "method": "transform",
+    "parent": "EMB-3X2-S"
+  },
+  "EMB-1X3FG-S": {
+    "method": "transform",
+    "parent": "EMB-1X3-S"
+  },
+  "EMB-1X3FGE-S": {
+    "method": "transform",
+    "parent": "EMB-1X3-S"
+  },
+  "EMB-2X3FG-S": {
+    "method": "transform",
+    "parent": "EMB-2X3-S"
+  },
+  "EMB-2X3FGE-S": {
+    "method": "transform",
+    "parent": "EMB-2X3-S"
+  },
+  "EMB-3X3FG-S": {
+    "method": "transform",
+    "parent": "EMB-3X3-S"
+  },
+  "EMB-3X3FGE-S": {
+    "method": "transform",
+    "parent": "EMB-3X3-S"
+  },
+  "EMB-3X4FG-S": {
+    "method": "transform",
+    "parent": "EMB-3X4-S"
+  },
+  "EMB-3X4FGE-S": {
+    "method": "transform",
+    "parent": "EMB-3X4-S"
+  },
+  "EMB-4X3FG-S": {
+    "method": "transform",
+    "parent": "EMB-4X3-S"
+  },
+  "EMB-4X3FGE-S": {
+    "method": "transform",
+    "parent": "EMB-4X3-S"
+  },
+  "EMB-4X4FG-S": {
+    "method": "transform",
+    "parent": "EMB-4X4-S"
+  },
+  "EMB-4X4FGE-S": {
+    "method": "transform",
+    "parent": "EMB-4X4-S"
+  },
+  "EMB-EXT-SHLF-K-1": {
+    "method": "prefix-4",
+    "parent": "EMB-EXT-SHLF-K-2"
+  },
+  "EMB-BRIDGE-CONNECTOR": {
+    "method": "prefix-2",
+    "parent": "EMB-BRIDGE-LT-KIT"
+  },
+  "EMB-BRIDGE-LT": {
+    "method": "prefix-2",
+    "parent": "EMB-BRIDGE-LT-KIT"
+  },
+  "EMB-BRIDGE-LT-KIT": {
+    "method": "prefix-3",
+    "parent": "EMB-BRIDGE-LT-KIT"
+  },
+  "FMLT-E-SC10-01": {
+    "method": "prefix-3",
+    "parent": "FMLT-E-SC10-02"
+  },
+  "HP-K-17-B": {
+    "method": "prefix-3",
+    "parent": "HP-K-17"
+  },
+  "VF-K-02A": {
+    "method": "prefix-2",
+    "parent": "VF-K-04A"
+  },
+  "VF-K-09A": {
+    "method": "prefix-2",
+    "parent": "VF-K-04A"
+  },
+  "VF-K-10A": {
+    "method": "prefix-2",
+    "parent": "VF-K-04A"
+  },
+  "VF-K-05A": {
+    "method": "prefix-2",
+    "parent": "VF-K-04A"
+  },
+  "VF-K-08A": {
+    "method": "prefix-2",
+    "parent": "VF-K-04A"
+  },
+  "VF-K-17": {
+    "method": "prefix-2",
+    "parent": "VF-K-04A"
+  },
+  "VF-K-19A": {
+    "method": "prefix-2",
+    "parent": "VF-K-04A"
+  },
+  "VF-K-22A": {
+    "method": "prefix-2",
+    "parent": "VF-K-04A"
+  },
+  "VF-K-26": {
+    "method": "prefix-2",
+    "parent": "VF-K-04A"
+  },
+  "VF-K-27": {
+    "method": "prefix-2",
+    "parent": "VF-K-04A"
+  },
+  "OR-SM-MB": {
+    "method": "prefix-2",
+    "parent": "OR-SM-MB"
+  },
+  "OR-M-MB": {
+    "method": "prefix-2",
+    "parent": "OR-M-MB"
+  },
+  "OR-LG-MB": {
+    "method": "prefix-2",
+    "parent": "OR-LG-MB"
+  },
+  "VF-MK-01-SS": {
+    "method": "prefix-2",
+    "parent": "VF-MK-02-DS"
+  },
+  "VF-MK-01-DS": {
+    "method": "prefix-2",
+    "parent": "VF-MK-02-DS"
+  },
+  "MFY-PED-01A": {
+    "method": "prefix-2",
+    "parent": "MFY-PED-01"
+  },
+  "MFY-PED-02A": {
+    "method": "prefix-2",
+    "parent": "MFY-PED-01"
+  },
+  "BLD-LT-1500-1": {
+    "method": "prefix-2",
+    "parent": "BLD-LT-1000-1"
+  },
+  "ONT-920-S/B-4": {
+    "method": "prefix-2",
+    "parent": "ONT-920-DBL-S-4"
+  },
+  "ONT-850-DW": {
+    "method": "prefix-2",
+    "parent": "ONT-850-S/B-4"
+  },
+  "PHX-400-S": {
+    "method": "prefix-2",
+    "parent": "PHX-400-S-2P"
+  },
+  "MOD-FRM-13-M-TL": {
+    "method": "prefix-2",
+    "parent": "MOD-FRM-01-M-TL"
+  },
+  "MOD-FRM-14-M-TL": {
+    "method": "prefix-2",
+    "parent": "MOD-FRM-01-M-TL"
+  },
+  "BLZ-W-3010-S/B/W-F": {
+    "method": "prefix-3",
+    "parent": "BLZ-W-3010"
+  },
+  "TNT-E-3X3-SQ-3": {
+    "method": "prefix-4",
+    "parent": "TNT-E-3X3-SQ-2-G"
+  },
+  "ZM-TNT-3MX3M-CAN-(COLOR)": {
+    "method": "prefix-2",
+    "parent": "ZM-TNT-LED-01"
+  },
+  "TNT-3X3-CAN-G": {
+    "method": "prefix-2",
+    "parent": "TNT-3X3-FWL-G"
+  },
+  "TNT-3X3-HLF-K-G": {
+    "method": "prefix-2",
+    "parent": "TNT-3X3-FWL-G"
+  },
+  "ZM-TNT-3MX6M-CAN-(COLOR)-3": {
+    "method": "prefix-2",
+    "parent": "ZM-TNT-LED-01"
+  },
+  "ZM-TNT-3MX6M-CAN-G": {
+    "method": "prefix-2",
+    "parent": "ZM-TNT-LED-01"
+  },
+  "TNT-E-1.5-FRM-SQ-3": {
+    "method": "prefix-5",
+    "parent": "TNT-E-1.5-FRM-SQ-2"
+  },
+  "TNT-E-1.5-SQ-2-G": {
+    "method": "prefix-3",
+    "parent": "TNT-E-1.5-FRM-SQ-2"
+  },
+  "TNT-1.5-CAN-G": {
+    "method": "prefix-2",
+    "parent": "TNT-1.5-FWL-G"
+  },
+  "ZOOM-FLX-XL-E": {
+    "method": "prefix-3",
+    "parent": "ZOOM-FLX-XL-2"
+  },
+  "CONTOUR-01-G": {
+    "method": "prefix-2",
+    "parent": "CONTOUR-01-PB"
+  },
+  "EMB-BL-2X2-S": {
+    "method": "prefix-2",
+    "parent": "EMB-BL-1X3-S"
+  },
+  "MOD-30-02-M-TL": {
+    "method": "prefix-2",
+    "parent": "MOD-30-01-M-TL"
+  },
+  "MOD-10-04-M-TL": {
+    "method": "prefix-2",
+    "parent": "MOD-10-03-M-TL"
+  },
+  "MOD-10-01-M-TL": {
+    "method": "prefix-2",
+    "parent": "MOD-10-03-M-TL"
+  },
+  "MOD-10-02-M-TL": {
+    "method": "prefix-2",
+    "parent": "MOD-10-03-M-TL"
+  },
+  "MOD-10-05-M-TL": {
+    "method": "prefix-2",
+    "parent": "MOD-10-03-M-TL"
+  },
+  "MOD-10-06-M-TL": {
+    "method": "prefix-2",
+    "parent": "MOD-10-03-M-TL"
+  },
+  "FMLT-WBWA-04C-L/R": {
+    "method": "prefix-2",
+    "parent": "FMLT-WBWA-05"
+  },
+  "FMLT-BL-WSS3-01": {
+    "method": "prefix-2",
+    "parent": "FMLT-BL-WS3-01"
+  },
+  "FMLT-BL-WSS5-01": {
+    "method": "prefix-2",
+    "parent": "FMLT-BL-WS3-01"
+  },
+  "FMLT-BL-WSS8-01": {
+    "method": "prefix-2",
+    "parent": "FMLT-BL-WS3-01"
+  },
+  "CFAB-K-11": {
+    "method": "prefix-2",
+    "parent": "CFAB-K-05"
+  },
+  "OR-K-ON1": {
+    "method": "prefix-2",
+    "parent": "OR-K-CE1-2"
+  },
+  "OR-K-HC15": {
+    "method": "prefix-2",
+    "parent": "OR-K-CE1-2"
+  },
+  "FMLT-CHRG-CNTR-01-G": {
+    "method": "prefix-2",
+    "parent": "FMLT-CHRG-COUNTER-1"
+  }
+}
