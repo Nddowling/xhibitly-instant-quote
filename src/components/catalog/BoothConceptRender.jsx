@@ -201,16 +201,30 @@ Write ONLY the final image generation prompt — no explanation, no preamble, no
   return { prompt, referenceImages };
 }
 
-// ─── Generate the image — pass reference photos so model knows hardware shapes ─
+// ─── Generate via GPT Image 1.5 (direct OpenAI — spatial accuracy) ────────────
 async function generatePhotoRender(order, lineItems) {
   const { prompt, referenceImages } = await buildRenderingPrompt(order, lineItems);
 
-  // Pass reference images so the model can use them for hardware structure accuracy.
-  // The prompt explicitly instructs the model to use structure/shape only, not copy graphics.
-  const result = await base44.integrations.Core.GenerateImage({
-    prompt,
-    existing_image_urls: referenceImages.length > 0 ? referenceImages.map(r => r.url) : undefined,
-  });
+  let result;
+  try {
+    // Call GPT Image 1.5 via serverless function — full multi-image composition support
+    result = await base44.functions.invoke('generateBoothRender', {
+      body: {
+        prompt,
+        reference_urls: referenceImages.map(r => r.url),
+      },
+    });
+
+    if (!result?.url) throw new Error('No URL returned');
+  } catch (fnErr) {
+    console.warn('GPT Image 1.5 function failed, falling back to built-in GenerateImage:', fnErr?.message);
+    // Fallback to Base44's built-in image generation if the function isn't deployed yet
+    const fallback = await base44.integrations.Core.GenerateImage({
+      prompt,
+      existing_image_urls: referenceImages.length > 0 ? referenceImages.map(r => r.url) : undefined,
+    });
+    result = fallback;
+  }
 
   return { url: result.url, prompt };
 }

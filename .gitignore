@@ -50,6 +50,3 @@ scripts/*.bak-*
 
 # Unrelated sub-projects
 ransomware-simulator/
-
-# Functions (local serverless dev)
-functions/
