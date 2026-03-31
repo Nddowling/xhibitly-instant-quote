@@ -75,7 +75,8 @@ export default function QuoteSidebar({ order, lineItems, onLineItemsChange, onCr
   };
 
   return (
-    <div className="w-full h-full min-h-0 flex-1 flex-shrink-0 bg-white flex flex-col overflow-y-auto overscroll-contain">
+    <div className="w-full h-full min-h-0 flex-1 flex-shrink-0 bg-white overflow-y-auto overscroll-contain">
+      <div className="min-h-full flex flex-col">
       <div className="border-b border-slate-200 bg-white px-3 py-3 flex-shrink-0">
         <div className="flex items-start gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#e2231a]/10 text-[#e2231a]">
@@ -103,7 +104,7 @@ export default function QuoteSidebar({ order, lineItems, onLineItemsChange, onCr
         )}
       </div>
 
-      <div className="flex-1 min-h-0 overflow-y-auto p-2.5 space-y-2 bg-slate-50/70">
+      <div className="p-2.5 space-y-2 bg-slate-50/70 flex-1">
         {lineItems.length === 0 ? (
           <div className="rounded-3xl border border-dashed border-slate-200 bg-white px-5 py-10 text-center shadow-sm">
             <ShoppingCart className="w-8 h-8 text-slate-200 mx-auto mb-3" />
@@ -166,7 +167,7 @@ export default function QuoteSidebar({ order, lineItems, onLineItemsChange, onCr
       </div>
 
       {order && (
-        <div className="flex-shrink-0">
+        <div>
           <QuotePricingPanel
             order={order}
             lineItems={lineItems}
@@ -177,7 +178,7 @@ export default function QuoteSidebar({ order, lineItems, onLineItemsChange, onCr
         </div>
       )}
 
-      <div className="p-3 border-t border-slate-200 bg-white space-y-2.5 flex-shrink-0">
+      <div className="p-3 border-t border-slate-200 bg-white space-y-2.5 mt-auto">
         <div className="rounded-2xl border border-slate-200 bg-slate-50 px-3.5 py-3 flex items-center justify-between">
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">{pricingResult ? 'Quote Total' : 'Current Subtotal'}</p>
@@ -194,5 +195,6 @@ export default function QuoteSidebar({ order, lineItems, onLineItemsChange, onCr
         </Button>
       </div>
     </div>
+  </div>
   );
 }
