@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { SKU_TO_IMAGE } from '@/data/skuImageMap';
 import { base44 } from '@/api/base44Client';
-import { Wand2, Loader2, RefreshCw, ZoomIn, X } from 'lucide-react';
+import { Wand2, Loader2, RefreshCw, ZoomIn, X, Sparkles, Images, ScanSearch, CheckCircle2 } from 'lucide-react';
 
 function resolveProductImage(item) {
   if (item.sku && SKU_TO_IMAGE[item.sku]) return SKU_TO_IMAGE[item.sku];
@@ -266,24 +266,88 @@ function ProductCard({ item }) {
   );
 }
 
+function RenderProgressMonitor({ currentStepIndex, steps }) {
+  return (
+    <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 text-white p-4 shadow-sm">
+      <div className="flex items-start gap-3">
+        <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/10 text-[#ff5a52]">
+          <Sparkles className="w-5 h-5" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-black tracking-tight">Rendering your booth concept</p>
+          <p className="mt-1 text-xs text-white/65">Luma Photon-1 is building the scene from your selected products and booth layout.</p>
+        </div>
+      </div>
+
+      <div className="mt-4 h-2 rounded-full bg-white/10 overflow-hidden">
+        <div
+          className="h-full rounded-full bg-gradient-to-r from-[#e2231a] via-orange-400 to-amber-300 transition-all duration-700"
+          style={{ width: `${Math.max(8, ((currentStepIndex + 1) / steps.length) * 100)}%` }}
+        />
+      </div>
+
+      <div className="mt-4 space-y-2">
+        {steps.map((step, index) => {
+          const isDone = index < currentStepIndex;
+          const isCurrent = index === currentStepIndex;
+          const Icon = step.icon;
+
+          return (
+            <div
+              key={step.label}
+              className={`flex items-center gap-3 rounded-xl px-3 py-2 transition-all ${
+                isCurrent ? 'bg-white/10 border border-white/10' : 'bg-white/5'
+              }`}
+            >
+              <div className={`flex h-8 w-8 items-center justify-center rounded-full ${isDone ? 'bg-emerald-500/20 text-emerald-300' : isCurrent ? 'bg-[#e2231a]/20 text-[#ff8c86]' : 'bg-white/10 text-white/45'}`}>
+                {isDone ? <CheckCircle2 className="w-4 h-4" /> : <Icon className={`w-4 h-4 ${isCurrent ? 'animate-pulse' : ''}`} />}
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className={`text-xs font-semibold ${isCurrent ? 'text-white' : isDone ? 'text-white/80' : 'text-white/50'}`}>{step.label}</p>
+                <p className="text-[11px] text-white/45">{step.fun}</p>
+              </div>
+              <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/35">
+                {isDone ? 'Done' : isCurrent ? 'Live' : 'Queued'}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 // ─── Main Component ────────────────────────────────────────────────────────────
 export default function BoothConceptRender({ order, lineItems = [], onRenderingSaved }) {
   const { w: boothW, d: boothD } = parseBoothSize(order?.booth_size);
   const boothType = order?.booth_type || 'Inline';
   const gridCols = getGridCols(boothW, lineItems.length);
 
+  const renderSteps = [
+    { label: 'Reading product references', fun: 'Pulling the best product images into the scene plan.', icon: Images },
+    { label: 'Mapping booth layout', fun: 'Placing walls, counters, and stand positions inside the footprint.', icon: ScanSearch },
+    { label: 'Building final render', fun: 'Luma Photon-1 is now painting the finished booth concept.', icon: Sparkles },
+  ];
+
   const [renderUrl, setRenderUrl] = useState(order?.booth_rendering_url || null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [genError, setGenError] = useState(null);
   const [genStep, setGenStep] = useState('');
+  const [genStepIndex, setGenStepIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
 
   const handleGenerate = async () => {
     setIsGenerating(true);
     setGenError(null);
-    setGenStep('Mapping booth layout…');
+    setGenStep('Reading product references…');
+    setGenStepIndex(0);
     try {
-      setGenStep('Building photorealistic render…');
+      await new Promise(resolve => setTimeout(resolve, 700));
+      setGenStep('Mapping booth layout…');
+      setGenStepIndex(1);
+      await new Promise(resolve => setTimeout(resolve, 1100));
+      setGenStep('Building final render with Luma Photon-1…');
+      setGenStepIndex(2);
       const { url } = await generatePhotoRender(order, lineItems);
 
       setRenderUrl(url);
@@ -330,14 +394,14 @@ export default function BoothConceptRender({ order, lineItems = [], onRenderingS
           />
           <div className="px-4 py-2 bg-slate-50 border-t border-slate-100">
             <p className="text-[10px] text-slate-400">
-              {boothW}' × {boothD}' {boothType} · {lineItems.length} product{lineItems.length !== 1 ? 's' : ''} · AI-generated concept — graphic panels shown with placeholder design
+              {boothW}' × {boothD}' {boothType} · {lineItems.length} product{lineItems.length !== 1 ? 's' : ''} · Rendered with Luma Photon-1
             </p>
           </div>
         </div>
       )}
 
       {/* ── Generate button ── */}
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-3">
         <button
           onClick={handleGenerate}
           disabled={isGenerating || lineItems.length === 0}
@@ -351,9 +415,11 @@ export default function BoothConceptRender({ order, lineItems = [], onRenderingS
             <><Wand2 className="w-4 h-4" /> Generate Photorealistic Booth Rendering</>
           )}
         </button>
-        {!renderUrl && !isGenerating && (
+        {isGenerating ? (
+          <RenderProgressMonitor currentStepIndex={genStepIndex} steps={renderSteps} />
+        ) : (
           <p className="text-[10px] text-slate-400 text-center">
-            AI maps your {lineItems.length} selected product{lineItems.length !== 1 ? 's' : ''} to a spatial booth layout and renders a photorealistic concept
+            Uses Luma Photon-1 to map your {lineItems.length} selected product{lineItems.length !== 1 ? 's' : ''} into a photorealistic booth concept
           </p>
         )}
         {genError && (
