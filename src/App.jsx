@@ -14,6 +14,7 @@ import CatalogAudit from './pages/CatalogAudit';
 import DesignerDashboard from './pages/DesignerDashboard';
 import Accounts from './pages/Accounts';
 import ObjectRecords from './pages/ObjectRecords';
+import GlobalAgentLauncher from '@/components/agents/GlobalAgentLauncher';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -135,6 +136,7 @@ function App() {
         <Router>
           <NavigationTracker />
           <AuthenticatedApp />
+          <GlobalAgentLauncher />
         </Router>
         <Toaster />
       </QueryClientProvider>
