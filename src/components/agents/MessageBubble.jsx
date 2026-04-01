@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
+import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { Copy, Zap, CheckCircle2, AlertCircle, Loader2, ChevronRight, Clock, Box } from 'lucide-react';
+import { Copy, Zap, CheckCircle2, AlertCircle, Loader2, ChevronRight, Clock, Box, BookOpen } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { base44 } from "@/api/base44Client";
+import { createPageUrl } from '@/utils';
 
 const ChatProductImage = ({ src, alt, sku, onAddProduct, onClick }) => {
     const [imgSrc, setImgSrc] = React.useState(src);
@@ -173,8 +175,26 @@ const FunctionDisplay = ({ toolCall }) => {
     );
 };
 
+function CatalogNavButton({ onNavigate }) {
+    return (
+        <button
+            onClick={onNavigate}
+            className="mt-2 inline-flex items-center gap-2 rounded-full border border-[#e2231a]/20 bg-[#e2231a]/10 px-3 py-2 text-xs font-semibold text-[#e2231a] transition-colors hover:bg-[#e2231a]/15"
+        >
+            <BookOpen className="w-3.5 h-3.5" />
+            Take me to Catalog
+        </button>
+    );
+}
+
 export default function MessageBubble({ message, onAddProduct }) {
     const isUser = message.role === 'user';
+    const navigate = useNavigate();
+    const shouldShowCatalogButton = !isUser && /\b(go to catalog|open catalog|take me to catalog|catalog page|catalog)\b/i.test(message.content || '');
+    
+    const handleCatalogNavigate = () => {
+        navigate(createPageUrl('CatalogQuote'));
+    };
     
     const handleImageClick = (src, alt) => {
         if (!onAddProduct) {
@@ -324,6 +344,10 @@ export default function MessageBubble({ message, onAddProduct }) {
                     </div>
                 )}
                 
+                {shouldShowCatalogButton && (
+                    <CatalogNavButton onNavigate={handleCatalogNavigate} />
+                )}
+
                 {message.tool_calls?.length > 0 && (
                     <div className="space-y-1">
                         {message.tool_calls.map((toolCall, idx) => (
