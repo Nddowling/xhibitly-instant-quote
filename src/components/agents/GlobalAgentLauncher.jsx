@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { MessageSquare, X, Minus } from 'lucide-react';
 
@@ -9,6 +10,30 @@ export default function GlobalAgentLauncher() {
   const [input, setInput] = React.useState('');
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+
+  const renderMessageContent = (content) => {
+    if (!content) return null;
+
+    const catalogLinkText = '[Take me to Catalog](/CatalogQuote)';
+    if (content.includes(catalogLinkText)) {
+      const parts = content.split(catalogLinkText);
+      return (
+        <div className="space-y-2">
+          {parts[0] && <p>{parts[0]}</p>}
+          <Link
+            to="/CatalogQuote"
+            onClick={() => setOpen(false)}
+            className="inline-flex items-center rounded-xl bg-[#e2231a] px-3 py-2 text-sm font-semibold text-white hover:bg-[#c41e17]"
+          >
+            Take me to Catalog
+          </Link>
+          {parts[1] && <p>{parts[1]}</p>}
+        </div>
+      );
+    }
+
+    return <p>{content}</p>;
+  };
 
   React.useEffect(() => {
     if (!conversation?.id) return;
@@ -101,7 +126,7 @@ export default function GlobalAgentLauncher() {
                   key={index}
                   className={`max-w-[85%] rounded-2xl px-3 py-2 text-sm ${message.role === 'user' ? 'ml-auto bg-[#e2231a] text-white' : 'bg-slate-100 text-slate-800'}`}
                 >
-                  {message.content}
+                  {renderMessageContent(message.content)}
                 </div>
               ))
             )}
