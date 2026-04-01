@@ -1,0 +1,40 @@
+{
+  "name": "DealerPricingSettings",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "base44 auth user ID"
+    },
+    "dealer_instance_id": {
+      "type": "string",
+      "description": "Dealer workspace scope"
+    },
+    "default_markup_pct": {
+      "type": "number",
+      "default": 0
+    },
+    "max_discount_pct": {
+      "type": "number",
+      "default": 30
+    },
+    "currency": {
+      "type": "string",
+      "default": "USD"
+    },
+    "show_list_prices_to_customer": {
+      "type": "boolean",
+      "default": false
+    },
+    "show_savings_on_quote": {
+      "type": "boolean",
+      "default": true
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "user_id"
+  ]
+}

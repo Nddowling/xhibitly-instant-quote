@@ -1,0 +1,42 @@
+{
+  "name": "AuditLog",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "User who performed the action"
+    },
+    "dealer_instance_id": {
+      "type": "string",
+      "description": "Dealer workspace scope"
+    },
+    "action": {
+      "type": "string",
+      "description": "Action performed (e.g., Order.create, Order.update.status)"
+    },
+    "entity_name": {
+      "type": "string",
+      "description": "Entity affected"
+    },
+    "entity_id": {
+      "type": "string",
+      "description": "Entity record ID"
+    },
+    "details": {
+      "type": "string",
+      "description": "Human-readable description of the change"
+    },
+    "old_value": {
+      "type": "object",
+      "description": "Previous values"
+    },
+    "new_value": {
+      "type": "object",
+      "description": "New values"
+    }
+  },
+  "required": [
+    "action",
+    "entity_name"
+  ]
+}

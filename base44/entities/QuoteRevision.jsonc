@@ -1,0 +1,41 @@
+{
+  "name": "QuoteRevision",
+  "type": "object",
+  "properties": {
+    "order_id": {
+      "type": "string",
+      "description": "FK to Order"
+    },
+    "dealer_instance_id": {
+      "type": "string",
+      "description": "Dealer workspace scope"
+    },
+    "version_number": {
+      "type": "number",
+      "description": "Revision version"
+    },
+    "changes_summary": {
+      "type": "string",
+      "description": "Brief description of changes"
+    },
+    "snapshot_json": {
+      "type": "object",
+      "description": "Full snapshot of order state at this revision"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "sent_to_client",
+        "approved",
+        "rejected"
+      ],
+      "default": "draft",
+      "description": "Revision status"
+    }
+  },
+  "required": [
+    "order_id",
+    "version_number"
+  ]
+}

@@ -1,0 +1,133 @@
+{
+  "name": "BoothDesign",
+  "type": "object",
+  "properties": {
+    "dealer_id": {
+      "type": "string",
+      "description": "Reference to dealer"
+    },
+    "dealer_instance_id": {
+      "type": "string",
+      "description": "Dealer workspace scope"
+    },
+    "booth_size": {
+      "type": "string",
+      "enum": [
+        "10x10",
+        "10x20",
+        "20x20"
+      ],
+      "description": "Booth size"
+    },
+    "booth_type": {
+      "type": "string",
+      "enum": [
+        "inline",
+        "corner",
+        "island",
+        "peninsula"
+      ],
+      "description": "Type of booth space"
+    },
+    "tier": {
+      "type": "string",
+      "enum": [
+        "Modular",
+        "Hybrid",
+        "Custom"
+      ],
+      "description": "Design tier"
+    },
+    "design_name": {
+      "type": "string",
+      "description": "Name of the booth design"
+    },
+    "brand_name": {
+      "type": "string",
+      "description": "Optional specific brand name to apply to the render graphics"
+    },
+    "brand_url": {
+      "type": "string",
+      "description": "Website URL for fetching brand data"
+    },
+    "layout_instructions": {
+      "type": "string",
+      "description": "Specific user instructions for placing products within the booth (e.g., 'place arch at back center, TVs in front corners')"
+    },
+    "brand_identity": {
+      "type": "object",
+      "description": "Extracted brand identity"
+    },
+    "experience_story": {
+      "type": "string",
+      "description": "The experience storyline this booth creates"
+    },
+    "visitor_journey": {
+      "type": "string",
+      "description": "Step-by-step visitor flow through the booth"
+    },
+    "key_moments": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Key memorable moments in the booth"
+    },
+    "product_skus": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Selected product SKUs from catalog"
+    },
+    "line_items": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "description": "Itemized product list with pricing from catalog"
+    },
+    "total_price": {
+      "type": "number",
+      "description": "Total design price (sum of line items)"
+    },
+    "design_rationale": {
+      "type": "string",
+      "description": "Why these products work together for this brand"
+    },
+    "mood_board_url": {
+      "type": "string",
+      "description": "Generated mood board image"
+    },
+    "design_image_url": {
+      "type": "string",
+      "description": "AI-generated booth design visualization"
+    },
+    "render_generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "render_history": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "spatial_layout": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "description": "3D spatial layout configuration for the booth"
+    },
+    "scene_json": {
+      "type": "string",
+      "description": "Serialized 2D scene state for placement engine"
+    }
+  },
+  "required": [
+    "booth_size",
+    "tier",
+    "design_name"
+  ]
+}

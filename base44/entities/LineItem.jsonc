@@ -1,0 +1,88 @@
+{
+  "name": "LineItem",
+  "type": "object",
+  "properties": {
+    "order_id": {
+      "type": "string"
+    },
+    "dealer_instance_id": {
+      "type": "string",
+      "description": "Dealer workspace scope"
+    },
+    "product_name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "Structures",
+        "Displays",
+        "Lighting",
+        "Flooring",
+        "Signage",
+        "Technology",
+        "Furniture",
+        "Graphics",
+        "Accessories",
+        "Services",
+        "Logistics"
+      ]
+    },
+    "quantity": {
+      "type": "number",
+      "default": 1
+    },
+    "unit_price": {
+      "type": "number"
+    },
+    "total_price": {
+      "type": "number"
+    },
+    "sku": {
+      "type": "string"
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "list_unit_price": {
+      "type": "number",
+      "description": "Original Orbus list price, immutable reference"
+    },
+    "markup_pct": {
+      "type": "number",
+      "description": "Per-item markup override (null = use quote default)"
+    },
+    "discount_pct": {
+      "type": "number",
+      "description": "Per-item discount override"
+    },
+    "rule_discount_amount": {
+      "type": "number",
+      "description": "Discount applied by rules engine to this line"
+    },
+    "final_unit_price": {
+      "type": "number",
+      "description": "After all adjustments"
+    },
+    "final_total_price": {
+      "type": "number",
+      "description": "final_unit_price \u00d7 quantity"
+    },
+    "price_override": {
+      "type": "boolean",
+      "default": false
+    },
+    "override_note": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "order_id",
+    "product_name",
+    "unit_price",
+    "total_price"
+  ]
+}

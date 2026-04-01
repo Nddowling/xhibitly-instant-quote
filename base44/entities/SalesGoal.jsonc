@@ -1,0 +1,68 @@
+{
+  "name": "SalesGoal",
+  "type": "object",
+  "properties": {
+    "sales_rep_id": {
+      "type": "string",
+      "description": "Reference to SalesRep entity"
+    },
+    "dealer_instance_id": {
+      "type": "string",
+      "description": "Dealer workspace scope"
+    },
+    "goal_type": {
+      "type": "string",
+      "enum": [
+        "monthly",
+        "quarterly",
+        "yearly"
+      ],
+      "description": "Goal period"
+    },
+    "year": {
+      "type": "number",
+      "description": "Goal year (e.g., 2025)"
+    },
+    "month": {
+      "type": "number",
+      "description": "Goal month (1-12, for monthly goals)"
+    },
+    "quarter": {
+      "type": "number",
+      "description": "Goal quarter (1-4, for quarterly goals)"
+    },
+    "revenue_target": {
+      "type": "number",
+      "description": "Revenue target (USD)"
+    },
+    "orders_target": {
+      "type": "number",
+      "description": "Number of orders target"
+    },
+    "revenue_actual": {
+      "type": "number",
+      "default": 0,
+      "description": "Actual revenue achieved (USD)"
+    },
+    "orders_actual": {
+      "type": "number",
+      "default": 0,
+      "description": "Actual orders closed"
+    },
+    "attainment_percentage": {
+      "type": "number",
+      "default": 0,
+      "description": "Goal attainment % (0-100+)"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Goal notes"
+    }
+  },
+  "required": [
+    "sales_rep_id",
+    "goal_type",
+    "year",
+    "revenue_target"
+  ]
+}

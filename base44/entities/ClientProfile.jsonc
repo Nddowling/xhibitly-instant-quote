@@ -1,0 +1,144 @@
+{
+  "name": "ClientProfile",
+  "type": "object",
+  "properties": {
+    "client_id": {
+      "type": "string",
+      "description": "Reference to User entity (the end customer)"
+    },
+    "client_email": {
+      "type": "string",
+      "description": "Client email (for filtering/lookup)"
+    },
+    "client_company": {
+      "type": "string",
+      "description": "Client's company name"
+    },
+    "client_industry": {
+      "type": "string",
+      "description": "Client's industry sector"
+    },
+    "objectives": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Primary trade show objectives (lead_generation, brand_awareness, etc.)"
+    },
+    "needs_multiple_sizes": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether client needs multiple booth size options"
+    },
+    "display_products": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether client needs to physically display products"
+    },
+    "needs_demo_space": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether client needs demonstration space"
+    },
+    "needs_conference_area": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether client needs private meeting area"
+    },
+    "needs_graphic_design": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether client needs custom graphic design services"
+    },
+    "desired_look": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Desired visual aesthetics (modern, elegant, minimalist, etc.)"
+    },
+    "desired_feel": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Desired experiential qualities (open, intimate, spacious, etc.)"
+    },
+    "needs_logistics": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether client needs full logistics support"
+    },
+    "additional_notes": {
+      "type": "string",
+      "description": "Additional requirements or special requests"
+    },
+    "booth_size": {
+      "type": "string",
+      "enum": [
+        "10x10",
+        "10x20",
+        "20x20"
+      ],
+      "description": "Primary booth size requested"
+    },
+    "show_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Trade show date"
+    },
+    "website_url": {
+      "type": "string",
+      "description": "Client's website URL for AI brand analysis"
+    },
+    "show_name": {
+      "type": "string",
+      "description": "Name of the trade show event"
+    },
+    "budget_range": {
+      "type": "string",
+      "enum": [
+        "under_10k",
+        "10k_25k",
+        "25k_50k",
+        "50k_100k",
+        "over_100k"
+      ],
+      "description": "Estimated budget range"
+    },
+    "decision_timeline": {
+      "type": "string",
+      "enum": [
+        "urgent",
+        "1_month",
+        "2_3_months",
+        "3_6_months",
+        "planning"
+      ],
+      "description": "Decision timeline"
+    },
+    "previous_booth_experience": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether client has exhibited before"
+    },
+    "assigned_sales_rep_id": {
+      "type": "string",
+      "description": "Reference to assigned SalesRep"
+    },
+    "dealer_instance_id": {
+      "type": "string",
+      "description": "Dealer workspace scope"
+    }
+  },
+  "required": [
+    "client_id",
+    "client_email",
+    "objectives",
+    "desired_look",
+    "desired_feel",
+    "booth_size",
+    "show_date",
+    "website_url"
+  ]
+}

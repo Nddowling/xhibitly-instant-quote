@@ -1,6 +1,20 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.23';
 
 const STANDARD_OBJECTS = ['Account', 'Contact'];
+const DEALER_SCOPED_OBJECTS = [
+  'Account',
+  'Contact',
+  'ObjectTab',
+  'ClientProfile',
+  'DealerPricingSettings',
+  'QuoteRevision',
+  'LineItem',
+  'BoothDesign',
+  'Activity',
+  'SalesGoal',
+  'Payment',
+  'AuditLog'
+];
 
 function makeDeveloperName(label) {
   return String(label || '')
@@ -24,6 +38,23 @@ function buildLayoutSections(objectApiName) {
   return [
     { name: 'Details', fields: ['name'] }
   ];
+}
+
+async function migrateDealerScopedEntity(base44, entityName, instanceMap) {
+  const records = await base44.asServiceRole.entities[entityName].list('created_date', 1000);
+
+  for (const record of records || []) {
+    if (record.dealer_instance_id) continue;
+    const brokerInstanceId = record.broker_instance_id || record.data?.broker_instance_id;
+    if (!brokerInstanceId) continue;
+
+    const dealerInstanceId = instanceMap[brokerInstanceId] || '';
+    if (!dealerInstanceId) continue;
+
+    await base44.asServiceRole.entities[entityName].update(record.id, {
+      dealer_instance_id: dealerInstanceId
+    });
+  }
 }
 
 async function ensureStandardRecordType(base44, objectApiName, label) {
@@ -115,30 +146,9 @@ Deno.serve(async (req) => {
       await ensureStandardRecordType(base44, 'Contact', label);
     }
 
-    const accounts = await base44.asServiceRole.entities.Account.list('created_date', 1000);
-    for (const account of accounts || []) {
-      if (account.broker_instance_id && !account.dealer_instance_id) {
-        await base44.asServiceRole.entities.Account.update(account.id, {
-          dealer_instance_id: instanceMap[account.broker_instance_id] || ''
-        });
-      }
-    }
-
-    const contacts = await base44.asServiceRole.entities.Contact.list('created_date', 1000);
-    for (const contact of contacts || []) {
-      if (contact.broker_instance_id && !contact.dealer_instance_id) {
-        await base44.asServiceRole.entities.Contact.update(contact.id, {
-          dealer_instance_id: instanceMap[contact.broker_instance_id] || ''
-        });
-      }
-    }
-
-    const objectTabs = await base44.asServiceRole.entities.ObjectTab.list('created_date', 1000);
-    for (const tab of objectTabs || []) {
-      if (tab.broker_instance_id && !tab.dealer_instance_id) {
-        await base44.asServiceRole.entities.ObjectTab.update(tab.id, {
-          dealer_instance_id: instanceMap[tab.broker_instance_id] || ''
-        });
+    for (const entityName of DEALER_SCOPED_OBJECTS) {
+      if (base44.asServiceRole.entities[entityName]) {
+        await migrateDealerScopedEntity(base44, entityName, instanceMap);
       }
     }
 
@@ -146,7 +156,8 @@ Deno.serve(async (req) => {
       success: true,
       migrated_instances: Object.keys(instanceMap).length,
       migrated_members: (legacyMembers || []).length,
-      initialized_standard_objects: STANDARD_OBJECTS
+      initialized_standard_objects: STANDARD_OBJECTS,
+      migrated_scoped_entities: DEALER_SCOPED_OBJECTS
     });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });

@@ -1,0 +1,67 @@
+{
+  "name": "Payment",
+  "type": "object",
+  "properties": {
+    "order_id": {
+      "type": "string",
+      "description": "FK to Order"
+    },
+    "dealer_instance_id": {
+      "type": "string",
+      "description": "Dealer workspace scope"
+    },
+    "amount": {
+      "type": "number",
+      "description": "Payment amount USD"
+    },
+    "currency": {
+      "type": "string",
+      "default": "USD",
+      "description": "Currency code"
+    },
+    "payment_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Payment date"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "succeeded",
+        "failed",
+        "refunded"
+      ],
+      "default": "pending",
+      "description": "Payment status"
+    },
+    "payment_gateway": {
+      "type": "string",
+      "enum": [
+        "stripe",
+        "manual",
+        "wire"
+      ],
+      "description": "Payment method"
+    },
+    "transaction_id": {
+      "type": "string",
+      "description": "External transaction ID"
+    },
+    "payment_type": {
+      "type": "string",
+      "enum": [
+        "deposit",
+        "final",
+        "full"
+      ],
+      "description": "Payment type"
+    }
+  },
+  "required": [
+    "order_id",
+    "amount",
+    "status",
+    "payment_type"
+  ]
+}

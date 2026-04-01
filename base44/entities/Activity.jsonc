@@ -1,0 +1,86 @@
+{
+  "name": "Activity",
+  "type": "object",
+  "properties": {
+    "order_id": {
+      "type": "string",
+      "description": "Reference to Order entity"
+    },
+    "dealer_instance_id": {
+      "type": "string",
+      "description": "Dealer workspace scope"
+    },
+    "sales_rep_id": {
+      "type": "string",
+      "description": "Sales rep who performed the activity"
+    },
+    "activity_type": {
+      "type": "string",
+      "enum": [
+        "call",
+        "email",
+        "meeting",
+        "demo",
+        "quote_sent",
+        "follow_up",
+        "status_change",
+        "note"
+      ],
+      "description": "Type of activity"
+    },
+    "subject": {
+      "type": "string",
+      "description": "Activity subject/title"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed activity notes"
+    },
+    "outcome": {
+      "type": "string",
+      "enum": [
+        "positive",
+        "neutral",
+        "negative",
+        "no_contact"
+      ],
+      "description": "Activity outcome"
+    },
+    "next_action": {
+      "type": "string",
+      "description": "Next planned action"
+    },
+    "next_action_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Next action due date"
+    },
+    "duration_minutes": {
+      "type": "number",
+      "description": "Activity duration in minutes"
+    },
+    "attachments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Attached files"
+    }
+  },
+  "required": [
+    "order_id",
+    "activity_type",
+    "subject"
+  ]
+}
