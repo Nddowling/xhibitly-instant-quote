@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   LayoutGrid, Users, Shield, Key, Database, Settings,
-  ChevronRight, Search, Wrench, Layers, ClipboardCheck, Upload, PlugZap
+  ChevronRight, Search, Wrench, Layers, ClipboardCheck, Upload, PlugZap, Bot
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import ObjectManager from '@/components/setup/ObjectManager';
@@ -13,6 +13,7 @@ import SetupSeeder from '@/components/setup/SetupSeeder';
 import SetupBrokerInstances from '@/components/setup/SetupBrokerInstances';
 import SetupDataLoader from '@/components/setup/SetupDataLoader';
 import SetupCrmConnectors from '@/components/setup/SetupCrmConnectors';
+import SetupBrokerOnboarding from '@/components/setup/SetupBrokerOnboarding';
 import HotspotAudit from '@/pages/HotspotAudit';
 import CatalogAudit from '@/pages/CatalogAudit';
 
@@ -26,6 +27,7 @@ const SECTIONS = [
       { key: 'broker-instances', label: 'Org Workspaces', icon: Layers,  component: SetupBrokerInstances },
       { key: 'data-loader',      label: 'Data Loader',      icon: Upload,   component: SetupDataLoader },
       { key: 'crm-connectors',   label: 'CRM Connectors',   icon: PlugZap,  component: SetupCrmConnectors },
+      { key: 'broker-onboarding', label: 'Broker Support & KB', icon: Bot, component: SetupBrokerOnboarding },
       { key: 'seed',             label: 'Initialize Data',  icon: Wrench,   component: SetupSeeder },
     ]
   },
