@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Building2, Users, DollarSign, ClipboardList } from 'lucide-react';
 import BrokerWorkspaceSwitcher from '@/components/broker/BrokerWorkspaceSwitcher';
+import DashboardAgentPanel from '@/components/agents/DashboardAgentPanel';
 import { loadAllBrokerInstances, loadBrokerContext, setActiveBrokerInstance, scopeItems } from '@/lib/brokerAccess';
 
 export default function DesignerDashboard() {
@@ -104,6 +105,18 @@ export default function DesignerDashboard() {
             </div>
           </CardContent>
         </Card>
+
+        <DashboardAgentPanel
+          agentName="executive_analytics_assistant"
+          title="Global Admin Analytics Agent"
+          subtitle="Ask about the selected org or the full multi-org portfolio."
+          promptHint="Ask things like: which org has the largest pipeline, what are the quarterly projections for Q3 this year, or if we keep the same growth rate where do we land in Q3 2027."
+          starterQuestions={[
+            'Which org has the largest pipeline?',
+            'What are the quarterly projections for Q3 this year?',
+            'If we keep our growth rate the same, where does it put us in Q3 2027?'
+          ]}
+        />
       </div>
     </div>
   );

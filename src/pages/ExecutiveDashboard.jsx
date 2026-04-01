@@ -7,6 +7,7 @@ import { ensureBrokerInstance } from '@/lib/brokerInstance';
 import KpiCard from '@/components/executive/KpiCard';
 import ExecutiveStatusBreakdown from '@/components/executive/ExecutiveStatusBreakdown';
 import ExecutiveOrderList from '@/components/executive/ExecutiveOrderList';
+import DashboardAgentPanel from '@/components/agents/DashboardAgentPanel';
 
 const WON_STATUSES = ['Confirmed', 'Delivered', 'Accepted'];
 const LOST_STATUSES = ['Declined', 'Cancelled'];
@@ -260,6 +261,18 @@ export default function ExecutiveDashboard() {
             </div>
           </div>
         </div>
+
+        <DashboardAgentPanel
+          agentName="executive_analytics_assistant"
+          title="Executive Analytics Agent"
+          subtitle="Ask about this org or compare across all orgs."
+          promptHint="Ask things like: get me the most recent order created, what is this org's pipeline, or compare this org to all orgs."
+          starterQuestions={[
+            'Get me the most recent order created',
+            'Show me this org\'s current pipeline value',
+            'Compare this org against all orgs by pipeline'
+          ]}
+        />
       </div>
     </div>
   );
