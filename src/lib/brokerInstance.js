@@ -24,16 +24,17 @@ async function createUniqueSlug(baseName) {
 export async function ensureDealerInstance(user) {
   if (!user) return null;
 
-  if (user.dealer_instance_id) {
-    const instances = await base44.entities.DealerInstance.filter({ id: user.dealer_instance_id });
+  const directDealerId = user.dealer_instance_id || user.active_dealer_instance_id;
+  if (directDealerId) {
+    const instances = await base44.entities.DealerInstance.filter({ id: directDealerId });
     if (instances?.length > 0) {
       return instances[0];
     }
   }
 
-  const existingMemberships = await base44.entities.DealerMember.filter({ user_id: user.id });
-  if (existingMemberships?.length > 0) {
-    const membership = existingMemberships[0];
+  const existingDealerMemberships = await base44.entities.DealerMember.filter({ user_id: user.id });
+  if (existingDealerMemberships?.length > 0) {
+    const membership = existingDealerMemberships[0];
     const dealerInstanceId = membership.dealer_instance_id || membership.data?.dealer_instance_id;
     const instances = dealerInstanceId
       ? await base44.entities.DealerInstance.filter({ id: dealerInstanceId })
@@ -41,6 +42,40 @@ export async function ensureDealerInstance(user) {
 
     if (instances?.length > 0) {
       return instances[0];
+    }
+  }
+
+  const legacyBrokerId = user.broker_instance_id || user.active_broker_instance_id;
+  if (legacyBrokerId) {
+    const migratedDealers = await base44.entities.DealerInstance.filter({ source_broker_instance_id: legacyBrokerId });
+    if (migratedDealers?.length > 0) {
+      return migratedDealers[0];
+    }
+
+    const legacyBrokers = await base44.entities.BrokerInstance.filter({ id: legacyBrokerId });
+    if (legacyBrokers?.length > 0) {
+      return legacyBrokers[0];
+    }
+  }
+
+  const legacyMemberships = await base44.entities.BrokerMember.filter({ user_id: user.id });
+  if (legacyMemberships?.length > 0) {
+    const membership = legacyMemberships[0];
+    const brokerInstanceId = membership.broker_instance_id || membership.data?.broker_instance_id;
+    const migratedDealers = brokerInstanceId
+      ? await base44.entities.DealerInstance.filter({ source_broker_instance_id: brokerInstanceId })
+      : [];
+
+    if (migratedDealers?.length > 0) {
+      return migratedDealers[0];
+    }
+
+    const legacyBrokers = brokerInstanceId
+      ? await base44.entities.BrokerInstance.filter({ id: brokerInstanceId })
+      : [];
+
+    if (legacyBrokers?.length > 0) {
+      return legacyBrokers[0];
     }
   }
 
@@ -67,12 +102,25 @@ export async function ensureDealerInstance(user) {
 }
 
 export async function getBrokerScopedMember(user) {
-  if (!user?.dealer_instance_id) return null;
-  const members = await base44.entities.DealerMember.filter({
-    dealer_instance_id: user.dealer_instance_id,
-    user_id: user.id
-  });
-  return members?.[0] || null;
+  const dealerInstanceId = user?.dealer_instance_id || user?.active_dealer_instance_id;
+  if (dealerInstanceId) {
+    const members = await base44.entities.DealerMember.filter({
+      dealer_instance_id: dealerInstanceId,
+      user_id: user.id
+    });
+    if (members?.length) return members[0];
+  }
+
+  const brokerInstanceId = user?.broker_instance_id || user?.active_broker_instance_id;
+  if (brokerInstanceId) {
+    const legacyMembers = await base44.entities.BrokerMember.filter({
+      broker_instance_id: brokerInstanceId,
+      user_id: user.id
+    });
+    return legacyMembers?.[0] || null;
+  }
+
+  return null;
 }
 
 export function filterByBrokerInstance(items, dealerInstanceId, field = 'dealer_instance_id') {
