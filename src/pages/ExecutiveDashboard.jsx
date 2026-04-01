@@ -264,7 +264,7 @@ export default function ExecutiveDashboard() {
 
         <DashboardAgentPanel
           agentName="executive_analytics_assistant"
-          title="Executive Analytics Agent"
+          title="Broker Agent"
           subtitle="Ask about this org or compare across all orgs."
           promptHint="Ask things like: get me the most recent order created, what is this org's pipeline, or compare this org to all orgs."
           starterQuestions={[

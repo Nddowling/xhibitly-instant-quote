@@ -7,14 +7,16 @@ import { Button } from '@/components/ui/button';
 import { Building2, Users, DollarSign, ClipboardList } from 'lucide-react';
 import BrokerWorkspaceSwitcher from '@/components/broker/BrokerWorkspaceSwitcher';
 import DashboardAgentPanel from '@/components/agents/DashboardAgentPanel';
+import { usePermissions } from '@/components/contexts/PermissionsContext';
 import { loadAllBrokerInstances, loadBrokerContext, setActiveBrokerInstance, scopeItems } from '@/lib/brokerAccess';
-
 export default function DesignerDashboard() {
   const navigate = useNavigate();
+  const { permissions } = usePermissions() || {};
   const [context, setContext] = useState(null);
   const [brokerInstances, setBrokerInstances] = useState([]);
   const [orders, setOrders] = useState([]);
   const [members, setMembers] = useState([]);
+  const [permissionSets, setPermissionSets] = useState([]);
 
   useEffect(() => {
     loadData();
@@ -27,16 +29,21 @@ export default function DesignerDashboard() {
       return;
     }
 
-    const [instances, allOrders, allMembers] = await Promise.all([
+    const userAssignments = await base44.entities.UserPermissionAssignment.filter({ user_id: brokerContext.user.id });
+    const userPermissionSetIds = userAssignments?.[0]?.permission_set_ids || [];
+
+    const [instances, allOrders, allMembers, allPermissionSets] = await Promise.all([
       loadAllBrokerInstances(),
       base44.entities.Order.list('-created_date', 500),
       base44.entities.BrokerMember.list('user_email', 500),
+      base44.entities.PermissionSet.list('name', 500),
     ]);
 
-    setContext(brokerContext);
+    setContext({ ...brokerContext, userPermissionSetIds });
     setBrokerInstances(instances || []);
     setOrders(allOrders || []);
     setMembers(allMembers || []);
+    setPermissionSets(allPermissionSets || []);
   };
 
   const activeBroker = useMemo(
@@ -55,6 +62,8 @@ export default function DesignerDashboard() {
   );
 
   const totalRevenue = scopedOrders.reduce((sum, order) => sum + (order.final_price || order.quoted_price || 0), 0);
+  const globalAgentPermissionSet = permissionSets.find((item) => item.name === 'Global Agent');
+  const userHasGlobalAgentPermission = permissions?._isAdmin || (context && globalAgentPermissionSet && Array.isArray(context.userPermissionSetIds) && context.userPermissionSetIds.includes(globalAgentPermissionSet.id));
 
   const handleSwitch = async (brokerId) => {
     await setActiveBrokerInstance(brokerId);
@@ -106,17 +115,19 @@ export default function DesignerDashboard() {
           </CardContent>
         </Card>
 
-        <DashboardAgentPanel
-          agentName="executive_analytics_assistant"
-          title="Global Admin Analytics Agent"
-          subtitle="Ask about the selected org or the full multi-org portfolio."
-          promptHint="Ask things like: which org has the largest pipeline, what are the quarterly projections for Q3 this year, or if we keep the same growth rate where do we land in Q3 2027."
-          starterQuestions={[
-            'Which org has the largest pipeline?',
-            'What are the quarterly projections for Q3 this year?',
-            'If we keep our growth rate the same, where does it put us in Q3 2027?'
-          ]}
-        />
+        {userHasGlobalAgentPermission && (
+          <DashboardAgentPanel
+            agentName="executive_analytics_assistant"
+            title="Global Agent"
+            subtitle="Ask about the selected org or the full multi-org portfolio."
+            promptHint="Ask things like: which org has the largest pipeline, what are the quarterly projections for Q3 this year, or if we keep the same growth rate where do we land in Q3 2027."
+            starterQuestions={[
+              'Which org has the largest pipeline?',
+              'What are the quarterly projections for Q3 this year?',
+              'If we keep our growth rate the same, where does it put us in Q3 2027?'
+            ]}
+          />
+        )}
       </div>
     </div>
   );
