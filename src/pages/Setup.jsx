@@ -27,7 +27,7 @@ const SECTIONS = [
       { key: 'broker-instances', label: 'Org Workspaces', icon: Layers,  component: SetupBrokerInstances },
       { key: 'data-loader',      label: 'Data Loader',      icon: Upload,   component: SetupDataLoader },
       { key: 'crm-connectors',   label: 'CRM Connectors',   icon: PlugZap,  component: SetupCrmConnectors },
-      { key: 'broker-onboarding', label: 'Broker Support & KB', icon: Bot, component: SetupBrokerOnboarding },
+      { key: 'broker-onboarding', label: 'Dealer Support & KB', icon: Bot, component: SetupBrokerOnboarding },
       { key: 'seed',             label: 'Initialize Data',  icon: Wrench,   component: SetupSeeder },
     ]
   },

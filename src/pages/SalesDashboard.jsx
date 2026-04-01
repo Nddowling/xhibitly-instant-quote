@@ -220,7 +220,7 @@ export default function SalesDashboard() {
             <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
               <div className="max-w-3xl">
                 <div className="inline-flex items-center gap-2 rounded-full border border-[#e2231a]/15 bg-[#e2231a]/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#e2231a]">
-                  Broker command center
+                  Dealer command center
                 </div>
                 <h1 className="mt-4 text-3xl md:text-4xl font-black tracking-tight text-slate-900">
                   Welcome back, {user?.full_name?.split(' ')[0] || user?.contact_name?.split(' ')[0]}
