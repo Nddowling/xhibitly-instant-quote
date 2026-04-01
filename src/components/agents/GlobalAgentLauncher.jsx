@@ -84,7 +84,7 @@ export default function GlobalAgentLauncher() {
           <div className="h-80 overflow-y-auto p-4 space-y-3 bg-white">
             {messages.length === 0 ? (
               <div className="rounded-xl bg-slate-50 p-3 text-sm text-slate-600">
-                Need help finding the catalog or building a booth quote? Ask here.
+                Need help finding products, building a quote, or framing a recommendation for your buyer? Ask here.
               </div>
             ) : (
               messages.map((message, index) => (
@@ -105,7 +105,7 @@ export default function GlobalAgentLauncher() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                placeholder="Ask for help..."
+                placeholder="Ask about products, quotes, or client positioning..."
                 className="flex-1 rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#e2231a]/20"
               />
               <button
