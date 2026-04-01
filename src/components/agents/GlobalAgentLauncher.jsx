@@ -38,6 +38,15 @@ export default function GlobalAgentLauncher() {
     await ensureConversation();
   };
 
+  const handleClose = () => {
+    setOpen(false);
+    setHidden(true);
+    setConversation(null);
+    setMessages([]);
+    setInput('');
+    setLoading(false);
+  };
+
   const handleSend = async () => {
     const trimmed = input.trim();
     if (!trimmed) return;
@@ -75,7 +84,7 @@ export default function GlobalAgentLauncher() {
               <button onClick={() => setOpen(false)} className="rounded-lg p-2 text-slate-500 hover:bg-slate-200 hover:text-slate-800">
                 <Minus className="w-4 h-4" />
               </button>
-              <button onClick={() => setHidden(true)} className="rounded-lg p-2 text-slate-500 hover:bg-slate-200 hover:text-slate-800">
+              <button onClick={handleClose} className="rounded-lg p-2 text-slate-500 hover:bg-slate-200 hover:text-slate-800">
                 <X className="w-4 h-4" />
               </button>
             </div>
