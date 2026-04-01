@@ -14,25 +14,34 @@ export default function GlobalAgentLauncher() {
   const renderMessageContent = (content) => {
     if (!content) return null;
 
-    const catalogLinkText = '[Take me to Catalog](/CatalogQuote)';
-    if (content.includes(catalogLinkText)) {
-      const parts = content.split(catalogLinkText);
-      return (
-        <div className="space-y-2">
-          {parts[0] && <p>{parts[0]}</p>}
-          <Link
-            to="/CatalogQuote"
-            onClick={() => setOpen(false)}
-            className="inline-flex items-center rounded-xl bg-[#e2231a] px-3 py-2 text-sm font-semibold text-white hover:bg-[#c41e17]"
-          >
-            Take me to Catalog
-          </Link>
-          {parts[1] && <p>{parts[1]}</p>}
-        </div>
-      );
+    const linkMatches = [...content.matchAll(/\[([^\]]+)\]\((\/[^)]+)\)/g)];
+    if (linkMatches.length === 0) {
+      return <p>{content}</p>;
     }
 
-    return <p>{content}</p>;
+    const parts = content.split(/\[[^\]]+\]\(\/[^)]+\)/g);
+
+    return (
+      <div className="space-y-2">
+        {parts.map((part, index) => {
+          const match = linkMatches[index];
+          return (
+            <React.Fragment key={`${part}-${index}`}>
+              {part ? <p>{part}</p> : null}
+              {match ? (
+                <Link
+                  to={match[2]}
+                  onClick={() => setOpen(false)}
+                  className="inline-flex items-center rounded-xl bg-[#e2231a] px-3 py-2 text-sm font-semibold text-white hover:bg-[#c41e17]"
+                >
+                  {match[1]}
+                </Link>
+              ) : null}
+            </React.Fragment>
+          );
+        })}
+      </div>
+    );
   };
 
   React.useEffect(() => {
