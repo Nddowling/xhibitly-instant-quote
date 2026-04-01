@@ -1,0 +1,69 @@
+{
+  "name": "CustomField",
+  "type": "object",
+  "properties": {
+    "object_api_name": {
+      "type": "string"
+    },
+    "api_name": {
+      "type": "string"
+    },
+    "label": {
+      "type": "string"
+    },
+    "field_type": {
+      "type": "string",
+      "enum": ["text", "number", "currency", "date", "datetime", "checkbox", "picklist", "multi_picklist", "textarea", "email", "phone", "url", "lookup", "formula"]
+    },
+    "picklist_values": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "lookup_object": {
+      "type": "string"
+    },
+    "formula_expression": {
+      "type": "string"
+    },
+    "is_required": {
+      "type": "boolean",
+      "default": false
+    },
+    "is_unique": {
+      "type": "boolean",
+      "default": false
+    },
+    "default_value": {
+      "type": "string"
+    },
+    "help_text": {
+      "type": "string"
+    },
+    "max_length": {
+      "type": "number"
+    },
+    "decimal_places": {
+      "type": "number",
+      "default": 2
+    },
+    "display_order": {
+      "type": "number",
+      "default": 10
+    },
+    "is_system": {
+      "type": "boolean",
+      "default": false
+    },
+    "page_layout_id": {
+      "type": "string",
+      "description": "Optional layout-specific placement"
+    },
+    "section_name": {
+      "type": "string",
+      "description": "Optional layout section name"
+    }
+  },
+  "required": ["object_api_name", "api_name", "label", "field_type"]
+}

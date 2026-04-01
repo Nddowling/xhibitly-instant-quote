@@ -30,14 +30,14 @@ export default function Contacts() {
     try {
       const brokerContext = await loadBrokerContext();
       const currentUser = brokerContext.user;
-      const brokerId = brokerContext.effectiveBrokerId;
+      const brokerId = brokerContext.effectiveDealerId || brokerContext.effectiveBrokerId;
 
       if (!currentUser.is_sales_rep && currentUser.role !== 'admin') {
         navigate(createPageUrl('QuoteRequest'));
         return;
       }
 
-      setUser({ ...currentUser, broker_instance_id: brokerId });
+      setUser({ ...currentUser, dealer_instance_id: brokerId });
 
       const allOrders = await base44.entities.Order.list('-created_date', 1000);
       const orders = scopeItems(allOrders || [], brokerId);

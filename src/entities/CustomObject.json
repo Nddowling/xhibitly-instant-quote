@@ -1,0 +1,52 @@
+{
+  "name": "CustomObject",
+  "type": "object",
+  "properties": {
+    "api_name": {
+      "type": "string"
+    },
+    "label": {
+      "type": "string"
+    },
+    "label_plural": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "icon": {
+      "type": "string",
+      "default": "box"
+    },
+    "allow_reports": {
+      "type": "boolean",
+      "default": true
+    },
+    "allow_activities": {
+      "type": "boolean",
+      "default": false
+    },
+    "name_field_label": {
+      "type": "string",
+      "default": "Name"
+    },
+    "created_by": {
+      "type": "string"
+    },
+    "record_count": {
+      "type": "number",
+      "default": 0
+    },
+    "dealer_instance_id": {
+      "type": "string",
+      "description": "Owning dealer workspace for dealer-created custom objects"
+    },
+    "default_record_type_id": {
+      "type": "string"
+    },
+    "default_page_layout_id": {
+      "type": "string"
+    }
+  },
+  "required": ["api_name", "label"]
+}

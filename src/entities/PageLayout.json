@@ -1,0 +1,37 @@
+{
+  "name": "PageLayout",
+  "type": "object",
+  "properties": {
+    "object_api_name": {
+      "type": "string"
+    },
+    "record_type_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "layout_sections": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "is_global": {
+      "type": "boolean",
+      "default": true
+    },
+    "dealer_instance_id": {
+      "type": "string",
+      "description": "Blank for global standard layouts, populated for dealer-owned custom object layouts"
+    },
+    "clone_source_layout_id": {
+      "type": "string"
+    }
+  },
+  "required": ["object_api_name", "name"]
+}

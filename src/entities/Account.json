@@ -1,0 +1,47 @@
+{
+  "name": "Account",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Account name"
+    },
+    "website": {
+      "type": "string",
+      "description": "Company website"
+    },
+    "industry": {
+      "type": "string",
+      "description": "Industry or market"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Main account phone"
+    },
+    "billing_address": {
+      "type": "string",
+      "description": "Billing or office address"
+    },
+    "description": {
+      "type": "string",
+      "description": "Internal account notes"
+    },
+    "dealer_instance_id": {
+      "type": "string",
+      "description": "Dealer workspace scope"
+    },
+    "owner_user_id": {
+      "type": "string",
+      "description": "Account owner user id"
+    },
+    "record_type_id": {
+      "type": "string",
+      "description": "Assigned record type"
+    },
+    "page_layout_id": {
+      "type": "string",
+      "description": "Resolved page layout"
+    }
+  },
+  "required": ["name"]
+}

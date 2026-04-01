@@ -1,0 +1,51 @@
+{
+  "name": "Contact",
+  "type": "object",
+  "properties": {
+    "first_name": {
+      "type": "string",
+      "description": "First name"
+    },
+    "last_name": {
+      "type": "string",
+      "description": "Last name"
+    },
+    "full_name": {
+      "type": "string",
+      "description": "Full contact name"
+    },
+    "email": {
+      "type": "string",
+      "description": "Primary email"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Phone number"
+    },
+    "title": {
+      "type": "string",
+      "description": "Job title"
+    },
+    "department": {
+      "type": "string",
+      "description": "Department"
+    },
+    "dealer_instance_id": {
+      "type": "string",
+      "description": "Dealer workspace scope"
+    },
+    "owner_user_id": {
+      "type": "string",
+      "description": "Contact owner user id"
+    },
+    "record_type_id": {
+      "type": "string",
+      "description": "Assigned record type"
+    },
+    "page_layout_id": {
+      "type": "string",
+      "description": "Resolved page layout"
+    }
+  },
+  "required": ["full_name"]
+}

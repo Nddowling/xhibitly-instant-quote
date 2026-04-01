@@ -1,0 +1,38 @@
+{
+  "name": "RecordType",
+  "type": "object",
+  "properties": {
+    "object_api_name": {
+      "type": "string"
+    },
+    "developer_name": {
+      "type": "string"
+    },
+    "label": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "is_global": {
+      "type": "boolean",
+      "default": true
+    },
+    "dealer_instance_id": {
+      "type": "string",
+      "description": "Blank for global standard record types, populated for dealer-owned custom object record types"
+    },
+    "page_layout_id": {
+      "type": "string"
+    },
+    "is_default": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": ["object_api_name", "developer_name", "label"]
+}

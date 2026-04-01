@@ -1,29 +1,31 @@
 import { base44 } from '@/api/base44Client';
-import { ensureBrokerInstance } from '@/lib/brokerInstance';
+import { ensureDealerInstance } from '@/lib/brokerInstance';
 
 export async function loadBrokerContext() {
   const user = await base44.auth.me();
-  const brokerInstance = await ensureBrokerInstance(user);
-  const membership = brokerInstance
-    ? (await base44.entities.BrokerMember.filter({ broker_instance_id: brokerInstance.id, user_id: user.id }))?.[0] || null
+  const dealerInstance = await ensureDealerInstance(user);
+  const membership = dealerInstance
+    ? (await base44.entities.DealerMember.filter({ dealer_instance_id: dealerInstance.id, user_id: user.id }))?.[0] || null
     : null;
 
   const isDesigner = user?.role === 'admin';
-  const effectiveBrokerId = isDesigner
-    ? (user?.active_broker_instance_id || brokerInstance?.id || user?.broker_instance_id || '')
-    : (brokerInstance?.id || user?.broker_instance_id || '');
+  const effectiveDealerId = isDesigner
+    ? (user?.active_dealer_instance_id || dealerInstance?.id || user?.dealer_instance_id || '')
+    : (dealerInstance?.id || user?.dealer_instance_id || '');
 
   return {
     user,
-    brokerInstance,
+    brokerInstance: dealerInstance,
+    dealerInstance,
     membership,
     isDesigner,
-    effectiveBrokerId,
+    effectiveBrokerId: effectiveDealerId,
+    effectiveDealerId,
   };
 }
 
-export function scopeItems(items, brokerInstanceId, field = 'broker_instance_id') {
-  return (items || []).filter(item => item?.[field] === brokerInstanceId);
+export function scopeItems(items, dealerInstanceId, field = 'dealer_instance_id') {
+  return (items || []).filter(item => item?.[field] === dealerInstanceId);
 }
 
 export async function loadAllBrokerInstances() {
@@ -31,25 +33,25 @@ export async function loadAllBrokerInstances() {
   const isGlobalAdmin = user?.email === 'ndowling970@gmail.com';
 
   if (isGlobalAdmin) {
-    return await base44.entities.BrokerInstance.list('name', 500);
+    return await base44.entities.DealerInstance.list('name', 500);
   }
 
-  const memberships = await base44.entities.BrokerMember.filter({ user_id: user.id }, 'broker_instance_id', 500);
-  const brokerIds = [...new Set((memberships || []).map((item) => item.broker_instance_id || item.data?.broker_instance_id).filter(Boolean))];
+  const memberships = await base44.entities.DealerMember.filter({ user_id: user.id }, 'dealer_instance_id', 500);
+  const dealerIds = [...new Set((memberships || []).map((item) => item.dealer_instance_id || item.data?.dealer_instance_id).filter(Boolean))];
 
-  const fallbackBrokerId = user?.broker_instance_id || user?.active_broker_instance_id;
-  if (fallbackBrokerId && !brokerIds.includes(fallbackBrokerId)) {
-    brokerIds.push(fallbackBrokerId);
+  const fallbackDealerId = user?.dealer_instance_id || user?.active_dealer_instance_id;
+  if (fallbackDealerId && !dealerIds.includes(fallbackDealerId)) {
+    dealerIds.push(fallbackDealerId);
   }
 
-  if (brokerIds.length === 0) {
+  if (dealerIds.length === 0) {
     return [];
   }
 
-  const allBrokers = await base44.entities.BrokerInstance.list('name', 500);
-  return (allBrokers || []).filter((broker) => brokerIds.includes(broker.id));
+  const allDealers = await base44.entities.DealerInstance.list('name', 500);
+  return (allDealers || []).filter((dealer) => dealerIds.includes(dealer.id));
 }
 
-export async function setActiveBrokerInstance(brokerInstanceId) {
-  await base44.auth.updateMe({ active_broker_instance_id: brokerInstanceId || '' });
+export async function setActiveBrokerInstance(dealerInstanceId) {
+  await base44.auth.updateMe({ active_dealer_instance_id: dealerInstanceId || '' });
 }

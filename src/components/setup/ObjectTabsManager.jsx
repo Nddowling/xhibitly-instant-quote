@@ -10,19 +10,20 @@ function buildRoutePath(apiName) {
 }
 
 export default function ObjectTabsManager({ brokerInstanceId = null, compact = false }) {
+  const dealerInstanceId = brokerInstanceId;
   const [objects, setObjects] = useState([]);
   const [tabs, setTabs] = useState([]);
   const [selectedApiName, setSelectedApiName] = useState('');
 
   useEffect(() => {
     loadData();
-  }, [brokerInstanceId]);
+  }, [dealerInstanceId]);
 
   const loadData = async () => {
     const [allObjects, allTabs] = await Promise.all([
       getAllObjects(),
-      brokerInstanceId
-        ? base44.entities.ObjectTab.filter({ broker_instance_id: brokerInstanceId, is_active: true }, 'sort_order', 100)
+      dealerInstanceId
+        ? base44.entities.ObjectTab.filter({ dealer_instance_id: dealerInstanceId, is_active: true }, 'sort_order', 100)
         : base44.entities.ObjectTab.filter({ is_active: true }, 'sort_order', 100),
     ]);
 
@@ -46,7 +47,7 @@ export default function ObjectTabsManager({ brokerInstanceId = null, compact = f
 
     const existing = tabs.find(tab => tab.object_api_name === selectedApiName);
     if (existing) return;
-    if (!brokerInstanceId) return;
+    if (!dealerInstanceId) return;
 
     await base44.entities.ObjectTab.create({
       object_api_name: objectDef.api_name,
@@ -54,7 +55,7 @@ export default function ObjectTabsManager({ brokerInstanceId = null, compact = f
       route_path: buildRoutePath(objectDef.api_name),
       sort_order: (tabs[tabs.length - 1]?.sort_order || 0) + 10,
       is_active: true,
-      broker_instance_id: brokerInstanceId,
+      dealer_instance_id: dealerInstanceId,
     });
     loadData();
   };

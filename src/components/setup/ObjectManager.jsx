@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { getAllObjects, getObjectFields, createCustomObject, createCustomField, buildCustomObjectApiName, buildHistoryObjectApiName } from '@/components/utils/metadataEngine';
+import { loadBrokerContext } from '@/lib/brokerAccess';
 import { Plus, Database, Search, Lock, Trash2, X, History, TableProperties } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -19,12 +20,18 @@ export default function ObjectManager() {
   const [showNewField, setShowNewField] = useState(false);
   const [newObj, setNewObj] = useState({ label: '', label_plural: '', description: '', icon: 'box', allow_reports: true, name_field_label: 'Name' });
   const [newField, setNewField] = useState({ label: '', field_type: 'text', is_required: false, help_text: '', picklist_values: '' });
+  const [dealerInstanceId, setDealerInstanceId] = useState('');
 
-  useEffect(() => { loadObjects(); }, []);
+  useEffect(() => { loadObjects(); loadContext(); }, []);
 
   const loadObjects = async () => {
     const objs = await getAllObjects();
     setObjects(objs);
+  };
+
+  const loadContext = async () => {
+    const context = await loadBrokerContext();
+    setDealerInstanceId(context.effectiveDealerId || context.effectiveBrokerId || '');
   };
 
   const selectObject = async (obj) => {
@@ -38,7 +45,7 @@ export default function ObjectManager() {
   };
 
   const handleCreateObject = async () => {
-    await createCustomObject(newObj);
+    await createCustomObject({ ...newObj, dealer_instance_id: dealerInstanceId });
     setShowNewObject(false);
     setNewObj({ label: '', label_plural: '', description: '', icon: 'box', allow_reports: true, name_field_label: 'Name' });
     loadObjects();

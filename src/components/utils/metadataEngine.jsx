@@ -101,6 +101,7 @@ export async function createCustomObject(objectDef) {
     name_field_label: objectDef.name_field_label || 'Name',
     history_tracking_enabled: true,
     history_object_api_name: historyApiName,
+    dealer_instance_id: objectDef.dealer_instance_id || '',
   });
 
   const baseFields = CUSTOM_SYSTEM_FIELDS.map((field) => ({
@@ -121,12 +122,44 @@ export async function createCustomObject(objectDef) {
     parentApiName: apiName,
     parentLabel: objectDef.label,
     historyApiName,
+    dealerInstanceId: objectDef.dealer_instance_id || '',
+  });
+
+  const layout = await base44.entities.PageLayout.create({
+    object_api_name: apiName,
+    name: `${objectDef.label} Default Layout`,
+    layout_sections: [
+      {
+        name: 'Details',
+        fields: ['name']
+      }
+    ],
+    is_active: true,
+    is_global: false,
+    dealer_instance_id: objectDef.dealer_instance_id || ''
+  });
+
+  const recordType = await base44.entities.RecordType.create({
+    object_api_name: apiName,
+    developer_name: 'default',
+    label: 'Default',
+    is_active: true,
+    is_global: false,
+    dealer_instance_id: objectDef.dealer_instance_id || '',
+    page_layout_id: layout.id,
+    is_default: true
+  });
+
+  await base44.entities.PageLayout.update(layout.id, { record_type_id: recordType.id });
+  await base44.entities.CustomObject.update(obj.id, {
+    default_record_type_id: recordType.id,
+    default_page_layout_id: layout.id,
   });
 
   return obj;
 }
 
-export async function createHistoryObjectForCustomObject({ parentApiName, parentLabel, historyApiName }) {
+export async function createHistoryObjectForCustomObject({ parentApiName, parentLabel, historyApiName, dealerInstanceId = '' }) {
   await base44.entities.CustomObject.create({
     api_name: historyApiName,
     label: `${parentLabel} History`,
@@ -138,6 +171,7 @@ export async function createHistoryObjectForCustomObject({ parentApiName, parent
     name_field_label: 'History Entry',
     parent_object_api_name: parentApiName,
     is_history_object: true,
+    dealer_instance_id: dealerInstanceId,
   });
 
   for (const field of HISTORY_SYSTEM_FIELDS) {
