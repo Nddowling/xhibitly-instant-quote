@@ -112,7 +112,7 @@ function getPresetConfig(preset) {
     default:
       return {
         title: 'Active Orders',
-        subtitle: 'Open deals currently moving through the broker pipeline',
+        subtitle: 'Open deals currently moving through the dealer pipeline',
         statuses: ACTIVE_STATUSES,
       };
   }

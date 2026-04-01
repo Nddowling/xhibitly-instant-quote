@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 const steps = [
   {
     title: 'Create the support agent',
-    description: 'Set up a broker-facing onboarding and support chat that can answer platform questions.',
+    description: 'Set up a dealer-facing onboarding and support chat that can answer platform questions.',
     icon: Bot,
   },
   {
@@ -16,13 +16,13 @@ const steps = [
   },
   {
     title: 'Connect chat to knowledge',
-    description: 'Use the uploaded docs as the source for support answers so brokers get guided help in context.',
+    description: 'Use the uploaded docs as the source for support answers so dealers get guided help in context.',
     icon: MessageSquare,
   },
 ];
 
 const docs = [
-  'Broker onboarding checklist',
+  'Dealer onboarding checklist',
   'Quote workflow guide',
   'Catalog and SKU lookup guide',
   'Pricing rules and approvals',
@@ -34,8 +34,8 @@ export default function SetupBrokerOnboarding() {
   return (
     <div className="p-6 space-y-6">
       <div>
-        <h2 className="text-xl font-bold text-slate-900">Broker Support & Knowledge Base</h2>
-        <p className="text-sm text-slate-500">Manage the onboarding support agent and the document library it should use to help brokers through the platform.</p>
+        <h2 className="text-xl font-bold text-slate-900">Dealer Support & Knowledge Base</h2>
+        <p className="text-sm text-slate-500">Manage the onboarding support agent and the document library it should use to help dealers through the platform.</p>
       </div>
 
       <div className="grid gap-4 xl:grid-cols-[1.2fr_0.8fr]">
@@ -62,7 +62,7 @@ export default function SetupBrokerOnboarding() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2"><Upload className="w-4 h-4" /> Knowledge Base Starter Docs</CardTitle>
-            <CardDescription>These are the best first documents to upload into the broker support knowledge base.</CardDescription>
+            <CardDescription>These are the best first documents to upload into the dealer support knowledge base.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
             {docs.map((doc) => (

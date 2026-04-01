@@ -71,7 +71,7 @@ export default function ObjectTabsManager({ brokerInstanceId = null, compact = f
       <div className="flex items-center justify-between gap-3 mb-4">
         <div>
           <h3 className="text-base font-semibold text-slate-900">Header Object Tabs</h3>
-          <p className="text-sm text-slate-500">Add or remove object tabs shown in the top header for this org.</p>
+          <p className="text-sm text-slate-500">Add or remove object tabs shown in the top header for this dealer org.</p>
         </div>
       </div>
 

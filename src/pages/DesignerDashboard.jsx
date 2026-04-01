@@ -80,7 +80,7 @@ export default function DesignerDashboard() {
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
             <h1 className="text-3xl font-black text-slate-900">Global Admin Dashboard</h1>
-            <p className="text-slate-600 mt-1">Switch between orgs, review isolated workspaces, and drill into a selected org safely.</p>
+            <p className="text-slate-600 mt-1">Switch between dealers, review isolated workspaces, and drill into a selected dealer safely.</p>
           </div>
           <BrokerWorkspaceSwitcher
             brokerInstances={brokerInstances}
@@ -90,15 +90,15 @@ export default function DesignerDashboard() {
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <MetricCard icon={Building2} label="Broker Orgs" value={brokerInstances.length} />
-          <MetricCard icon={Users} label="Broker Users" value={scopedMembers.length} />
-          <MetricCard icon={ClipboardList} label="Broker Orders" value={scopedOrders.length} />
-          <MetricCard icon={DollarSign} label="Broker Revenue" value={formatPrice(totalRevenue)} />
+          <MetricCard icon={Building2} label="Dealer Orgs" value={brokerInstances.length} />
+          <MetricCard icon={Users} label="Dealer Users" value={scopedMembers.length} />
+          <MetricCard icon={ClipboardList} label="Dealer Orders" value={scopedOrders.length} />
+          <MetricCard icon={DollarSign} label="Dealer Revenue" value={formatPrice(totalRevenue)} />
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>{activeBroker?.name || 'No broker selected'}</CardTitle>
+            <CardTitle>{activeBroker?.name || 'No dealer selected'}</CardTitle>
             <CardDescription>Current isolated workspace snapshot</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">

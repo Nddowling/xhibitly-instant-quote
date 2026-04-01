@@ -36,14 +36,14 @@ export default function SetupBrokerInstances() {
     <div className="p-6 space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Broker Workspaces</CardTitle>
-          <CardDescription>Create isolated broker orgs under your umbrella.</CardDescription>
+          <CardTitle>Dealer Workspaces</CardTitle>
+          <CardDescription>Create isolated dealer orgs under your umbrella.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
           <Input placeholder="Workspace name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
           <Input placeholder="Company name" value={form.company_name} onChange={(e) => setForm({ ...form, company_name: e.target.value })} />
           <Input placeholder="Owner email" value={form.owner_email} onChange={(e) => setForm({ ...form, owner_email: e.target.value })} />
-          <Button onClick={handleCreate} className="bg-[#e2231a] hover:bg-[#b01b13]">Create Broker Workspace</Button>
+          <Button onClick={handleCreate} className="bg-[#e2231a] hover:bg-[#b01b13]">Create Dealer Workspace</Button>
         </CardContent>
       </Card>
 
@@ -58,7 +58,7 @@ export default function SetupBrokerInstances() {
               <div className="text-sm text-slate-500">{broker.company_name || broker.owner_email}</div>
             </div>
           ))}
-          {brokers.length === 0 && <p className="text-sm text-slate-500">No broker workspaces yet.</p>}
+          {brokers.length === 0 && <p className="text-sm text-slate-500">No dealer workspaces yet.</p>}
         </CardContent>
       </Card>
     </div>

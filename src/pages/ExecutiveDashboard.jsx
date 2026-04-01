@@ -78,7 +78,7 @@ export default function ExecutiveDashboard() {
   const detailConfig = {
     active: {
       title: 'Active Orders',
-      subtitle: 'Open deals currently moving through the broker pipeline',
+      subtitle: 'Open deals currently moving through the dealer pipeline',
       orders: metrics.activeOrders
     },
     pipelineValue: {
@@ -171,7 +171,7 @@ export default function ExecutiveDashboard() {
               </div>
               <h1 className="mt-4 text-3xl md:text-4xl font-black tracking-tight text-slate-900">Admin Sales Breakdown</h1>
               <p className="mt-2 text-sm md:text-base text-slate-600">
-                Broker-level KPIs for active orders, won/lost performance, and pipeline health{brokerInstance?.name ? ` for ${brokerInstance.name}` : ''}.
+                Dealer-level KPIs for active orders, won/lost performance, and pipeline health{brokerInstance?.name ? ` for ${brokerInstance.name}` : ''}.
               </p>
             </div>
             <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
@@ -249,7 +249,7 @@ export default function ExecutiveDashboard() {
           <div className="grid gap-4 md:grid-cols-3">
             <div className="rounded-2xl bg-slate-50 p-4">
               <p className="text-xs uppercase tracking-wide text-slate-400">Most important now</p>
-              <p className="mt-2 text-sm font-semibold text-slate-900">{metrics.activeOrders.length} active orders are still moving through the broker pipeline.</p>
+              <p className="mt-2 text-sm font-semibold text-slate-900">{metrics.activeOrders.length} active orders are still moving through the dealer pipeline.</p>
             </div>
             <div className="rounded-2xl bg-slate-50 p-4">
               <p className="text-xs uppercase tracking-wide text-slate-400">Revenue signal</p>
@@ -264,8 +264,8 @@ export default function ExecutiveDashboard() {
 
         <DashboardAgentPanel
           agentName="executive_analytics_assistant"
-          title="Broker Agent"
-          subtitle="Ask about this org or compare across all orgs."
+          title="Dealer Agent"
+          subtitle="Ask about this dealer org or compare across all dealer orgs."
           promptHint="Ask things like: get me the most recent order created, what is this org's pipeline, or compare this org to all orgs."
           starterQuestions={[
             'Get me the most recent order created',
