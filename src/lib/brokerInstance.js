@@ -41,10 +41,6 @@ export async function ensureBrokerInstance(user) {
       : [];
 
     if (instances?.length > 0) {
-      await base44.auth.updateMe({
-        broker_instance_id: brokerInstanceId,
-        broker_role: memberRole
-      });
       return instances[0];
     }
   }
@@ -66,11 +62,6 @@ export async function ensureBrokerInstance(user) {
     user_email: user.email,
     member_role: 'owner',
     is_active: true
-  });
-
-  await base44.auth.updateMe({
-    broker_instance_id: instance.id,
-    broker_role: 'owner'
   });
 
   return instance;
