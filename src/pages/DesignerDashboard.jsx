@@ -4,6 +4,7 @@ import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Building2, Users, DollarSign, ClipboardList } from 'lucide-react';
 import BrokerWorkspaceSwitcher from '@/components/broker/BrokerWorkspaceSwitcher';
 import DashboardAgentPanel from '@/components/agents/DashboardAgentPanel';
@@ -17,6 +18,7 @@ export default function DesignerDashboard() {
   const [orders, setOrders] = useState([]);
   const [members, setMembers] = useState([]);
   const [permissionSets, setPermissionSets] = useState([]);
+  const [showGlobalPrompt, setShowGlobalPrompt] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -51,14 +53,16 @@ export default function DesignerDashboard() {
     [brokerInstances, context]
   );
 
+  const isGlobalView = !context?.effectiveBrokerId;
+
   const scopedOrders = useMemo(
-    () => scopeItems(orders, context?.effectiveBrokerId),
-    [orders, context]
+    () => isGlobalView ? orders : scopeItems(orders, context?.effectiveBrokerId),
+    [orders, context, isGlobalView]
   );
 
   const scopedMembers = useMemo(
-    () => scopeItems(members, context?.effectiveBrokerId),
-    [members, context]
+    () => isGlobalView ? members : scopeItems(members, context?.effectiveBrokerId),
+    [members, context, isGlobalView]
   );
 
   const totalRevenue = scopedOrders.reduce((sum, order) => sum + (order.final_price || order.quoted_price || 0), 0);
@@ -67,6 +71,19 @@ export default function DesignerDashboard() {
 
   const handleSwitch = async (brokerId) => {
     await setActiveBrokerInstance(brokerId);
+    await loadData();
+  };
+
+  const handleEnterGlobalView = async () => {
+    await setActiveBrokerInstance('');
+    setShowGlobalPrompt(false);
+    await loadData();
+  };
+
+  const handleReturnToDealerView = async () => {
+    const fallbackDealerId = brokerInstances[0]?.id || context?.dealerInstance?.id || context?.user?.dealer_instance_id || '';
+    if (!fallbackDealerId) return;
+    await setActiveBrokerInstance(fallbackDealerId);
     await loadData();
   };
 
@@ -80,37 +97,44 @@ export default function DesignerDashboard() {
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
             <h1 className="text-3xl font-black text-slate-900">Global Admin Dashboard</h1>
-            <p className="text-slate-600 mt-1">Switch between dealers, review isolated workspaces, and drill into a selected dealer safely.</p>
+            <p className="text-slate-600 mt-1">{isGlobalView ? 'Viewing all dealer data at the global level until you switch back into a dealer workspace.' : 'Switch between dealers, review isolated workspaces, and drill into a selected dealer safely.'}</p>
           </div>
-          <BrokerWorkspaceSwitcher
-            brokerInstances={brokerInstances}
-            activeBrokerId={context.effectiveBrokerId}
-            onChange={handleSwitch}
-          />
+          <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
+            <BrokerWorkspaceSwitcher
+              brokerInstances={brokerInstances}
+              activeBrokerId={context.effectiveBrokerId}
+              onChange={handleSwitch}
+            />
+            {isGlobalView ? (
+              <Button variant="outline" onClick={handleReturnToDealerView}>Return to Dealer View</Button>
+            ) : (
+              <Button variant="outline" onClick={() => setShowGlobalPrompt(true)}>Enter Global View</Button>
+            )}
+          </div>
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <MetricCard icon={Building2} label="Dealer Orgs" value={brokerInstances.length} />
-          <MetricCard icon={Users} label="Dealer Users" value={scopedMembers.length} />
-          <MetricCard icon={ClipboardList} label="Dealer Orders" value={scopedOrders.length} />
-          <MetricCard icon={DollarSign} label="Dealer Revenue" value={formatPrice(totalRevenue)} />
+        <MetricCard icon={Building2} label={isGlobalView ? 'All Dealer Orgs' : 'Dealer Orgs'} value={isGlobalView ? brokerInstances.length : 1} />
+        <MetricCard icon={Users} label={isGlobalView ? 'All Dealer Users' : 'Dealer Users'} value={scopedMembers.length} />
+        <MetricCard icon={ClipboardList} label={isGlobalView ? 'All Dealer Orders' : 'Dealer Orders'} value={scopedOrders.length} />
+        <MetricCard icon={DollarSign} label={isGlobalView ? 'Global Revenue' : 'Dealer Revenue'} value={formatPrice(totalRevenue)} />
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>{activeBroker?.name || 'No dealer selected'}</CardTitle>
-            <CardDescription>Current isolated workspace snapshot</CardDescription>
+            <CardTitle>{isGlobalView ? 'Global Portfolio View' : activeBroker?.name || 'No dealer selected'}</CardTitle>
+            <CardDescription>{isGlobalView ? 'Showing combined data across all dealer workspaces.' : 'Current isolated workspace snapshot'}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="grid md:grid-cols-2 gap-4 text-sm">
-              <InfoRow label="Workspace ID" value={activeBroker?.id || '-'} />
-              <InfoRow label="Owner Email" value={activeBroker?.owner_email || '-'} />
-              <InfoRow label="Company" value={activeBroker?.company_name || '-'} />
-              <InfoRow label="Status" value={activeBroker?.status || '-'} />
+              <InfoRow label="Workspace ID" value={isGlobalView ? 'All workspaces' : activeBroker?.id || '-'} />
+              <InfoRow label="Owner Email" value={isGlobalView ? '-' : activeBroker?.owner_email || '-'} />
+              <InfoRow label="Company" value={isGlobalView ? 'Combined portfolio' : activeBroker?.company_name || '-'} />
+              <InfoRow label="Status" value={isGlobalView ? 'global' : activeBroker?.status || '-'} />
             </div>
             <div className="flex flex-wrap gap-2 pt-2">
               <Button onClick={() => navigate(createPageUrl('Setup'))} variant="outline">Open Org Setup</Button>
-              <Button onClick={() => navigate(createPageUrl('SalesDashboard'))} className="bg-[#e2231a] hover:bg-[#b01b13]">Open Selected Org</Button>
+              {!isGlobalView && <Button onClick={() => navigate(createPageUrl('SalesDashboard'))} className="bg-[#e2231a] hover:bg-[#b01b13]">Open Selected Org</Button>}
             </div>
           </CardContent>
         </Card>
@@ -119,7 +143,7 @@ export default function DesignerDashboard() {
           <DashboardAgentPanel
             agentName="executive_analytics_assistant"
             title="Global Agent"
-            subtitle="Ask about the selected org or the full multi-org portfolio."
+            subtitle={isGlobalView ? 'Ask about the full multi-org portfolio.' : 'Ask about the selected org or the full multi-org portfolio.'}
             promptHint="Ask things like: which org has the largest pipeline, what are the quarterly projections for Q3 this year, or if we keep the same growth rate where do we land in Q3 2027."
             starterQuestions={[
               'Which org has the largest pipeline?',
@@ -128,6 +152,21 @@ export default function DesignerDashboard() {
             ]}
           />
         )}
+
+        <AlertDialog open={showGlobalPrompt} onOpenChange={setShowGlobalPrompt}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Switch to Global View?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Would you like to log out of the current dealer workspace and see everything at the global level until you choose another dealer instance?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Stay in Dealer View</AlertDialogCancel>
+              <AlertDialogAction onClick={handleEnterGlobalView}>Yes, go global</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
@@ -18,13 +18,14 @@ export default function Layout({ children, currentPageName }) {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [objectTabs, setObjectTabs] = useState([]);
   const [activeOrgName, setActiveOrgName] = useState('');
+  const [hasGlobalProfile, setHasGlobalProfile] = useState(false);
   const analyticsRef = useRef(null);
   const workspaceRef = useRef(null);
   const settingsRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => { checkAuth(); initDarkMode(); }, [currentPageName]);
-  useEffect(() => { if (user) { loadObjectTabs(); loadActiveOrgName(); } }, [user?.dealer_instance_id, user?.active_dealer_instance_id, user?.broker_instance_id, user?.active_broker_instance_id, currentPageName]);
+  useEffect(() => { if (user) { loadObjectTabs(); loadActiveOrgName(); loadGlobalProfileAccess(); } }, [user?.id, user?.dealer_instance_id, user?.active_dealer_instance_id, user?.broker_instance_id, user?.active_broker_instance_id, currentPageName]);
   useEffect(() => { setMobileMenuOpen(false); }, [currentPageName]);
 
   useEffect(() => {
@@ -83,13 +84,33 @@ export default function Layout({ children, currentPageName }) {
     try {
       const activeDealerId = user?.active_dealer_instance_id || user?.dealer_instance_id || user?.active_broker_instance_id || user?.broker_instance_id;
       if (!activeDealerId) {
-        setActiveOrgName('');
+        setActiveOrgName('Global View');
         return;
       }
       const dealers = await base44.entities.DealerInstance.filter({ id: activeDealerId }, 'name', 1);
       setActiveOrgName(dealers?.[0]?.name || dealers?.[0]?.company_name || '');
     } catch {
       setActiveOrgName('');
+    }
+  };
+
+  const loadGlobalProfileAccess = async () => {
+    try {
+      if (!user?.id) {
+        setHasGlobalProfile(false);
+        return;
+      }
+      const assignments = await base44.entities.UserPermissionAssignment.filter({ user_id: user.id }, 'updated_date', 20);
+      const profileIds = [...new Set((assignments || []).map(item => item.profile_id || item.data?.profile_id).filter(Boolean))];
+      if (profileIds.length === 0) {
+        setHasGlobalProfile(false);
+        return;
+      }
+      const profiles = await base44.entities.Profile.list('name', 200);
+      const hasMatch = (profiles || []).some(profile => profileIds.includes(profile.id) && String(profile.name || profile.data?.name || '').toLowerCase().includes('global'));
+      setHasGlobalProfile(hasMatch);
+    } catch {
+      setHasGlobalProfile(false);
     }
   };
 
@@ -128,7 +149,7 @@ export default function Layout({ children, currentPageName }) {
   ];
 
   const isGlobalAdmin = user?.email === 'ndowling970@gmail.com';
-  const canSeeGlobalAdmin = isGlobalAdmin;
+  const canSeeGlobalAdmin = isGlobalAdmin && hasGlobalProfile;
   const canSeeExecutive = ['admin', 'broker'].includes(user?.role);
   const canSeeSetup = ['admin', 'designer'].includes(user?.role);
 
