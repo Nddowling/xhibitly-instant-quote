@@ -1,50 +1,30 @@
 {
-  "name": "Account",
+  "name": "Dealer",
   "type": "object",
   "properties": {
-    "name": {
+    "dealer_name": {
       "type": "string",
-      "description": "Account name"
+      "description": "Name of the dealer company"
     },
-    "website": {
+    "phone_number": {
       "type": "string",
-      "description": "Company website"
+      "description": "Main phone number for the dealer"
     },
-    "industry": {
+    "lead_contact_name": {
       "type": "string",
-      "description": "Industry or market"
+      "description": "Primary point of contact name"
     },
-    "phone": {
+    "lead_contact_phone": {
       "type": "string",
-      "description": "Main account phone"
+      "description": "Phone number for the lead contact"
     },
-    "billing_address": {
+    "lead_contact_email": {
       "type": "string",
-      "description": "Billing or office address"
+      "description": "Email for the lead contact"
     },
-    "description": {
+    "location": {
       "type": "string",
-      "description": "Internal account notes"
-    },
-    "broker_instance_id": {
-      "type": "string",
-      "description": "Broker workspace scope"
-    },
-    "dealer_instance_id": {
-      "type": "string",
-      "description": "Dealer workspace scope"
-    },
-    "owner_user_id": {
-      "type": "string",
-      "description": "Account owner user id"
-    },
-    "record_type_id": {
-      "type": "string",
-      "description": "Associated record type id"
-    },
-    "page_layout_id": {
-      "type": "string",
-      "description": "Associated page layout id"
+      "description": "Dealer location (city, state, or full address)"
     },
     "dealer_id": {
       "type": "string",
@@ -72,7 +52,11 @@
     },
     "email": {
       "type": "string",
-      "description": "General account email"
+      "description": "General dealer email"
+    },
+    "website": {
+      "type": "string",
+      "description": "Dealer website"
     },
     "lat": {
       "type": "number",
@@ -86,12 +70,20 @@
       "type": "string",
       "description": "Source system"
     },
+    "dealer_instance_id": {
+      "type": "string",
+      "description": "Dealer workspace scope"
+    },
     "record_type": {
       "type": "string",
       "description": "Record type label"
+    },
+    "record_type_id": {
+      "type": "string",
+      "description": "Associated record type id"
     }
   },
   "required": [
-    "name"
+    "dealer_name"
   ]
 }
