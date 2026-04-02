@@ -153,7 +153,6 @@ export default function Layout({ children, currentPageName }) {
   const canSeeSetup = ['admin', 'designer'].includes(user?.role);
 
   const adminNav = [
-    ...(canSeeGlobalAdmin ? [{ page: 'DesignerDashboard', label: 'Global Admin', icon: LayoutDashboard }] : []),
     ...(canSeeExecutive ? [{ page: 'ExecutiveDashboard', label: 'Executive', icon: ShieldCheck }] : []),
   ];
 
@@ -291,6 +290,17 @@ export default function Layout({ children, currentPageName }) {
                     </div>
                   )}
                 </div>
+
+                {canSeeGlobalAdmin && (
+                  <Link to={createPageUrl('DesignerDashboard')}>
+                    <button className={`flex items-center gap-1.5 px-2.5 lg:px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
+                      currentPageName === 'DesignerDashboard' ? 'bg-[#e2231a] text-white' : 'text-white/60 hover:text-white hover:bg-white/8'
+                    }`}>
+                      <LayoutDashboard className="w-4 h-4" />
+                      Global Admin
+                    </button>
+                  </Link>
+                )}
 
                 {adminNav.map(({ page, label, icon: Icon }) => (
                   <Link key={page} to={createPageUrl(page)}>
