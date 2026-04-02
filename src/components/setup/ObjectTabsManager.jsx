@@ -55,6 +55,7 @@ export default function ObjectTabsManager({ brokerInstanceId = null, compact = f
       route_path: buildRoutePath(objectDef.api_name),
       sort_order: (tabs[tabs.length - 1]?.sort_order || 0) + 10,
       is_active: true,
+      broker_instance_id: dealerInstanceId,
       dealer_instance_id: dealerInstanceId,
     });
     loadData();
