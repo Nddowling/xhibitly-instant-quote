@@ -60,6 +60,7 @@ export default function ContactDetail() {
       contact_name: dealerContact?.full_name || dealerContact?.data?.full_name || firstOrder?.dealer_name || 'Unknown Contact',
       phone: dealerContact?.phone || dealerContact?.data?.phone || firstOrder?.dealer_phone,
       title: dealerContact?.title || dealerContact?.data?.title,
+      record_type: dealerContact?.record_type || dealerContact?.data?.record_type || null,
       dealer_instance_id: dealerContact?.dealer_instance_id || dealerContact?.data?.dealer_instance_id,
       total_orders: contactOrders.length,
       total_value: contactOrders.reduce((sum, o) => sum + (o.quoted_price || 0), 0),
@@ -171,6 +172,15 @@ export default function ContactDetail() {
                     <div>
                       <p className="text-xs text-slate-500">Phone</p>
                       <p className="text-sm font-medium text-slate-900">{contact.phone}</p>
+                    </div>
+                  </div>
+                )}
+                {contact.record_type && (
+                  <div className="flex items-center gap-3">
+                    <User className="w-5 h-5 text-slate-400" />
+                    <div>
+                      <p className="text-xs text-slate-500">Record Type</p>
+                      <p className="text-sm font-medium text-slate-900">{contact.record_type}</p>
                     </div>
                   </div>
                 )}
