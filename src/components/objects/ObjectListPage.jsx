@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Search, ChevronRight } from 'lucide-react';
+import { loadBrokerContext, scopeItems } from '@/lib/brokerAccess';
 
 export default function ObjectListPage({ objectApiName, title }) {
   const navigate = useNavigate();
@@ -20,6 +21,18 @@ export default function ObjectListPage({ objectApiName, title }) {
   const loadRecords = async () => {
     setLoading(true);
     const data = await base44.entities[objectApiName].list('-created_date', 200);
+
+    if (objectApiName === 'Contact') {
+      const brokerContext = await loadBrokerContext();
+      const dealerId = brokerContext.effectiveDealerId || brokerContext.effectiveBrokerId;
+      const isGlobalAdminView = window.location.pathname === '/DesignerDashboard' || window.location.pathname === '/ExecutiveDashboard';
+      const scopedContacts = isGlobalAdminView ? (data || []) : scopeItems(data || [], dealerId);
+      const dealerContacts = scopedContacts.filter(contact => (contact.record_type || contact.data?.record_type) === 'Dealer');
+      setRecords(dealerContacts);
+      setLoading(false);
+      return;
+    }
+
     setRecords(data || []);
     setLoading(false);
   };
@@ -38,7 +51,7 @@ export default function ObjectListPage({ objectApiName, title }) {
     if (objectApiName === 'Product') {
       return [record.sku, record.category, record.product_line].filter(Boolean).join(' • ') || record.id;
     }
-    return record.email || record.phone || record.website || record.object_api_name || record.id;
+    return record.email || record.data?.email || record.phone || record.data?.phone || record.website || record.object_api_name || record.id;
   };
 
   const handleRecordClick = (record) => {
@@ -48,6 +61,10 @@ export default function ObjectListPage({ objectApiName, title }) {
     }
     if (objectApiName === 'Order') {
       navigate(`${createPageUrl('OrderDetail')}?id=${record.id}`);
+      return;
+    }
+    if (objectApiName === 'Contact') {
+      navigate(`${createPageUrl('ContactDetail')}?email=${encodeURIComponent(record.email || record.data?.email || '')}`);
       return;
     }
     navigate(`${createPageUrl('Setup')}?object=${objectApiName}&record=${record.id}`);
