@@ -33,6 +33,46 @@
     "source_broker_instance_id": {
       "type": "string",
       "description": "Legacy broker instance id used during migration"
+    },
+    "dealer_id": {
+      "type": "string",
+      "description": "External dealer identifier from import"
+    },
+    "address": {
+      "type": "string",
+      "description": "Street address"
+    },
+    "city": {
+      "type": "string",
+      "description": "City"
+    },
+    "state": {
+      "type": "string",
+      "description": "State"
+    },
+    "zip": {
+      "type": "string",
+      "description": "Postal code"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Main phone number"
+    },
+    "website": {
+      "type": "string",
+      "description": "Dealer website"
+    },
+    "lat": {
+      "type": "number",
+      "description": "Latitude"
+    },
+    "lng": {
+      "type": "number",
+      "description": "Longitude"
+    },
+    "source": {
+      "type": "string",
+      "description": "Source system"
     }
   },
   "required": [

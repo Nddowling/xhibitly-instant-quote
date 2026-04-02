@@ -30,13 +30,37 @@
       "type": "string",
       "description": "Department"
     },
-    "broker_instance_id": {
+    "dealer_instance_id": {
       "type": "string",
-      "description": "Broker workspace scope"
+      "description": "Dealer workspace scope"
     },
     "owner_user_id": {
       "type": "string",
       "description": "Contact owner user id"
+    },
+    "record_type_id": {
+      "type": "string",
+      "description": "Assigned record type"
+    },
+    "page_layout_id": {
+      "type": "string",
+      "description": "Resolved page layout"
+    },
+    "record_type": {
+      "type": "string",
+      "description": "Record type label"
+    },
+    "contact_id": {
+      "type": "string",
+      "description": "External contact identifier from import"
+    },
+    "dealer_id": {
+      "type": "string",
+      "description": "External dealer identifier from import"
+    },
+    "linkedin": {
+      "type": "string",
+      "description": "LinkedIn profile URL"
     }
   },
   "required": [
