@@ -112,10 +112,14 @@ export default function Layout({ children, currentPageName }) {
     icon: Briefcase,
   }));
 
-  const workspaceNav = [
-    ...objectNav,
-    ...primaryNav,
+  const defaultWorkspaceNav = [
+    { page: '/objects/Account', label: 'Accounts', icon: Briefcase },
+    { page: '/objects/Contact', label: 'Contacts', icon: Briefcase },
   ];
+
+  const workspaceNav = [...defaultWorkspaceNav, ...objectNav, ...primaryNav].filter(
+    (item, index, array) => array.findIndex(entry => entry.page === item.page) === index
+  );
 
   // Analytics dropdown items
   const analyticsNav = [

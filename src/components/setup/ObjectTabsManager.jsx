@@ -66,8 +66,11 @@ export default function ObjectTabsManager({ brokerInstanceId = null, compact = f
     loadData();
   };
 
-  const pinnedObjects = [{ api_name: 'Contact', label: 'Contacts' }];
-  const mergedObjects = [...pinnedObjects, ...objects.filter(object => object.api_name !== 'Contact')];
+  const pinnedObjects = [
+    { api_name: 'Account', label: 'Accounts' },
+    { api_name: 'Contact', label: 'Contacts' },
+  ];
+  const mergedObjects = [...pinnedObjects, ...objects.filter(object => !['Account', 'Contact'].includes(object.api_name))];
   const availableObjects = mergedObjects.filter(object => !tabs.some(tab => tab.object_api_name === object.api_name));
 
   return (
