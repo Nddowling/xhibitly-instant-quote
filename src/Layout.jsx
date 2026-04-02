@@ -148,8 +148,7 @@ export default function Layout({ children, currentPageName }) {
     { page: 'Dashboards',    label: 'Dashboards', icon: LayoutDashboard },
   ];
 
-  const isGlobalAdmin = user?.email === 'ndowling970@gmail.com';
-  const canSeeGlobalAdmin = isGlobalAdmin && hasGlobalProfile;
+  const canSeeGlobalAdmin = hasGlobalProfile;
   const canSeeExecutive = ['admin', 'broker'].includes(user?.role);
   const canSeeSetup = ['admin', 'designer'].includes(user?.role);
 
