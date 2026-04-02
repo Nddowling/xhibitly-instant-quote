@@ -56,18 +56,18 @@ export default function ObjectListPage({ objectApiName, title }) {
 
   const handleRecordClick = (record) => {
     if (objectApiName === 'Product') {
-      navigate(`${createPageUrl('ProductDetail')}?id=${record.id}`);
+      navigate(`/ProductDetail?id=${record.id}`);
       return;
     }
     if (objectApiName === 'Order') {
-      navigate(`${createPageUrl('OrderDetail')}?orderId=${record.id}`);
+      navigate(`/OrderDetail?orderId=${record.id}`);
       return;
     }
     if (objectApiName === 'Contact') {
-      navigate(`${createPageUrl('ContactDetail')}?email=${encodeURIComponent(record.email || record.data?.email || '')}`);
+      navigate(`/ContactDetail?email=${encodeURIComponent(record.email || record.data?.email || '')}`);
       return;
     }
-    navigate(`${createPageUrl('ObjectRecordDetail')}?object=${objectApiName}&id=${record.id}`);
+    navigate(`/ObjectRecordDetail?object=${encodeURIComponent(objectApiName)}&id=${record.id}`);
   };
 
   return (

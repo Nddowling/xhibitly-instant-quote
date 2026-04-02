@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ExternalLink } from 'lucide-react';
-import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -73,7 +72,7 @@ export default function ObjectRecordDetail() {
             </div>
             <Button
               variant="outline"
-              onClick={() => navigate(`${createPageUrl('Setup')}?object=${objectApiName}&record=${record.id}`)}
+              onClick={() => navigate(`/Setup?object=${encodeURIComponent(objectApiName)}&record=${record.id}`)}
             >
               <ExternalLink className="w-4 h-4 mr-2" />
               Open in Setup
