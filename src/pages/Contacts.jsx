@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
-import { Search, Building2, Mail, Phone, FileText, Plus } from 'lucide-react';
+import { Search, Building2, Mail, Phone, FileText, Plus, Send, KeyRound } from 'lucide-react';
 import { loadBrokerContext, scopeItems } from '@/lib/brokerAccess';
 
 export default function Contacts() {
@@ -17,6 +17,8 @@ export default function Contacts() {
   const [filteredContacts, setFilteredContacts] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [sendingInviteId, setSendingInviteId] = useState(null);
+  const [sendingResetId, setSendingResetId] = useState(null);
 
   useEffect(() => {
     loadContacts();
@@ -52,6 +54,8 @@ export default function Contacts() {
         const key = contact.id;
         contactsMap.set(key, {
           id: contact.id,
+          record_id: contact.id,
+          dealer_instance_id: contact.dealer_instance_id || contact.data?.dealer_instance_id,
           email: contact.email || contact.data?.email,
           company_name: dealerContacts.find(c => (c.dealer_instance_id || c.data?.dealer_instance_id) === (contact.dealer_instance_id || contact.data?.dealer_instance_id))?.company_name || '',
           contact_name: contact.full_name || contact.data?.full_name,
@@ -137,6 +141,22 @@ export default function Contacts() {
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(price || 0);
+  };
+
+  const sendInvite = async (contact, event) => {
+    event?.stopPropagation();
+    if (!contact.email) return;
+    setSendingInviteId(contact.id);
+    await base44.auth.inviteUser(contact.email, 'user');
+    setSendingInviteId(null);
+  };
+
+  const sendPasswordReset = async (contact, event) => {
+    event?.stopPropagation();
+    if (!contact.email) return;
+    setSendingResetId(contact.id);
+    await base44.auth.resetPasswordRequest(contact.email);
+    setSendingResetId(null);
   };
 
   if (isLoading) {
@@ -243,6 +263,18 @@ export default function Contacts() {
                         </span>
                       </div>
                     </div>
+                    {contact.source === 'contact' && contact.email && (
+                      <div className="pt-3 border-t border-slate-200 grid grid-cols-1 gap-2">
+                        <Button size="sm" className="bg-[#e2231a] hover:bg-[#b01b13]" onClick={(e) => sendInvite(contact, e)} disabled={sendingInviteId === contact.id}>
+                          <Send className="w-4 h-4 mr-2" />
+                          {sendingInviteId === contact.id ? 'Sending invite...' : 'Send Dealer Invite'}
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={(e) => sendPasswordReset(contact, e)} disabled={sendingResetId === contact.id}>
+                          <KeyRound className="w-4 h-4 mr-2" />
+                          {sendingResetId === contact.id ? 'Sending reset...' : 'Send Password Reset'}
+                        </Button>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               </motion.div>

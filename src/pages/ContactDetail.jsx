@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
 import { 
   Building2, Mail, Phone, User, FileText, DollarSign, 
-  Calendar, ArrowRight, Plus, Package
+  Calendar, ArrowRight, Plus, Package, Send, KeyRound
 } from 'lucide-react';
 
 export default function ContactDetail() {
@@ -16,6 +16,8 @@ export default function ContactDetail() {
   const [contact, setContact] = useState(null);
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [sendingInvite, setSendingInvite] = useState(false);
+  const [sendingReset, setSendingReset] = useState(false);
 
   const urlParams = new URLSearchParams(window.location.search);
   const email = urlParams.get('email');
@@ -30,30 +32,35 @@ export default function ContactDetail() {
 
   const loadContactData = async () => {
     const currentUser = await base44.auth.me();
-    if (!currentUser.is_sales_rep) {
+    if (!currentUser.is_sales_rep && currentUser.role !== 'admin') {
       navigate(createPageUrl('QuoteRequest'));
       return;
     }
 
-    const contactOrders = await base44.entities.Order.filter(
-      { dealer_email: email },
-      '-created_date',
-      100
-    );
+    const [contactRecords, contactOrders] = await Promise.all([
+      base44.entities.Contact.filter({ email }, '-created_date', 10),
+      base44.entities.Order.filter({ dealer_email: email }, '-created_date', 100),
+    ]);
 
-    if (contactOrders.length === 0) {
+    const dealerContact = (contactRecords || []).find(item => (item.record_type || item.data?.record_type) === 'Dealer');
+    const firstOrder = contactOrders[0];
+
+    if (!dealerContact && contactOrders.length === 0) {
       navigate(createPageUrl('Contacts'));
       return;
     }
 
-    const firstOrder = contactOrders[0];
     setContact({
-      email: firstOrder.dealer_email,
-      company_name: firstOrder.dealer_company,
-      contact_name: firstOrder.dealer_name,
-      phone: firstOrder.dealer_phone,
+      id: dealerContact?.id || email,
+      email: dealerContact?.email || dealerContact?.data?.email || firstOrder?.dealer_email || email,
+      company_name: dealerContact?.company_name || dealerContact?.data?.company_name || firstOrder?.dealer_company || 'No Company',
+      contact_name: dealerContact?.full_name || dealerContact?.data?.full_name || firstOrder?.dealer_name || 'Unknown Contact',
+      phone: dealerContact?.phone || dealerContact?.data?.phone || firstOrder?.dealer_phone,
+      title: dealerContact?.title || dealerContact?.data?.title,
+      dealer_instance_id: dealerContact?.dealer_instance_id || dealerContact?.data?.dealer_instance_id,
       total_orders: contactOrders.length,
       total_value: contactOrders.reduce((sum, o) => sum + (o.quoted_price || 0), 0),
+      is_dealer_contact: Boolean(dealerContact),
     });
     setOrders(contactOrders);
     setIsLoading(false);
@@ -85,6 +92,20 @@ export default function ContactDetail() {
     navigate(createPageUrl('SalesQuoteStart'));
   };
 
+  const sendInvite = async () => {
+    if (!contact?.email) return;
+    setSendingInvite(true);
+    await base44.auth.inviteUser(contact.email, 'user');
+    setSendingInvite(false);
+  };
+
+  const sendPasswordReset = async () => {
+    if (!contact?.email) return;
+    setSendingReset(true);
+    await base44.auth.resetPasswordRequest(contact.email);
+    setSendingReset(false);
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
@@ -112,10 +133,24 @@ export default function ContactDetail() {
                     </CardDescription>
                   </div>
                 </div>
-                <Button onClick={() => navigate(createPageUrl('CatalogQuote'))} className="bg-[#e2231a] hover:bg-[#b01b13]">
-                  <Plus className="w-4 h-4 mr-2" />
-                  Catalog Quote
-                </Button>
+                <div className="flex flex-wrap gap-2">
+                  <Button onClick={() => navigate(createPageUrl('CatalogQuote'))} className="bg-[#e2231a] hover:bg-[#b01b13]">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Catalog Quote
+                  </Button>
+                  {contact?.is_dealer_contact && contact?.email && (
+                    <>
+                      <Button onClick={sendInvite} disabled={sendingInvite} className="bg-slate-900 hover:bg-slate-800">
+                        <Send className="w-4 h-4 mr-2" />
+                        {sendingInvite ? 'Sending invite...' : 'Send Dealer Invite'}
+                      </Button>
+                      <Button onClick={sendPasswordReset} disabled={sendingReset} variant="outline">
+                        <KeyRound className="w-4 h-4 mr-2" />
+                        {sendingReset ? 'Sending reset...' : 'Send Password Reset'}
+                      </Button>
+                    </>
+                  )}
+                </div>
               </div>
             </CardHeader>
             <CardContent>
