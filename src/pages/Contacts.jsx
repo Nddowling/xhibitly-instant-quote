@@ -135,7 +135,10 @@ export default function Contacts() {
   };
 
   const handleContactClick = (contact) => {
-    navigate(createPageUrl('ContactDetail') + '?email=' + encodeURIComponent(contact.email));
+    const query = contact.record_id
+      ? `?id=${encodeURIComponent(contact.record_id)}`
+      : `?email=${encodeURIComponent(contact.email || '')}`;
+    navigate(createPageUrl('ContactDetail') + query);
   };
 
   const formatPrice = (price) => {
