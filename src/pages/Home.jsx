@@ -28,16 +28,16 @@ export default function Home() {
           .toLowerCase();
 
         const assignmentProfileNames = (assignments || [])
-          .flatMap(item => [item.profile_name, item.data?.profile_name])
+          .flatMap(item => [item.profile_name, item.data?.profile_name, item?.data?.data?.profile_name])
           .filter(Boolean)
           .map(value => String(value).toLowerCase());
 
-        const profileIds = [...new Set((assignments || []).map(item => item.profile_id || item.data?.profile_id).filter(Boolean))];
+        const profileIds = [...new Set((assignments || []).map(item => item.profile_id || item.data?.profile_id || item?.data?.data?.profile_id).filter(Boolean))];
         const profiles = profileIds.length > 0 ? await base44.entities.Profile.list('name', 200) : [];
         const hasGlobalProfile =
           directProfileText.includes('global') ||
           assignmentProfileNames.some(name => name.includes('global')) ||
-          (profiles || []).some(profile => profileIds.includes(profile.id) && String(profile.name || profile.data?.name || '').toLowerCase().includes('global'));
+          (profiles || []).some(profile => profileIds.includes(profile.id) && String(profile.name || profile.data?.name || profile?.data?.data?.name || '').toLowerCase().includes('global'));
 
         navigate(createPageUrl(hasGlobalProfile ? 'ExecutiveDashboard' : currentUser?.role === 'designer' ? 'DesignerDashboard' : 'SalesDashboard'));
         return;

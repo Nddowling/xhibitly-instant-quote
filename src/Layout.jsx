@@ -100,6 +100,7 @@ export default function Layout({ children, currentPageName }) {
         setHasGlobalProfile(false);
         return;
       }
+
       const userProfileText = [
         user?.profile_name,
         user?.profile,
@@ -112,9 +113,9 @@ export default function Layout({ children, currentPageName }) {
       }
 
       const assignments = await base44.entities.UserPermissionAssignment.filter({ user_id: user.id }, 'updated_date', 20);
-      const profileIds = [...new Set((assignments || []).map(item => item.profile_id || item.data?.profile_id).filter(Boolean))];
+      const profileIds = [...new Set((assignments || []).map(item => item.profile_id || item.data?.profile_id || item?.data?.data?.profile_id).filter(Boolean))];
       const assignmentProfileNames = (assignments || [])
-        .flatMap(item => [item.profile_name, item.data?.profile_name])
+        .flatMap(item => [item.profile_name, item.data?.profile_name, item?.data?.data?.profile_name])
         .filter(Boolean)
         .map(value => String(value).toLowerCase());
 
@@ -129,7 +130,11 @@ export default function Layout({ children, currentPageName }) {
       }
 
       const profiles = await base44.entities.Profile.list('name', 200);
-      const hasMatch = (profiles || []).some(profile => profileIds.includes(profile.id) && String(profile.name || profile.data?.name || '').toLowerCase().includes('global'));
+      const hasMatch = (profiles || []).some(profile => {
+        const profileName = profile.name || profile.data?.name || profile?.data?.data?.name || '';
+        return profileIds.includes(profile.id) && String(profileName).toLowerCase().includes('global');
+      });
+
       setHasGlobalProfile(hasMatch);
     } catch {
       setHasGlobalProfile(false);
