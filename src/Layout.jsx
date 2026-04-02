@@ -24,7 +24,7 @@ export default function Layout({ children, currentPageName }) {
   const navigate = useNavigate();
 
   useEffect(() => { checkAuth(); initDarkMode(); }, [currentPageName]);
-  useEffect(() => { if (user) { loadObjectTabs(); loadActiveOrgName(); } }, [user?.broker_instance_id, user?.active_broker_instance_id, currentPageName]);
+  useEffect(() => { if (user) { loadObjectTabs(); loadActiveOrgName(); } }, [user?.dealer_instance_id, user?.active_dealer_instance_id, user?.broker_instance_id, user?.active_broker_instance_id, currentPageName]);
   useEffect(() => { setMobileMenuOpen(false); }, [currentPageName]);
 
   useEffect(() => {
@@ -67,12 +67,12 @@ export default function Layout({ children, currentPageName }) {
 
   const loadObjectTabs = async () => {
     try {
-      if (!user?.broker_instance_id) {
+      const activeDealerId = user?.active_dealer_instance_id || user?.dealer_instance_id || user?.active_broker_instance_id || user?.broker_instance_id;
+      if (!activeDealerId) {
         setObjectTabs([]);
         return;
       }
-      const activeBrokerId = user?.active_broker_instance_id || user?.broker_instance_id;
-      const tabs = await base44.entities.ObjectTab.filter({ broker_instance_id: activeBrokerId, is_active: true }, 'sort_order', 50);
+      const tabs = await base44.entities.ObjectTab.filter({ dealer_instance_id: activeDealerId, is_active: true }, 'sort_order', 50);
       setObjectTabs(tabs || []);
     } catch {
       setObjectTabs([]);
@@ -81,13 +81,13 @@ export default function Layout({ children, currentPageName }) {
 
   const loadActiveOrgName = async () => {
     try {
-      const activeBrokerId = user?.active_broker_instance_id || user?.broker_instance_id;
-      if (!activeBrokerId) {
+      const activeDealerId = user?.active_dealer_instance_id || user?.dealer_instance_id || user?.active_broker_instance_id || user?.broker_instance_id;
+      if (!activeDealerId) {
         setActiveOrgName('');
         return;
       }
-      const brokers = await base44.entities.BrokerInstance.filter({ id: activeBrokerId }, 'name', 1);
-      setActiveOrgName(brokers?.[0]?.name || brokers?.[0]?.company_name || '');
+      const dealers = await base44.entities.DealerInstance.filter({ id: activeDealerId }, 'name', 1);
+      setActiveOrgName(dealers?.[0]?.name || dealers?.[0]?.company_name || '');
     } catch {
       setActiveOrgName('');
     }
@@ -286,7 +286,7 @@ export default function Layout({ children, currentPageName }) {
                 <span className="hidden xl:block text-xs text-white/40 mr-1 max-w-[96px] truncate">
                   {user?.full_name?.split(' ')[0] || 'Dealer'}
                 </span>
-                <HeaderTabEditor brokerInstanceId={user?.broker_instance_id} />
+                <HeaderTabEditor brokerInstanceId={user?.active_dealer_instance_id || user?.dealer_instance_id || user?.active_broker_instance_id || user?.broker_instance_id} />
                 <div className="relative" ref={settingsRef}>
                   <button
                     onClick={() => setSettingsOpen(o => !o)}
