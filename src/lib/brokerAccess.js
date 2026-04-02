@@ -9,8 +9,9 @@ export async function loadBrokerContext() {
     : null;
 
   const isDesigner = user?.role === 'admin';
+  const hasExplicitGlobalSelection = user?.active_dealer_instance_id === '' || user?.active_broker_instance_id === '';
   const effectiveDealerId = isDesigner
-    ? (user?.active_dealer_instance_id || dealerInstance?.id || user?.dealer_instance_id || '')
+    ? (hasExplicitGlobalSelection ? '' : (user?.active_dealer_instance_id || dealerInstance?.id || user?.dealer_instance_id || ''))
     : (dealerInstance?.id || user?.dealer_instance_id || '');
 
   return {

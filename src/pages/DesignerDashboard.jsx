@@ -81,7 +81,7 @@ export default function DesignerDashboard() {
   };
 
   const handleReturnToDealerView = async () => {
-    const fallbackDealerId = brokerInstances[0]?.id || context?.dealerInstance?.id || context?.user?.dealer_instance_id || '';
+    const fallbackDealerId = context?.dealerInstance?.id || context?.user?.dealer_instance_id || brokerInstances[0]?.id || '';
     if (!fallbackDealerId) return;
     await setActiveBrokerInstance(fallbackDealerId);
     await loadData();
@@ -122,7 +122,7 @@ export default function DesignerDashboard() {
 
         <Card>
           <CardHeader>
-            <CardTitle>{isGlobalView ? 'Global Portfolio View' : activeBroker?.name || 'No dealer selected'}</CardTitle>
+            <CardTitle>{isGlobalView ? 'Global Portfolio View' : activeBroker?.name || context?.dealerInstance?.name || 'No dealer selected'}</CardTitle>
             <CardDescription>{isGlobalView ? 'Showing combined data across all dealer workspaces.' : 'Current isolated workspace snapshot'}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
