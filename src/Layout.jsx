@@ -100,12 +100,34 @@ export default function Layout({ children, currentPageName }) {
         setHasGlobalProfile(false);
         return;
       }
+      const userProfileText = [
+        user?.profile_name,
+        user?.profile,
+        user?.role,
+      ].filter(Boolean).join(' ').toLowerCase();
+
+      if (userProfileText.includes('global')) {
+        setHasGlobalProfile(true);
+        return;
+      }
+
       const assignments = await base44.entities.UserPermissionAssignment.filter({ user_id: user.id }, 'updated_date', 20);
       const profileIds = [...new Set((assignments || []).map(item => item.profile_id || item.data?.profile_id).filter(Boolean))];
+      const assignmentProfileNames = (assignments || [])
+        .flatMap(item => [item.profile_name, item.data?.profile_name])
+        .filter(Boolean)
+        .map(value => String(value).toLowerCase());
+
+      if (assignmentProfileNames.some(name => name.includes('global'))) {
+        setHasGlobalProfile(true);
+        return;
+      }
+
       if (profileIds.length === 0) {
         setHasGlobalProfile(false);
         return;
       }
+
       const profiles = await base44.entities.Profile.list('name', 200);
       const hasMatch = (profiles || []).some(profile => profileIds.includes(profile.id) && String(profile.name || profile.data?.name || '').toLowerCase().includes('global'));
       setHasGlobalProfile(hasMatch);
