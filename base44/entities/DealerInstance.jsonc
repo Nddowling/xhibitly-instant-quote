@@ -1,0 +1,44 @@
+{
+  "name": "DealerInstance",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Dealer workspace name"
+    },
+    "slug": {
+      "type": "string",
+      "description": "Unique dealer workspace slug"
+    },
+    "owner_user_id": {
+      "type": "string",
+      "description": "First user who created the dealer instance"
+    },
+    "owner_email": {
+      "type": "string",
+      "description": "Owner email"
+    },
+    "company_name": {
+      "type": "string",
+      "description": "Dealer company name"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive"
+      ],
+      "default": "active"
+    },
+    "source_broker_instance_id": {
+      "type": "string",
+      "description": "Legacy broker instance id used during migration"
+    }
+  },
+  "required": [
+    "name",
+    "slug",
+    "owner_user_id",
+    "owner_email"
+  ]
+}
