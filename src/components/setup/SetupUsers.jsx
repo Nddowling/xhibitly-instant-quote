@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { clearPermissionsCache } from '@/components/utils/permissionsEngine';
-import { Users, Save, X, Shield, Key } from 'lucide-react';
+import { Users, Save, X, Shield, Key, Building2, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
 export default function SetupUsers() {
   const [users, setUsers] = useState([]);
+  const [dealerMembers, setDealerMembers] = useState([]);
+  const [dealerInstances, setDealerInstances] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [view, setView] = useState('org');
   const [profiles, setProfiles] = useState([]);
   const [permSets, setPermSets] = useState([]);
   const [assignments, setAssignments] = useState([]);
@@ -16,16 +20,22 @@ export default function SetupUsers() {
   useEffect(() => { loadAll(); }, []);
 
   const loadAll = async () => {
-    const [u, p, ps, a] = await Promise.all([
+    const [me, u, p, ps, a, members, instances] = await Promise.all([
+      base44.auth.me(),
       base44.entities.User.list(),
       base44.entities.Profile.list(),
       base44.entities.PermissionSet.list(),
       base44.entities.UserPermissionAssignment.list(),
+      base44.entities.DealerMember.list(),
+      base44.entities.DealerInstance.list(),
     ]);
+    setCurrentUser(me);
     setUsers(u);
     setProfiles(p);
     setPermSets(ps);
     setAssignments(a);
+    setDealerMembers(members);
+    setDealerInstances(instances);
   };
 
   const openUser = (user) => {
@@ -69,12 +79,51 @@ export default function SetupUsers() {
 
   const getAssignment = (userId) => assignments.find(a => a.user_id === userId);
   const getProfileName = (profileId) => profiles.find(p => p.id === profileId)?.name || 'None';
+  const activeDealerId = currentUser?.active_dealer_instance_id || currentUser?.dealer_instance_id || currentUser?.active_broker_instance_id || currentUser?.broker_instance_id;
+  const orgMemberUserIds = dealerMembers.filter(member => member.dealer_instance_id === activeDealerId).map(member => member.user_id);
+  const orgUsers = users.filter(user => orgMemberUserIds.includes(user.id));
+  const internalUsers = users.filter(user => !dealerMembers.some(member => member.user_id === user.id));
+  const dealerUsers = users.filter(user => dealerMembers.some(member => member.user_id === user.id));
+  const displayedUsers = view === 'org' ? orgUsers : users;
+  const getDealerBadges = (userId) => dealerMembers
+    .filter(member => member.user_id === userId)
+    .map(member => ({
+      id: member.id,
+      name: dealerInstances.find(instance => instance.id === member.dealer_instance_id)?.name || 'Unknown org',
+      role: member.member_role,
+    }));
 
   return (
     <div className="p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-slate-900">Users</h2>
+      <div className="flex items-center justify-between mb-6 gap-4 flex-wrap">
+        <div>
+          <h2 className="text-xl font-bold text-slate-900">Users</h2>
+          <p className="text-sm text-slate-500">Org Users follows the currently open org. Global Users shows everyone.</p>
+        </div>
+        <div className="inline-flex rounded-lg border border-slate-200 bg-white p-1">
+          <button onClick={() => setView('org')} className={`px-3 py-1.5 text-sm rounded-md flex items-center gap-1.5 ${view === 'org' ? 'bg-slate-900 text-white' : 'text-slate-600'}`}>
+            <Building2 className="w-4 h-4" /> Org Users
+          </button>
+          <button onClick={() => setView('global')} className={`px-3 py-1.5 text-sm rounded-md flex items-center gap-1.5 ${view === 'global' ? 'bg-slate-900 text-white' : 'text-slate-600'}`}>
+            <Globe className="w-4 h-4" /> Global Users
+          </button>
+        </div>
       </div>
+
+      {view === 'global' && (
+        <div className="grid gap-4 md:grid-cols-2 mb-6">
+          <div className="bg-white rounded-xl border border-slate-200 p-4">
+            <div className="text-sm font-semibold text-slate-900 mb-1">Internal Users</div>
+            <div className="text-2xl font-bold text-slate-900">{internalUsers.length}</div>
+            <p className="text-xs text-slate-500 mt-1">Platform users not assigned to a dealer org.</p>
+          </div>
+          <div className="bg-white rounded-xl border border-slate-200 p-4">
+            <div className="text-sm font-semibold text-slate-900 mb-1">Dealer Users</div>
+            <div className="text-2xl font-bold text-slate-900">{dealerUsers.length}</div>
+            <p className="text-xs text-slate-500 mt-1">Users assigned to one or more dealer orgs.</p>
+          </div>
+        </div>
+      )}
 
       <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
         <table className="w-full text-sm">
@@ -84,12 +133,21 @@ export default function SetupUsers() {
               <th className="text-left px-4 py-3 font-semibold text-slate-600">Email</th>
               <th className="text-left px-4 py-3 font-semibold text-slate-600">Profile</th>
               <th className="text-left px-4 py-3 font-semibold text-slate-600">Permission Sets</th>
+              <th className="text-left px-4 py-3 font-semibold text-slate-600">Org Access</th>
               <th className="px-4 py-3 w-16" />
             </tr>
           </thead>
           <tbody>
-            {users.map(user => {
+            {displayedUsers.length === 0 && (
+              <tr>
+                <td colSpan={6} className="px-4 py-8 text-center text-sm text-slate-500">
+                  {view === 'org' ? 'No users found for the currently open org.' : 'No users found.'}
+                </td>
+              </tr>
+            )}
+            {displayedUsers.map(user => {
               const assignment = getAssignment(user.id);
+              const dealerBadges = getDealerBadges(user.id);
               return (
                 <tr key={user.id} className="border-b border-slate-100 hover:bg-slate-50">
                   <td className="px-4 py-3 font-medium text-slate-800">{user.full_name}</td>
@@ -106,6 +164,18 @@ export default function SetupUsers() {
                         const ps = permSets.find(p => p.id === psId);
                         return ps ? <Badge key={psId} className="text-xs bg-blue-100 text-blue-700">{ps.name}</Badge> : null;
                       })}
+                    </div>
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex gap-1 flex-wrap">
+                      {dealerBadges.length > 0 ? dealerBadges.map(item => (
+                        <Badge key={item.id} variant="outline" className="text-xs gap-1">
+                          {item.name}
+                          <span className="text-slate-400">• {item.role}</span>
+                        </Badge>
+                      )) : (
+                        <Badge variant="outline" className="text-xs">Internal</Badge>
+                      )}
                     </div>
                   </td>
                   <td className="px-4 py-3">
