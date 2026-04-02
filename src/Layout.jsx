@@ -82,9 +82,13 @@ export default function Layout({ children, currentPageName }) {
 
   const loadActiveOrgName = async () => {
     try {
-      const activeDealerId = user?.active_dealer_instance_id || user?.dealer_instance_id || user?.active_broker_instance_id || user?.broker_instance_id;
+      const hasExplicitGlobalSelection = user?.active_dealer_instance_id === '' || user?.active_broker_instance_id === '';
+      const activeDealerId = hasExplicitGlobalSelection
+        ? ''
+        : (user?.active_dealer_instance_id || user?.dealer_instance_id || user?.active_broker_instance_id || user?.broker_instance_id);
+
       if (!activeDealerId) {
-        setActiveOrgName('Global View');
+        setActiveOrgName('Global');
         return;
       }
       const dealers = await base44.entities.DealerInstance.filter({ id: activeDealerId }, 'name', 1);
