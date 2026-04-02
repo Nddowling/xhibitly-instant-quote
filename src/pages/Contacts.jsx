@@ -41,23 +41,27 @@ export default function Contacts() {
 
       setUser({ ...currentUser, dealer_instance_id: brokerId });
 
-      const [allOrders, allContacts] = await Promise.all([
+      const [allOrders, allContacts, allDealerInstances] = await Promise.all([
         base44.entities.Order.list('-created_date', 1000),
         base44.entities.Contact.list('-created_date', 1000),
+        base44.entities.DealerInstance.list('name', 1000),
       ]);
       const orders = scopeItems(allOrders || [], brokerId);
       const dealerContacts = scopeItems(allContacts || [], brokerId).filter(contact => (contact.record_type || contact.data?.record_type) === 'Dealer');
+      const dealerInstanceMap = new Map((allDealerInstances || []).map(instance => [instance.id, instance]));
 
       const contactsMap = new Map();
 
       dealerContacts.forEach(contact => {
         const key = contact.id;
+        const dealerInstanceId = contact.dealer_instance_id || contact.data?.dealer_instance_id;
+        const dealerInstance = dealerInstanceMap.get(dealerInstanceId);
         contactsMap.set(key, {
           id: contact.id,
           record_id: contact.id,
-          dealer_instance_id: contact.dealer_instance_id || contact.data?.dealer_instance_id,
+          dealer_instance_id: dealerInstanceId,
           email: contact.email || contact.data?.email,
-          company_name: dealerContacts.find(c => (c.dealer_instance_id || c.data?.dealer_instance_id) === (contact.dealer_instance_id || contact.data?.dealer_instance_id))?.company_name || '',
+          company_name: dealerInstance?.company_name || dealerInstance?.name || '',
           contact_name: contact.full_name || contact.data?.full_name,
           phone: contact.phone || contact.data?.phone,
           title: contact.title || contact.data?.title,

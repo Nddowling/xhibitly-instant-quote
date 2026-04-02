@@ -37,12 +37,15 @@ export default function ContactDetail() {
       return;
     }
 
-    const [contactRecords, contactOrders] = await Promise.all([
+    const [contactRecords, contactOrders, dealerInstances] = await Promise.all([
       base44.entities.Contact.filter({ email }, '-created_date', 10),
       base44.entities.Order.filter({ dealer_email: email }, '-created_date', 100),
+      base44.entities.DealerInstance.list('name', 1000),
     ]);
 
     const dealerContact = (contactRecords || []).find(item => (item.record_type || item.data?.record_type) === 'Dealer');
+    const dealerInstanceId = dealerContact?.dealer_instance_id || dealerContact?.data?.dealer_instance_id;
+    const dealerInstance = (dealerInstances || []).find(item => item.id === dealerInstanceId);
     const firstOrder = contactOrders[0];
 
     if (!dealerContact && contactOrders.length === 0) {
@@ -53,7 +56,7 @@ export default function ContactDetail() {
     setContact({
       id: dealerContact?.id || email,
       email: dealerContact?.email || dealerContact?.data?.email || firstOrder?.dealer_email || email,
-      company_name: dealerContact?.company_name || dealerContact?.data?.company_name || firstOrder?.dealer_company || 'No Company',
+      company_name: dealerInstance?.company_name || dealerInstance?.name || dealerContact?.company_name || dealerContact?.data?.company_name || firstOrder?.dealer_company || 'No Company',
       contact_name: dealerContact?.full_name || dealerContact?.data?.full_name || firstOrder?.dealer_name || 'Unknown Contact',
       phone: dealerContact?.phone || dealerContact?.data?.phone || firstOrder?.dealer_phone,
       title: dealerContact?.title || dealerContact?.data?.title,
