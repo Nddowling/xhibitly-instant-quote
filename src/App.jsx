@@ -14,6 +14,7 @@ import CatalogAudit from './pages/CatalogAudit';
 import DesignerDashboard from './pages/DesignerDashboard';
 import Accounts from './pages/Accounts';
 import ObjectRecords from './pages/ObjectRecords';
+import ObjectRecordDetail from './pages/ObjectRecordDetail';
 import GlobalAgentLauncher from '@/components/agents/GlobalAgentLauncher';
 
 const { Pages, Layout, mainPage } = pagesConfig;
@@ -119,6 +120,14 @@ const AuthenticatedApp = () => {
         element={
           <LayoutWrapper currentPageName="ObjectRecords">
             <ObjectRecords />
+          </LayoutWrapper>
+        }
+      />
+      <Route
+        path="/ObjectRecordDetail"
+        element={
+          <LayoutWrapper currentPageName="ObjectRecordDetail">
+            <ObjectRecordDetail />
           </LayoutWrapper>
         }
       />

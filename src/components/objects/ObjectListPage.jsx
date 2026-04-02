@@ -60,14 +60,14 @@ export default function ObjectListPage({ objectApiName, title }) {
       return;
     }
     if (objectApiName === 'Order') {
-      navigate(`${createPageUrl('OrderDetail')}?id=${record.id}`);
+      navigate(`${createPageUrl('OrderDetail')}?orderId=${record.id}`);
       return;
     }
     if (objectApiName === 'Contact') {
       navigate(`${createPageUrl('ContactDetail')}?email=${encodeURIComponent(record.email || record.data?.email || '')}`);
       return;
     }
-    navigate(`${createPageUrl('Setup')}?object=${objectApiName}&record=${record.id}`);
+    navigate(`${createPageUrl('ObjectRecordDetail')}?object=${objectApiName}&id=${record.id}`);
   };
 
   return (
