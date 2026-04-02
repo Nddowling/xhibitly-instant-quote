@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { clearPermissionsCache } from '@/components/utils/permissionsEngine';
-import { Users, Save, X, Shield, Key, Building2, Globe } from 'lucide-react';
+import { Users, Save, X, Shield, Key, Building2, Globe, Mail, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
 export default function SetupUsers() {
   const [users, setUsers] = useState([]);
+  const [contacts, setContacts] = useState([]);
   const [dealerMembers, setDealerMembers] = useState([]);
   const [dealerInstances, setDealerInstances] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
@@ -20,9 +21,10 @@ export default function SetupUsers() {
   useEffect(() => { loadAll(); }, []);
 
   const loadAll = async () => {
-    const [me, u, p, ps, a, members, instances] = await Promise.all([
+    const [me, u, c, p, ps, a, members, instances] = await Promise.all([
       base44.auth.me(),
       base44.entities.User.list(),
+      base44.entities.Contact.list(),
       base44.entities.Profile.list(),
       base44.entities.PermissionSet.list(),
       base44.entities.UserPermissionAssignment.list(),
@@ -31,6 +33,7 @@ export default function SetupUsers() {
     ]);
     setCurrentUser(me);
     setUsers(u);
+    setContacts(c.filter(contact => (contact.record_type || contact.data?.record_type) === 'Dealer'));
     setProfiles(p);
     setPermSets(ps);
     setAssignments(a);
@@ -80,18 +83,17 @@ export default function SetupUsers() {
   const getAssignment = (userId) => assignments.find(a => a.user_id === userId);
   const getProfileName = (profileId) => profiles.find(p => p.id === profileId)?.name || 'None';
   const activeDealerId = currentUser?.active_dealer_instance_id || currentUser?.dealer_instance_id || currentUser?.active_broker_instance_id || currentUser?.broker_instance_id;
-  const orgMemberUserIds = dealerMembers.filter(member => member.dealer_instance_id === activeDealerId).map(member => member.user_id);
-  const orgUsers = users.filter(user => orgMemberUserIds.includes(user.id));
+  const orgContacts = contacts.filter(contact => (contact.dealer_instance_id || contact.data?.dealer_instance_id) === activeDealerId);
   const internalUsers = users.filter(user => !dealerMembers.some(member => member.user_id === user.id));
-  const dealerUsers = users.filter(user => dealerMembers.some(member => member.user_id === user.id));
-  const displayedUsers = view === 'org' ? orgUsers : [...internalUsers, ...dealerUsers];
-  const getDealerBadges = (userId) => dealerMembers
-    .filter(member => member.user_id === userId)
-    .map(member => ({
-      id: member.id,
-      name: dealerInstances.find(instance => instance.id === member.dealer_instance_id)?.name || 'Unknown org',
-      role: member.member_role,
-    }));
+  const dealerContacts = contacts;
+  const displayedRecords = view === 'org' ? orgContacts : [...internalUsers, ...dealerContacts];
+  const isContactRecord = (record) => !record.email || !!record.full_name || !!record.data?.full_name;
+  const getDealerBadges = (record) => {
+    const dealerInstanceId = record.dealer_instance_id || record.data?.dealer_instance_id;
+    if (!dealerInstanceId) return [];
+    const dealerName = dealerInstances.find(instance => instance.id === dealerInstanceId)?.name || 'Unknown org';
+    return [{ id: dealerInstanceId, name: dealerName, role: record.title || record.data?.title || 'Dealer Contact' }];
+  };
 
   return (
     <div className="p-6">
@@ -118,9 +120,9 @@ export default function SetupUsers() {
             <p className="text-xs text-slate-500 mt-1">Platform users not assigned to a dealer org.</p>
           </div>
           <div className="bg-white rounded-xl border border-slate-200 p-4">
-            <div className="text-sm font-semibold text-slate-900 mb-1">Dealer Users</div>
-            <div className="text-2xl font-bold text-slate-900">{dealerUsers.length}</div>
-            <p className="text-xs text-slate-500 mt-1">Users assigned to one or more dealer orgs.</p>
+            <div className="text-sm font-semibold text-slate-900 mb-1">Dealer Contacts</div>
+            <div className="text-2xl font-bold text-slate-900">{dealerContacts.length}</div>
+            <p className="text-xs text-slate-500 mt-1">Imported dealer people stored as Contacts.</p>
           </div>
           <div className="md:col-span-2 bg-white rounded-xl border border-slate-200 p-4">
             <div className="flex flex-wrap gap-2 text-xs">
@@ -144,45 +146,61 @@ export default function SetupUsers() {
             </tr>
           </thead>
           <tbody>
-            {displayedUsers.length === 0 && (
+            {displayedRecords.length === 0 && (
               <tr>
                 <td colSpan={6} className="px-4 py-8 text-center text-sm text-slate-500">
                   {view === 'org' ? 'No users found for the currently open org.' : 'No users found.'}
                 </td>
               </tr>
             )}
-            {displayedUsers.map((user, index) => {
-              const assignment = getAssignment(user.id);
-              const dealerBadges = getDealerBadges(user.id);
-              const previousUser = displayedUsers[index - 1];
-              const previousWasInternal = previousUser ? !dealerMembers.some(member => member.user_id === previousUser.id) : null;
-              const currentIsInternal = !dealerMembers.some(member => member.user_id === user.id);
+            {displayedRecords.map((record, index) => {
+              const isContact = isContactRecord(record);
+              const assignment = isContact ? null : getAssignment(record.id);
+              const dealerBadges = getDealerBadges(record);
+              const previousRecord = displayedRecords[index - 1];
+              const previousWasInternal = previousRecord ? !isContactRecord(previousRecord) : null;
+              const currentIsInternal = !isContact;
               const showSectionHeader = view === 'global' && (index === 0 || previousWasInternal !== currentIsInternal);
               return (
-                <React.Fragment key={user.id}>
+                <React.Fragment key={record.id}>
                   {showSectionHeader && (
                     <tr className="bg-slate-100 border-y border-slate-200">
                       <td colSpan={6} className="px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-600">
-                        {currentIsInternal ? 'Internal Users' : 'Dealer Users'}
+                        {currentIsInternal ? 'Internal Users' : 'Dealer Contacts'}
                       </td>
                     </tr>
                   )}
                 <tr className="border-b border-slate-100 hover:bg-slate-50">
-                  <td className="px-4 py-3 font-medium text-slate-800">{user.full_name}</td>
-                  <td className="px-4 py-3 text-slate-500">{user.email}</td>
+                  <td className="px-4 py-3 font-medium text-slate-800">{record.full_name || record.data?.full_name || record.full_name || record.data?.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.full_name || record.email || record.data?.email || 'No email'}</td>
+                  <td className="px-4 py-3 text-slate-500">{record.email || record.data?.email || '—'}</td>
                   <td className="px-4 py-3">
-                    <Badge variant="outline" className="gap-1 text-xs">
-                      <Shield className="w-3 h-3" />
-                      {getProfileName(assignment?.profile_id)}
-                    </Badge>
+                    {isContact ? (
+                      <Badge variant="outline" className="gap-1 text-xs">
+                        <Users className="w-3 h-3" />
+                        Dealer Contact
+                      </Badge>
+                    ) : (
+                      <Badge variant="outline" className="gap-1 text-xs">
+                        <Shield className="w-3 h-3" />
+                        {getProfileName(assignment?.profile_id)}
+                      </Badge>
+                    )}
                   </td>
                   <td className="px-4 py-3">
-                    <div className="flex gap-1 flex-wrap">
-                      {(assignment?.permission_set_ids || []).map(psId => {
-                        const ps = permSets.find(p => p.id === psId);
-                        return ps ? <Badge key={psId} className="text-xs bg-blue-100 text-blue-700">{ps.name}</Badge> : null;
-                      })}
-                    </div>
+                    {isContact ? (
+                      <div className="space-y-1 text-xs text-slate-500">
+                        {(record.title || record.data?.title) && <div>{record.title || record.data?.title}</div>}
+                        {(record.phone || record.data?.phone) && <div className="flex items-center gap-1"><Phone className="w-3 h-3" />{record.phone || record.data?.phone}</div>}
+                        {(record.email || record.data?.email) && <div className="flex items-center gap-1"><Mail className="w-3 h-3" />{record.email || record.data?.email}</div>}
+                      </div>
+                    ) : (
+                      <div className="flex gap-1 flex-wrap">
+                        {(assignment?.permission_set_ids || []).map(psId => {
+                          const ps = permSets.find(p => p.id === psId);
+                          return ps ? <Badge key={psId} className="text-xs bg-blue-100 text-blue-700">{ps.name}</Badge> : null;
+                        })}
+                      </div>
+                    )}
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex gap-1 flex-wrap">
@@ -197,7 +215,7 @@ export default function SetupUsers() {
                     </div>
                   </td>
                   <td className="px-4 py-3">
-                    <Button size="sm" variant="ghost" onClick={() => openUser(user)} className="text-xs">Edit</Button>
+                    {!isContact && <Button size="sm" variant="ghost" onClick={() => openUser(record)} className="text-xs">Edit</Button>}
                   </td>
                 </tr>
                 </React.Fragment>

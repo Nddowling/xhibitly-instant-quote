@@ -39,36 +39,64 @@ export default function Contacts() {
 
       setUser({ ...currentUser, dealer_instance_id: brokerId });
 
-      const allOrders = await base44.entities.Order.list('-created_date', 1000);
+      const [allOrders, allContacts] = await Promise.all([
+        base44.entities.Order.list('-created_date', 1000),
+        base44.entities.Contact.list('-created_date', 1000),
+      ]);
       const orders = scopeItems(allOrders || [], brokerId);
-      
-      // Group orders by customer email to create contact list
+      const dealerContacts = scopeItems(allContacts || [], brokerId).filter(contact => (contact.record_type || contact.data?.record_type) === 'Dealer');
+
       const contactsMap = new Map();
-      
+
+      dealerContacts.forEach(contact => {
+        const key = contact.id;
+        contactsMap.set(key, {
+          id: contact.id,
+          email: contact.email || contact.data?.email,
+          company_name: dealerContacts.find(c => (c.dealer_instance_id || c.data?.dealer_instance_id) === (contact.dealer_instance_id || contact.data?.dealer_instance_id))?.company_name || '',
+          contact_name: contact.full_name || contact.data?.full_name,
+          phone: contact.phone || contact.data?.phone,
+          title: contact.title || contact.data?.title,
+          total_orders: 0,
+          last_order_date: contact.created_date,
+          total_value: 0,
+          orders: [],
+          source: 'contact',
+        });
+      });
+
       orders.forEach(order => {
-        if (order.dealer_email) {
-          if (!contactsMap.has(order.dealer_email)) {
-            contactsMap.set(order.dealer_email, {
-              email: order.dealer_email,
-              company_name: order.dealer_company,
-              contact_name: order.dealer_name,
-              phone: order.dealer_phone,
-              total_orders: 0,
-              last_order_date: order.created_date,
-              total_value: 0,
-              orders: []
-            });
-          }
-          
-          const contact = contactsMap.get(order.dealer_email);
-          contact.total_orders += 1;
-          contact.total_value += (order.quoted_price || 0);
-          contact.orders.push(order);
-          
-          // Update last order date if more recent
-          if (new Date(order.created_date) > new Date(contact.last_order_date)) {
-            contact.last_order_date = order.created_date;
-          }
+        const matchingContact = dealerContacts.find(contact => {
+          const email = contact.email || contact.data?.email;
+          const fullName = contact.full_name || contact.data?.full_name;
+          return (email && email === order.dealer_email) || (fullName && fullName === order.dealer_name);
+        });
+        const key = matchingContact?.id || order.dealer_email || order.dealer_name;
+        if (!contactsMap.has(key)) {
+          contactsMap.set(key, {
+            id: key,
+            email: order.dealer_email,
+            company_name: order.dealer_company,
+            contact_name: order.dealer_name,
+            phone: order.dealer_phone,
+            total_orders: 0,
+            last_order_date: order.created_date,
+            total_value: 0,
+            orders: [],
+            source: 'order',
+          });
+        }
+
+        const contact = contactsMap.get(key);
+        contact.total_orders += 1;
+        contact.total_value += (order.quoted_price || 0);
+        contact.orders.push(order);
+        contact.company_name = contact.company_name || order.dealer_company;
+        contact.phone = contact.phone || order.dealer_phone;
+        contact.email = contact.email || order.dealer_email;
+
+        if (new Date(order.created_date) > new Date(contact.last_order_date)) {
+          contact.last_order_date = order.created_date;
         }
       });
 

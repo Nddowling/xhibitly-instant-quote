@@ -65,7 +65,9 @@ export default function ObjectTabsManager({ brokerInstanceId = null, compact = f
     loadData();
   };
 
-  const availableObjects = objects.filter(object => !tabs.some(tab => tab.object_api_name === object.api_name));
+  const pinnedObjects = [{ api_name: 'Contact', label: 'Contacts' }];
+  const mergedObjects = [...pinnedObjects, ...objects.filter(object => object.api_name !== 'Contact')];
+  const availableObjects = mergedObjects.filter(object => !tabs.some(tab => tab.object_api_name === object.api_name));
 
   return (
     <div className={`rounded-2xl border border-slate-200 bg-white shadow-sm ${compact ? 'p-4' : 'p-5'}`}>
