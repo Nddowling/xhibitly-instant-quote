@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
+import { createPageUrl } from '@/utils';
 import { BUILT_IN_OBJECTS } from '@/components/utils/reportEngine';
-import { Plus, Shield, Lock, Save, Sparkles, Copy, Trash2 } from 'lucide-react';
+import { Plus, Shield, Lock, Save, Sparkles, Copy, Trash2, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -170,6 +171,11 @@ export default function SetupProfiles() {
                     <Sparkles className="w-3.5 h-3.5" /> Full Access
                   </Button>
                 )}
+                <Button asChild variant="outline" size="sm" className="gap-1">
+                  <a href={`${createPageUrl('ProfileAssignedContacts')}?profileId=${selected.id}`}>
+                    <Users className="w-3.5 h-3.5" /> Assigned Contacts
+                  </a>
+                </Button>
                 <Button onClick={openCloneDialog} variant="outline" size="sm" className="gap-1">
                   <Copy className="w-3.5 h-3.5" /> Clone
                 </Button>
