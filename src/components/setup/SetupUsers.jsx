@@ -84,7 +84,7 @@ export default function SetupUsers() {
   const orgUsers = users.filter(user => orgMemberUserIds.includes(user.id));
   const internalUsers = users.filter(user => !dealerMembers.some(member => member.user_id === user.id));
   const dealerUsers = users.filter(user => dealerMembers.some(member => member.user_id === user.id));
-  const displayedUsers = view === 'org' ? orgUsers : users;
+  const displayedUsers = view === 'org' ? orgUsers : [...internalUsers, ...dealerUsers];
   const getDealerBadges = (userId) => dealerMembers
     .filter(member => member.user_id === userId)
     .map(member => ({
@@ -122,6 +122,12 @@ export default function SetupUsers() {
             <div className="text-2xl font-bold text-slate-900">{dealerUsers.length}</div>
             <p className="text-xs text-slate-500 mt-1">Users assigned to one or more dealer orgs.</p>
           </div>
+          <div className="md:col-span-2 bg-white rounded-xl border border-slate-200 p-4">
+            <div className="flex flex-wrap gap-2 text-xs">
+              <Badge variant="outline">Internal users first</Badge>
+              <Badge variant="outline">Dealer users second</Badge>
+            </div>
+          </div>
         </div>
       )}
 
@@ -145,11 +151,23 @@ export default function SetupUsers() {
                 </td>
               </tr>
             )}
-            {displayedUsers.map(user => {
+            {displayedUsers.map((user, index) => {
               const assignment = getAssignment(user.id);
               const dealerBadges = getDealerBadges(user.id);
+              const previousUser = displayedUsers[index - 1];
+              const previousWasInternal = previousUser ? !dealerMembers.some(member => member.user_id === previousUser.id) : null;
+              const currentIsInternal = !dealerMembers.some(member => member.user_id === user.id);
+              const showSectionHeader = view === 'global' && (index === 0 || previousWasInternal !== currentIsInternal);
               return (
-                <tr key={user.id} className="border-b border-slate-100 hover:bg-slate-50">
+                <React.Fragment key={user.id}>
+                  {showSectionHeader && (
+                    <tr className="bg-slate-100 border-y border-slate-200">
+                      <td colSpan={6} className="px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-600">
+                        {currentIsInternal ? 'Internal Users' : 'Dealer Users'}
+                      </td>
+                    </tr>
+                  )}
+                <tr className="border-b border-slate-100 hover:bg-slate-50">
                   <td className="px-4 py-3 font-medium text-slate-800">{user.full_name}</td>
                   <td className="px-4 py-3 text-slate-500">{user.email}</td>
                   <td className="px-4 py-3">
@@ -182,6 +200,7 @@ export default function SetupUsers() {
                     <Button size="sm" variant="ghost" onClick={() => openUser(user)} className="text-xs">Edit</Button>
                   </td>
                 </tr>
+                </React.Fragment>
               );
             })}
           </tbody>
