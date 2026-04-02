@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { clearPermissionsCache } from '@/components/utils/permissionsEngine';
-import { Users, Save, X, Shield, Key, Building2, Globe, Mail, Phone } from 'lucide-react';
+import { Users, Save, X, Shield, Key, Building2, Globe, Mail, Phone, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
@@ -220,7 +220,12 @@ export default function SetupUsers() {
                       </div>
                     </td>
                     <td className="px-4 py-3">
-                      {!isContact && <Button size="sm" variant="ghost" onClick={() => openUser(record)} className="text-xs">Edit</Button>}
+                      {!isContact && (
+                        <Button size="sm" variant="outline" onClick={() => openUser(record)} className="text-xs gap-1.5">
+                          <Pencil className="w-3.5 h-3.5" />
+                          Edit User
+                        </Button>
+                      )}
                     </td>
                   </tr>
                 </React.Fragment>
@@ -235,7 +240,8 @@ export default function SetupUsers() {
           <div className="bg-white rounded-t-2xl sm:rounded-2xl shadow-xl p-6 w-full max-w-md">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h2 className="text-lg font-bold text-slate-900">{selected.user.full_name}</h2>
+                <h2 className="text-lg font-bold text-slate-900">Edit User</h2>
+                <p className="text-sm font-medium text-slate-700">{selected.user.full_name}</p>
                 <p className="text-xs text-slate-500">{selected.user.email}</p>
               </div>
               <button onClick={() => setSelected(null)} className="text-slate-400 hover:text-slate-700"><X className="w-4 h-4" /></button>
@@ -246,6 +252,7 @@ export default function SetupUsers() {
                 <label className="text-xs font-semibold text-slate-600 mb-1.5 flex items-center gap-1 block">
                   <Shield className="w-3.5 h-3.5" /> Profile
                 </label>
+                <p className="text-xs text-slate-500 mb-2">Choose the user profile that controls their base access.</p>
                 <select
                   value={selected.assignment.profile_id}
                   onChange={e => setSelected(s => ({ ...s, assignment: { ...s.assignment, profile_id: e.target.value } }))}
@@ -260,6 +267,7 @@ export default function SetupUsers() {
                 <label className="text-xs font-semibold text-slate-600 mb-1.5 flex items-center gap-1 block">
                   <Key className="w-3.5 h-3.5" /> Permission Sets
                 </label>
+                <p className="text-xs text-slate-500 mb-2">Add or remove permission sets for extra access beyond the selected profile.</p>
                 <div className="space-y-1.5 max-h-48 overflow-y-auto">
                   {permSets.map(ps => (
                     <label key={ps.id} className="flex items-center gap-2 text-sm text-slate-700 cursor-pointer p-1.5 rounded hover:bg-slate-50">
