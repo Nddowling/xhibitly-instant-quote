@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { getAllObjects } from '@/components/utils/metadataEngine';
 import { Button } from '@/components/ui/button';
@@ -20,18 +20,26 @@ export default function ObjectTabsManager({ brokerInstanceId = null, compact = f
   }, [dealerInstanceId]);
 
   const loadData = async () => {
-    const [allObjects, allTabs] = await Promise.all([
+    const [allObjects, dealerTabs, brokerTabs] = await Promise.all([
       getAllObjects(),
       dealerInstanceId
         ? base44.entities.ObjectTab.filter({ dealer_instance_id: dealerInstanceId, is_active: true }, 'sort_order', 100)
         : base44.entities.ObjectTab.filter({ is_active: true }, 'sort_order', 100),
+      dealerInstanceId
+        ? base44.entities.ObjectTab.filter({ broker_instance_id: dealerInstanceId, is_active: true }, 'sort_order', 100)
+        : Promise.resolve([]),
     ]);
 
-    const normalizedTabs = (allTabs || []).map(tab => ({
-      id: tab.id,
-      ...tab,
-      ...(tab.data || {}),
-    }));
+    const allTabs = [...(dealerTabs || []), ...(brokerTabs || [])];
+
+    const normalizedTabs = Array.from(new Map((allTabs || []).map(tab => {
+      const normalized = {
+        id: tab.id,
+        ...tab,
+        ...(tab.data || {}),
+      };
+      return [normalized.object_api_name || normalized.id, normalized];
+    })).values());
 
     setObjects(allObjects || []);
     setTabs(normalizedTabs);
@@ -42,36 +50,44 @@ export default function ObjectTabsManager({ brokerInstanceId = null, compact = f
   };
 
   const handleAdd = async () => {
-    const objectDef = objects.find(object => object.api_name === selectedApiName);
-    if (!objectDef) return;
+    const objectDef = objects.find(object => object.api_name === selectedApiName) || mergedObjects.find(object => object.api_name === selectedApiName);
+    if (!objectDef || !dealerInstanceId) return;
 
     const existing = tabs.find(tab => tab.object_api_name === selectedApiName);
     if (existing) return;
-    if (!dealerInstanceId) return;
 
-    await base44.entities.ObjectTab.create({
+    const nextSortOrder = Math.max(0, ...tabs.map(tab => Number(tab.sort_order) || 0)) + 10;
+    const createdTab = await base44.entities.ObjectTab.create({
       object_api_name: objectDef.api_name,
       label: objectDef.label,
       route_path: buildRoutePath(objectDef.api_name),
-      sort_order: (tabs[tabs.length - 1]?.sort_order || 0) + 10,
+      sort_order: nextSortOrder,
       is_active: true,
-      broker_instance_id: dealerInstanceId,
       dealer_instance_id: dealerInstanceId,
     });
-    loadData();
+
+    const normalizedCreatedTab = {
+      id: createdTab.id,
+      ...createdTab,
+      ...(createdTab.data || {}),
+    };
+
+    setTabs(prev => [...prev, normalizedCreatedTab]);
+    const remainingObjects = availableObjects.filter(object => object.api_name !== objectDef.api_name);
+    setSelectedApiName(remainingObjects[0]?.api_name || '');
   };
 
   const handleRemove = async (tabId) => {
     await base44.entities.ObjectTab.delete(tabId);
-    loadData();
+    setTabs(prev => prev.filter(tab => tab.id !== tabId));
   };
 
   const pinnedObjects = [
     { api_name: 'Account', label: 'Accounts' },
     { api_name: 'Contact', label: 'Contacts' },
   ];
-  const mergedObjects = [...pinnedObjects, ...objects.filter(object => !['Account', 'Contact'].includes(object.api_name))];
-  const availableObjects = mergedObjects.filter(object => !tabs.some(tab => tab.object_api_name === object.api_name));
+  const mergedObjects = useMemo(() => [...pinnedObjects, ...objects.filter(object => !['Account', 'Contact'].includes(object.api_name))], [objects]);
+  const availableObjects = useMemo(() => mergedObjects.filter(object => !tabs.some(tab => tab.object_api_name === object.api_name)), [mergedObjects, tabs]);
 
   return (
     <div className={`rounded-2xl border border-slate-200 bg-white shadow-sm ${compact ? 'p-4' : 'p-5'}`}>
