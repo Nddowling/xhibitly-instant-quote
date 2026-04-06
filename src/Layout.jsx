@@ -73,11 +73,8 @@ export default function Layout({ children, currentPageName }) {
         setObjectTabs([]);
         return;
       }
-      const [dealerTabs, brokerTabs] = await Promise.all([
-        base44.entities.ObjectTab.filter({ dealer_instance_id: activeDealerId, is_active: true }, 'sort_order', 50),
-        base44.entities.ObjectTab.filter({ broker_instance_id: activeDealerId, is_active: true }, 'sort_order', 50),
-      ]);
-      const mergedTabs = Array.from(new Map([...(dealerTabs || []), ...(brokerTabs || [])].map(tab => {
+      const dealerTabs = await base44.entities.ObjectTab.filter({ dealer_instance_id: activeDealerId, user_id: user.id, is_active: true }, 'sort_order', 50);
+      const mergedTabs = Array.from(new Map((dealerTabs || []).map(tab => {
         const normalized = { ...tab, ...(tab.data || {}) };
         return [normalized.object_api_name || normalized.id, normalized];
       })).values());

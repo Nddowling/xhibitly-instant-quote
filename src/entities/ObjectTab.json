@@ -27,6 +27,10 @@
     "dealer_instance_id": {
       "type": "string",
       "description": "Dealer workspace this toolbar configuration belongs to"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "User who customized this toolbar configuration"
     }
   },
   "required": ["object_api_name", "label", "route_path"]

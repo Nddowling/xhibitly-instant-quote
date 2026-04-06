@@ -14,23 +14,22 @@ export default function ObjectTabsManager({ brokerInstanceId = null, compact = f
   const [objects, setObjects] = useState([]);
   const [tabs, setTabs] = useState([]);
   const [selectedApiName, setSelectedApiName] = useState('');
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
     loadData();
   }, [dealerInstanceId]);
 
   const loadData = async () => {
-    const [allObjects, dealerTabs, brokerTabs] = await Promise.all([
+    const me = await base44.auth.me();
+    const [allObjects, dealerTabs] = await Promise.all([
       getAllObjects(),
       dealerInstanceId
-        ? base44.entities.ObjectTab.filter({ dealer_instance_id: dealerInstanceId, is_active: true }, 'sort_order', 100)
-        : base44.entities.ObjectTab.filter({ is_active: true }, 'sort_order', 100),
-      dealerInstanceId
-        ? base44.entities.ObjectTab.filter({ broker_instance_id: dealerInstanceId, is_active: true }, 'sort_order', 100)
+        ? base44.entities.ObjectTab.filter({ dealer_instance_id: dealerInstanceId, user_id: me.id, is_active: true }, 'sort_order', 100)
         : Promise.resolve([]),
     ]);
 
-    const allTabs = [...(dealerTabs || []), ...(brokerTabs || [])];
+    const allTabs = dealerTabs || [];
 
     const normalizedTabs = Array.from(new Map((allTabs || []).map(tab => {
       const normalized = {
@@ -41,6 +40,7 @@ export default function ObjectTabsManager({ brokerInstanceId = null, compact = f
       return [normalized.object_api_name || normalized.id, normalized];
     })).values());
 
+    setCurrentUser(me);
     setObjects(allObjects || []);
     setTabs(normalizedTabs);
 
@@ -58,12 +58,13 @@ export default function ObjectTabsManager({ brokerInstanceId = null, compact = f
 
     const nextSortOrder = Math.max(0, ...tabs.map(tab => Number(tab.sort_order) || 0)) + 10;
     const createdTab = await base44.entities.ObjectTab.create({
-      object_api_name: objectDef.api_name,
-      label: objectDef.label,
-      route_path: buildRoutePath(objectDef.api_name),
-      sort_order: nextSortOrder,
-      is_active: true,
-      dealer_instance_id: dealerInstanceId,
+    object_api_name: objectDef.api_name,
+    label: objectDef.label,
+    route_path: buildRoutePath(objectDef.api_name),
+    sort_order: nextSortOrder,
+    is_active: true,
+    dealer_instance_id: dealerInstanceId,
+    user_id: currentUser?.id,
     });
 
     const normalizedCreatedTab = {
@@ -94,7 +95,7 @@ export default function ObjectTabsManager({ brokerInstanceId = null, compact = f
       <div className="flex items-center justify-between gap-3 mb-4">
         <div>
           <h3 className="text-base font-semibold text-slate-900">Header Object Tabs</h3>
-          <p className="text-sm text-slate-500">Add or remove object tabs shown in the top header for this dealer org.</p>
+          <p className="text-sm text-slate-500">Add or remove object tabs shown in the top header for this specific user inside this org.</p>
         </div>
       </div>
 
