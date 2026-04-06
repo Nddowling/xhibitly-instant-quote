@@ -114,10 +114,10 @@ export default function DesignerDashboard() {
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <MetricCard icon={Building2} label={isGlobalView ? 'All Dealer Orgs' : 'Dealer Orgs'} value={isGlobalView ? brokerInstances.length : 1} />
-        <MetricCard icon={Users} label={isGlobalView ? 'All Dealer Users' : 'Dealer Users'} value={scopedMembers.length} />
-        <MetricCard icon={ClipboardList} label={isGlobalView ? 'All Dealer Orders' : 'Dealer Orders'} value={scopedOrders.length} />
-        <MetricCard icon={DollarSign} label={isGlobalView ? 'Global Revenue' : 'Dealer Revenue'} value={formatPrice(totalRevenue)} />
+        <MetricCard icon={Building2} label={isGlobalView ? 'All Dealer Orgs' : 'Dealer Orgs'} value={isGlobalView ? brokerInstances.length : 1} onClick={() => navigate(`${createPageUrl('GlobalAdminMetricView')}?type=orgs`)} />
+        <MetricCard icon={Users} label={isGlobalView ? 'All Dealer Users' : 'Dealer Users'} value={scopedMembers.length} onClick={() => navigate(`${createPageUrl('GlobalAdminMetricView')}?type=users`)} />
+        <MetricCard icon={ClipboardList} label={isGlobalView ? 'All Dealer Orders' : 'Dealer Orders'} value={scopedOrders.length} onClick={() => navigate(`${createPageUrl('GlobalAdminMetricView')}?type=orders`)} />
+        <MetricCard icon={DollarSign} label={isGlobalView ? 'Global Revenue' : 'Dealer Revenue'} value={formatPrice(totalRevenue)} onClick={() => navigate(`${createPageUrl('GlobalAdminMetricView')}?type=revenue`)} />
         </div>
 
         <Card>
@@ -172,9 +172,9 @@ export default function DesignerDashboard() {
   );
 }
 
-function MetricCard({ icon: Icon, label, value }) {
+function MetricCard({ icon: Icon, label, value, onClick }) {
   return (
-    <Card>
+    <Card className={onClick ? 'cursor-pointer hover:shadow-md hover:border-[#e2231a] transition-all' : ''} onClick={onClick}>
       <CardContent className="p-4">
         <div className="flex items-center justify-between mb-3">
           <Icon className="w-5 h-5 text-[#e2231a]" />

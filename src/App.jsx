@@ -17,6 +17,7 @@ import ObjectRecords from './pages/ObjectRecords';
 import ObjectRecordDetail from './pages/ObjectRecordDetail';
 import GlobalAgentLauncher from '@/components/agents/GlobalAgentLauncher';
 import ProfileAssignedContacts from './pages/ProfileAssignedContacts';
+import GlobalAdminMetricView from './pages/GlobalAdminMetricView';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -137,6 +138,14 @@ const AuthenticatedApp = () => {
         element={
           <LayoutWrapper currentPageName="ProfileAssignedContacts">
             <ProfileAssignedContacts />
+          </LayoutWrapper>
+        }
+      />
+      <Route
+        path="/GlobalAdminMetricView"
+        element={
+          <LayoutWrapper currentPageName="GlobalAdminMetricView">
+            <GlobalAdminMetricView />
           </LayoutWrapper>
         }
       />
