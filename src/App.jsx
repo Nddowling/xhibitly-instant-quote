@@ -18,6 +18,7 @@ import ObjectRecordDetail from './pages/ObjectRecordDetail';
 import GlobalAgentLauncher from '@/components/agents/GlobalAgentLauncher';
 import ProfileAssignedContacts from './pages/ProfileAssignedContacts';
 import GlobalAdminMetricView from './pages/GlobalAdminMetricView';
+import MultiTenantAudit from './pages/MultiTenantAudit';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -146,6 +147,14 @@ const AuthenticatedApp = () => {
         element={
           <LayoutWrapper currentPageName="GlobalAdminMetricView">
             <GlobalAdminMetricView />
+          </LayoutWrapper>
+        }
+      />
+      <Route
+        path="/MultiTenantAudit"
+        element={
+          <LayoutWrapper currentPageName="MultiTenantAudit">
+            <MultiTenantAudit />
           </LayoutWrapper>
         }
       />

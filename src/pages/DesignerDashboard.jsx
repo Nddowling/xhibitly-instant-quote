@@ -134,6 +134,11 @@ export default function DesignerDashboard() {
             </div>
             <div className="flex flex-wrap gap-2 pt-2">
               <Button onClick={() => navigate(createPageUrl('Setup'))} variant="outline">Open Org Setup</Button>
+              <Button onClick={async () => {
+                await base44.functions.invoke('seedMultiTenantTestData', {});
+                navigate(createPageUrl('MultiTenantAudit'));
+              }} variant="outline">Seed Test Tenants</Button>
+              <Button onClick={() => navigate(createPageUrl('MultiTenantAudit'))} variant="outline">Open Tenant Audit</Button>
               {!isGlobalView && <Button onClick={() => navigate(createPageUrl('SalesDashboard'))} className="bg-[#e2231a] hover:bg-[#b01b13]">Open Selected Org</Button>}
             </div>
           </CardContent>
