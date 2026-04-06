@@ -88,7 +88,7 @@ export default function Layout({ children, currentPageName }) {
         : (user?.active_dealer_instance_id || user?.dealer_instance_id || user?.active_broker_instance_id || user?.broker_instance_id);
 
       if (!activeDealerId) {
-        setActiveOrgName('Global');
+        setActiveOrgName('Global Admin');
         return;
       }
       const dealers = await base44.entities.DealerInstance.filter({ id: activeDealerId }, 'name', 1);
