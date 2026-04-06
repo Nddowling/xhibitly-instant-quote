@@ -92,7 +92,7 @@ export default function Layout({ children, currentPageName }) {
         return;
       }
       const dealers = await base44.entities.DealerInstance.filter({ id: activeDealerId }, 'name', 1);
-      setActiveOrgName(dealers?.[0]?.name || dealers?.[0]?.company_name || '');
+      setActiveOrgName(dealers?.[0]?.company_name || dealers?.[0]?.name || '');
     } catch {
       setActiveOrgName('');
     }
