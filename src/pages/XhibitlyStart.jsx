@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { base44 } from '@/api/base44Client';
 import CatalogQuote from '@/pages/CatalogQuote';
 import XhibitlyAgentPane from '@/components/xhibitly/XhibitlyAgentPane';
 import BoothPreviewPanel from '@/components/xhibitly/BoothPreviewPanel';
@@ -8,6 +9,37 @@ export default function XhibitlyStart() {
   const [previewOrder, setPreviewOrder] = useState(null);
   const [previewLineItems, setPreviewLineItems] = useState([]);
   const [previewPricingResult, setPreviewPricingResult] = useState(null);
+  const [isGeneratingPreview, setIsGeneratingPreview] = useState(false);
+
+  const handleGeneratePreview = async () => {
+    if (!previewOrder || previewLineItems.length === 0 || isGeneratingPreview) return;
+
+    const brand = previewOrder.customer_company || previewOrder.customer_name || 'Client brand';
+    const booth = previewOrder.booth_size || 'trade show booth';
+    const show = previewOrder.show_name || 'event booth';
+    const items = previewLineItems
+      .map((item) => item.product_name || item.sku)
+      .filter(Boolean)
+      .slice(0, 6)
+      .join(', ');
+    const referenceUrls = previewLineItems
+      .map((item) => item.image_url)
+      .filter(Boolean)
+      .slice(0, 4);
+
+    const prompt = `Create a polished branded trade show booth concept for ${brand}. Booth size: ${booth}. Event: ${show}. Include these selected products only: ${items}. Keep the layout realistic, premium, and presentation-ready with clear product placement and cohesive branded graphics.`;
+
+    setIsGeneratingPreview(true);
+    const response = await base44.functions.invoke('generateBoothRender', {
+      prompt,
+      reference_urls: referenceUrls,
+    });
+
+    if (response?.data?.url) {
+      setPreviewOrder((prev) => ({ ...prev, booth_rendering_url: response.data.url }));
+    }
+    setIsGeneratingPreview(false);
+  };
 
   return (
     <div className="min-h-screen bg-[#f6f8fc] text-slate-900 overflow-hidden">
@@ -20,16 +52,18 @@ export default function XhibitlyStart() {
           </div>
 
           <div className="grid gap-6 lg:grid-cols-[minmax(280px,0.9fr)_minmax(720px,1.65fr)_minmax(340px,1fr)] items-start min-h-[calc(100vh-120px)]">
-            <section className="min-w-0 h-[760px] lg:h-[calc(100vh-140px)]">
+            <section className="min-w-0 h-[760px] lg:h-[calc(100vh-140px)] lg:sticky lg:top-4">
               <BoothPreviewPanel
                 order={previewOrder}
                 lineItems={previewLineItems}
                 pricingResult={previewPricingResult}
+                onGeneratePreview={handleGeneratePreview}
+                isGeneratingPreview={isGeneratingPreview}
               />
             </section>
 
-            <section className="min-w-0 rounded-[30px] overflow-hidden border border-slate-200 bg-white shadow-[0_25px_70px_rgba(15,23,42,0.10)]">
-              <div className="h-[760px] bg-white">
+            <section className="min-w-0 rounded-[30px] overflow-hidden border border-slate-200 bg-white shadow-[0_25px_70px_rgba(15,23,42,0.10)] h-[760px] lg:h-[calc(100vh-140px)]">
+              <div className="h-full bg-white">
                 <CatalogQuote
                   embeddedMode
                   onOrderChange={setPreviewOrder}

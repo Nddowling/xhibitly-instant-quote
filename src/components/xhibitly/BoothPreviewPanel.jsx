@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
-import { Sparkles, Image as ImageIcon, Package } from 'lucide-react';
+import { Sparkles, Image as ImageIcon, Package, Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 function fmt(n) {
   if (!n && n !== 0) return '—';
@@ -26,7 +27,7 @@ function PreviewThumb({ item }) {
   );
 }
 
-export default function BoothPreviewPanel({ order, lineItems, pricingResult }) {
+export default function BoothPreviewPanel({ order, lineItems, pricingResult, onGeneratePreview, isGeneratingPreview = false }) {
   const previewPrompt = useMemo(() => {
     const items = (lineItems || []).map(item => item.product_name || item.sku).filter(Boolean).slice(0, 6);
     const brand = order?.customer_company || order?.customer_name || 'Client brand';
@@ -53,8 +54,8 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult }) {
         </div>
       </div>
 
-      <div className="flex-1 min-h-0 p-4 bg-slate-50/70 flex flex-col gap-4">
-        <div className="flex-1 rounded-[24px] border border-dashed border-slate-200 bg-white flex flex-col items-center justify-center text-center px-6">
+      <div className="flex-1 min-h-0 p-4 bg-slate-50/70 flex flex-col gap-4 overflow-hidden">
+        <div className="relative min-h-[260px] flex-1 rounded-[24px] border border-dashed border-slate-200 bg-white flex flex-col items-center justify-center text-center px-6 overflow-hidden">
           {order?.booth_rendering_url ? (
             <img src={order.booth_rendering_url} alt="Booth preview" className="w-full h-full object-cover rounded-[20px]" />
           ) : (
@@ -64,18 +65,29 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult }) {
               <p className="text-xs text-slate-500 mt-1 leading-relaxed max-w-xs">As products, booth details, and brand info are captured, this panel can show the generated concept.</p>
             </>
           )}
+          <div className="absolute bottom-4 left-4 right-4 flex justify-center">
+            <Button
+              onClick={onGeneratePreview}
+              disabled={!lineItems?.length || isGeneratingPreview}
+              className="rounded-xl bg-[#18C3F8] hover:bg-[#0fb2e4] text-white shadow-sm"
+            >
+              {isGeneratingPreview ? <><Loader2 className="w-4 h-4 animate-spin" />Generating…</> : 'Generate AI Booth Image'}
+            </Button>
+          </div>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Preview Inputs</p>
-          <p className="text-xs text-slate-600 mt-2 leading-relaxed">{previewPrompt}</p>
-          {lineItems?.length > 0 && (
-            <div className="mt-3 grid gap-2">
-              {(lineItems || []).slice(0, 3).map((item) => (
-                <PreviewThumb key={item.id || item.sku} item={item} />
-              ))}
-            </div>
-          )}
+        <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3 min-h-0 max-h-[230px] flex flex-col overflow-hidden">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500 flex-shrink-0">Preview Inputs</p>
+          <div className="mt-2 min-h-0 overflow-y-auto pr-1">
+            <p className="text-xs text-slate-600 leading-relaxed">{previewPrompt}</p>
+            {lineItems?.length > 0 && (
+              <div className="mt-3 grid gap-2">
+                {(lineItems || []).map((item) => (
+                  <PreviewThumb key={item.id || item.sku} item={item} />
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3 flex items-center justify-between">
