@@ -14,7 +14,7 @@
  */
 
 // @ts-ignore — Deno runtime, types not available in VS Code
-const LUMAAI_API_KEY = Deno.env.get('LUMAAI_API_KEY') ?? '';
+const LUMAAI_API_KEY = Deno.env.get('LumaAI') ?? Deno.env.get('LUMAAI_API_KEY') ?? '';
 
 const LUMA_BASE = 'https://api.lumalabs.ai/dream-machine/v1';
 const MODEL = 'photon-1';

@@ -30,15 +30,18 @@ export default function XhibitlyStart() {
     const prompt = `Create a polished branded trade show booth concept for ${brand}. Booth size: ${booth}. Event: ${show}. Include these selected products only: ${items}. Keep the layout realistic, premium, and presentation-ready with clear product placement and cohesive branded graphics.`;
 
     setIsGeneratingPreview(true);
-    const response = await base44.functions.invoke('generateBoothRender', {
-      prompt,
-      reference_urls: referenceUrls,
-    });
+    try {
+      const response = await base44.functions.invoke('generateBoothRender', {
+        prompt,
+        reference_urls: referenceUrls,
+      });
 
-    if (response?.data?.url) {
-      setPreviewOrder((prev) => ({ ...prev, booth_rendering_url: response.data.url }));
+      if (response?.data?.url) {
+        setPreviewOrder((prev) => ({ ...prev, booth_rendering_url: response.data.url }));
+      }
+    } finally {
+      setIsGeneratingPreview(false);
     }
-    setIsGeneratingPreview(false);
   };
 
   return (
