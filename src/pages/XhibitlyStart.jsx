@@ -55,7 +55,7 @@ export default function XhibitlyStart() {
           </div>
 
           <div className="grid gap-6 lg:grid-cols-[minmax(280px,0.9fr)_minmax(720px,1.65fr)_minmax(340px,1fr)] items-start min-h-[calc(100vh-24px)]">
-            <section className="min-w-0 h-[980px] lg:h-[calc(100vh-24px)] lg:sticky lg:top-3">
+            <section className="min-w-0 h-[1004px] lg:h-[calc(100vh-8px)] lg:sticky lg:top-2">
               <BoothPreviewPanel
                 order={previewOrder}
                 lineItems={previewLineItems}
@@ -65,7 +65,7 @@ export default function XhibitlyStart() {
               />
             </section>
 
-            <section className="min-w-0 rounded-[30px] overflow-hidden border border-slate-200 bg-white shadow-[0_25px_70px_rgba(15,23,42,0.10)] h-[980px] lg:h-[calc(100vh-24px)]">
+            <section className="min-w-0 rounded-[30px] overflow-hidden border border-slate-200 bg-white shadow-[0_25px_70px_rgba(15,23,42,0.10)] h-[1004px] lg:h-[calc(100vh-8px)]">
               <div className="h-full bg-white">
                 <CatalogQuote
                   embeddedMode
@@ -76,7 +76,7 @@ export default function XhibitlyStart() {
               </div>
             </section>
 
-            <section className="min-w-0 rounded-[30px] bg-white/96 backdrop-blur border border-white shadow-[0_25px_70px_rgba(15,23,42,0.12)] overflow-hidden h-[980px] lg:h-[calc(100vh-24px)] lg:sticky lg:top-3">
+            <section className="min-w-0 rounded-[30px] bg-white/96 backdrop-blur border border-white shadow-[0_25px_70px_rgba(15,23,42,0.12)] overflow-hidden h-[1004px] lg:h-[calc(100vh-8px)] lg:sticky lg:top-2">
               <XhibitlyAgentPane queuedPrompt={queuedPrompt} onPromptConsumed={() => setQueuedPrompt('')} />
             </section>
           </div>
