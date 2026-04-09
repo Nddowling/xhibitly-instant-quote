@@ -15,6 +15,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import SessionStartModal from '@/components/catalog/SessionStartModal';
 import QuoteSidebar from '@/components/catalog/QuoteSidebar';
+import { useLocation } from 'react-router-dom';
 
 import QuoteConfirmModal from '@/components/catalog/QuoteConfirmModal';
 import { runPricingEngine, generatePromoCode } from '@/components/pricing/pricingEngine';
@@ -990,6 +991,8 @@ function OrderItem({ item, onQtyChange, onRemove, onSizeChange }) {
 // ─── Main Page ────────────────────────────────────────────────────────────────
 export default function CatalogQuote() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const isEmbeddedOnXhibitlyStart = location.pathname === '/' || location.pathname === '/XhibitlyStart';
   const [currentPage, setCurrentPage] = useState(FIRST_VISIBLE_CATALOG_PAGE);
   const [pageInput, setPageInput] = useState(String(FIRST_VISIBLE_CATALOG_PAGE));
   const [direction, setDirection] = useState(1);
@@ -1021,8 +1024,13 @@ export default function CatalogQuote() {
   const rulesResCacheRef = useRef([]);
 
   useEffect(() => {
-    base44.auth.me().then(u => { setUser(u); setShowSessionModal(true); }).catch(() => setShowSessionModal(true));
-  }, []);
+    base44.auth.me()
+      .then(u => {
+        setUser(u);
+        setShowSessionModal(!isEmbeddedOnXhibitlyStart);
+      })
+      .catch(() => setShowSessionModal(!isEmbeddedOnXhibitlyStart));
+  }, [isEmbeddedOnXhibitlyStart]);
 
   // ── Line items loader ────────────────────────────────────────────────────
   const refreshLineItems = useCallback(async () => {
@@ -1537,7 +1545,7 @@ export default function CatalogQuote() {
                 <span className="w-2 h-2 rounded-full bg-green-500 inline-block flex-shrink-0"></span>
                 <span className="truncate">{activeOrder.customer_name || activeOrder.customer_email} · {activeOrder.show_name || 'Show not set'}{activeOrder.booth_size ? ` · ${activeOrder.booth_size}` : ''}</span>
               </div>
-            ) : (
+            ) : !isEmbeddedOnXhibitlyStart ? (
               <button
                 onClick={() => setShowSessionModal(true)}
                 className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:border-[#e2231a]/30 hover:text-[#e2231a] transition-colors"
@@ -1545,7 +1553,7 @@ export default function CatalogQuote() {
                 <Plus className="w-4 h-4" />
                 Start Quote Session
               </button>
-            )}
+            ) : null}
 
             <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-2xl px-3 py-2 shadow-sm">
               <button onClick={() => goToPage(currentPage - 1)} disabled={currentPage <= FIRST_VISIBLE_CATALOG_PAGE}
@@ -1787,7 +1795,11 @@ export default function CatalogQuote() {
                     products={productCache}
                     fetchProduct={fetchProduct}
                     hasSession={!!activeOrder}
-                    onStartSession={() => { setShowVariants(false); setSelectedHotspot(null); setShowSessionModal(true); }}
+                    onStartSession={() => {
+                      setShowVariants(false);
+                      setSelectedHotspot(null);
+                      if (!isEmbeddedOnXhibitlyStart) setShowSessionModal(true);
+                    }}
                     onAdd={(product) => { handleAddToQuote(product); setShowVariants(false); setSelectedHotspot(null); }}
                     onClose={() => { setShowVariants(false); setSelectedHotspot(null); }}
                   />
@@ -1798,7 +1810,7 @@ export default function CatalogQuote() {
               <div className="mt-3 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                 <div className="px-4 py-2 bg-amber-50 border-b border-amber-100">
                   <p className="text-xs text-amber-700 font-medium">
-                    No hotspots for this page — click a product to add it
+                    No hotspots for this page — browse the products shown here
                   </p>
                 </div>
                 <div className="p-3 grid grid-cols-2 gap-2">
@@ -1807,7 +1819,11 @@ export default function CatalogQuote() {
                     return (
                       <button
                         key={p.sku}
-                        onClick={() => handleAddToQuote({ sku: p.sku, name: pd?.name || p.name, price: pd?.base_price, imageUrl: getImageUrl(pd) })}
+                        onClick={() => {
+                          if (activeOrder) {
+                            handleAddToQuote({ sku: p.sku, name: pd?.name || p.name, price: pd?.base_price, imageUrl: getImageUrl(pd) });
+                          }
+                        }}
                         className="flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-200 hover:border-[#e2231a]/40 hover:bg-[#e2231a]/5 text-left transition-all group"
                       >
                         <div className="w-12 h-12 flex-shrink-0 rounded-lg bg-slate-100 overflow-hidden flex items-center justify-center">
@@ -1818,7 +1834,7 @@ export default function CatalogQuote() {
                           <p className="text-[9px] text-slate-400 font-mono">{p.sku}</p>
                           {pd?.base_price && <p className="text-xs font-bold text-[#e2231a]">{fmt(pd.base_price)}</p>}
                         </div>
-                        <Plus className="w-4 h-4 text-[#e2231a] opacity-0 group-hover:opacity-100 flex-shrink-0" />
+                        {activeOrder && <Plus className="w-4 h-4 text-[#e2231a] opacity-0 group-hover:opacity-100 flex-shrink-0" />}
                       </button>
                     );
                   })}
