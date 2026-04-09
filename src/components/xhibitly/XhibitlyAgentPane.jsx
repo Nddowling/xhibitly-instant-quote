@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import MessageBubble from '@/components/agents/MessageBubble';
-import { Sparkles, Send } from 'lucide-react';
+import { MessageSquare, Send, Sparkles } from 'lucide-react';
 
 const STARTERS = [
   'I need help designing a 10x10 booth',
@@ -65,21 +65,27 @@ export default function XhibitlyAgentPane({ queuedPrompt, onPromptConsumed }) {
   };
 
   return (
-    <div className="h-full flex flex-col bg-transparent overflow-hidden">
-      <div className="p-5 border-b border-slate-200 bg-white text-slate-900">
-        <div className="flex items-center gap-3 mb-3">
-          <div className="h-11 w-11 rounded-2xl bg-white/15 flex items-center justify-center">
-            <Sparkles className="w-5 h-5" />
+    <div className="w-full h-full min-h-0 flex flex-col bg-white overflow-hidden">
+      <div className="border-b border-slate-200 bg-white px-5 py-5 flex-shrink-0">
+        <div className="flex items-start gap-3">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eaf6ff] text-[#18C3F8]">
+            <MessageSquare className="w-5 h-5" />
           </div>
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#18C3F8]">The AI Bot</p>
-            <h2 className="text-2xl font-black text-[#0D2E73]">The Speed of AI</h2>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2">
+              <p className="text-sm font-black tracking-tight text-slate-900">AI Booth Guide</p>
+              <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-600">
+                live chat
+              </span>
+            </div>
+            <p className="mt-1 text-xs text-slate-500">
+              I’ll gather event info, brand details, and suggest popular catalog items while helping shape the proposal.
+            </p>
           </div>
         </div>
-        <p className="text-sm text-slate-600 max-w-xl">I’ll guide your booth design, gather event and brand details, and suggest popular catalog items while building toward a quote-ready direction.</p>
       </div>
 
-      <div className="p-4 border-b border-slate-100 flex flex-wrap gap-2 bg-slate-50">
+      <div className="p-3 border-b border-slate-100 flex flex-wrap gap-2 bg-slate-50 flex-shrink-0">
         {STARTERS.map((item) => (
           <button
             key={item}
@@ -91,29 +97,37 @@ export default function XhibitlyAgentPane({ queuedPrompt, onPromptConsumed }) {
         ))}
       </div>
 
-      <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-4 bg-white">
+      <div ref={scrollRef} className="p-3 space-y-3 bg-slate-50/70 flex-1 overflow-y-auto">
         {messages.length === 0 ? (
-          <div className="rounded-2xl border border-[#18C3F8]/20 bg-[#18C3F8]/5 p-4 text-sm text-slate-700">
-            To get started, tell me your booth size, event name, company, and whether you want me to help pull your branding direction from your website.
+          <div className="rounded-3xl border border-dashed border-slate-200 bg-white px-5 py-10 text-center shadow-sm">
+            <Sparkles className="w-8 h-8 text-slate-200 mx-auto mb-3" />
+            <p className="text-sm font-semibold text-slate-800">No conversation started yet</p>
+            <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+              Start chatting and I’ll guide the booth build, ask the right questions, and recommend exact products from the catalog.
+            </p>
           </div>
         ) : (
           messages.map((message, index) => (
             <MessageBubble key={index} message={message} />
           ))
         )}
-        {loading && <div className="text-xs text-slate-400">Xhibitly AI is thinking…</div>}
+        {loading && <div className="text-xs text-slate-400 px-1">Xhibitly AI is thinking…</div>}
       </div>
 
-      <div className="p-4 border-t border-slate-200 bg-white">
+      <div className="p-3 border-t border-slate-200 bg-white space-y-2.5 mt-auto flex-shrink-0">
+        <div className="rounded-2xl border border-slate-200 bg-slate-50 px-3.5 py-3">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Current Focus</p>
+          <p className="text-[11px] text-slate-500 mt-1">Booth size, event, brand, goals, and product direction</p>
+        </div>
         <div className="flex gap-2">
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-            placeholder="Ask about booth size, products, branding, budget, or event details"
+            placeholder="Tell me your booth size, event, company, or product idea"
             className="h-12 rounded-xl"
           />
-          <Button onClick={() => handleSend()} className="h-12 px-5 rounded-xl bg-[#0D4FB3] hover:bg-[#0A3D8B] text-white">
+          <Button onClick={() => handleSend()} className="h-12 px-5 rounded-xl bg-[#18C3F8] hover:bg-[#0fb2e4] text-white">
             <Send className="w-4 h-4" />
           </Button>
         </div>
