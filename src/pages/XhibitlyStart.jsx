@@ -15,7 +15,7 @@ export default function XhibitlyStart() {
             <img src="https://media.base44.com/images/public/69834d9e0d7220d671bfd124/d492801c9_IMG_1017.PNG" alt="Xhibitly" className="h-10 md:h-12 w-auto object-contain" />
           </div>
 
-          <div className="grid gap-6 xl:grid-cols-[420px_minmax(0,1.12fr)] items-start min-h-[calc(100vh-120px)]">
+          <div className="grid gap-6 xl:grid-cols-[380px_minmax(0,0.92fr)] items-start min-h-[calc(100vh-120px)]">
             <section className="rounded-[30px] bg-white/96 backdrop-blur border border-white shadow-[0_25px_70px_rgba(15,23,42,0.12)] overflow-hidden min-h-[760px] xl:sticky xl:top-0">
               <XhibitlyAgentPane queuedPrompt={queuedPrompt} onPromptConsumed={() => setQueuedPrompt('')} />
             </section>
