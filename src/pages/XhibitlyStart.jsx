@@ -6,34 +6,35 @@ export default function XhibitlyStart() {
   const [queuedPrompt, setQueuedPrompt] = useState('');
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 overflow-hidden">
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(248,252,255,0.98))]" />
-      <div className="absolute inset-0 opacity-60" style={{ backgroundImage: 'linear-gradient(rgba(13,79,179,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(13,79,179,0.06) 1px, transparent 1px)', backgroundSize: '42px 42px' }} />
-      <div className="relative z-10 px-4 md:px-8 py-6 md:py-8">
-        <div className="max-w-[1500px] mx-auto">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 mb-6">
-            <div className="flex items-center gap-4 min-w-0">
-              <img src="https://media.base44.com/images/public/69834d9e0d7220d671bfd124/d492801c9_IMG_1017.PNG" alt="Xhibitly" className="h-14 md:h-20 w-auto object-contain" />
-              <div className="hidden md:block w-px self-stretch bg-slate-200" />
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#18C3F8]">The AI Bot</p>
-                <h1 className="text-3xl md:text-5xl font-black tracking-tight text-[#0D2E73]">The Speed of AI</h1>
-                <p className="mt-2 text-sm md:text-base text-slate-600">The Power of The Handbook.</p>
-              </div>
-            </div>
-            <div className="rounded-2xl border border-[#18C3F8]/20 bg-white/80 backdrop-blur px-4 py-3 shadow-sm max-w-xl">
-              <p className="text-sm text-slate-600">Start your booth right here: browse the live catalog, chat with Xhibitly’s design guide, and move from concept to quote-ready direction.</p>
-            </div>
+    <div className="min-h-screen bg-[#f6f8fc] text-slate-900 overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(24,195,248,0.16),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(13,79,179,0.12),transparent_30%)]" />
+      <div className="absolute inset-0 opacity-70" style={{ backgroundImage: 'linear-gradient(rgba(13,79,179,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(13,79,179,0.08) 1px, transparent 1px)', backgroundSize: '46px 46px' }} />
+      <div className="relative z-10 px-4 md:px-8 py-4 md:py-6">
+        <div className="max-w-[1560px] mx-auto">
+          <div className="flex items-center justify-center mb-5 md:mb-6">
+            <img src="https://media.base44.com/images/public/69834d9e0d7220d671bfd124/d492801c9_IMG_1017.PNG" alt="Xhibitly" className="h-10 md:h-12 w-auto object-contain" />
           </div>
 
-          <div className="grid gap-6 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] min-h-[calc(100vh-180px)]">
-            <div className="min-h-[42vh] xl:min-h-0">
-              <XhibitlyCatalogPane onProductPrompt={setQueuedPrompt} />
-            </div>
-            <div className="min-h-[48vh] xl:min-h-0">
+          <div className="grid gap-6 xl:grid-cols-[minmax(0,1.12fr)_420px] items-start min-h-[calc(100vh-120px)]">
+            <section className="rounded-[30px] bg-[linear-gradient(135deg,#1f4fa4_0%,#204d97_38%,#1c3f84_100%)] text-white p-6 md:p-8 shadow-[0_30px_80px_rgba(13,79,179,0.22)] border border-white/15">
+              <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)] lg:items-center h-full">
+                <div className="text-center lg:text-left">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/70">The Handbook</p>
+                  <h1 className="mt-2 text-3xl md:text-4xl font-black leading-tight">The Power of The Handbook</h1>
+                  <p className="mt-4 text-sm md:text-base text-white/80 max-w-sm mx-auto lg:mx-0">Walk the catalog, explore products, and let the AI collect booth details while suggesting the right exhibit direction.</p>
+                </div>
+                <div className="min-w-0">
+                  <XhibitlyCatalogPane onProductPrompt={setQueuedPrompt} />
+                </div>
+              </div>
+            </section>
+
+            <section className="rounded-[30px] bg-white/96 backdrop-blur border border-white shadow-[0_25px_70px_rgba(15,23,42,0.12)] overflow-hidden min-h-[680px]">
               <XhibitlyAgentPane queuedPrompt={queuedPrompt} onPromptConsumed={() => setQueuedPrompt('')} />
-            </div>
+            </section>
           </div>
+
+          <p className="text-center text-xs md:text-sm text-slate-500 mt-4">The Speed of AI. The Power of The Handbook.</p>
         </div>
       </div>
     </div>

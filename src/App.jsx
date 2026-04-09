@@ -15,7 +15,7 @@ import DesignerDashboard from './pages/DesignerDashboard';
 import Accounts from './pages/Accounts';
 import ObjectRecords from './pages/ObjectRecords';
 import ObjectRecordDetail from './pages/ObjectRecordDetail';
-import GlobalAgentLauncher from '@/components/agents/GlobalAgentLauncher';
+
 import ProfileAssignedContacts from './pages/ProfileAssignedContacts';
 import GlobalAdminMetricView from './pages/GlobalAdminMetricView';
 import MultiTenantAudit from './pages/MultiTenantAudit';
@@ -170,7 +170,6 @@ function App() {
         <Router>
           <NavigationTracker />
           <AuthenticatedApp />
-          <GlobalAgentLauncher />
         </Router>
         <Toaster />
       </QueryClientProvider>

@@ -42,15 +42,15 @@ export default function XhibitlyCatalogPane({ onProductPrompt }) {
   }, [products, search]);
 
   return (
-    <div className="h-full flex flex-col bg-white/80 backdrop-blur-sm border border-[#0D4FB3]/10 rounded-[28px] overflow-hidden shadow-[0_20px_60px_rgba(13,79,179,0.08)]">
-      <div className="p-5 border-b border-slate-200 bg-white/90">
+    <div className="h-full flex flex-col bg-white/10 backdrop-blur-sm border border-white/10 rounded-[24px] overflow-hidden shadow-[0_18px_40px_rgba(7,18,41,0.18)]">
+      <div className="p-5 border-b border-white/10 bg-white/10">
         <div className="flex items-center gap-3 mb-4">
           <div className="h-10 w-10 rounded-2xl bg-[#18C3F8]/15 text-[#0D4FB3] flex items-center justify-center">
             <Package className="w-5 h-5" />
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#18C3F8]">Orbus Catalog</p>
-            <h2 className="text-xl font-black text-[#0D2E73]">Browse Products</h2>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8FE7FF]">Orbus Catalog</p>
+            <h2 className="text-xl font-black text-white">Browse Products</h2>
           </div>
         </div>
         <div className="relative">
@@ -59,12 +59,12 @@ export default function XhibitlyCatalogPane({ onProductPrompt }) {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search SKU, name, category, or size"
-            className="pl-9 h-11 rounded-xl border-slate-200"
+            className="pl-9 h-11 rounded-xl border-white/15 bg-white text-slate-900"
           />
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-[linear-gradient(180deg,rgba(24,195,248,0.03),transparent)]">
+      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-transparent">
         {loading ? (
           <div className="text-sm text-slate-500">Loading catalog…</div>
         ) : filteredProducts.length === 0 ? (

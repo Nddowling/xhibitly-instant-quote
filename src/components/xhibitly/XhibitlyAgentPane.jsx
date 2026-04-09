@@ -65,21 +65,21 @@ export default function XhibitlyAgentPane({ queuedPrompt, onPromptConsumed }) {
   };
 
   return (
-    <div className="h-full flex flex-col bg-white rounded-[28px] border border-[#0D4FB3]/10 overflow-hidden shadow-[0_20px_60px_rgba(13,79,179,0.08)]">
-      <div className="p-5 border-b border-slate-200 bg-[linear-gradient(135deg,#0D4FB3,#18C3F8)] text-white">
+    <div className="h-full flex flex-col bg-transparent overflow-hidden">
+      <div className="p-5 border-b border-slate-200 bg-white text-slate-900">
         <div className="flex items-center gap-3 mb-3">
           <div className="h-11 w-11 rounded-2xl bg-white/15 flex items-center justify-center">
             <Sparkles className="w-5 h-5" />
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/70">The AI Bot</p>
-            <h2 className="text-2xl font-black">The Speed of AI</h2>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#18C3F8]">The AI Bot</p>
+            <h2 className="text-2xl font-black text-[#0D2E73]">The Speed of AI</h2>
           </div>
         </div>
-        <p className="text-sm text-white/85 max-w-xl">I’ll guide your booth design, recommend exact catalog products, gather event and brand details, and help get this project quote-ready.</p>
+        <p className="text-sm text-slate-600 max-w-xl">I’ll guide your booth design, gather event and brand details, and suggest popular catalog items while building toward a quote-ready direction.</p>
       </div>
 
-      <div className="p-4 border-b border-slate-100 flex flex-wrap gap-2 bg-slate-50/70">
+      <div className="p-4 border-b border-slate-100 flex flex-wrap gap-2 bg-slate-50">
         {STARTERS.map((item) => (
           <button
             key={item}
@@ -91,7 +91,7 @@ export default function XhibitlyAgentPane({ queuedPrompt, onPromptConsumed }) {
         ))}
       </div>
 
-      <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-4 bg-[radial-gradient(circle_at_top_right,rgba(24,195,248,0.08),transparent_28%)]">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-4 bg-white">
         {messages.length === 0 ? (
           <div className="rounded-2xl border border-[#18C3F8]/20 bg-[#18C3F8]/5 p-4 text-sm text-slate-700">
             To get started, tell me your booth size, event name, company, and whether you want me to help pull your branding direction from your website.
