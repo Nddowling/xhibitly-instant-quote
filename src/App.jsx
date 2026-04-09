@@ -19,6 +19,13 @@ import GlobalAgentLauncher from '@/components/agents/GlobalAgentLauncher';
 import ProfileAssignedContacts from './pages/ProfileAssignedContacts';
 import GlobalAdminMetricView from './pages/GlobalAdminMetricView';
 import MultiTenantAudit from './pages/MultiTenantAudit';
+import StoreShell from './store/components/StoreShell';
+import OrbusStoreLanding from './store/pages/OrbusStoreLanding';
+import OrbusProductCatalog from './store/pages/OrbusProductCatalog';
+import OrbusStoreProductDetail from './store/pages/OrbusStoreProductDetail';
+import StoreCart from './store/pages/StoreCart';
+import StoreCheckout from './store/pages/StoreCheckout';
+import OrbusOrderConfirmation from './store/pages/OrbusOrderConfirmation';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -158,6 +165,12 @@ const AuthenticatedApp = () => {
           </LayoutWrapper>
         }
       />
+      <Route path="/store" element={<StoreShell><OrbusStoreLanding /></StoreShell>} />
+      <Route path="/store/products" element={<StoreShell><OrbusProductCatalog /></StoreShell>} />
+      <Route path="/store/products/:id" element={<StoreShell><OrbusStoreProductDetail /></StoreShell>} />
+      <Route path="/store/cart" element={<StoreShell><StoreCart /></StoreShell>} />
+      <Route path="/store/checkout" element={<StoreShell><StoreCheckout /></StoreShell>} />
+      <Route path="/store/order-success" element={<StoreShell><OrbusOrderConfirmation /></StoreShell>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

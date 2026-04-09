@@ -16,11 +16,11 @@ export default function StoreLayout({ children }) {
       {/* Nav */}
       <nav className="sticky top-0 z-30 bg-[#0a0a0a]/95 backdrop-blur border-b border-white/8 px-6 md:px-12 h-16 flex items-center justify-between">
         <Link to="/store" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-          <div className="w-8 h-8 bg-[#00c9a7] rounded-lg flex items-center justify-center">
-            <Zap className="w-4 h-4 text-black" />
+          <div className="w-8 h-8 bg-[#e2231a] rounded-lg flex items-center justify-center">
+            <Zap className="w-4 h-4 text-white" />
           </div>
-          <span className="font-bold text-base tracking-tight">RecoverEdge</span>
-          <span className="hidden sm:block text-xs text-white/40 border border-white/15 rounded-full px-2.5 py-0.5">Biohacking Store</span>
+          <span className="font-bold text-base tracking-tight">Orbus Store</span>
+          <span className="hidden sm:block text-xs text-white/40 border border-white/15 rounded-full px-2.5 py-0.5">Self-Serve Products</span>
         </Link>
 
         {/* Desktop nav links */}
@@ -44,7 +44,7 @@ export default function StoreLayout({ children }) {
           </button>
           <Button
             onClick={() => navigate('/store/products')}
-            className="hidden sm:flex bg-[#00c9a7] hover:bg-[#00b396] text-black font-semibold h-9 px-5 text-sm rounded-lg"
+            className="hidden sm:flex bg-[#e2231a] hover:bg-[#c91e16] text-white font-semibold h-9 px-5 text-sm rounded-lg"
           >
             Shop Now
           </Button>
@@ -76,15 +76,15 @@ export default function StoreLayout({ children }) {
       <footer className="bg-[#0a0a0a] border-t border-white/8 px-6 md:px-12 py-8">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-7 h-7 bg-[#00c9a7] rounded-lg flex items-center justify-center">
-              <Zap className="w-3.5 h-3.5 text-black" />
+            <div className="w-7 h-7 bg-[#e2231a] rounded-lg flex items-center justify-center">
+              <Zap className="w-3.5 h-3.5 text-white" />
             </div>
-            <span className="font-bold text-sm">RecoverEdge</span>
+            <span className="font-bold text-sm">Orbus Store</span>
           </div>
           <div className="flex items-center gap-6 text-xs text-white/30">
             <Link to="/store/products" className="hover:text-white/60 transition-colors">Shop</Link>
             <Link to="/store" className="hover:text-white/60 transition-colors">Free Guide</Link>
-            <span>Free shipping on orders over $75</span>
+            <span>Verified Orbus products</span>
           </div>
           <p className="text-xs text-white/20">© {new Date().getFullYear()} RecoverEdge. All rights reserved.</p>
         </div>
