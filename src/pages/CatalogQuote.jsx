@@ -427,8 +427,8 @@ function EditHotspotDialog({ spot, pageProducts, productCache, onSave, onCancel 
                 return (
                   <button key={p.sku} onClick={() => togglePageProduct(p)}
                     className={`w-full text-left px-3 py-2 rounded-lg text-xs border transition-all flex items-center gap-2
-                      ${checked ? 'border-[#e2231a] bg-[#e2231a]/10 font-bold' : 'border-slate-200 hover:border-[#e2231a]/40'}`}>
-                    <div className={`w-3.5 h-3.5 rounded border flex-shrink-0 flex items-center justify-center ${checked ? 'bg-[#e2231a] border-[#e2231a]' : 'border-slate-300'}`}>
+                      ${checked ? 'border-[#18C3F8] bg-[#18C3F8]/10 font-bold' : 'border-slate-200 hover:border-[#18C3F8]/40'}`}>
+                    <div className={`w-3.5 h-3.5 rounded border flex-shrink-0 flex items-center justify-center ${checked ? 'bg-[#18C3F8] border-[#18C3F8]' : 'border-slate-300'}`}>
                       {checked && <span className="text-white text-[8px] font-bold">✓</span>}
                     </div>
                     <span className="text-slate-400 font-mono mr-1">{p.sku}</span>
@@ -458,9 +458,9 @@ function EditHotspotDialog({ spot, pageProducts, productCache, onSave, onCancel 
             <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide mb-1.5">SKUs ({groupedSkus.length})</p>
             <div className="flex flex-wrap gap-1.5">
               {groupedSkus.map(s => (
-                <div key={s} className="flex items-center gap-1 bg-[#e2231a]/10 border border-[#e2231a]/30 text-[#e2231a] rounded-full px-2.5 py-1 text-[10px] font-bold">
+                <div key={s} className="flex items-center gap-1 bg-[#18C3F8]/10 border border-[#18C3F8]/30 text-[#18C3F8] rounded-full px-2.5 py-1 text-[10px] font-bold">
                   {s}
-                  <button onClick={() => removeSku(s)} className="hover:text-red-700 ml-0.5"><X className="w-2.5 h-2.5" /></button>
+                  <button onClick={() => removeSku(s)} className="hover:text-[#0D4FB3] ml-0.5"><X className="w-2.5 h-2.5" /></button>
                 </div>
               ))}
             </div>
@@ -472,7 +472,7 @@ function EditHotspotDialog({ spot, pageProducts, productCache, onSave, onCancel 
 
         <div className="flex gap-2">
           <Button size="sm" onClick={submit} disabled={groupedSkus.length === 0}
-            className="flex-1 bg-[#e2231a] hover:bg-[#b01b13] text-white disabled:opacity-50">
+            className="flex-1 bg-[#18C3F8] hover:bg-[#0fb2e4] text-white disabled:opacity-50">
             Save Changes
           </Button>
           <Button size="sm" variant="outline" onClick={onCancel} className="flex-1">Cancel</Button>
@@ -771,7 +771,7 @@ function NewHotspotForm({ pageProducts, productCache, autoDetecting, autoDetecte
         </div>
 
         {autoDetecting && (
-          <div className="bg-purple-50 border border-purple-100 rounded-lg px-3 py-2.5 text-xs text-purple-700">
+          <div className="bg-[#18C3F8]/10 border border-[#18C3F8]/20 rounded-lg px-3 py-2.5 text-xs text-[#0D4FB3]">
             Reading SKUs from the selected area…
           </div>
         )}
@@ -788,9 +788,9 @@ function NewHotspotForm({ pageProducts, productCache, autoDetecting, autoDetecte
                     key={p.sku}
                     onClick={() => togglePageProduct(p)}
                     className={`w-full text-left px-3 py-2 rounded-lg text-xs border transition-all flex items-center gap-2
-                      ${checked ? 'border-[#e2231a] bg-[#e2231a]/10 font-bold' : 'border-slate-200 hover:border-[#e2231a]/40'}`}
+                      ${checked ? 'border-[#18C3F8] bg-[#18C3F8]/10 font-bold' : 'border-slate-200 hover:border-[#18C3F8]/40'}`}
                   >
-                    <div className={`w-3.5 h-3.5 rounded border flex-shrink-0 flex items-center justify-center ${checked ? 'bg-[#e2231a] border-[#e2231a]' : 'border-slate-300'}`}>
+                    <div className={`w-3.5 h-3.5 rounded border flex-shrink-0 flex items-center justify-center ${checked ? 'bg-[#18C3F8] border-[#18C3F8]' : 'border-slate-300'}`}>
                       {checked && <span className="text-white text-[8px] font-bold">✓</span>}
                     </div>
                     <span className="text-slate-400 font-mono mr-1">{p.sku}</span>
@@ -827,9 +827,9 @@ function NewHotspotForm({ pageProducts, productCache, autoDetecting, autoDetecte
             </p>
             <div className="flex flex-wrap gap-1.5">
               {groupedSkus.map(s => (
-                <div key={s} className="flex items-center gap-1 bg-[#e2231a]/10 border border-[#e2231a]/30 text-[#e2231a] rounded-full px-2.5 py-1 text-[10px] font-bold">
+                <div key={s} className="flex items-center gap-1 bg-[#18C3F8]/10 border border-[#18C3F8]/30 text-[#18C3F8] rounded-full px-2.5 py-1 text-[10px] font-bold">
                   {s}
-                  <button onClick={() => removeSku(s)} className="hover:text-red-700 ml-0.5">
+                  <button onClick={() => removeSku(s)} className="hover:text-[#0D4FB3] ml-0.5">
                     <X className="w-2.5 h-2.5" />
                   </button>
                 </div>
@@ -843,11 +843,11 @@ function NewHotspotForm({ pageProducts, productCache, autoDetecting, autoDetecte
           placeholder="Hotspot display name"
           value={displayName}
           onChange={e => setDisplayName(e.target.value)}
-          className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30"
+          className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#18C3F8]/30"
         />
 
         <div className="flex gap-2">
-          <Button size="sm" onClick={submit} disabled={autoDetecting || groupedSkus.length === 0} className="flex-1 bg-[#e2231a] hover:bg-[#b01b13] text-white disabled:opacity-50">
+          <Button size="sm" onClick={submit} disabled={autoDetecting || groupedSkus.length === 0} className="flex-1 bg-[#18C3F8] hover:bg-[#0fb2e4] text-white disabled:opacity-50">
             Add Hotspot ({groupedSkus.length} SKU{groupedSkus.length !== 1 ? 's' : ''})
           </Button>
           <Button size="sm" variant="outline" onClick={onCancel} className="flex-1">Cancel</Button>
@@ -882,7 +882,7 @@ function VariantPicker({ spot, products, fetchProduct, onAdd, onClose, hasSessio
     if (!p) return (
       <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/40 rounded-lg">
         <div className="bg-white rounded-2xl p-6 flex items-center gap-3 shadow-xl">
-          <Loader2 className="w-5 h-5 animate-spin text-[#e2231a]" />
+          <Loader2 className="w-5 h-5 animate-spin text-[#18C3F8]" />
           <span className="text-sm text-slate-600">Loading product...</span>
         </div>
       </div>
@@ -903,7 +903,7 @@ function VariantPicker({ spot, products, fetchProduct, onAdd, onClose, hasSessio
         {!hasSession && (
           <div className="px-4 py-3 bg-amber-50 border-b border-amber-100 flex items-center justify-between gap-3">
             <p className="text-xs text-amber-700">Start a quote session to add items.</p>
-            <button onClick={onStartSession} className="text-xs font-bold text-[#e2231a] hover:underline whitespace-nowrap">Start Session →</button>
+            <button onClick={onStartSession} className="text-xs font-bold text-[#18C3F8] hover:underline whitespace-nowrap">Start Session →</button>
           </div>
         )}
         <div className="overflow-y-auto p-3 space-y-1.5">
@@ -914,7 +914,7 @@ function VariantPicker({ spot, products, fetchProduct, onAdd, onClose, hasSessio
               <button
                 key={sku}
                 onClick={() => { if (hasSession) { onAdd({ sku, name: p?.name || sku, price: p?.base_price, imageUrl: imgSrc }); onClose(); } else { onStartSession(); } }}
-                className="w-full flex items-center gap-3 p-2.5 rounded-xl border border-slate-200 hover:border-[#e2231a]/40 hover:bg-[#e2231a]/5 transition-all text-left group"
+                className="w-full flex items-center gap-3 p-2.5 rounded-xl border border-slate-200 hover:border-[#18C3F8]/40 hover:bg-[#18C3F8]/5 transition-all text-left group"
               >
                 <div className="w-14 h-14 flex-shrink-0 rounded-lg bg-slate-100 overflow-hidden flex items-center justify-center border border-slate-100">
                   {p === null ? (
@@ -926,9 +926,9 @@ function VariantPicker({ spot, products, fetchProduct, onAdd, onClose, hasSessio
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-semibold text-slate-800 leading-tight">{p?.name || sku}</p>
                   <p className="text-[10px] text-slate-400 mt-0.5 font-mono">{sku}</p>
-                  {p?.base_price && <p className="text-xs font-bold text-[#e2231a] mt-0.5">{fmt(p.base_price)}</p>}
+                  {p?.base_price && <p className="text-xs font-bold text-[#18C3F8] mt-0.5">{fmt(p.base_price)}</p>}
                 </div>
-                {hasSession && <Plus className="w-4 h-4 text-[#e2231a] opacity-0 group-hover:opacity-100 flex-shrink-0" />}
+                {hasSession && <Plus className="w-4 h-4 text-[#18C3F8] opacity-0 group-hover:opacity-100 flex-shrink-0" />}
               </button>
             );
           })}
@@ -954,7 +954,7 @@ function OrderItem({ item, onQtyChange, onRemove, onSizeChange }) {
           <p className="text-[10px] text-slate-500 mt-0.5 font-mono">{item.sku}</p>
           {sizes && (
             <select
-              className="mt-2 w-full text-xs border border-slate-200 rounded-md p-1.5 bg-slate-50 text-slate-700 focus:outline-none focus:ring-1 focus:ring-[#e2231a]"
+              className="mt-2 w-full text-xs border border-slate-200 rounded-md p-1.5 bg-slate-50 text-slate-700 focus:outline-none focus:ring-1 focus:ring-[#18C3F8]"
               value={item.selectedSize || ''}
               onChange={(e) => onSizeChange(item.id, e.target.value)}
             >
