@@ -1,9 +1,29 @@
 import React, { useMemo } from 'react';
-import { Sparkles, Image as ImageIcon } from 'lucide-react';
+import { Sparkles, Image as ImageIcon, Package } from 'lucide-react';
 
 function fmt(n) {
   if (!n && n !== 0) return '—';
   return '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function PreviewThumb({ item }) {
+  const src = item?.image_url;
+
+  return (
+    <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-2">
+      <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-lg bg-white border border-slate-200 flex items-center justify-center">
+        {src ? (
+          <img src={src} alt={item?.product_name || item?.sku || 'Product'} className="h-full w-full object-contain p-1" />
+        ) : (
+          <Package className="w-4 h-4 text-slate-300" />
+        )}
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="text-[11px] font-semibold text-slate-700 leading-tight line-clamp-2">{item?.product_name || item?.sku || 'Product'}</p>
+        {item?.sku && <p className="text-[10px] text-slate-400 mt-0.5 font-mono truncate">{item.sku}</p>}
+      </div>
+    </div>
+  );
 }
 
 export default function BoothPreviewPanel({ order, lineItems, pricingResult }) {
@@ -49,6 +69,13 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult }) {
         <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3">
           <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Preview Inputs</p>
           <p className="text-xs text-slate-600 mt-2 leading-relaxed">{previewPrompt}</p>
+          {lineItems?.length > 0 && (
+            <div className="mt-3 grid gap-2">
+              {(lineItems || []).slice(0, 3).map((item) => (
+                <PreviewThumb key={item.id || item.sku} item={item} />
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3 flex items-center justify-between">
