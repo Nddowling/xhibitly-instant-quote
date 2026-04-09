@@ -1845,16 +1845,18 @@ export default function CatalogQuote() {
         </div>
 
         {/* RIGHT: Quote Sidebar */}
-        <div className="hidden lg:flex lg:w-[18rem] xl:w-[20rem] 2xl:w-[22rem] lg:flex-shrink-0 lg:min-h-0 border-l border-slate-200 bg-white overflow-hidden">
-          <QuoteSidebar
-            order={activeOrder}
-            lineItems={lineItems}
-            onLineItemsChange={refreshLineItems}
-            onCreateQuote={handleCreateQuote}
-            productCache={productCache}
-            onPricingResult={setLatestPricingResult}
-          />
-        </div>
+        {!isEmbeddedOnXhibitlyStart && (
+          <div className="hidden lg:flex lg:w-[18rem] xl:w-[20rem] 2xl:w-[22rem] lg:flex-shrink-0 lg:min-h-0 border-l border-slate-200 bg-white overflow-hidden">
+            <QuoteSidebar
+              order={activeOrder}
+              lineItems={lineItems}
+              onLineItemsChange={refreshLineItems}
+              onCreateQuote={handleCreateQuote}
+              productCache={productCache}
+              onPricingResult={setLatestPricingResult}
+            />
+          </div>
+        )}
       </div>
 
 
