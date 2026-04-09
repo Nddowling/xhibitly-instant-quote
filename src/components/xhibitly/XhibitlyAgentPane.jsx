@@ -97,7 +97,7 @@ export default function XhibitlyAgentPane({ queuedPrompt, onPromptConsumed }) {
         ))}
       </div>
 
-      <div ref={scrollRef} className="p-3 space-y-3 bg-slate-50/70 flex-1 overflow-y-auto">
+      <div ref={scrollRef} className="min-h-0 p-3 space-y-3 bg-slate-50/70 flex-1 overflow-y-auto">
         {messages.length === 0 ? (
           <div className="rounded-3xl border border-dashed border-slate-200 bg-white px-5 py-10 text-center shadow-sm">
             <Sparkles className="w-8 h-8 text-slate-200 mx-auto mb-3" />

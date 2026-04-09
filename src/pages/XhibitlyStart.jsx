@@ -22,7 +22,7 @@ export default function XhibitlyStart() {
               </div>
             </section>
 
-            <section className="min-w-0 rounded-[30px] bg-white/96 backdrop-blur border border-white shadow-[0_25px_70px_rgba(15,23,42,0.12)] overflow-hidden min-h-[760px] lg:sticky lg:top-4">
+            <section className="min-w-0 rounded-[30px] bg-white/96 backdrop-blur border border-white shadow-[0_25px_70px_rgba(15,23,42,0.12)] overflow-hidden h-[760px] lg:h-[calc(100vh-140px)] lg:sticky lg:top-4">
               <XhibitlyAgentPane queuedPrompt={queuedPrompt} onPromptConsumed={() => setQueuedPrompt('')} />
             </section>
           </div>
