@@ -362,11 +362,11 @@ function CatalogPageView({ pageNum, hotspots, onHotspotClick, selectedHotspot, o
               cursor: 'pointer',
             }}
             className={`group border-2 rounded transition-all duration-150
-              ${isSelected ? 'border-[#e2231a] bg-[#e2231a]/20' : 'border-transparent hover:border-[#e2231a]/60 hover:bg-[#e2231a]/10'}`}
+              ${isSelected ? 'border-[#18C3F8] bg-[#18C3F8]/20' : 'border-transparent hover:border-[#18C3F8]/60 hover:bg-[#18C3F8]/10'}`}
             title={spot.name}
           >
             <div className={`absolute top-1 right-1 transition-opacity ${isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
-              <div className="bg-[#e2231a] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-lg flex items-center gap-1">
+              <div className="bg-[#18C3F8] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-lg flex items-center gap-1">
                 <Plus className="w-2.5 h-2.5" />Add
               </div>
             </div>
@@ -1474,7 +1474,11 @@ export default function CatalogQuote({ embeddedMode = false, onOrderChange, onLi
     <div className="h-screen flex flex-col bg-slate-100 overflow-hidden">
       {/* Session Start Modal */}
       {showSessionModal && (
-        <SessionStartModal user={user} onComplete={handleSessionComplete} onDismiss={() => setShowSessionModal(false)} />
+        <SessionStartModal
+          user={user}
+          onComplete={handleSessionComplete}
+          onDismiss={isEmbeddedOnXhibitlyStart ? undefined : () => setShowSessionModal(false)}
+        />
       )}
 
       {/* Quote Confirm Modal */}
@@ -1809,7 +1813,7 @@ export default function CatalogQuote({ embeddedMode = false, onOrderChange, onLi
                     onStartSession={() => {
                       setShowVariants(false);
                       setSelectedHotspot(null);
-                      if (!isEmbeddedOnXhibitlyStart) setShowSessionModal(true);
+                      setShowSessionModal(true);
                     }}
                     onAdd={(product) => { handleAddToQuote(product); setShowVariants(false); setSelectedHotspot(null); }}
                     onClose={() => { setShowVariants(false); setSelectedHotspot(null); }}

@@ -428,6 +428,7 @@ function NewCustomerStep({ user, onBack, onComplete }) {
 
 // ─── Main Modal ───────────────────────────────────────────────────────────────
 export default function SessionStartModal({ onComplete, onDismiss, user }) {
+  const canDismiss = typeof onDismiss === 'function';
   // step: 'search' | 'choice' | 'new_quote' | 'new_customer'
   const [step, setStep] = useState('search');
   const [selectedClient, setSelectedClient] = useState(null);
@@ -451,11 +452,15 @@ export default function SessionStartModal({ onComplete, onDismiss, user }) {
   const { title, sub } = STEP_TITLES[step] || STEP_TITLES.search;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
+      onClick={() => canDismiss && onDismiss()}
+    >
       <motion.div
         initial={{ opacity: 0, scale: 0.96, y: 8 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="bg-[#1a1a1a] px-6 py-4 flex items-center justify-between">
