@@ -84,7 +84,7 @@ export default function Landing() {
                 Search the catalog, assemble client-ready booth configurations, and keep every follow-up organized in one clean workflow made for real exhibit sales conversations.
               </p>
 
-              <div className="flex flex-col sm:flex-row items-center lg:items-center gap-4 mb-8 flex-wrap">
+              <div className="flex flex-col sm:flex-row items-center lg:items-center gap-4 mb-8">
                 <Button
                   onClick={handleLogin}
                   size="lg"
@@ -93,17 +93,9 @@ export default function Landing() {
                   Enter Dealer Workspace
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
-                <Button
-                  onClick={() => navigate('/store')}
-                  size="lg"
-                  variant="outline"
-                  className="w-full sm:w-auto border-white/20 bg-white/5 text-white h-14 px-6 sm:px-10 text-base font-bold rounded-2xl hover:bg-white/10"
-                >
-                  Shop Self-Serve Store
-                </Button>
                 <div className="text-left">
-                  <p className="text-sm font-semibold text-white">Catalog-driven quoting + self-serve store</p>
-                  <p className="text-xs text-white/58">Verified Orbus products for both guided and direct buying</p>
+                  <p className="text-sm font-semibold text-white">Catalog-driven quoting</p>
+                  <p className="text-xs text-white/58">Only verified Orbus products and broker workflows</p>
                 </div>
               </div>
 

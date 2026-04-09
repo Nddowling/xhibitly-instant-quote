@@ -16,7 +16,7 @@ export default function StoreCart() {
         <p className="text-white/40 mb-8">Add some biohacking tools to get started.</p>
         <Button
           onClick={() => navigate('/store/products')}
-          className="bg-[#e2231a] hover:bg-[#c91e16] text-white font-bold px-8 h-12 rounded-xl"
+          className="bg-[#00c9a7] hover:bg-[#00b396] text-black font-bold px-8 h-12 rounded-xl"
         >
           Browse Products
         </Button>
@@ -35,11 +35,11 @@ export default function StoreCart() {
       {remaining > 0 && (
         <div className="bg-white/4 border border-white/8 rounded-xl px-5 py-3 mb-8">
           <p className="text-sm text-white/60">
-            Add <span className="text-[#e2231a] font-semibold">${remaining.toFixed(2)}</span> more for <span className="font-semibold text-white">free shipping</span>
+            Add <span className="text-[#00c9a7] font-semibold">${remaining.toFixed(2)}</span> more for <span className="font-semibold text-white">free shipping</span>
           </p>
           <div className="mt-2 h-1.5 bg-white/10 rounded-full overflow-hidden">
             <div
-              className="h-full bg-[#e2231a] rounded-full transition-all"
+              className="h-full bg-[#00c9a7] rounded-full transition-all"
               style={{ width: `${Math.min(100, (subtotal / freeShippingThreshold) * 100)}%` }}
             />
           </div>
@@ -89,7 +89,7 @@ export default function StoreCart() {
             </div>
             <div className="flex justify-between text-white/60">
               <span>Shipping</span>
-              <span className="text-[#e2231a]">{subtotal >= freeShippingThreshold ? 'FREE' : 'Calculated at checkout'}</span>
+              <span className="text-[#00c9a7]">{subtotal >= freeShippingThreshold ? 'FREE' : 'Calculated at checkout'}</span>
             </div>
           </div>
           <div className="border-t border-white/8 pt-4 mb-5">
@@ -100,7 +100,7 @@ export default function StoreCart() {
           </div>
           <Button
             onClick={() => navigate('/store/checkout')}
-            className="w-full bg-[#e2231a] hover:bg-[#c91e16] text-white font-bold h-12 rounded-xl"
+            className="w-full bg-[#00c9a7] hover:bg-[#00b396] text-black font-bold h-12 rounded-xl"
           >
             Proceed to Checkout <ArrowRight className="w-4 h-4 ml-1" />
           </Button>

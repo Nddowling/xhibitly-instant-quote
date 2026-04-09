@@ -10,8 +10,7 @@ import { base44 } from '@/api/base44Client';
 import { useCart } from '../StoreCartContext';
 import StripeCheckoutForm from '../components/StripeCheckoutForm';
 
-const stripePublishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
-const stripePromise = stripePublishableKey ? loadStripe(stripePublishableKey) : null;
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY ?? '');
 
 const APPEARANCE = {
   theme: 'night',
@@ -61,13 +60,13 @@ export default function StoreCheckout() {
     setIntentError('');
 
     try {
-      const response = await base44.functions.invoke('createStorePaymentIntent', {
+      const res = await base44.functions.invoke('createStorePaymentIntent', {
         line_items: items.map(i => ({ product_id: i.product_id, quantity: i.quantity })),
         customer_email: form.email,
       });
-      setClientSecret(response.data?.client_secret);
-      setPaymentIntentId(response.data?.payment_intent_id);
-      setServerTotal(response.data?.total);
+      setClientSecret(res.client_secret);
+      setPaymentIntentId(res.payment_intent_id);
+      setServerTotal(res.total);
       setPhase('payment');
     } catch (err) {
       console.error(err);
@@ -173,12 +172,8 @@ export default function StoreCheckout() {
                 {loadingIntent ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Loading...</> : 'Continue to Payment'}
               </Button>
             </form>
-          ) : !stripePublishableKey ? (
-            <div className="rounded-2xl border border-amber-500/20 bg-amber-500/10 px-4 py-4 text-sm text-amber-200">
-              Stripe checkout is not configured yet. Add your Stripe publishable key to enable card payments.
-            </div>
           ) : (
-            clientSecret && stripePromise && (
+            clientSecret && (
               <Elements stripe={stripePromise} options={{ clientSecret, appearance: APPEARANCE }}>
                 <StripeCheckoutForm total={serverTotal ?? subtotal} onSuccess={handlePaymentSuccess} />
               </Elements>
