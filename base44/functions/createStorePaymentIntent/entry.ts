@@ -1,50 +1,48 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.23';
 
 const STRIPE_SECRET_KEY = Deno.env.get('STRIPE_SECRET_KEY') ?? '';
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'Content-Type, Authorization' } });
-  }
-
   try {
     const base44 = createClientFromRequest(req);
-
     const { line_items, customer_email } = await req.json();
+
+    if (!STRIPE_SECRET_KEY) {
+      return Response.json({ error: 'Stripe secret key is not configured' }, { status: 500 });
+    }
 
     if (!line_items || !Array.isArray(line_items) || line_items.length === 0) {
       return Response.json({ error: 'line_items is required' }, { status: 400 });
     }
+
     if (!customer_email) {
       return Response.json({ error: 'customer_email is required' }, { status: 400 });
     }
 
-    // Fetch products server-side to verify prices (never trust client-sent prices)
-    const productIds = line_items.map((i: any) => i.product_id);
-    const products: any[] = [];
-    for (const pid of productIds) {
-      try {
-        const p = await base44.asServiceRole.entities.StoreProduct.get(pid);
-        products.push(p);
-      } catch {
-        return Response.json({ error: `Product ${pid} not found` }, { status: 400 });
-      }
-    }
+    const productIds = line_items.map((item) => item.product_id);
+    const products = await Promise.all(productIds.map(async (productId) => {
+      const product = await base44.asServiceRole.entities.Product.get(productId);
+      return product;
+    }));
 
-    // Calculate total server-side
     let totalCents = 0;
     for (const item of line_items) {
-      const product = products.find((p: any) => p.id === item.product_id);
-      if (!product) return Response.json({ error: 'Product not found' }, { status: 400 });
-      if (!product.in_stock) return Response.json({ error: `${product.name} is out of stock` }, { status: 400 });
-      totalCents += Math.round(product.price * 100) * (item.quantity ?? 1);
+      const product = products.find((entry) => entry.id === item.product_id);
+      if (!product) {
+        return Response.json({ error: 'Product not found' }, { status: 400 });
+      }
+      if (product.is_active === false) {
+        return Response.json({ error: `${product.name} is unavailable` }, { status: 400 });
+      }
+
+      const unitPrice = Number(product.retail_price || product.base_price || product.market_value || 0);
+      totalCents += Math.round(unitPrice * 100) * (item.quantity ?? 1);
     }
 
     if (totalCents < 50) {
       return Response.json({ error: 'Order total too small' }, { status: 400 });
     }
 
-    // Create Stripe PaymentIntent
     const stripeRes = await fetch('https://api.stripe.com/v1/payment_intents', {
       method: 'POST',
       headers: {
@@ -55,25 +53,25 @@ Deno.serve(async (req) => {
         amount: String(totalCents),
         currency: 'usd',
         receipt_email: customer_email,
-        'metadata[store]': 'recoveredge',
+        automatic_payment_methods: 'enabled',
+        'metadata[store]': 'orbus',
       }).toString(),
     });
 
     if (!stripeRes.ok) {
       const errData = await stripeRes.json();
       console.error('Stripe error:', errData);
-      return Response.json({ error: 'Payment processing unavailable' }, { status: 502 });
+      return Response.json({ error: errData?.error?.message || 'Payment processing unavailable' }, { status: 502 });
     }
 
-    const pi = await stripeRes.json();
-
+    const paymentIntent = await stripeRes.json();
     return Response.json({
-      client_secret: pi.client_secret,
-      payment_intent_id: pi.id,
+      client_secret: paymentIntent.client_secret,
+      payment_intent_id: paymentIntent.id,
       total: totalCents / 100,
     });
-  } catch (err) {
-    console.error('createStorePaymentIntent error:', err);
-    return Response.json({ error: 'Internal server error' }, { status: 500 });
+  } catch (error) {
+    console.error('createStorePaymentIntent error:', error);
+    return Response.json({ error: error.message }, { status: 500 });
   }
 });
