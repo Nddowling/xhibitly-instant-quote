@@ -408,6 +408,15 @@ export default function Layout({ children, currentPageName }) {
                     </Link>
                   );
                 })}
+                <Link to="/store" onClick={() => setMobileMenuOpen(false)}>
+                  <div className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-all ${
+                    window.location.pathname.startsWith('/store') ? 'bg-[#e2231a]/15 text-white' : 'text-white/60 hover:bg-white/5 hover:text-white'
+                  }`}>
+                    <BookOpen className="w-5 h-5 flex-shrink-0" />
+                    <span className="font-medium">Store</span>
+                    {window.location.pathname.startsWith('/store') && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-[#e2231a]" />}
+                  </div>
+                </Link>
                 <div className="h-px bg-white/5 my-2" />
                 {settingsNav.map(({ page, label, icon: ItemIcon }) => (
                   <Link key={`mobile-${page}`} to={createPageUrl(page)} onClick={() => setMobileMenuOpen(false)}>
