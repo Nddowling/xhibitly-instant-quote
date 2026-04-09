@@ -19,6 +19,7 @@ import GlobalAgentLauncher from '@/components/agents/GlobalAgentLauncher';
 import ProfileAssignedContacts from './pages/ProfileAssignedContacts';
 import GlobalAdminMetricView from './pages/GlobalAdminMetricView';
 import MultiTenantAudit from './pages/MultiTenantAudit';
+import XhibitlyStart from './pages/XhibitlyStart';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -54,11 +55,7 @@ const AuthenticatedApp = () => {
   // Render the main app
   return (
     <Routes>
-      <Route path="/" element={
-        <LayoutWrapper currentPageName={mainPageKey}>
-          <MainPage />
-        </LayoutWrapper>
-      } />
+      <Route path="/" element={<XhibitlyStart />} />
       {Object.entries(Pages).map(([path, Page]) => (
         <Route
           key={path}
@@ -158,6 +155,7 @@ const AuthenticatedApp = () => {
           </LayoutWrapper>
         }
       />
+      <Route path="/XhibitlyStart" element={<XhibitlyStart />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
