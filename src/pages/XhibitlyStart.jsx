@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import XhibitlyCatalogPane from '@/components/xhibitly/XhibitlyCatalogPane';
+import CatalogQuote from '@/pages/CatalogQuote';
 import XhibitlyAgentPane from '@/components/xhibitly/XhibitlyAgentPane';
 
 export default function XhibitlyStart() {
@@ -16,15 +16,17 @@ export default function XhibitlyStart() {
           </div>
 
           <div className="grid gap-6 xl:grid-cols-[minmax(0,1.12fr)_420px] items-start min-h-[calc(100vh-120px)]">
-            <section className="rounded-[30px] bg-[linear-gradient(135deg,#1f4fa4_0%,#204d97_38%,#1c3f84_100%)] text-white p-6 md:p-8 shadow-[0_30px_80px_rgba(13,79,179,0.22)] border border-white/15">
+            <section className="rounded-[30px] bg-[linear-gradient(135deg,#1f4fa4_0%,#204d97_38%,#1c3f84_100%)] text-white p-4 md:p-5 shadow-[0_30px_80px_rgba(13,79,179,0.22)] border border-white/15">
               <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)] lg:items-center h-full">
                 <div className="text-center lg:text-left">
                   <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/70">The Handbook</p>
                   <h1 className="mt-2 text-3xl md:text-4xl font-black leading-tight">The Power of The Handbook</h1>
-                  <p className="mt-4 text-sm md:text-base text-white/80 max-w-sm mx-auto lg:mx-0">Walk the catalog, explore products, and let the AI collect booth details while suggesting the right exhibit direction.</p>
+                  <p className="mt-4 text-sm md:text-base text-white/80 max-w-sm mx-auto lg:mx-0">Walk the real catalog interface, explore products, and let the AI collect booth details while suggesting the right exhibit direction.</p>
                 </div>
-                <div className="min-w-0">
-                  <XhibitlyCatalogPane onProductPrompt={setQueuedPrompt} />
+                <div className="min-w-0 rounded-[24px] overflow-hidden border border-white/10 shadow-[0_18px_40px_rgba(7,18,41,0.18)]">
+                  <div className="h-[760px] bg-white">
+                    <CatalogQuote />
+                  </div>
                 </div>
               </div>
             </section>
