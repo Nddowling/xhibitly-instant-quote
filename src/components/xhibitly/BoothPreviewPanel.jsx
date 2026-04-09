@@ -54,14 +54,14 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult, onG
     setShowBrandPrompt(true);
   };
 
-  const handleBrandConfirm = () => {
-    onGeneratePreview?.({ website_url: websiteInput.trim() });
+  const handleBrandConfirm = async () => {
     setShowBrandPrompt(false);
+    await onGeneratePreview?.({ website_url: websiteInput.trim() });
   };
 
-  const handleSkipBranding = () => {
-    onGeneratePreview?.({ website_url: '' });
+  const handleSkipBranding = async () => {
     setShowBrandPrompt(false);
+    await onGeneratePreview?.({ website_url: '' });
   };
 
   return (
@@ -146,7 +146,7 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult, onG
               </div>
               <div className="mt-4 flex gap-2">
                 <Button onClick={handleBrandConfirm} className="flex-1 rounded-xl bg-[#18C3F8] hover:bg-[#0fb2e4] text-white">Use Website</Button>
-                <Button variant="outline" onClick={handleSkipBranding} className="flex-1 rounded-xl">Skip</Button>
+                <Button variant="outline" onClick={handleSkipBranding} className="flex-1 rounded-xl">Skip Branding</Button>
               </div>
             </div>
           </div>

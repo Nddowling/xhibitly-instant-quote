@@ -21,8 +21,12 @@ export default function XhibitlyStart() {
     setIsGeneratingPreview(true);
     try {
       if (cleanWebsite) {
-        const brandResponse = await base44.functions.invoke('fetchBrandData', { website_url: cleanWebsite });
-        brandDetails = brandResponse?.data?.brand || null;
+        try {
+          const brandResponse = await base44.functions.invoke('fetchBrandData', { website_url: cleanWebsite });
+          brandDetails = brandResponse?.data?.brand || null;
+        } catch (error) {
+          toast.error('Brand lookup is temporarily unavailable, so the render will continue without pulled branding.');
+        }
       }
 
       const brand = brandDetails?.company_name || previewOrder.customer_company || previewOrder.customer_name || 'Client brand';
@@ -57,6 +61,8 @@ export default function XhibitlyStart() {
           toast.success('Branding pulled into the preview.');
         }
       }
+    } catch (error) {
+      toast.error('Preview generation failed. Please try again.');
     } finally {
       setIsGeneratingPreview(false);
     }
