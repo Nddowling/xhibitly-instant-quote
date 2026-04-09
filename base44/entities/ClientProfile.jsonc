@@ -129,6 +129,14 @@
     "dealer_instance_id": {
       "type": "string",
       "description": "Dealer workspace scope"
+    },
+    "ai_brief": {
+      "type": "string",
+      "description": "Captured AI planning summary for this client"
+    },
+    "ai_context": {
+      "type": "object",
+      "description": "Structured booth planning details captured during chat"
     }
   },
   "required": [

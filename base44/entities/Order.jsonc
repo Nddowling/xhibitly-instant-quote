@@ -252,6 +252,14 @@
     "account_id": {
       "type": "string",
       "description": "Related Account record"
+    },
+    "ai_brief": {
+      "type": "string",
+      "description": "Captured AI planning summary for this quote"
+    },
+    "ai_context": {
+      "type": "object",
+      "description": "Structured booth planning details captured during chat"
     }
   },
   "required": [

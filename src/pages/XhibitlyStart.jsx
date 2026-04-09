@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import CatalogQuote from '@/pages/CatalogQuote';
 import XhibitlyAgentPane from '@/components/xhibitly/XhibitlyAgentPane';
+import BoothPreviewPanel from '@/components/xhibitly/BoothPreviewPanel';
 
 export default function XhibitlyStart() {
   const [queuedPrompt, setQueuedPrompt] = useState('');
+  const [previewOrder, setPreviewOrder] = useState(null);
+  const [previewLineItems, setPreviewLineItems] = useState([]);
+  const [previewPricingResult, setPreviewPricingResult] = useState(null);
 
   return (
     <div className="min-h-screen bg-[#f6f8fc] text-slate-900 overflow-hidden">
@@ -15,11 +19,24 @@ export default function XhibitlyStart() {
             <img src="https://media.base44.com/images/public/69834d9e0d7220d671bfd124/d492801c9_IMG_1017.PNG" alt="Xhibitly" className="h-10 md:h-12 w-auto object-contain" />
           </div>
 
-          <div className="grid gap-6 lg:grid-cols-2 items-start min-h-[calc(100vh-120px)]">
-            <section className="min-w-0 rounded-[30px] overflow-hidden border border-slate-200 bg-white shadow-[0_25px_70px_rgba(15,23,42,0.10)]">
+          <div className="grid gap-6 lg:grid-cols-[84px_minmax(0,1fr)_320px_420px] items-start min-h-[calc(100vh-120px)]">
+            <section className="min-w-0 rounded-[30px] overflow-hidden border border-slate-200 bg-white shadow-[0_25px_70px_rgba(15,23,42,0.10)] lg:col-span-2">
               <div className="h-[760px] bg-white">
-                <CatalogQuote />
+                <CatalogQuote
+                  embeddedMode
+                  onOrderChange={setPreviewOrder}
+                  onLineItemsChange={setPreviewLineItems}
+                  onPricingResult={setPreviewPricingResult}
+                />
               </div>
+            </section>
+
+            <section className="min-w-0 h-[760px] lg:h-[calc(100vh-140px)]">
+              <BoothPreviewPanel
+                order={previewOrder}
+                lineItems={previewLineItems}
+                pricingResult={previewPricingResult}
+              />
             </section>
 
             <section className="min-w-0 rounded-[30px] bg-white/96 backdrop-blur border border-white shadow-[0_25px_70px_rgba(15,23,42,0.12)] overflow-hidden h-[760px] lg:h-[calc(100vh-140px)] lg:sticky lg:top-4">

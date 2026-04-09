@@ -989,10 +989,10 @@ function OrderItem({ item, onQtyChange, onRemove, onSizeChange }) {
 }
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
-export default function CatalogQuote() {
+export default function CatalogQuote({ embeddedMode = false, onOrderChange, onLineItemsChange, onPricingResult }) {
   const navigate = useNavigate();
   const location = useLocation();
-  const isEmbeddedOnXhibitlyStart = location.pathname === '/' || location.pathname === '/XhibitlyStart';
+  const isEmbeddedOnXhibitlyStart = embeddedMode || location.pathname === '/' || location.pathname === '/XhibitlyStart';
   const [currentPage, setCurrentPage] = useState(FIRST_VISIBLE_CATALOG_PAGE);
   const [pageInput, setPageInput] = useState(String(FIRST_VISIBLE_CATALOG_PAGE));
   const [direction, setDirection] = useState(1);
@@ -1040,6 +1040,14 @@ export default function CatalogQuote() {
   }, [activeOrder]);
 
   useEffect(() => { refreshLineItems(); }, [refreshLineItems]);
+
+  useEffect(() => {
+    onOrderChange?.(activeOrder || null);
+  }, [activeOrder, onOrderChange]);
+
+  useEffect(() => {
+    onLineItemsChange?.(lineItems || []);
+  }, [lineItems, onLineItemsChange]);
 
   const handleSessionComplete = async (order) => {
     setActiveOrder(order);
@@ -1632,7 +1640,10 @@ export default function CatalogQuote() {
                 onLineItemsChange={refreshLineItems}
                 onCreateQuote={handleCreateQuote}
                 productCache={productCache}
-                onPricingResult={setLatestPricingResult}
+                onPricingResult={(result) => {
+                  setLatestPricingResult(result);
+                  onPricingResult?.(result);
+                }}
               />
             </div>
           </div>
