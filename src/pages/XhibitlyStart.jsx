@@ -19,7 +19,7 @@ export default function XhibitlyStart() {
             <img src="https://media.base44.com/images/public/69834d9e0d7220d671bfd124/d492801c9_IMG_1017.PNG" alt="Xhibitly" className="h-10 md:h-12 w-auto object-contain" />
           </div>
 
-          <div className="grid gap-6 lg:grid-cols-[84px_minmax(0,1fr)_320px_420px] items-start min-h-[calc(100vh-120px)]">
+          <div className="grid gap-6 lg:grid-cols-[320px_minmax(0,1fr)_420px] items-start min-h-[calc(100vh-120px)]">
             <section className="min-w-0 rounded-[30px] overflow-hidden border border-slate-200 bg-white shadow-[0_25px_70px_rgba(15,23,42,0.10)] lg:col-span-2">
               <div className="h-[760px] bg-white">
                 <CatalogQuote
