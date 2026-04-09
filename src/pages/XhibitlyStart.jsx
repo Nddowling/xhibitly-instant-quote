@@ -15,9 +15,13 @@ export default function XhibitlyStart() {
             <img src="https://media.base44.com/images/public/69834d9e0d7220d671bfd124/d492801c9_IMG_1017.PNG" alt="Xhibitly" className="h-10 md:h-12 w-auto object-contain" />
           </div>
 
-          <div className="grid gap-6 xl:grid-cols-[minmax(0,1.12fr)_420px] items-start min-h-[calc(100vh-120px)]">
+          <div className="grid gap-6 xl:grid-cols-[420px_minmax(0,1.12fr)] items-start min-h-[calc(100vh-120px)]">
+            <section className="rounded-[30px] bg-white/96 backdrop-blur border border-white shadow-[0_25px_70px_rgba(15,23,42,0.12)] overflow-hidden min-h-[760px] xl:sticky xl:top-0">
+              <XhibitlyAgentPane queuedPrompt={queuedPrompt} onPromptConsumed={() => setQueuedPrompt('')} />
+            </section>
+
             <section className="rounded-[30px] bg-[linear-gradient(135deg,#1f4fa4_0%,#204d97_38%,#1c3f84_100%)] text-white p-4 md:p-5 shadow-[0_30px_80px_rgba(13,79,179,0.22)] border border-white/15">
-              <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)] lg:items-center h-full">
+              <div className="grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)] lg:items-center h-full">
                 <div className="text-center lg:text-left">
                   <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/70">The Handbook</p>
                   <h1 className="mt-2 text-3xl md:text-4xl font-black leading-tight">The Power of The Handbook</h1>
@@ -29,10 +33,6 @@ export default function XhibitlyStart() {
                   </div>
                 </div>
               </div>
-            </section>
-
-            <section className="rounded-[30px] bg-white/96 backdrop-blur border border-white shadow-[0_25px_70px_rgba(15,23,42,0.12)] overflow-hidden min-h-[760px]">
-              <XhibitlyAgentPane queuedPrompt={queuedPrompt} onPromptConsumed={() => setQueuedPrompt('')} />
             </section>
           </div>
 
