@@ -1516,7 +1516,7 @@ export default function CatalogQuote({ embeddedMode = false, onOrderChange, onLi
                 onKeyDown={e => e.key === 'Enter' && handleSkuSearch()}
                 onFocus={() => searchResults.length > 0 && setShowSearchDropdown(true)}
                 onBlur={() => setTimeout(() => setShowSearchDropdown(false), 200)}
-                className="text-sm border border-slate-200 rounded-xl px-3.5 py-2 w-full focus:outline-none focus:ring-2 focus:ring-[#e2231a]/20"
+                className="text-sm border border-slate-200 rounded-xl px-3.5 py-2 w-full focus:outline-none focus:ring-2 focus:ring-[#18C3F8]/20"
               />
               <button onClick={handleSkuSearch} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
                 <Search className="w-4 h-4" />
@@ -1541,7 +1541,7 @@ export default function CatalogQuote({ embeddedMode = false, onOrderChange, onLi
                       )}
                     </div>
                     {(p.catalog_pages?.[0] || SKU_TO_PAGE[p.sku]) && (
-                      <span className="text-[10px] text-[#e2231a] font-bold flex-shrink-0">
+                      <span className="text-[10px] text-[#18C3F8] font-bold flex-shrink-0">
                         p.{p.catalog_pages?.[0] || SKU_TO_PAGE[p.sku]}
                       </span>
                     )}
@@ -1560,7 +1560,7 @@ export default function CatalogQuote({ embeddedMode = false, onOrderChange, onLi
             ) : !isEmbeddedOnXhibitlyStart ? (
               <button
                 onClick={() => setShowSessionModal(true)}
-                className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:border-[#e2231a]/30 hover:text-[#e2231a] transition-colors"
+                className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:border-[#18C3F8]/30 hover:text-[#18C3F8] transition-colors"
               >
                 <Plus className="w-4 h-4" />
                 Start Quote Session
@@ -1593,13 +1593,13 @@ export default function CatalogQuote({ embeddedMode = false, onOrderChange, onLi
             </div>
 
             {hasHotspots && !editMode && (
-              <Badge className="hidden 2xl:inline-flex bg-[#e2231a]/10 text-[#e2231a] text-[10px] rounded-full px-3 py-1">{currentHotspots.length} hotspots</Badge>
+              <Badge className="hidden 2xl:inline-flex bg-[#18C3F8]/10 text-[#18C3F8] text-[10px] rounded-full px-3 py-1">{currentHotspots.length} hotspots</Badge>
             )}
             {isEdited && <Badge className="hidden 2xl:inline-flex bg-amber-100 text-amber-700 text-[10px] rounded-full px-3 py-1">unsaved edits</Badge>}
 
             <button
               onClick={() => setShowMobileQuote(true)}
-              className="lg:hidden flex items-center gap-1.5 bg-[#e2231a] text-white px-3.5 py-2 rounded-xl text-xs font-bold hover:bg-[#b01b13] transition-colors shadow-sm"
+              className="lg:hidden flex items-center gap-1.5 bg-[#18C3F8] text-white px-3.5 py-2 rounded-xl text-xs font-bold hover:bg-[#0fb2e4] transition-colors shadow-sm"
             >
               <ShoppingCart className="w-3.5 h-3.5" />
               Quote ({lineItems.reduce((s, i) => s + (i.quantity || 0), 0)})
@@ -1608,7 +1608,7 @@ export default function CatalogQuote({ embeddedMode = false, onOrderChange, onLi
             {lineItems.length > 0 && (
               <button
                 onClick={handleCreateQuote}
-                className="hidden 2xl:flex items-center gap-1.5 bg-[#e2231a] text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-[#b01b13] transition-colors shadow-sm"
+                className="hidden 2xl:flex items-center gap-1.5 bg-[#18C3F8] text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-[#0fb2e4] transition-colors shadow-sm"
               >
                 <ShoppingCart className="w-4 h-4" />
                 Review Quote ({lineItems.reduce((s, i) => s + (i.quantity || 0), 0)})
@@ -1839,7 +1839,7 @@ export default function CatalogQuote({ embeddedMode = false, onOrderChange, onLi
                             handleAddToQuote({ sku: p.sku, name: pd?.name || p.name, price: pd?.base_price, imageUrl: getImageUrl(pd) });
                           }
                         }}
-                        className="flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-200 hover:border-[#e2231a]/40 hover:bg-[#e2231a]/5 text-left transition-all group"
+                        className="flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-200 hover:border-[#18C3F8]/40 hover:bg-[#18C3F8]/5 text-left transition-all group"
                       >
                         <div className="w-12 h-12 flex-shrink-0 rounded-lg bg-slate-100 overflow-hidden flex items-center justify-center">
                           <ProductImage src={getImageUrl(pd)} alt={p.name} fallbackClassName="w-4 h-4 text-slate-300" />
@@ -1847,9 +1847,9 @@ export default function CatalogQuote({ embeddedMode = false, onOrderChange, onLi
                         <div className="flex-1 min-w-0">
                           <p className="text-xs font-semibold text-slate-800 leading-tight line-clamp-2">{pd?.name || p.name}</p>
                           <p className="text-[9px] text-slate-400 font-mono">{p.sku}</p>
-                          {pd?.base_price && <p className="text-xs font-bold text-[#e2231a]">{fmt(pd.base_price)}</p>}
+                          {pd?.base_price && <p className="text-xs font-bold text-[#18C3F8]">{fmt(pd.base_price)}</p>}
                         </div>
-                        {activeOrder && <Plus className="w-4 h-4 text-[#e2231a] opacity-0 group-hover:opacity-100 flex-shrink-0" />}
+                        {activeOrder && <Plus className="w-4 h-4 text-[#18C3F8] opacity-0 group-hover:opacity-100 flex-shrink-0" />}
                       </button>
                     );
                   })}

@@ -14,7 +14,7 @@ function fmt(n) {
 }
 
 // Step 1: Search for a customer
-function CustomerStep({ onSelect, onNewCustomer }) {
+function CustomerStep({ onSelect, onNewCustomer, onDismiss, canDismiss }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [recentCustomers, setRecentCustomers] = useState([]);
@@ -53,8 +53,15 @@ function CustomerStep({ onSelect, onNewCustomer }) {
 
   return (
     <div className="p-6 space-y-4">
+      <div className="flex items-center justify-between gap-3">
+        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide block">Search Customer</label>
+        {canDismiss && (
+          <button onClick={onDismiss} className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-700 hover:border-slate-300 transition-colors flex-shrink-0">
+            <X className="w-4 h-4" />
+          </button>
+        )}
+      </div>
       <div>
-        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide block mb-2">Search Customer</label>
         <div className="relative" ref={searchRef}>
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 z-10" />
           <input
@@ -63,7 +70,7 @@ function CustomerStep({ onSelect, onNewCustomer }) {
             onFocus={() => searchResults.length > 0 && setShowDropdown(true)}
             onBlur={() => setTimeout(() => setShowDropdown(false), 150)}
             placeholder="Type name, email, or company..."
-            className="w-full pl-9 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30"
+            className="w-full pl-9 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#18C3F8]/30"
             autoFocus
           />
           {showDropdown && searchResults.length > 0 && (
@@ -89,7 +96,7 @@ function CustomerStep({ onSelect, onNewCustomer }) {
         {searchQuery.length >= 1 && searchResults.length === 0 && (
           <p className="text-xs text-slate-400 mt-2">
             No matches found.{' '}
-            <button onClick={onNewCustomer} className="text-[#e2231a] font-semibold hover:underline">
+            <button onClick={onNewCustomer} className="text-[#18C3F8] font-semibold hover:underline">
               Add new customer →
             </button>
           </p>
@@ -134,7 +141,7 @@ function CustomerStep({ onSelect, onNewCustomer }) {
 }
 
 // Step 2 (existing client): New or Existing Quote choice + open quotes list
-function QuoteChoiceStep({ client, onNewQuote, onResumeQuote, onBack }) {
+function QuoteChoiceStep({ client, onNewQuote, onResumeQuote, onBack, onDismiss, canDismiss }) {
   const [openQuotes, setOpenQuotes] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -157,15 +164,22 @@ function QuoteChoiceStep({ client, onNewQuote, onResumeQuote, onBack }) {
           <p className="text-sm font-bold text-green-800">{client.client_company || client.client_email}</p>
           <p className="text-xs text-green-600">{client.contact_name ? `${client.contact_name} · ` : ''}{client.client_email}</p>
         </div>
-        <button onClick={onBack} className="text-green-400 hover:text-green-600">
-          <X className="w-4 h-4" />
-        </button>
+        <div className="flex items-center gap-2">
+          <button onClick={onBack} className="text-green-400 hover:text-green-600">
+            <X className="w-4 h-4" />
+          </button>
+          {canDismiss && (
+            <button onClick={onDismiss} className="w-8 h-8 rounded-full border border-slate-200 bg-white flex items-center justify-center text-slate-400 hover:text-slate-700 hover:border-slate-300 transition-colors">
+              <X className="w-4 h-4" />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* New Quote button */}
       <button
         onClick={onNewQuote}
-        className="w-full flex items-center gap-3 px-4 py-3.5 bg-[#e2231a] hover:bg-[#b01b13] text-white rounded-xl transition-colors font-semibold text-sm"
+        className="w-full flex items-center gap-3 px-4 py-3.5 bg-[#18C3F8] hover:bg-[#0fb2e4] text-white rounded-xl transition-colors font-semibold text-sm"
       >
         <Plus className="w-4 h-4 flex-shrink-0" />
         <span className="flex-1 text-left">Start New Quote</span>
@@ -218,7 +232,7 @@ function QuoteChoiceStep({ client, onNewQuote, onResumeQuote, onBack }) {
 }
 
 // Step 3: New quote show info form
-function NewQuoteStep({ client, user, onBack, onComplete }) {
+function NewQuoteStep({ client, user, onBack, onComplete, onDismiss, canDismiss }) {
   const [starting, setStarting] = useState(false);
   const [form, setForm] = useState({
     first_name: client?.contact_name?.split(' ')[0] || '',
@@ -263,9 +277,16 @@ function NewQuoteStep({ client, user, onBack, onComplete }) {
           <p className="text-sm font-bold text-green-800">{client.client_company || client.client_email}</p>
           <p className="text-xs text-green-600">{client.client_email}</p>
         </div>
-        <button onClick={onBack} className="text-green-400 hover:text-green-600">
-          <X className="w-4 h-4" />
-        </button>
+        <div className="flex items-center gap-2">
+          <button onClick={onBack} className="text-green-400 hover:text-green-600">
+            <X className="w-4 h-4" />
+          </button>
+          {canDismiss && (
+            <button onClick={onDismiss} className="w-8 h-8 rounded-full border border-slate-200 bg-white flex items-center justify-center text-slate-400 hover:text-slate-700 hover:border-slate-300 transition-colors">
+              <X className="w-4 h-4" />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Contact name */}
@@ -274,13 +295,13 @@ function NewQuoteStep({ client, user, onBack, onComplete }) {
           <label className="text-[10px] text-slate-500 font-semibold uppercase tracking-wide">First Name</label>
           <input value={form.first_name} onChange={e => setField('first_name', e.target.value)}
             placeholder="Jane"
-            className="w-full mt-1 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30" />
+            className="w-full mt-1 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#18C3F8]/30" />
         </div>
         <div>
           <label className="text-[10px] text-slate-500 font-semibold uppercase tracking-wide">Last Name</label>
           <input value={form.last_name} onChange={e => setField('last_name', e.target.value)}
             placeholder="Smith"
-            className="w-full mt-1 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30" />
+            className="w-full mt-1 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#18C3F8]/30" />
         </div>
       </div>
 
@@ -293,7 +314,7 @@ function NewQuoteStep({ client, user, onBack, onComplete }) {
             value={form.show_name} onChange={e => setField('show_name', e.target.value)}
             placeholder="e.g. EXHIBITORLIVE 2026"
             autoFocus
-            className="w-full mt-1 px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30"
+            className="w-full mt-1 px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#18C3F8]/30"
           />
         </div>
         <div>
@@ -302,7 +323,7 @@ function NewQuoteStep({ client, user, onBack, onComplete }) {
             {BOOTH_SIZES.map(s => (
               <button key={s} onClick={() => setField('booth_size', s)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
-                  form.booth_size === s ? 'bg-[#e2231a] text-white border-[#e2231a]' : 'bg-white text-slate-600 border-slate-200 hover:border-[#e2231a]/40'
+                  form.booth_size === s ? 'bg-[#18C3F8] text-white border-[#18C3F8]' : 'bg-white text-slate-600 border-slate-200 hover:border-[#18C3F8]/40'
                 }`}>{s}</button>
             ))}
           </div>
@@ -313,7 +334,7 @@ function NewQuoteStep({ client, user, onBack, onComplete }) {
             {BOOTH_TYPES.map(t => (
               <button key={t} onClick={() => setField('booth_type', t)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
-                  form.booth_type === t ? 'bg-[#e2231a] text-white border-[#e2231a]' : 'bg-white text-slate-600 border-slate-200 hover:border-[#e2231a]/40'
+                  form.booth_type === t ? 'bg-[#18C3F8] text-white border-[#18C3F8]' : 'bg-white text-slate-600 border-slate-200 hover:border-[#18C3F8]/40'
                 }`}>{t}</button>
             ))}
           </div>
@@ -323,7 +344,7 @@ function NewQuoteStep({ client, user, onBack, onComplete }) {
       <Button
         onClick={handleStart}
         disabled={starting || !canSubmit}
-        className="w-full bg-[#e2231a] hover:bg-[#b01b13] text-white h-11 font-bold disabled:opacity-40"
+        className="w-full bg-[#18C3F8] hover:bg-[#0fb2e4] text-white h-11 font-bold disabled:opacity-40"
       >
         {starting ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Creating Quote…</> : 'Start Session →'}
       </Button>
@@ -332,7 +353,7 @@ function NewQuoteStep({ client, user, onBack, onComplete }) {
 }
 
 // Step: New Customer form
-function NewCustomerStep({ user, onBack, onComplete }) {
+function NewCustomerStep({ user, onBack, onComplete, onDismiss, canDismiss }) {
   const [starting, setStarting] = useState(false);
   const [form, setForm] = useState({
     first_name: '', last_name: '', customer_email: '', customer_phone: '', customer_company: '',
@@ -370,7 +391,14 @@ function NewCustomerStep({ user, onBack, onComplete }) {
     <div className="p-6 space-y-4">
       <div className="flex items-center justify-between mb-1">
         <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">New Customer</label>
-        <button onClick={onBack} className="text-xs text-slate-400 hover:text-slate-600">← Back</button>
+        <div className="flex items-center gap-3">
+          <button onClick={onBack} className="text-xs text-slate-400 hover:text-slate-600">← Back</button>
+          {canDismiss && (
+            <button onClick={onDismiss} className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-700 hover:border-slate-300 transition-colors">
+              <X className="w-4 h-4" />
+            </button>
+          )}
+        </div>
       </div>
       <div className="grid grid-cols-2 gap-3">
         {[
@@ -384,7 +412,7 @@ function NewCustomerStep({ user, onBack, onComplete }) {
             <label className="text-[10px] text-slate-500 font-semibold uppercase tracking-wide">{f.label}</label>
             <input type={f.type || 'text'} value={form[f.key]} onChange={e => setField(f.key, e.target.value)}
               placeholder={f.placeholder}
-              className="w-full mt-1 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30" />
+              className="w-full mt-1 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#18C3F8]/30" />
           </div>
         ))}
       </div>
@@ -393,14 +421,14 @@ function NewCustomerStep({ user, onBack, onComplete }) {
         <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide block">Show Information</label>
         <input value={form.show_name} onChange={e => setField('show_name', e.target.value)}
           placeholder="Show Name *"
-          className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#e2231a]/30" />
+          className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#18C3F8]/30" />
         <div>
           <label className="text-[10px] text-slate-500 font-semibold uppercase tracking-wide">Booth Size</label>
           <div className="flex flex-wrap gap-2 mt-1.5">
             {BOOTH_SIZES.map(s => (
               <button key={s} onClick={() => setField('booth_size', s)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
-                  form.booth_size === s ? 'bg-[#e2231a] text-white border-[#e2231a]' : 'bg-white text-slate-600 border-slate-200 hover:border-[#e2231a]/40'
+                  form.booth_size === s ? 'bg-[#18C3F8] text-white border-[#18C3F8]' : 'bg-white text-slate-600 border-slate-200 hover:border-[#18C3F8]/40'
                 }`}>{s}</button>
             ))}
           </div>
@@ -411,7 +439,7 @@ function NewCustomerStep({ user, onBack, onComplete }) {
             {BOOTH_TYPES.map(t => (
               <button key={t} onClick={() => setField('booth_type', t)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
-                  form.booth_type === t ? 'bg-[#e2231a] text-white border-[#e2231a]' : 'bg-white text-slate-600 border-slate-200 hover:border-[#e2231a]/40'
+                  form.booth_type === t ? 'bg-[#18C3F8] text-white border-[#18C3F8]' : 'bg-white text-slate-600 border-slate-200 hover:border-[#18C3F8]/40'
                 }`}>{t}</button>
             ))}
           </div>
@@ -419,7 +447,7 @@ function NewCustomerStep({ user, onBack, onComplete }) {
       </div>
 
       <Button onClick={handleStart} disabled={starting || !canSubmit}
-        className="w-full bg-[#e2231a] hover:bg-[#b01b13] text-white h-11 font-bold disabled:opacity-40">
+        className="w-full bg-[#18C3F8] hover:bg-[#0fb2e4] text-white h-11 font-bold disabled:opacity-40">
         {starting ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Creating…</> : 'Start Session →'}
       </Button>
     </div>
@@ -485,6 +513,8 @@ export default function SessionStartModal({ onComplete, onDismiss, user }) {
                 <CustomerStep
                   onSelect={handleSelectClient}
                   onNewCustomer={() => setStep('new_customer')}
+                  onDismiss={onDismiss}
+                  canDismiss={canDismiss}
                 />
               </motion.div>
             )}
@@ -496,6 +526,8 @@ export default function SessionStartModal({ onComplete, onDismiss, user }) {
                   onNewQuote={() => setStep('new_quote')}
                   onResumeQuote={handleResumeQuote}
                   onBack={() => { setSelectedClient(null); setStep('search'); }}
+                  onDismiss={onDismiss}
+                  canDismiss={canDismiss}
                 />
               </motion.div>
             )}
@@ -507,6 +539,8 @@ export default function SessionStartModal({ onComplete, onDismiss, user }) {
                   user={user}
                   onBack={() => setStep('choice')}
                   onComplete={onComplete}
+                  onDismiss={onDismiss}
+                  canDismiss={canDismiss}
                 />
               </motion.div>
             )}
@@ -517,6 +551,8 @@ export default function SessionStartModal({ onComplete, onDismiss, user }) {
                   user={user}
                   onBack={() => setStep('search')}
                   onComplete={onComplete}
+                  onDismiss={onDismiss}
+                  canDismiss={canDismiss}
                 />
               </motion.div>
             )}
