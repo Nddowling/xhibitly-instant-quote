@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
+import { toast } from 'sonner';
 import CatalogQuote from '@/pages/CatalogQuote';
 import XhibitlyAgentPane from '@/components/xhibitly/XhibitlyAgentPane';
 import BoothPreviewPanel from '@/components/xhibitly/BoothPreviewPanel';
@@ -11,37 +12,61 @@ export default function XhibitlyStart() {
   const [previewPricingResult, setPreviewPricingResult] = useState(null);
   const [isGeneratingPreview, setIsGeneratingPreview] = useState(false);
 
-  const handleGeneratePreview = async () => {
+  const handleGeneratePreview = async ({ website_url = '' } = {}) => {
     if (!previewOrder || previewLineItems.length === 0 || isGeneratingPreview) return;
 
-    const brand = previewOrder.customer_company || previewOrder.customer_name || 'Client brand';
-    const booth = previewOrder.booth_size || 'trade show booth';
-    const show = previewOrder.show_name || 'event booth';
-    const items = previewLineItems
-      .map((item) => item.product_name || item.sku)
-      .filter(Boolean)
-      .slice(0, 6)
-      .join(', ');
-    const referenceUrls = previewLineItems
-      .map((item) => item.image_url)
-      .filter(Boolean)
-      .slice(0, 4);
-
-    const prompt = `Create a polished branded trade show booth concept for ${brand}. Booth size: ${booth}. Event: ${show}. Include these selected products only: ${items}. Keep the layout realistic, premium, and presentation-ready with clear product placement and cohesive branded graphics.`;
+    let brandDetails = null;
+    const cleanWebsite = website_url.trim();
 
     setIsGeneratingPreview(true);
     try {
+      if (cleanWebsite) {
+        const brandResponse = await base44.functions.invoke('fetchBrandData', { website_url: cleanWebsite });
+        brandDetails = brandResponse?.data?.brand || null;
+      }
+
+      const brand = brandDetails?.company_name || previewOrder.customer_company || previewOrder.customer_name || 'Client brand';
+      const booth = previewOrder.booth_size || 'trade show booth';
+      const show = previewOrder.show_name || 'event booth';
+      const itemNames = previewLineItems
+        .map((item) => item.product_name || item.sku)
+        .filter(Boolean);
+      const referenceUrls = previewLineItems
+        .map((item) => item.image_url)
+        .filter(Boolean)
+        .slice(0, 4);
+      const colorNotes = [brandDetails?.primary_color, brandDetails?.secondary_color, brandDetails?.accent_color_1, brandDetails?.accent_color_2]
+        .filter(Boolean)
+        .join(', ');
+      const logoNote = brandDetails?.logo_cached_url || brandDetails?.logo_url;
+
+      const prompt = `Create a polished branded trade show booth concept for ${brand}. Booth size: ${booth}. Event: ${show}. Show only these selected products and no additional display structures or furniture: ${itemNames.join(', ')}. Keep the layout realistic, within the stated booth footprint, and presentation-ready. ${colorNotes ? `Use these brand colors: ${colorNotes}. ` : ''}${logoNote ? 'Apply the provided brand logo and graphics where appropriate. ' : ''}Do not add products that are not in the selected list.`;
+
       const response = await base44.functions.invoke('generateBoothRender', {
         prompt,
-        reference_urls: referenceUrls,
+        reference_urls: logoNote ? [logoNote, ...referenceUrls].slice(0, 4) : referenceUrls,
       });
 
       if (response?.data?.url) {
-        setPreviewOrder((prev) => ({ ...prev, booth_rendering_url: response.data.url }));
+        setPreviewOrder((prev) => ({
+          ...prev,
+          website_url: cleanWebsite || prev?.website_url,
+          booth_rendering_url: response.data.url,
+        }));
+        if (cleanWebsite && brandDetails) {
+          toast.success('Branding pulled into the preview.');
+        }
       }
     } finally {
       setIsGeneratingPreview(false);
     }
+  };
+
+  const handleRemovePreviewItem = async (item) => {
+    if (!item?.id) return;
+    await base44.entities.LineItem.delete(item.id);
+    setPreviewLineItems((prev) => prev.filter((entry) => entry.id !== item.id));
+    setPreviewOrder((prev) => prev ? { ...prev, booth_rendering_url: '' } : prev);
   };
 
   return (
@@ -61,6 +86,7 @@ export default function XhibitlyStart() {
                 lineItems={previewLineItems}
                 pricingResult={previewPricingResult}
                 onGeneratePreview={handleGeneratePreview}
+                onRemoveItem={handleRemovePreviewItem}
                 isGeneratingPreview={isGeneratingPreview}
               />
             </section>

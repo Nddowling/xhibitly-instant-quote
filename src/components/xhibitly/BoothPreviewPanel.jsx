@@ -1,13 +1,14 @@
-import React, { useMemo } from 'react';
-import { Sparkles, Image as ImageIcon, Package, Loader2 } from 'lucide-react';
+import React, { useMemo, useState } from 'react';
+import { Sparkles, Image as ImageIcon, Package, Loader2, X, Palette } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 function fmt(n) {
   if (!n && n !== 0) return '—';
   return '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
-function PreviewThumb({ item }) {
+function PreviewThumb({ item, onRemove }) {
   const src = item?.image_url;
 
   return (
@@ -23,19 +24,45 @@ function PreviewThumb({ item }) {
         <p className="text-[11px] font-semibold text-slate-700 leading-tight line-clamp-2">{item?.product_name || item?.sku || 'Product'}</p>
         {item?.sku && <p className="text-[10px] text-slate-400 mt-0.5 font-mono truncate">{item.sku}</p>}
       </div>
+      <button
+        type="button"
+        onClick={() => onRemove?.(item)}
+        className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-400 hover:border-red-200 hover:text-red-500"
+        title="Remove from quote"
+      >
+        <X className="w-3.5 h-3.5" />
+      </button>
     </div>
   );
 }
 
-export default function BoothPreviewPanel({ order, lineItems, pricingResult, onGeneratePreview, isGeneratingPreview = false }) {
+export default function BoothPreviewPanel({ order, lineItems, pricingResult, onGeneratePreview, onRemoveItem, isGeneratingPreview = false }) {
+  const [showBrandPrompt, setShowBrandPrompt] = useState(false);
+  const [websiteInput, setWebsiteInput] = useState(order?.website_url || '');
+
   const previewPrompt = useMemo(() => {
-    const items = (lineItems || []).map(item => item.product_name || item.sku).filter(Boolean).slice(0, 6);
+    const items = (lineItems || []).map(item => item.product_name || item.sku).filter(Boolean);
     const brand = order?.customer_company || order?.customer_name || 'Client brand';
     const booth = order?.booth_size || 'Booth size not set';
     const show = order?.show_name || 'Event not set';
     if (items.length === 0) return 'Start adding products to generate a branded booth preview.';
     return `${brand} • ${booth} • ${show} • ${items.join(', ')}`;
   }, [order, lineItems]);
+
+  const handleGenerateClick = () => {
+    setWebsiteInput(order?.website_url || '');
+    setShowBrandPrompt(true);
+  };
+
+  const handleBrandConfirm = () => {
+    onGeneratePreview?.({ website_url: websiteInput.trim() });
+    setShowBrandPrompt(false);
+  };
+
+  const handleSkipBranding = () => {
+    onGeneratePreview?.({ website_url: '' });
+    setShowBrandPrompt(false);
+  };
 
   return (
     <div className="rounded-[28px] border border-slate-200 bg-white shadow-[0_18px_40px_rgba(15,23,42,0.08)] overflow-hidden h-full flex flex-col">
@@ -67,7 +94,7 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult, onG
           )}
           <div className="absolute bottom-4 left-4 right-4 flex justify-center">
             <Button
-              onClick={onGeneratePreview}
+              onClick={handleGenerateClick}
               disabled={!lineItems?.length || isGeneratingPreview}
               className="rounded-xl bg-[#18C3F8] hover:bg-[#0fb2e4] text-white shadow-sm"
             >
@@ -83,7 +110,7 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult, onG
             {lineItems?.length > 0 && (
               <div className="mt-3 grid gap-2">
                 {(lineItems || []).map((item) => (
-                  <PreviewThumb key={item.id || item.sku} item={item} />
+                  <PreviewThumb key={item.id || item.sku} item={item} onRemove={onRemoveItem} />
                 ))}
               </div>
             )}
@@ -97,6 +124,33 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult, onG
           </div>
           <span className="text-lg font-black text-[#18C3F8]">{fmt(pricingResult?.finalTotal ?? lineItems?.reduce((sum, item) => sum + (item.final_total_price ?? item.total_price ?? 0), 0))}</span>
         </div>
+        {showBrandPrompt && (
+          <div className="absolute inset-0 z-10 flex items-center justify-center bg-slate-950/45 p-4">
+            <div className="w-full max-w-sm rounded-3xl border border-slate-200 bg-white p-5 shadow-2xl">
+              <div className="flex items-start gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#eaf6ff] text-[#18C3F8]">
+                  <Palette className="w-4 h-4" />
+                </div>
+                <div>
+                  <p className="text-sm font-black text-slate-900">Add branding first?</p>
+                  <p className="mt-1 text-xs leading-relaxed text-slate-500">If you have a company website, we can pull saved brand details first and use them in the render.</p>
+                </div>
+              </div>
+              <div className="mt-4">
+                <Input
+                  value={websiteInput}
+                  onChange={(e) => setWebsiteInput(e.target.value)}
+                  placeholder="Company website (optional)"
+                  className="h-11 rounded-xl"
+                />
+              </div>
+              <div className="mt-4 flex gap-2">
+                <Button onClick={handleBrandConfirm} className="flex-1 rounded-xl bg-[#18C3F8] hover:bg-[#0fb2e4] text-white">Use Website</Button>
+                <Button variant="outline" onClick={handleSkipBranding} className="flex-1 rounded-xl">Skip</Button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
