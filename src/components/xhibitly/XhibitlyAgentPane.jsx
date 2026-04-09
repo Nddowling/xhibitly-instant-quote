@@ -114,11 +114,7 @@ export default function XhibitlyAgentPane({ queuedPrompt, onPromptConsumed }) {
         {loading && <div className="text-xs text-slate-400 px-1">Xhibitly AI is thinking…</div>}
       </div>
 
-      <div className="p-3 border-t border-slate-200 bg-white space-y-2.5 mt-auto flex-shrink-0">
-        <div className="rounded-2xl border border-slate-200 bg-slate-50 px-3.5 py-3">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Current Focus</p>
-          <p className="text-[11px] text-slate-500 mt-1">Booth size, event, brand, goals, and product direction</p>
-        </div>
+      <div className="p-3 border-t border-slate-200 bg-white mt-auto flex-shrink-0">
         <div className="flex gap-2">
           <Input
             value={input}
