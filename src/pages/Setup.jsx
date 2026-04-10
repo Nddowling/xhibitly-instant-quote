@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { base44 } from '@/api/base44Client';
 import {
   LayoutGrid, Users, Shield, Key, Database, Settings,
   ChevronRight, Search, Wrench, Layers, ClipboardCheck, Upload, PlugZap, Bot
