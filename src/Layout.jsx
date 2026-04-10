@@ -66,6 +66,15 @@ export default function Layout({ children, currentPageName }) {
 
   const handleLogout = () => base44.auth.logout(createPageUrl('Home'));
 
+  const handleGlobalAdminView = async () => {
+    await base44.auth.updateMe({
+      active_dealer_instance_id: '',
+      active_broker_instance_id: '',
+    });
+    setActiveOrgName('Global Admin');
+    navigate(createPageUrl('DesignerDashboard'));
+  };
+
   const loadObjectTabs = async () => {
     try {
       const activeDealerId = user?.active_dealer_instance_id || user?.dealer_instance_id || user?.active_broker_instance_id || user?.broker_instance_id;
@@ -327,14 +336,15 @@ export default function Layout({ children, currentPageName }) {
                 </div>
 
                 {canSeeGlobalAdmin && (
-                  <Link to={createPageUrl('DesignerDashboard')}>
-                    <button className={`flex items-center gap-1.5 px-2.5 lg:px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
+                  <button
+                    onClick={handleGlobalAdminView}
+                    className={`flex items-center gap-1.5 px-2.5 lg:px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
                       currentPageName === 'DesignerDashboard' ? 'bg-[#e2231a] text-white' : 'text-white/60 hover:text-white hover:bg-white/8'
-                    }`}>
-                      <LayoutDashboard className="w-4 h-4" />
-                      Global Admin
-                    </button>
-                  </Link>
+                    }`}
+                  >
+                    <LayoutDashboard className="w-4 h-4" />
+                    Global Admin
+                  </button>
                 )}
 
                 {adminNav.map(({ page, label, icon: Icon }) => (
@@ -365,16 +375,38 @@ export default function Layout({ children, currentPageName }) {
                   </button>
                   {settingsOpen && (
                     <div className="absolute top-full right-0 mt-1 w-48 bg-[#222] rounded-xl border border-white/10 shadow-2xl overflow-hidden z-50">
-                      {settingsNav.map(({ page, label, icon: Icon }) => (
-                        <Link key={page} to={createPageUrl(page)} onClick={() => setSettingsOpen(false)}>
-                          <div className={`flex items-center gap-2.5 px-3 py-2.5 text-sm transition-colors ${
-                            currentPageName === page ? 'bg-[#e2231a]/20 text-white' : 'text-white/70 hover:bg-white/8 hover:text-white'
-                          }`}>
-                            <Icon className="w-4 h-4" />
-                            {label}
-                          </div>
-                        </Link>
-                      ))}
+                      {settingsNav.map(({ page, label, icon: Icon }) => {
+                        const isGlobalAdmin = page === 'DesignerDashboard' && label === 'Global Admin';
+
+                        if (isGlobalAdmin) {
+                          return (
+                            <button
+                              key={page}
+                              onClick={async () => {
+                                setSettingsOpen(false);
+                                await handleGlobalAdminView();
+                              }}
+                              className={`w-full flex items-center gap-2.5 px-3 py-2.5 text-sm transition-colors ${
+                                currentPageName === page ? 'bg-[#e2231a]/20 text-white' : 'text-white/70 hover:bg-white/8 hover:text-white'
+                              }`}
+                            >
+                              <Icon className="w-4 h-4" />
+                              {label}
+                            </button>
+                          );
+                        }
+
+                        return (
+                          <Link key={page} to={createPageUrl(page)} onClick={() => setSettingsOpen(false)}>
+                            <div className={`flex items-center gap-2.5 px-3 py-2.5 text-sm transition-colors ${
+                              currentPageName === page ? 'bg-[#e2231a]/20 text-white' : 'text-white/70 hover:bg-white/8 hover:text-white'
+                            }`}>
+                              <Icon className="w-4 h-4" />
+                              {label}
+                            </div>
+                          </Link>
+                        );
+                      })}
                     </div>
                   )}
                 </div>
@@ -409,16 +441,38 @@ export default function Layout({ children, currentPageName }) {
                   );
                 })}
                 <div className="h-px bg-white/5 my-2" />
-                {settingsNav.map(({ page, label, icon: ItemIcon }) => (
-                  <Link key={`mobile-${page}`} to={createPageUrl(page)} onClick={() => setMobileMenuOpen(false)}>
-                    <div className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-all ${
-                      currentPageName === page ? 'bg-[#e2231a]/15 text-white' : 'text-white/50 hover:bg-white/5 hover:text-white'
-                    }`}>
-                      <ItemIcon className="w-5 h-5" />
-                      <span className="font-medium">{label}</span>
-                    </div>
-                  </Link>
-                ))}
+                {settingsNav.map(({ page, label, icon: ItemIcon }) => {
+                  const isGlobalAdmin = page === 'DesignerDashboard' && label === 'Global Admin';
+
+                  if (isGlobalAdmin) {
+                    return (
+                      <button
+                        key={`mobile-${page}`}
+                        onClick={async () => {
+                          setMobileMenuOpen(false);
+                          await handleGlobalAdminView();
+                        }}
+                        className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all ${
+                          currentPageName === page ? 'bg-[#e2231a]/15 text-white' : 'text-white/50 hover:bg-white/5 hover:text-white'
+                        }`}
+                      >
+                        <ItemIcon className="w-5 h-5" />
+                        <span className="font-medium">{label}</span>
+                      </button>
+                    );
+                  }
+
+                  return (
+                    <Link key={`mobile-${page}`} to={createPageUrl(page)} onClick={() => setMobileMenuOpen(false)}>
+                      <div className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-all ${
+                        currentPageName === page ? 'bg-[#e2231a]/15 text-white' : 'text-white/50 hover:bg-white/5 hover:text-white'
+                      }`}>
+                        <ItemIcon className="w-5 h-5" />
+                        <span className="font-medium">{label}</span>
+                      </div>
+                    </Link>
+                  );
+                })}
                 <button onClick={handleLogout} className="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-white/50 hover:bg-white/5 hover:text-white">
                   <LogOut className="w-5 h-5" />
                   <span className="font-medium">Log Out</span>
