@@ -11,6 +11,7 @@ export default function XhibitlyStart() {
   const [previewLineItems, setPreviewLineItems] = useState([]);
   const [previewPricingResult, setPreviewPricingResult] = useState(null);
   const [isGeneratingPreview, setIsGeneratingPreview] = useState(false);
+  const [previewStatus, setPreviewStatus] = useState('');
   const [renderTaskId, setRenderTaskId] = useState('');
   const pollTimerRef = useRef(null);
 
@@ -21,6 +22,7 @@ export default function XhibitlyStart() {
     const cleanWebsite = website_url.trim();
 
     setIsGeneratingPreview(true);
+    setPreviewStatus('Starting booth preview…');
     setRenderTaskId('');
     try {
       if (cleanWebsite) {
@@ -55,6 +57,7 @@ export default function XhibitlyStart() {
       });
 
       if (response?.data?.task_id) {
+        setPreviewStatus('Render started. Checking for the finished image…');
         setRenderTaskId(response.data.task_id);
         setPreviewOrder((prev) => ({
           ...prev,
@@ -82,11 +85,16 @@ export default function XhibitlyStart() {
         const status = response?.data?.status;
         const url = response?.data?.url;
 
+        if (status === 'pending' || status === 'queued' || status === 'running' || status === 'processing') {
+          setPreviewStatus('Rendering your booth preview…');
+        }
+
         if ((status === 'success' || status === 'completed' || status === 'finished') && url) {
           window.clearInterval(pollTimerRef.current);
           pollTimerRef.current = null;
           setRenderTaskId('');
           setIsGeneratingPreview(false);
+          setPreviewStatus('');
           setPreviewOrder((prev) => prev ? { ...prev, booth_rendering_url: url } : prev);
           toast.success('Booth preview is ready.');
         }
@@ -96,6 +104,7 @@ export default function XhibitlyStart() {
           pollTimerRef.current = null;
           setRenderTaskId('');
           setIsGeneratingPreview(false);
+          setPreviewStatus('');
           toast.error('Preview generation failed. Please try again.');
         }
       } catch (error) {
@@ -103,6 +112,7 @@ export default function XhibitlyStart() {
         pollTimerRef.current = null;
         setRenderTaskId('');
         setIsGeneratingPreview(false);
+        setPreviewStatus('');
         toast.error('Preview generation failed. Please try again.');
       }
     }, 5000);
@@ -122,6 +132,7 @@ export default function XhibitlyStart() {
     setPreviewOrder((prev) => prev ? { ...prev, booth_rendering_url: '' } : prev);
     setRenderTaskId('');
     setIsGeneratingPreview(false);
+    setPreviewStatus('');
   };
 
   return (
@@ -143,6 +154,7 @@ export default function XhibitlyStart() {
                 onGeneratePreview={handleGeneratePreview}
                 onRemoveItem={handleRemovePreviewItem}
                 isGeneratingPreview={isGeneratingPreview}
+                previewStatus={previewStatus}
               />
             </section>
 

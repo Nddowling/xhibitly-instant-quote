@@ -36,7 +36,7 @@ function PreviewThumb({ item, onRemove }) {
   );
 }
 
-export default function BoothPreviewPanel({ order, lineItems, pricingResult, onGeneratePreview, onRemoveItem, isGeneratingPreview = false }) {
+export default function BoothPreviewPanel({ order, lineItems, pricingResult, onGeneratePreview, onRemoveItem, isGeneratingPreview = false, previewStatus = '' }) {
   const [showBrandPrompt, setShowBrandPrompt] = useState(false);
   const [websiteInput, setWebsiteInput] = useState(order?.website_url || '');
 
@@ -92,7 +92,12 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult, onG
               <p className="text-xs text-slate-500 mt-1 leading-relaxed max-w-xs">As products, booth details, and brand info are captured, this panel can show the generated concept.</p>
             </>
           )}
-          <div className="absolute bottom-4 left-4 right-4 flex justify-center">
+          <div className="absolute bottom-4 left-4 right-4 flex flex-col items-center gap-2">
+            {previewStatus ? (
+              <div className="rounded-full bg-slate-900/85 px-3 py-1.5 text-[11px] font-medium text-white shadow-sm">
+                {previewStatus}
+              </div>
+            ) : null}
             <Button
               onClick={handleGenerateClick}
               disabled={!lineItems?.length || isGeneratingPreview}
