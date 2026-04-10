@@ -63,8 +63,10 @@ async function pollGeneration(id, timeoutMs = 120000) {
     const task = await res.json();
 
     const status = task?.data?.status || task?.status;
-    const output = task?.data?.output || task?.output;
-    const imageUrl = output?.image_url || output?.url || output?.rendered_image;
+    const output = task?.data?.output || task?.output || {};
+    const imageUrl = output?.image_url || output?.url || output?.rendered_image || output?.result_url || output?.image || output?.images?.[0]?.url || output?.images?.[0] || task?.data?.image_url || task?.image_url;
+
+    console.log('[generateBoothRender] Poll response:', JSON.stringify(task));
 
     if (status === 'success' || status === 'completed' || status === 'finished') {
       if (!imageUrl) throw new Error('Tripo returned a completed task but no image URL');
@@ -72,7 +74,7 @@ async function pollGeneration(id, timeoutMs = 120000) {
     }
 
     if (status === 'failed' || status === 'error') {
-      throw new Error(`Tripo generation failed: ${task?.message || 'unknown reason'}`);
+      throw new Error(`Tripo generation failed: ${task?.message || task?.data?.message || 'unknown reason'}`);
     }
   }
 
