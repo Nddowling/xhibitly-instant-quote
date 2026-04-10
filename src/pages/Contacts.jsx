@@ -62,6 +62,7 @@ export default function Contacts() {
         contactsMap.set(key, {
           id: contact.id,
           record_id: contact.id,
+          account_id: contact.account_id || contact.data?.account_id,
           dealer_instance_id: dealerInstanceId,
           email: contact.email || contact.data?.email,
           company_name: contact.company_name || contact.data?.company_name || contact.account_name || contact.data?.account_name || dealerInstance?.company_name || dealerInstance?.name || '',
@@ -86,6 +87,7 @@ export default function Contacts() {
         if (!contactsMap.has(key)) {
           contactsMap.set(key, {
             id: key,
+            account_id: order.account_id,
             email: order.dealer_email,
             company_name: order.dealer_company,
             contact_name: order.dealer_name,
@@ -142,6 +144,13 @@ export default function Contacts() {
       ? `?id=${encodeURIComponent(contact.record_id)}`
       : `?email=${encodeURIComponent(contact.email || '')}`;
     navigate(createPageUrl('ContactDetail') + query);
+  };
+
+  const handleAccountClick = (contact, event) => {
+    event.stopPropagation();
+    if (contact.account_id) {
+      navigate(`/ObjectRecordDetail?object=Account&id=${encodeURIComponent(contact.account_id)}`);
+    }
   };
 
   const formatPrice = (price) => {
@@ -243,7 +252,16 @@ export default function Contacts() {
                         {contact.total_orders} order{contact.total_orders !== 1 ? 's' : ''}
                       </Badge>
                     </div>
-                    <CardTitle className="text-lg">{contact.company_name || 'No Company'}</CardTitle>
+                    <CardTitle>
+                      <button
+                        type="button"
+                        onClick={(e) => handleAccountClick(contact, e)}
+                        className="text-lg font-semibold text-left text-slate-900 hover:text-[#e2231a] transition-colors disabled:pointer-events-none disabled:text-slate-900"
+                        disabled={!contact.account_id}
+                      >
+                        {contact.company_name || 'No Company'}
+                      </button>
+                    </CardTitle>
                     <CardDescription className="font-medium text-slate-700">
                       {contact.contact_name}
                     </CardDescription>
