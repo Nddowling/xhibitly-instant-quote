@@ -248,6 +248,9 @@ function NewQuoteStep({ client, user, onBack, onComplete, onDismiss, canDismiss 
     if (!canSubmit) return;
     setStarting(true);
     const customerName = `${form.first_name} ${form.last_name}`.trim() || client.contact_name || '';
+    const exhibitlyOrg = await base44.entities.DealerInstance.filter({ slug: 'exhibitly' }, 'name', 1);
+    const exhibitlyDealer = exhibitlyOrg?.[0] || null;
+
     const order = await base44.entities.Order.create({
       reference_number: 'XQ-' + Date.now(),
       status: 'Draft',
@@ -259,10 +262,11 @@ function NewQuoteStep({ client, user, onBack, onComplete, onDismiss, canDismiss 
       customer_name: customerName,
       customer_email: client.client_email || client.customer_email || '',
       customer_company: client.client_company || client.customer_company || '',
-      dealer_id: user?.id || '',
-      dealer_email: user?.email || '',
-      dealer_name: user?.full_name || '',
-      dealer_company: user?.company_name || '',
+      dealer_instance_id: exhibitlyDealer?.id || '',
+      dealer_id: exhibitlyDealer?.id || user?.id || '',
+      dealer_email: exhibitlyDealer?.owner_email || user?.email || '',
+      dealer_name: exhibitlyDealer?.name || user?.full_name || '',
+      dealer_company: exhibitlyDealer?.company_name || 'Exhibitly',
     });
     onComplete(order);
     setStarting(false);
@@ -366,6 +370,25 @@ function NewCustomerStep({ user, onBack, onComplete, onDismiss, canDismiss }) {
   const handleStart = async () => {
     if (!canSubmit) return;
     setStarting(true);
+    const exhibitlyOrg = await base44.entities.DealerInstance.filter({ slug: 'exhibitly' }, 'name', 1);
+    const exhibitlyDealer = exhibitlyOrg?.[0] || null;
+    const contactEmail = form.customer_email.trim().toLowerCase();
+    const existingContacts = contactEmail
+      ? await base44.entities.Contact.filter({ email: contactEmail }, 'created_date', 10)
+      : [];
+
+    if (!existingContacts.some((entry) => (entry.dealer_instance_id || entry.data?.dealer_instance_id) === exhibitlyDealer?.id)) {
+      await base44.entities.Contact.create({
+        first_name: form.first_name,
+        last_name: form.last_name,
+        full_name: customerName,
+        email: contactEmail,
+        phone: form.customer_phone,
+        dealer_instance_id: exhibitlyDealer?.id || '',
+        owner_user_id: exhibitlyDealer?.owner_user_id || user?.id || '',
+      });
+    }
+
     const order = await base44.entities.Order.create({
       reference_number: 'XQ-' + Date.now(),
       status: 'Draft',
@@ -375,13 +398,14 @@ function NewCustomerStep({ user, onBack, onComplete, onDismiss, canDismiss }) {
       booth_type: form.booth_type,
       show_date: new Date().toISOString().split('T')[0],
       customer_name: customerName,
-      customer_email: form.customer_email,
+      customer_email: contactEmail,
       customer_phone: form.customer_phone,
       customer_company: form.customer_company,
-      dealer_id: user?.id || '',
-      dealer_email: user?.email || '',
-      dealer_name: user?.full_name || '',
-      dealer_company: user?.company_name || '',
+      dealer_instance_id: exhibitlyDealer?.id || '',
+      dealer_id: exhibitlyDealer?.id || user?.id || '',
+      dealer_email: exhibitlyDealer?.owner_email || user?.email || '',
+      dealer_name: exhibitlyDealer?.name || user?.full_name || '',
+      dealer_company: exhibitlyDealer?.company_name || 'Exhibitly',
     });
     onComplete(order);
     setStarting(false);

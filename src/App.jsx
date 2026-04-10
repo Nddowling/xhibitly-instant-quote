@@ -20,6 +20,7 @@ import ProfileAssignedContacts from './pages/ProfileAssignedContacts';
 import GlobalAdminMetricView from './pages/GlobalAdminMetricView';
 import MultiTenantAudit from './pages/MultiTenantAudit';
 import XhibitlyStart from './pages/XhibitlyStart';
+import XhibitlyStart2 from './pages/XhibitlyStart2';
 import Home from './pages/Home';
 
 const { Pages, Layout, mainPage } = pagesConfig;
@@ -157,6 +158,7 @@ const AuthenticatedApp = () => {
         }
       />
       <Route path="/XhibitlyStart" element={<XhibitlyStart />} />
+      <Route path="/XhibitlyStart2" element={<XhibitlyStart2 />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
