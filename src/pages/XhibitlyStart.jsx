@@ -18,44 +18,38 @@ export default function XhibitlyStart() {
   const handleGeneratePreview = async ({ website_url = '' } = {}) => {
     if (!previewOrder || previewLineItems.length === 0 || isGeneratingPreview) return;
 
-    let brandDetails = null;
-    const cleanWebsite = website_url.trim();
+    const cleanWebsite = website_url.trim() || previewOrder?.website_url || '';
+    const boothSize = previewOrder?.booth_size || '10x10';
+    const boothType = previewOrder?.booth_type || 'Inline';
+    const brandName = previewOrder?.customer_company || previewOrder?.customer_name || 'Client brand';
+    const showName = previewOrder?.show_name || 'Convention event';
+    const quoteItems = previewLineItems
+      .map((item) => ({
+        sku: item?.sku || '',
+        name: item?.product_name || item?.sku || 'Quoted product',
+        image_url: item?.image_url || '',
+      }))
+      .filter((item) => item.sku || item.name);
+
+    const productLabels = quoteItems.map((item) => `${item.sku ? `${item.sku} ` : ''}${item.name}`.trim());
+    const productImageUrls = quoteItems.map((item) => item.image_url).filter(Boolean).slice(0, 6);
 
     setIsGeneratingPreview(true);
-    setPreviewStatus('Starting booth preview…');
+    setPreviewStatus(cleanWebsite ? 'Pulling brand details and starting render…' : 'Starting booth preview…');
     setRenderTaskId('');
+
     try {
-      if (cleanWebsite) {
-        try {
-          const brandResponse = await base44.functions.invoke('fetchBrandData', { website_url: cleanWebsite });
-          brandDetails = brandResponse?.data?.brand || null;
-        } catch (error) {
-          toast.error('Brand lookup is temporarily unavailable, so the render will continue without pulled branding.');
-        }
-      }
-
-      const brand = brandDetails?.company_name || previewOrder.customer_company || previewOrder.customer_name || 'Client brand';
-      const booth = previewOrder.booth_size || '10x10';
-      const boothType = previewOrder.booth_type || 'Inline';
-      const show = previewOrder.show_name || 'event booth';
-      const itemNames = previewLineItems
-        .map((item) => item.product_name || item.sku)
-        .filter(Boolean);
-      const referenceUrls = previewLineItems
-        .map((item) => item.image_url)
-        .filter(Boolean)
-        .slice(0, 6);
-      const colorNotes = [brandDetails?.primary_color, brandDetails?.secondary_color, brandDetails?.accent_color_1, brandDetails?.accent_color_2]
-        .filter(Boolean)
-        .join(', ');
-      const logoNote = brandDetails?.logo_cached_url || brandDetails?.logo_url;
-      const websiteNote = cleanWebsite || previewOrder.website_url || brandDetails?.domain || '';
-
-      const prompt = `Create a realistic, production-ready branded trade show booth concept for ${brand}. Booth size: ${booth}. Booth type: ${boothType} inline booth for a convention center. Event: ${show}. Use the provided product reference images as the actual quoted products and keep the design spatially correct for the stated footprint. Do not invent extra products, counters, furniture, lighting, or architectural features beyond what is shown in the references. Build a clean exhibitor presentation image that looks like a real inline convention booth proposal, with the selected items arranged in a believable 10x10 trade show layout.${websiteNote ? ` Brand website: ${websiteNote}.` : ''}${colorNotes ? ` Use these brand colors: ${colorNotes}.` : ''}${logoNote ? ' Apply the provided logo and brand graphics naturally across the visible booth surfaces where appropriate.' : ''} Selected quoted items: ${itemNames.join(', ')}. If any item is unclear, stay conservative and preserve the referenced product shapes.`;
+      const prompt = `Create a realistic, production-ready branded exhibitors booth rendering for a convention center. Brand: ${brandName}. Booth size: ${boothSize}. Booth type: ${boothType}. Event: ${showName}. This must be spatially correct for the stated booth footprint and booth type. Use the provided quoted product images as the actual products in the booth. Do not invent extra structures, counters, furniture, lighting, flooring, hanging signs, or accessories that are not represented by the quoted items. The booth should look like a clean inline trade show proposal image suitable for a client presentation. Selected quote items: ${productLabels.join(', ')}. If branding is provided from the website, apply the actual logo, colors, and graphic style to the booth naturally. If any product is unclear, stay conservative and preserve the referenced shapes and proportions.`;
 
       const response = await base44.functions.invoke('generateBoothRender', {
         prompt,
-        reference_urls: logoNote ? [logoNote, ...referenceUrls].slice(0, 6) : referenceUrls,
+        website_url: cleanWebsite,
+        brand_name: brandName,
+        booth_size: boothSize,
+        booth_type: boothType,
+        show_name: showName,
+        quote_items: quoteItems,
+        reference_urls: productImageUrls,
       });
 
       if (response?.data?.task_id) {
@@ -66,14 +60,12 @@ export default function XhibitlyStart() {
           website_url: cleanWebsite || prev?.website_url,
           booth_rendering_url: '',
         }));
-        if (cleanWebsite && brandDetails) {
-          toast.success('Branding pulled in and render started.');
-        }
       } else {
         throw new Error('No render task was returned');
       }
     } catch (error) {
       setIsGeneratingPreview(false);
+      setPreviewStatus('');
       toast.error('Preview generation failed. Please try again.');
     }
   };
