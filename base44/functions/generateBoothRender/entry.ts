@@ -44,41 +44,31 @@ async function createGeneration(prompt, referenceUrls) {
   return taskId;
 }
 
-async function pollGeneration(id, timeoutMs = 300000) {
-  const start = Date.now();
-  const INTERVAL = 4_000;
+async function getGenerationStatus(id) {
+  const res = await fetch(`${TRIPO_BASE}/task/${id}`, {
+    headers: {
+      'Authorization': `Bearer ${TRIPO_API_KEY}`,
+      'Accept': 'application/json',
+    },
+  });
 
-  while (Date.now() - start < timeoutMs) {
-    await new Promise(r => setTimeout(r, INTERVAL));
-
-    const res = await fetch(`${TRIPO_BASE}/task/${id}`, {
-      headers: {
-        'Authorization': `Bearer ${TRIPO_API_KEY}`,
-        'Accept': 'application/json',
-      },
-    });
-
-    if (!res.ok) continue;
-
-    const task = await res.json();
-
-    const status = task?.data?.status || task?.status;
-    const output = task?.data?.output || task?.output || {};
-    const imageUrl = output?.image_url || output?.url || output?.rendered_image || output?.result_url || output?.image || output?.images?.[0]?.url || output?.images?.[0] || task?.data?.image_url || task?.image_url;
-
-    console.log('[generateBoothRender] Poll response:', JSON.stringify(task));
-
-    if (status === 'success' || status === 'completed' || status === 'finished') {
-      if (!imageUrl) throw new Error('Tripo returned a completed task but no image URL');
-      return imageUrl;
-    }
-
-    if (status === 'failed' || status === 'error') {
-      throw new Error(`Tripo generation failed: ${task?.message || task?.data?.message || 'unknown reason'}`);
-    }
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`Tripo status failed (${res.status}): ${err}`);
   }
 
-  throw new Error('Tripo generation timed out after 300 seconds');
+  const task = await res.json();
+  const status = task?.data?.status || task?.status || 'pending';
+  const output = task?.data?.output || task?.output || {};
+  const imageUrl = output?.image_url || output?.url || output?.rendered_image || output?.result_url || output?.image || output?.images?.[0]?.url || output?.images?.[0] || task?.data?.image_url || task?.image_url;
+
+  console.log('[generateBoothRender] Status response:', JSON.stringify(task));
+
+  return {
+    status,
+    url: imageUrl || null,
+    raw: task,
+  };
 }
 
 // ─── Main handler ─────────────────────────────────────────────────────────────
@@ -108,21 +98,21 @@ Deno.serve(async (req) => {
     return Response.json({ error: 'Invalid JSON body' }, { status: 400, headers: CORS });
   }
 
-  const { prompt, reference_urls = [] } = body;
-
-  if (!prompt) {
-    return Response.json({ error: 'prompt is required' }, { status: 400, headers: CORS });
-  }
+  const { prompt, reference_urls = [], task_id } = body;
 
   try {
+    if (task_id) {
+      const result = await getGenerationStatus(task_id);
+      return Response.json(result, { headers: CORS });
+    }
+
+    if (!prompt) {
+      return Response.json({ error: 'prompt is required' }, { status: 400, headers: CORS });
+    }
+
     console.log(`[generateBoothRender] Creating Tripo generation | refs: ${reference_urls.length}`);
     const id = await createGeneration(prompt, reference_urls);
-
-    console.log(`[generateBoothRender] Polling task ${id}...`);
-    const imageUrl = await pollGeneration(id);
-
-    console.log(`[generateBoothRender] Done: ${imageUrl}`);
-    return Response.json({ url: imageUrl }, { headers: CORS });
+    return Response.json({ task_id: id, status: 'pending' }, { headers: CORS });
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
     console.error('[generateBoothRender] Error:', msg);

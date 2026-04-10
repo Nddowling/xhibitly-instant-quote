@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
 import CatalogQuote from '@/pages/CatalogQuote';
@@ -11,6 +11,8 @@ export default function XhibitlyStart() {
   const [previewLineItems, setPreviewLineItems] = useState([]);
   const [previewPricingResult, setPreviewPricingResult] = useState(null);
   const [isGeneratingPreview, setIsGeneratingPreview] = useState(false);
+  const [renderTaskId, setRenderTaskId] = useState('');
+  const pollTimerRef = useRef(null);
 
   const handleGeneratePreview = async ({ website_url = '' } = {}) => {
     if (!previewOrder || previewLineItems.length === 0 || isGeneratingPreview) return;
@@ -19,6 +21,7 @@ export default function XhibitlyStart() {
     const cleanWebsite = website_url.trim();
 
     setIsGeneratingPreview(true);
+    setRenderTaskId('');
     try {
       if (cleanWebsite) {
         try {
@@ -51,28 +54,74 @@ export default function XhibitlyStart() {
         reference_urls: logoNote ? [logoNote, ...referenceUrls].slice(0, 4) : referenceUrls,
       });
 
-      if (response?.data?.url) {
+      if (response?.data?.task_id) {
+        setRenderTaskId(response.data.task_id);
         setPreviewOrder((prev) => ({
           ...prev,
           website_url: cleanWebsite || prev?.website_url,
-          booth_rendering_url: response.data.url,
+          booth_rendering_url: '',
         }));
         if (cleanWebsite && brandDetails) {
-          toast.success('Branding pulled into the preview.');
+          toast.success('Branding pulled in and render started.');
         }
+      } else {
+        throw new Error('No render task was returned');
       }
     } catch (error) {
-      toast.error('Preview generation failed. Please try again.');
-    } finally {
       setIsGeneratingPreview(false);
+      toast.error('Preview generation failed. Please try again.');
     }
   };
+
+  useEffect(() => {
+    if (!renderTaskId) return;
+
+    pollTimerRef.current = window.setInterval(async () => {
+      try {
+        const response = await base44.functions.invoke('generateBoothRender', { task_id: renderTaskId });
+        const status = response?.data?.status;
+        const url = response?.data?.url;
+
+        if ((status === 'success' || status === 'completed' || status === 'finished') && url) {
+          window.clearInterval(pollTimerRef.current);
+          pollTimerRef.current = null;
+          setRenderTaskId('');
+          setIsGeneratingPreview(false);
+          setPreviewOrder((prev) => prev ? { ...prev, booth_rendering_url: url } : prev);
+          toast.success('Booth preview is ready.');
+        }
+
+        if (status === 'failed' || status === 'error') {
+          window.clearInterval(pollTimerRef.current);
+          pollTimerRef.current = null;
+          setRenderTaskId('');
+          setIsGeneratingPreview(false);
+          toast.error('Preview generation failed. Please try again.');
+        }
+      } catch (error) {
+        window.clearInterval(pollTimerRef.current);
+        pollTimerRef.current = null;
+        setRenderTaskId('');
+        setIsGeneratingPreview(false);
+        toast.error('Preview generation failed. Please try again.');
+      }
+    }, 5000);
+
+    return () => {
+      if (pollTimerRef.current) {
+        window.clearInterval(pollTimerRef.current);
+        pollTimerRef.current = null;
+      }
+    };
+  }, [renderTaskId]);
 
   const handleRemovePreviewItem = async (item) => {
     if (!item?.id) return;
     await base44.entities.LineItem.delete(item.id);
     setPreviewLineItems((prev) => prev.filter((entry) => entry.id !== item.id));
     setPreviewOrder((prev) => prev ? { ...prev, booth_rendering_url: '' } : prev);
+    setRenderTaskId('');
+    setIsGeneratingPreview(false);
   };
 
   return (
