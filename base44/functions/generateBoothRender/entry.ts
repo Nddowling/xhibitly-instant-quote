@@ -26,6 +26,8 @@ async function createGeneration(prompt, referenceUrls) {
     image_urls: imageUrls,
   };
 
+  console.log('[generateBoothRender] Create body:', JSON.stringify(body));
+
   const res = await fetch(`${TRIPO_BASE}/task`, {
     method: 'POST',
     headers: {
@@ -150,6 +152,35 @@ function buildPrompt({ prompt, boothSize, boothType, showName, brandName, brandD
   return `Create a realistic, production-ready branded exhibitors booth rendering for a convention center. Brand: ${brandName || brandDetails?.company_name || 'Client brand'}. Booth size: ${boothSize || '10x10'}. Booth type: ${boothType || 'Inline'}. Event: ${showName || 'Convention event'}. This must be spatially correct for the stated booth footprint and booth type. Use the provided quoted product images as the actual products in the booth. Do not invent extra structures, counters, furniture, lighting, flooring, hanging signs, or accessories that are not represented by the quoted items. Selected quote items: ${itemSummary || 'Quoted products'}.${colorNotes ? ` Use these brand colors: ${colorNotes}.` : ''}${brandDetails?.logo_cached_url || brandDetails?.logo_url ? ' Apply the provided brand logo and graphic style naturally across the booth.' : ''} If any item is unclear, stay conservative and preserve the referenced shapes and proportions.`;
 }
 
+function extractImageUrl(task) {
+  const data = task?.data || {};
+  const output = data?.output || task?.output || {};
+  const result = data?.result || task?.result || {};
+
+  return output?.generated_image
+    || output?.image_url
+    || output?.url
+    || output?.rendered_image
+    || output?.result_url
+    || output?.image
+    || output?.images?.[0]?.url
+    || output?.images?.[0]
+    || result?.generated_image
+    || result?.image_url
+    || result?.url
+    || result?.rendered_image
+    || result?.result_url
+    || result?.image
+    || result?.images?.[0]?.url
+    || result?.images?.[0]
+    || data?.image_url
+    || data?.rendered_image
+    || data?.url
+    || task?.image_url
+    || task?.url
+    || null;
+}
+
 async function getGenerationStatus(id) {
   const res = await fetch(`${TRIPO_BASE}/task/${id}`, {
     headers: {
@@ -164,15 +195,21 @@ async function getGenerationStatus(id) {
   }
 
   const task = await res.json();
-  const status = task?.data?.status || task?.status || 'pending';
-  const output = task?.data?.output || task?.output || {};
-  const imageUrl = output?.generated_image || output?.image_url || output?.url || output?.rendered_image || output?.result_url || output?.image || output?.images?.[0]?.url || output?.images?.[0] || task?.data?.image_url || task?.image_url;
+  const rawStatus = task?.data?.status || task?.status || 'pending';
+  const imageUrl = extractImageUrl(task);
+  const createTime = Number(task?.data?.create_time || task?.create_time || 0);
+  const ageSeconds = createTime ? Math.max(0, Math.floor(Date.now() / 1000) - createTime) : 0;
+  const status = imageUrl && ['running', 'processing', 'queued', 'pending'].includes(rawStatus) ? 'completed' : rawStatus;
 
   console.log('[generateBoothRender] Status response:', JSON.stringify(task));
 
+  if (!imageUrl && ['running', 'processing'].includes(rawStatus) && ageSeconds > 180) {
+    throw new Error('Render timed out before an image was returned');
+  }
+
   return {
     status,
-    url: imageUrl || null,
+    url: imageUrl,
     raw: task,
   };
 }

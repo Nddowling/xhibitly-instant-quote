@@ -13,6 +13,7 @@ export default function XhibitlyStart() {
   const [isGeneratingPreview, setIsGeneratingPreview] = useState(false);
   const [previewStatus, setPreviewStatus] = useState('');
   const [renderTaskId, setRenderTaskId] = useState('');
+  const [pollAttempts, setPollAttempts] = useState(0);
   const pollTimerRef = useRef(null);
 
   const handleGeneratePreview = async ({ website_url = '' } = {}) => {
@@ -37,6 +38,7 @@ export default function XhibitlyStart() {
     setIsGeneratingPreview(true);
     setPreviewStatus(cleanWebsite ? 'Pulling brand details and starting render…' : 'Starting booth preview…');
     setRenderTaskId('');
+    setPollAttempts(0);
 
     try {
       const prompt = `Create a realistic, production-ready branded exhibitors booth rendering for a convention center. Brand: ${brandName}. Booth size: ${boothSize}. Booth type: ${boothType}. Event: ${showName}. This must be spatially correct for the stated booth footprint and booth type. Use the provided quoted product images as the actual products in the booth. Do not invent extra structures, counters, furniture, lighting, flooring, hanging signs, or accessories that are not represented by the quoted items. The booth should look like a clean inline trade show proposal image suitable for a client presentation. Selected quote items: ${productLabels.join(', ')}. If branding is provided from the website, apply the actual logo, colors, and graphic style to the booth naturally. If any product is unclear, stay conservative and preserve the referenced shapes and proportions.`;
@@ -79,24 +81,29 @@ export default function XhibitlyStart() {
         const status = response?.data?.status;
         const url = response?.data?.url;
 
+        setPollAttempts((prev) => prev + 1);
+
         if (status === 'pending' || status === 'queued' || status === 'running' || status === 'processing') {
           setPreviewStatus('Rendering your booth preview…');
         }
 
-        if ((status === 'success' || status === 'completed' || status === 'finished') && url) {
+        if (url && (status === 'success' || status === 'completed' || status === 'finished' || status === 'running' || status === 'processing')) {
           window.clearInterval(pollTimerRef.current);
           pollTimerRef.current = null;
           setRenderTaskId('');
+          setPollAttempts(0);
           setIsGeneratingPreview(false);
           setPreviewStatus('');
           setPreviewOrder((prev) => prev ? { ...prev, booth_rendering_url: url } : prev);
           toast.success('Booth preview is ready.');
+          return;
         }
 
         if (status === 'failed' || status === 'error') {
           window.clearInterval(pollTimerRef.current);
           pollTimerRef.current = null;
           setRenderTaskId('');
+          setPollAttempts(0);
           setIsGeneratingPreview(false);
           setPreviewStatus('');
           toast.error('Preview generation failed. Please try again.');
@@ -105,9 +112,10 @@ export default function XhibitlyStart() {
         window.clearInterval(pollTimerRef.current);
         pollTimerRef.current = null;
         setRenderTaskId('');
+        setPollAttempts(0);
         setIsGeneratingPreview(false);
         setPreviewStatus('');
-        toast.error('Preview generation failed. Please try again.');
+        toast.error(error?.message || 'Preview generation failed. Please try again.');
       }
     }, 5000);
 
@@ -118,6 +126,21 @@ export default function XhibitlyStart() {
       }
     };
   }, [renderTaskId]);
+
+  useEffect(() => {
+    if (!renderTaskId || pollAttempts < 36) return;
+
+    if (pollTimerRef.current) {
+      window.clearInterval(pollTimerRef.current);
+      pollTimerRef.current = null;
+    }
+
+    setRenderTaskId('');
+    setPollAttempts(0);
+    setIsGeneratingPreview(false);
+    setPreviewStatus('');
+    toast.error('Preview generation timed out. Please try again.');
+  }, [pollAttempts, renderTaskId]);
 
   const handleRemovePreviewItem = async (item) => {
     if (!item?.id) return;
