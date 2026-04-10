@@ -47,12 +47,15 @@ export default function Contacts() {
         base44.entities.DealerInstance.list('name', 1000),
       ]);
       const orders = scopeItems(allOrders || [], brokerId);
-      const dealerContacts = scopeItems(allContacts || [], brokerId);
+      const customerContacts = scopeItems(allContacts || [], brokerId).filter(contact => {
+        const recordType = contact.record_type || contact.data?.record_type;
+        return recordType !== 'Dealer';
+      });
       const dealerInstanceMap = new Map((allDealerInstances || []).map(instance => [instance.id, instance]));
 
       const contactsMap = new Map();
 
-      dealerContacts.forEach(contact => {
+      customerContacts.forEach(contact => {
         const key = contact.id;
         const dealerInstanceId = contact.dealer_instance_id || contact.data?.dealer_instance_id;
         const dealerInstance = dealerInstanceMap.get(dealerInstanceId);
@@ -61,7 +64,7 @@ export default function Contacts() {
           record_id: contact.id,
           dealer_instance_id: dealerInstanceId,
           email: contact.email || contact.data?.email,
-          company_name: dealerInstance?.company_name || dealerInstance?.name || '',
+          company_name: contact.company_name || contact.data?.company_name || contact.account_name || contact.data?.account_name || dealerInstance?.company_name || dealerInstance?.name || '',
           contact_name: contact.full_name || contact.data?.full_name,
           phone: contact.phone || contact.data?.phone,
           title: contact.title || contact.data?.title,
@@ -74,7 +77,7 @@ export default function Contacts() {
       });
 
       orders.forEach(order => {
-        const matchingContact = dealerContacts.find(contact => {
+        const matchingContact = customerContacts.find(contact => {
           const email = contact.email || contact.data?.email;
           const fullName = contact.full_name || contact.data?.full_name;
           return (email && email === order.dealer_email) || (fullName && fullName === order.dealer_name);
