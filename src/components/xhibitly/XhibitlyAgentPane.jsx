@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import MessageBubble from '@/components/agents/MessageBubble';
-import { MessageSquare, Send, Sparkles } from 'lucide-react';
+import { MessageSquare, Send, Sparkles, LogIn } from 'lucide-react';
 
 const STARTERS = [
   'I need help designing a 10x10 booth',
@@ -16,10 +16,12 @@ export default function XhibitlyAgentPane({ queuedPrompt, onPromptConsumed }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
   const scrollRef = useRef(null);
 
   useEffect(() => {
-    ensureConversation();
+    checkAuthAndConversation();
   }, []);
 
   useEffect(() => {
@@ -41,6 +43,15 @@ export default function XhibitlyAgentPane({ queuedPrompt, onPromptConsumed }) {
     }
   }, [queuedPrompt, conversation]);
 
+  const checkAuthAndConversation = async () => {
+    const authed = await base44.auth.isAuthenticated();
+    setIsAuthenticated(authed);
+    setAuthChecked(true);
+    if (authed) {
+      await ensureConversation();
+    }
+  };
+
   const ensureConversation = async () => {
     const created = await base44.agents.createConversation({
       agent_name: 'xhibitly_sales_designer',
@@ -55,7 +66,7 @@ export default function XhibitlyAgentPane({ queuedPrompt, onPromptConsumed }) {
 
   const handleSend = async (messageText = input) => {
     const trimmed = String(messageText || '').trim();
-    if (!trimmed || !conversation) return;
+    if (!trimmed || !conversation || !isAuthenticated) return;
     setLoading(true);
     setInput('');
     await base44.agents.addMessage(conversation, {
@@ -98,7 +109,23 @@ export default function XhibitlyAgentPane({ queuedPrompt, onPromptConsumed }) {
       </div>
 
       <div ref={scrollRef} className="min-h-0 p-3 space-y-3 bg-slate-50/70 flex-1 overflow-y-auto overscroll-contain">
-        {messages.length === 0 ? (
+        {!authChecked ? (
+          <div className="rounded-3xl border border-dashed border-slate-200 bg-white px-5 py-10 text-center shadow-sm">
+            <Sparkles className="w-8 h-8 text-slate-200 mx-auto mb-3" />
+            <p className="text-sm font-semibold text-slate-800">Checking access…</p>
+          </div>
+        ) : !isAuthenticated ? (
+          <div className="rounded-3xl border border-dashed border-slate-200 bg-white px-5 py-10 text-center shadow-sm">
+            <LogIn className="w-8 h-8 text-slate-300 mx-auto mb-3" />
+            <p className="text-sm font-semibold text-slate-800">Sign in to use the AI booth guide</p>
+            <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+              Once you sign in, the assistant can start a conversation and help build the booth.
+            </p>
+            <Button onClick={() => base44.auth.redirectToLogin()} className="mt-4 rounded-xl bg-[#18C3F8] hover:bg-[#0fb2e4] text-white">
+              Sign In
+            </Button>
+          </div>
+        ) : messages.length === 0 ? (
           <div className="rounded-3xl border border-dashed border-slate-200 bg-white px-5 py-10 text-center shadow-sm">
             <Sparkles className="w-8 h-8 text-slate-200 mx-auto mb-3" />
             <p className="text-sm font-semibold text-slate-800">No conversation started yet</p>
@@ -115,18 +142,25 @@ export default function XhibitlyAgentPane({ queuedPrompt, onPromptConsumed }) {
       </div>
 
       <div className="p-3 border-t border-slate-200 bg-white mt-auto flex-shrink-0">
-        <div className="flex gap-2">
-          <Input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-            placeholder="Tell me your booth size, event, company, or product idea"
-            className="h-12 rounded-xl"
-          />
-          <Button onClick={() => handleSend()} className="h-12 px-5 rounded-xl bg-[#18C3F8] hover:bg-[#0fb2e4] text-white">
-            <Send className="w-4 h-4" />
+        {isAuthenticated ? (
+          <div className="flex gap-2">
+            <Input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+              placeholder="Tell me your booth size, event, company, or product idea"
+              className="h-12 rounded-xl"
+            />
+            <Button onClick={() => handleSend()} className="h-12 px-5 rounded-xl bg-[#18C3F8] hover:bg-[#0fb2e4] text-white">
+              <Send className="w-4 h-4" />
+            </Button>
+          </div>
+        ) : (
+          <Button onClick={() => base44.auth.redirectToLogin()} className="w-full h-12 rounded-xl bg-[#18C3F8] hover:bg-[#0fb2e4] text-white">
+            <LogIn className="w-4 h-4" />
+            Sign In to Chat
           </Button>
-        </div>
+        )}
       </div>
     </div>
   );
