@@ -32,8 +32,8 @@ for (const page of Object.keys(PAGE_PRODUCTS)) {
 }
 
 const CATALOG_PAGES = Object.keys(PAGE_PRODUCTS).map(Number).sort((a, b) => a - b);
-// Full catalog is 218 print pages (2026 edition)
-const MAX_PAGE = 218;
+// Last usable customer-facing catalog page (213–218 are blank)
+const MAX_PAGE = 212;
 const MIN_PAGE = 1;
 
 // SKU → primary page lookup (for "where is this product?" feature)

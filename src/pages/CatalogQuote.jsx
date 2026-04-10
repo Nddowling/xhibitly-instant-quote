@@ -5,7 +5,7 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { PAGE_PRODUCTS, MAX_PAGE, SKU_TO_PAGE } from '@/data/catalogPageMapping';
-import { FIRST_VISIBLE_CATALOG_PAGE, normalizeCatalogPage } from '@/components/catalog/catalogPageUtils';
+import { FIRST_VISIBLE_CATALOG_PAGE, HIDDEN_CATALOG_PAGES, normalizeCatalogPage } from '@/components/catalog/catalogPageUtils';
 import { SKU_TO_IMAGE } from '@/data/skuImageMap';
 import {
   ChevronLeft, ChevronRight, Plus, Minus, X, ShoppingCart,
@@ -1258,7 +1258,7 @@ export default function CatalogQuote({ embeddedMode = false, onOrderChange, onLi
 
   const handlePageInputSubmit = () => {
     const n = parseInt(pageInput, 10);
-    if (!isNaN(n) && n >= 0) goToPage(n);
+    if (!isNaN(n) && n >= 0 && !HIDDEN_CATALOG_PAGES.includes(n)) goToPage(n);
     else setPageInput(String(currentPage));
   };
 
@@ -1542,7 +1542,7 @@ export default function CatalogQuote({ embeddedMode = false, onOrderChange, onLi
                     </div>
                     {(p.catalog_pages?.[0] || SKU_TO_PAGE[p.sku]) && (
                       <span className="text-[10px] text-[#18C3F8] font-bold flex-shrink-0">
-                        p.{p.catalog_pages?.[0] || SKU_TO_PAGE[p.sku]}
+                        p.{Math.min(p.catalog_pages?.[0] || SKU_TO_PAGE[p.sku], 212)}
                       </span>
                     )}
                   </button>

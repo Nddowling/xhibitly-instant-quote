@@ -1,4 +1,4 @@
-export const HIDDEN_CATALOG_PAGES = [1, 2, 3, 4, 5, 6];
+export const HIDDEN_CATALOG_PAGES = [1, 2, 3, 4, 5, 6, 213, 214, 215, 216, 217, 218];
 export const FIRST_VISIBLE_CATALOG_PAGE = 0;
 
 export function normalizeCatalogPage(requestedPage, currentPage, maxPage) {
