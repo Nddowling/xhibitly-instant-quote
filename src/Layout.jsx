@@ -179,7 +179,6 @@ export default function Layout({ children, currentPageName }) {
 
   const defaultWorkspaceNav = [
     { page: '/objects/Account', label: 'Accounts', icon: Briefcase },
-    { page: '/objects/Contact', label: 'Contacts', icon: Briefcase },
   ];
 
   const workspaceNav = [...defaultWorkspaceNav, ...objectNav, ...primaryNav].filter(
