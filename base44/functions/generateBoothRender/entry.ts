@@ -1,51 +1,32 @@
 /**
  * generateBoothRender.ts
  *
- * Generates a photorealistic booth concept render using Luma AI Photon-1.
- * Passes up to 4 product reference photos via image_ref for hardware/graphic accuracy.
- * Polls until the generation completes and returns the image URL.
- *
- * Body:
- *   prompt: string           — detailed booth layout prompt from Claude
- *   reference_urls: string[] — product photo URLs (up to 4 used as image_ref)
- *
- * Returns:
- *   { url: string }          — Luma CDN URL of the completed render
+ * Generates a branded booth concept image using Tripo's image generation task flow.
+ * Uses the selected quote item images as references and returns a single preview image URL.
  */
 
-// @ts-ignore — Deno runtime, types not available in VS Code
-const LUMAAI_API_KEY = Deno.env.get('LumaAI') ?? Deno.env.get('LUMAAI_API_KEY') ?? '';
+const TRIPO_API_KEY = (Deno.env.get('TRIPO_API_KEY') ?? '').trim();
 
-const LUMA_BASE = 'https://api.lumalabs.ai/dream-machine/v1';
-const MODEL = 'photon-1';
+const TRIPO_BASE = 'https://api.tripo3d.ai/v2/openapi';
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
 };
 
-// ─── Create a generation via Luma REST API ────────────────────────────────────
-async function createGeneration(prompt: string, referenceUrls: string[]): Promise<string> {
-  // image_ref: up to 4 product photos, weighted by position (first = strongest)
-  const imageRef = referenceUrls.slice(0, 4).map((url, i) => ({
-    url,
-    weight: i === 0 ? 0.85 : i === 1 ? 0.75 : 0.65,
-  }));
+async function createGeneration(prompt, referenceUrls) {
+  const imageUrls = referenceUrls.slice(0, 4);
 
-  const body: Record<string, unknown> = {
+  const body = {
+    type: 'generate_image',
     prompt,
-    model: MODEL,
-    aspect_ratio: '16:9', // landscape — best for booth visualization
+    image_urls: imageUrls,
   };
 
-  if (imageRef.length > 0) {
-    body.image_ref = imageRef;
-  }
-
-  const res = await fetch(`${LUMA_BASE}/generations/image`, {
+  const res = await fetch(`${TRIPO_BASE}/task`, {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${LUMAAI_API_KEY}`,
+      'Authorization': `Bearer ${TRIPO_API_KEY}`,
       'Content-Type': 'application/json',
       'Accept': 'application/json',
     },
@@ -54,67 +35,71 @@ async function createGeneration(prompt: string, referenceUrls: string[]): Promis
 
   if (!res.ok) {
     const err = await res.text();
-    throw new Error(`Luma create failed (${res.status}): ${err}`);
+    throw new Error(`Tripo create failed (${res.status}): ${err}`);
   }
 
-  const data = await res.json() as { id: string };
-  return data.id;
+  const data = await res.json();
+  const taskId = data?.data?.task_id || data?.task_id;
+  if (!taskId) throw new Error('Tripo did not return a task id');
+  return taskId;
 }
 
-// ─── Poll until completed or failed ──────────────────────────────────────────
-async function pollGeneration(id: string, timeoutMs = 90_000): Promise<string> {
+async function pollGeneration(id, timeoutMs = 120000) {
   const start = Date.now();
-  const INTERVAL = 4_000; // 4 second poll interval
+  const INTERVAL = 4_000;
 
   while (Date.now() - start < timeoutMs) {
     await new Promise(r => setTimeout(r, INTERVAL));
 
-    const res = await fetch(`${LUMA_BASE}/generations/${id}`, {
+    const res = await fetch(`${TRIPO_BASE}/task/${id}`, {
       headers: {
-        'Authorization': `Bearer ${LUMAAI_API_KEY}`,
+        'Authorization': `Bearer ${TRIPO_API_KEY}`,
         'Accept': 'application/json',
       },
     });
 
     if (!res.ok) continue;
 
-    const gen = await res.json() as {
-      state: string;
-      assets?: { image?: string };
-      failure_reason?: string;
-    };
+    const task = await res.json();
 
-    if (gen.state === 'completed') {
-      const url = gen.assets?.image;
-      if (!url) throw new Error('Luma returned completed state but no image URL');
-      return url;
+    const status = task?.data?.status || task?.status;
+    const output = task?.data?.output || task?.output;
+    const imageUrl = output?.image_url || output?.url || output?.rendered_image;
+
+    if (status === 'success' || status === 'completed' || status === 'finished') {
+      if (!imageUrl) throw new Error('Tripo returned a completed task but no image URL');
+      return imageUrl;
     }
 
-    if (gen.state === 'failed') {
-      throw new Error(`Luma generation failed: ${gen.failure_reason || 'unknown reason'}`);
+    if (status === 'failed' || status === 'error') {
+      throw new Error(`Tripo generation failed: ${task?.message || 'unknown reason'}`);
     }
-
-    // state is 'dreaming' or 'queued' — keep polling
   }
 
-  throw new Error('Luma generation timed out after 90 seconds');
+  throw new Error('Tripo generation timed out after 120 seconds');
 }
 
 // ─── Main handler ─────────────────────────────────────────────────────────────
-// @ts-ignore — Deno runtime
-Deno.serve(async (req: Request) => {
+Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: CORS });
   }
 
-  if (!LUMAAI_API_KEY) {
+  if (!TRIPO_API_KEY) {
     return Response.json(
-      { error: 'LUMAAI_API_KEY not configured — add it to Base44 environment variables' },
+      { error: 'TRIPO_API_KEY not configured — add it to Base44 environment variables' },
       { status: 500, headers: CORS }
     );
   }
 
-  let body: { prompt?: string; reference_urls?: string[] };
+  if ([...TRIPO_API_KEY].some((char) => char.charCodeAt(0) > 255)) {
+    return Response.json(
+      { error: 'TRIPO_API_KEY contains unsupported characters. Please re-save the secret as plain text.' },
+      { status: 500, headers: CORS }
+    );
+  }
+
+  let body;
   try {
     body = await req.json();
   } catch {
@@ -128,15 +113,15 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    console.log(`[generateBoothRender] Creating Luma generation | refs: ${reference_urls.length}`);
+    console.log(`[generateBoothRender] Creating Tripo generation | refs: ${reference_urls.length}`);
     const id = await createGeneration(prompt, reference_urls);
 
-    console.log(`[generateBoothRender] Polling generation ${id}...`);
+    console.log(`[generateBoothRender] Polling task ${id}...`);
     const imageUrl = await pollGeneration(id);
 
     console.log(`[generateBoothRender] Done: ${imageUrl}`);
     return Response.json({ url: imageUrl }, { headers: CORS });
-  } catch (e: unknown) {
+  } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
     console.error('[generateBoothRender] Error:', msg);
     return Response.json({ error: msg }, { status: 500, headers: CORS });

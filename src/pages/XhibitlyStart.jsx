@@ -44,7 +44,7 @@ export default function XhibitlyStart() {
         .join(', ');
       const logoNote = brandDetails?.logo_cached_url || brandDetails?.logo_url;
 
-      const prompt = `Create a polished branded trade show booth concept for ${brand}. Booth size: ${booth}. Event: ${show}. Show only these selected products and no additional display structures or furniture: ${itemNames.join(', ')}. Keep the layout realistic, within the stated booth footprint, and presentation-ready. ${colorNotes ? `Use these brand colors: ${colorNotes}. ` : ''}${logoNote ? 'Apply the provided brand logo and graphics where appropriate. ' : ''}Do not add products that are not in the selected list.`;
+      const prompt = `Create a polished branded trade show booth concept for ${brand}. Booth size: ${booth}. Event: ${show}. The customer is considering purchase, so make this look like a realistic, production-ready trade show proposal image. Use only these selected items from the quote and do not invent any extra products, structures, counters, seating, lighting, or furniture beyond what is shown in the provided references: ${itemNames.join(', ')}. Keep the layout realistic, within the stated booth footprint, and visually centered on the chosen items. ${colorNotes ? `Use these brand colors: ${colorNotes}. ` : ''}${logoNote ? 'Apply the provided brand logo and graphics where appropriate. ' : ''}If a selected item is unclear, stay conservative and do not add substitutes.`;
 
       const response = await base44.functions.invoke('generateBoothRender', {
         prompt,
