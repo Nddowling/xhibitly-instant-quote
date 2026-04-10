@@ -41,9 +41,10 @@ export default function Contacts() {
 
       setUser({ ...currentUser, dealer_instance_id: brokerId });
 
-      const [allOrders, allContacts, allDealerInstances] = await Promise.all([
+      const [allOrders, allContacts, allAccounts, allDealerInstances] = await Promise.all([
         base44.entities.Order.list('-created_date', 1000),
         base44.entities.Contact.list('-created_date', 1000),
+        base44.entities.Account.list('-created_date', 1000),
         base44.entities.DealerInstance.list('name', 1000),
       ]);
       const orders = scopeItems(allOrders || [], brokerId);
@@ -51,7 +52,10 @@ export default function Contacts() {
         const recordType = contact.record_type || contact.data?.record_type;
         return recordType !== 'Dealer';
       });
+      const accounts = scopeItems(allAccounts || [], brokerId);
       const dealerInstanceMap = new Map((allDealerInstances || []).map(instance => [instance.id, instance]));
+      const accountsByEmail = new Map(accounts.map(account => [account.email || account.data?.email, account]).filter(([email]) => email));
+      const accountsByName = new Map(accounts.map(account => [account.name || account.data?.name || account.company_name || account.data?.company_name, account]).filter(([name]) => name));
 
       const contactsMap = new Map();
 
@@ -59,13 +63,18 @@ export default function Contacts() {
         const key = contact.id;
         const dealerInstanceId = contact.dealer_instance_id || contact.data?.dealer_instance_id;
         const dealerInstance = dealerInstanceMap.get(dealerInstanceId);
+        const contactEmail = contact.email || contact.data?.email;
+        const matchedAccount =
+          accountsByEmail.get(contactEmail) ||
+          accountsByName.get(contact.account_name || contact.data?.account_name || contact.company_name || contact.data?.company_name);
+
         contactsMap.set(key, {
           id: contact.id,
           record_id: contact.id,
-          account_id: contact.account_id || contact.data?.account_id,
+          account_id: contact.account_id || contact.data?.account_id || matchedAccount?.id,
           dealer_instance_id: dealerInstanceId,
-          email: contact.email || contact.data?.email,
-          company_name: contact.company_name || contact.data?.company_name || contact.account_name || contact.data?.account_name || dealerInstance?.company_name || dealerInstance?.name || '',
+          email: contactEmail,
+          company_name: matchedAccount?.name || matchedAccount?.company_name || matchedAccount?.data?.name || matchedAccount?.data?.company_name || contact.company_name || contact.data?.company_name || contact.account_name || contact.data?.account_name || dealerInstance?.company_name || dealerInstance?.name || '',
           contact_name: contact.full_name || contact.data?.full_name,
           phone: contact.phone || contact.data?.phone,
           title: contact.title || contact.data?.title,
