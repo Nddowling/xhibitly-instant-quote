@@ -61,6 +61,27 @@
     "linkedin": {
       "type": "string",
       "description": "LinkedIn profile URL"
+    },
+    "account_id": {
+      "type": "string",
+      "description": "Related account record"
+    },
+    "company_name": {
+      "type": "string",
+      "description": "Company name for imported customer contacts"
+    },
+    "linked_user_id": {
+      "type": "string",
+      "description": "Customer app user linked on first login"
+    },
+    "portal_status": {
+      "type": "string",
+      "enum": [
+        "lead",
+        "linked"
+      ],
+      "default": "lead",
+      "description": "Customer portal lifecycle state"
     }
   },
   "required": [

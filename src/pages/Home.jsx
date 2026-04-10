@@ -39,7 +39,8 @@ export default function Home() {
           assignmentProfileNames.some(name => name.includes('global')) ||
           (profiles || []).some(profile => profileIds.includes(profile.id) && String(profile.name || profile.data?.name || profile?.data?.data?.name || '').toLowerCase().includes('global'));
 
-        navigate(createPageUrl(hasGlobalProfile ? 'ExecutiveDashboard' : currentUser?.role === 'designer' ? 'DesignerDashboard' : 'SalesDashboard'));
+        const isCustomer = String(currentUser?.role || '').toLowerCase() === 'user';
+        navigate(createPageUrl(isCustomer ? 'CustomerOrders' : hasGlobalProfile ? 'ExecutiveDashboard' : currentUser?.role === 'designer' ? 'DesignerDashboard' : 'SalesDashboard'));
         return;
       }
     } catch (e) {}

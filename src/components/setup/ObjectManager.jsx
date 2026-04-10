@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import RecordTypeManager from '@/components/setup/RecordTypeManager';
 
 const FIELD_TYPES = ['text','number','currency','date','datetime','checkbox','picklist','multi_picklist','textarea','email','phone','url','lookup','formula'];
 
@@ -132,6 +133,10 @@ export default function ObjectManager() {
               <Button size="sm" onClick={() => setShowNewField(true)} className="bg-[#e2231a] hover:bg-[#c41e17] text-white gap-1">
                 <Plus className="w-3.5 h-3.5" /> New Field
               </Button>
+            </div>
+
+            <div className="mb-4">
+              <RecordTypeManager objectApiName={selectedObject.api_name} />
             </div>
 
             <Accordion type="multiple" defaultValue={["fields", "history"]} className="space-y-4">

@@ -2,11 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, ShieldCheck, Sparkles, Users } from 'lucide-react';
+import useCustomerBootstrap from '@/components/xhibitly/useCustomerBootstrap';
 
 export default function XhibitlyCustomerGate() {
   const [loading, setLoading] = useState(true);
   const [isAuthed, setIsAuthed] = useState(false);
   const [userName, setUserName] = useState('');
+
+  useCustomerBootstrap(true);
 
   useEffect(() => {
     base44.auth.isAuthenticated()
@@ -25,7 +28,7 @@ export default function XhibitlyCustomerGate() {
   };
 
   const handleContinue = () => {
-    window.location.href = '/XhibitlyStart2';
+    window.location.href = '/CustomerOrders';
   };
 
   return (

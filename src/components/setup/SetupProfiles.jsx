@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 
-const ALL_PAGES = ['SalesDashboard','Contacts','CatalogQuote','RecentQuotes','PricingRules','Reports','Dashboards','Setup','Settings','Pipeline'];
+const ALL_PAGES = ['SalesDashboard','Contacts','CatalogQuote','RecentQuotes','PricingRules','Reports','Dashboards','Setup','Settings','Pipeline','XhibitlyStart','CustomerOrders'];
 const ACTIONS = ['read','create','edit','delete'];
 
 export default function SetupProfiles() {
