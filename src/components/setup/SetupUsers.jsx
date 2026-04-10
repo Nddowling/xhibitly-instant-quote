@@ -34,7 +34,7 @@ export default function SetupUsers() {
 
     setCurrentUser(me);
     setUsers(u || []);
-    setContacts((c || []).filter(contact => (contact.record_type || contact.data?.record_type) === 'Dealer'));
+    setContacts(c || []);
     setProfiles(p || []);
     setPermSets(ps || []);
     setAssignments(a || []);

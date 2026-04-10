@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   LayoutGrid, Users, Shield, Key, Database, Settings,
   ChevronRight, Search, Wrench, Layers, ClipboardCheck, Upload, PlugZap, Bot
@@ -50,8 +50,38 @@ const SECTIONS = [
 export default function Setup() {
   const [activeKey, setActiveKey] = useState('data-loader');
   const [search, setSearch] = useState('');
+  const [currentUser, setCurrentUser] = useState(null);
 
-  const allItems = SECTIONS.flatMap(s => s.items);
+  useEffect(() => {
+    base44.auth.me().then(setCurrentUser);
+  }, []);
+
+  const isGlobalAdmin = [currentUser?.profile_name, currentUser?.profile, currentUser?.role]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase()
+    .includes('global');
+  const isSalesRep = currentUser?.role === 'sales_rep';
+
+  const visibleSections = useMemo(() => {
+    if (isSalesRep) {
+      return [{
+        group: 'Administration',
+        items: [{ key: 'users', label: 'Org Users', icon: Users, component: SetupUsers }]
+      }];
+    }
+
+    return SECTIONS.map((section) => ({
+      ...section,
+      items: section.items.filter((item) => {
+        if (item.key === 'broker-instances') return true;
+        if (item.key === 'profiles' || item.key === 'permission-sets') return !isSalesRep;
+        return isGlobalAdmin || currentUser?.role === 'admin' || currentUser?.role === 'designer';
+      })
+    })).filter((section) => section.items.length > 0);
+  }, [currentUser, isGlobalAdmin, isSalesRep]);
+
+  const allItems = visibleSections.flatMap(s => s.items);
   const ActiveComponent = allItems.find(i => i.key === activeKey)?.component || SetupUsers;
 
   const filtered = search.trim()
@@ -91,7 +121,7 @@ export default function Setup() {
               ))}
             </div>
           ) : (
-            SECTIONS.map(section => (
+            visibleSections.map(section => (
               <div key={section.group} className="mb-4">
                 <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 px-2 py-1">{section.group}</p>
                 {section.items.map(item => (

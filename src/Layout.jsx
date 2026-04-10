@@ -203,10 +203,11 @@ export default function Layout({ children, currentPageName }) {
   const analyticsActive = analyticsNav.some(n => n.page === currentPageName) ||
     ['ReportBuilder','ReportView','DashboardView'].includes(currentPageName);
 
+  const isSalesRepOnly = user?.role === 'sales_rep';
   const settingsNav = [
     { page: 'Settings', label: 'My Settings', icon: SettingsIcon },
-    ...(canSeeGlobalAdmin ? [{ page: 'DesignerDashboard', label: 'Global Admin', icon: LayoutDashboard }] : []),
-    ...(canSeeSetup ? [{ page: 'Setup', label: 'Org Setup', icon: Settings2 }] : []),
+    ...(!isSalesRepOnly && canSeeGlobalAdmin ? [{ page: 'DesignerDashboard', label: 'Global Admin', icon: LayoutDashboard }] : []),
+    ...(!isSalesRepOnly && canSeeSetup ? [{ page: 'Setup', label: 'Org Setup', icon: Settings2 }] : []),
   ];
 
   // Mobile: all nav items flat
