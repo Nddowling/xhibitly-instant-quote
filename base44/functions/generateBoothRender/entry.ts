@@ -26,8 +26,6 @@ async function createGeneration(prompt, referenceUrls) {
     image_urls: imageUrls,
   };
 
-  console.log('[generateBoothRender] Create body:', JSON.stringify(body));
-
   const res = await fetch(`${TRIPO_BASE}/task`, {
     method: 'POST',
     headers: {
@@ -143,13 +141,12 @@ async function fetchBrandDetails(base44, websiteUrl) {
   return parsed;
 }
 
-function buildPrompt({ prompt, boothSize, boothType, showName, brandName, brandDetails, quoteItems }) {
-  if (prompt) return prompt;
-
+function buildPrompt({ boothSize, boothType, showName, brandName, brandDetails, quoteItems }) {
   const itemSummary = (quoteItems || []).map((item) => `${item?.sku ? `${item.sku} ` : ''}${item?.name || 'Product'}`.trim()).join(', ');
   const colorNotes = [brandDetails?.primary_color, brandDetails?.secondary_color, brandDetails?.accent_color_1, brandDetails?.accent_color_2].filter(Boolean).join(', ');
+  const resolvedBoothType = String(boothType || 'Inline').toLowerCase();
 
-  return `Create a realistic, production-ready branded exhibitors booth rendering for a convention center. Brand: ${brandName || brandDetails?.company_name || 'Client brand'}. Booth size: ${boothSize || '10x10'}. Booth type: ${boothType || 'Inline'}. Event: ${showName || 'Convention event'}. This must be spatially correct for the stated booth footprint and booth type. Use the provided quoted product images as the actual products in the booth. Do not invent extra structures, counters, furniture, lighting, flooring, hanging signs, or accessories that are not represented by the quoted items. Selected quote items: ${itemSummary || 'Quoted products'}.${colorNotes ? ` Use these brand colors: ${colorNotes}.` : ''}${brandDetails?.logo_cached_url || brandDetails?.logo_url ? ' Apply the provided brand logo and graphic style naturally across the booth.' : ''} If any item is unclear, stay conservative and preserve the referenced shapes and proportions.`;
+  return `Create a realistic, production-ready branded exhibitors booth rendering for a convention center. Brand: ${brandName || brandDetails?.company_name || 'Client brand'}. Booth size: ${boothSize || '10x10'}. Booth type: ${resolvedBoothType}. Event: ${showName || 'Convention event'}. This must be spatially correct for the stated booth footprint and booth type. Use the provided quoted product images as the actual products in the booth. Do not invent extra structures, counters, furniture, lighting, flooring, hanging signs, or accessories that are not represented by the quoted items. Selected quote items: ${itemSummary || 'Quoted products'}.${colorNotes ? ` Use these brand colors: ${colorNotes}.` : ''}${brandDetails?.logo_cached_url || brandDetails?.logo_url ? ' Apply the provided brand logo and graphic style naturally across the booth.' : ''} If any item is unclear, stay conservative and preserve the referenced shapes and proportions.`;
 }
 
 function extractImageUrl(task) {
@@ -255,9 +252,11 @@ Deno.serve(async (req) => {
       ? quote_items.map((item) => item?.image_url).filter(Boolean)
       : [];
     const logoUrl = brandDetails?.logo_cached_url || brandDetails?.logo_url || '';
-    const combinedReferenceUrls = [logoUrl, ...reference_urls, ...quoteItemUrls].filter(Boolean).filter((url, index, arr) => arr.indexOf(url) === index).slice(0, 6);
+    const combinedReferenceUrls = [logoUrl, ...reference_urls, ...quoteItemUrls]
+      .filter(Boolean)
+      .filter((url, index, arr) => arr.indexOf(url) === index)
+      .slice(0, 6);
     const finalPrompt = buildPrompt({
-      prompt,
       boothSize: booth_size,
       boothType: booth_type,
       showName: show_name,
