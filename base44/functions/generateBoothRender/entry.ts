@@ -44,7 +44,7 @@ async function createGeneration(prompt, referenceUrls) {
   return taskId;
 }
 
-async function pollGeneration(id, timeoutMs = 120000) {
+async function pollGeneration(id, timeoutMs = 300000) {
   const start = Date.now();
   const INTERVAL = 4_000;
 
@@ -78,7 +78,7 @@ async function pollGeneration(id, timeoutMs = 120000) {
     }
   }
 
-  throw new Error('Tripo generation timed out after 120 seconds');
+  throw new Error('Tripo generation timed out after 300 seconds');
 }
 
 // ─── Main handler ─────────────────────────────────────────────────────────────
