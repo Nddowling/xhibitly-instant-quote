@@ -40,7 +40,8 @@ export default function Settings() {
   const loadUser = async () => {
     try {
       const currentUser = await base44.auth.me();
-      const instance = await ensureBrokerInstance(currentUser);
+      const shouldEnsureWorkspace = currentUser?.role !== 'sales_rep';
+      const instance = shouldEnsureWorkspace ? await ensureBrokerInstance(currentUser) : null;
       setUser({ ...currentUser, broker_instance_id: instance?.id || currentUser.broker_instance_id });
       setBrokerInstance(instance);
       setEditForm({

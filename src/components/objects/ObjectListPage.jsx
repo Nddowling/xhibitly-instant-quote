@@ -27,8 +27,7 @@ export default function ObjectListPage({ objectApiName, title }) {
       const dealerId = brokerContext.effectiveDealerId || brokerContext.effectiveBrokerId;
       const isGlobalAdminView = window.location.pathname === '/DesignerDashboard' || window.location.pathname === '/ExecutiveDashboard';
       const scopedContacts = isGlobalAdminView ? (data || []) : scopeItems(data || [], dealerId);
-      const dealerContacts = scopedContacts.filter(contact => (contact.record_type || contact.data?.record_type) === 'Dealer');
-      setRecords(dealerContacts);
+      setRecords(scopedContacts);
       setLoading(false);
       return;
     }

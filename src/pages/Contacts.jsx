@@ -47,7 +47,7 @@ export default function Contacts() {
         base44.entities.DealerInstance.list('name', 1000),
       ]);
       const orders = scopeItems(allOrders || [], brokerId);
-      const dealerContacts = scopeItems(allContacts || [], brokerId).filter(contact => (contact.record_type || contact.data?.record_type) === 'Dealer');
+      const dealerContacts = scopeItems(allContacts || [], brokerId);
       const dealerInstanceMap = new Map((allDealerInstances || []).map(instance => [instance.id, instance]));
 
       const contactsMap = new Map();

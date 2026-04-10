@@ -83,11 +83,17 @@ export default function Setup() {
   }, [currentUser, isGlobalAdmin, isSalesRep]);
 
   const allItems = visibleSections.flatMap(s => s.items);
-  const ActiveComponent = allItems.find(i => i.key === activeKey)?.component || SetupUsers;
+  const ActiveComponent = allItems.find(i => i.key === activeKey)?.component || allItems[0]?.component || SetupUsers;
 
   const filtered = search.trim()
     ? allItems.filter(i => i.label.toLowerCase().includes(search.toLowerCase()))
     : null;
+
+  useEffect(() => {
+    if (allItems.length > 0 && !allItems.some((item) => item.key === activeKey)) {
+      setActiveKey(allItems[0].key);
+    }
+  }, [activeKey, allItems]);
 
   return (
     <div className="min-h-screen bg-slate-50 flex">
