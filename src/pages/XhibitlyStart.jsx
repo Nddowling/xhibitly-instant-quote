@@ -6,7 +6,6 @@ import XhibitlyAgentPane from '@/components/xhibitly/XhibitlyAgentPane';
 import BoothPreviewPanel from '@/components/xhibitly/BoothPreviewPanel';
 
 export default function XhibitlyStart() {
-  const [queuedPrompt, setQueuedPrompt] = useState('');
   const [previewOrder, setPreviewOrder] = useState(null);
   const [previewLineItems, setPreviewLineItems] = useState([]);
   const [previewPricingResult, setPreviewPricingResult] = useState(null);
@@ -186,7 +185,7 @@ export default function XhibitlyStart() {
             </section>
 
             <section className="min-w-0 rounded-[30px] bg-white/96 backdrop-blur border border-white shadow-[0_25px_70px_rgba(15,23,42,0.12)] overflow-hidden h-[1004px] lg:h-[calc(100vh-8px)] lg:sticky lg:top-2">
-              <XhibitlyAgentPane queuedPrompt={queuedPrompt} onPromptConsumed={() => setQueuedPrompt('')} />
+              <XhibitlyAgentPane />
             </section>
           </div>
 
