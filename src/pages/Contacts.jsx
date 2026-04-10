@@ -199,7 +199,7 @@ export default function Contacts() {
             <div>
               <h1 className="text-2xl md:text-3xl font-bold text-slate-900 mb-1">Contacts</h1>
               <p className="text-slate-500">
-                {filteredContacts.length} contact{filteredContacts.length !== 1 ? 's' : ''} found
+                {filteredContacts.length} account contact{filteredContacts.length !== 1 ? 's' : ''}
               </p>
             </div>
             <Button
@@ -229,7 +229,7 @@ export default function Contacts() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6"
+          className="space-y-4"
         >
           {filteredContacts.length > 0 ? (
             filteredContacts.map((contact, index) => (
@@ -244,65 +244,83 @@ export default function Contacts() {
                   onClick={() => handleContactClick(contact)}
                 >
                   <CardHeader>
-                    <div className="flex items-start justify-between mb-2">
-                      <div className="w-12 h-12 bg-[#e2231a]/10 rounded-full flex items-center justify-center">
-                        <Building2 className="w-6 h-6 text-[#e2231a]" />
+                    <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="w-14 h-14 bg-[#e2231a]/10 rounded-full flex items-center justify-center">
+                          <Building2 className="w-7 h-7 text-[#e2231a]" />
+                        </div>
+                        <div>
+                          <CardTitle>
+                            <button
+                              type="button"
+                              onClick={(e) => handleAccountClick(contact, e)}
+                              className="text-xl font-semibold text-left text-slate-900 hover:text-[#e2231a] transition-colors disabled:pointer-events-none disabled:text-slate-900"
+                              disabled={!contact.account_id}
+                            >
+                              {contact.company_name || 'No Company'}
+                            </button>
+                          </CardTitle>
+                          <CardDescription className="text-base font-medium text-slate-700 mt-1">
+                            {contact.contact_name}
+                          </CardDescription>
+                        </div>
                       </div>
-                      <Badge variant="outline" className="text-xs">
-                        {contact.total_orders} order{contact.total_orders !== 1 ? 's' : ''}
-                      </Badge>
+                      <div className="flex flex-wrap gap-2">
+                        <Badge variant="outline" className="text-xs">
+                          {contact.total_orders} order{contact.total_orders !== 1 ? 's' : ''}
+                        </Badge>
+                        {contact.source === 'contact' && contact.email && (
+                          <>
+                            <Button size="sm" className="bg-[#e2231a] hover:bg-[#b01b13]" onClick={(e) => sendInvite(contact, e)} disabled={sendingInviteId === contact.id}>
+                              <Send className="w-4 h-4 mr-2" />
+                              {sendingInviteId === contact.id ? 'Sending invite...' : 'Send Invite'}
+                            </Button>
+                            <Button size="sm" variant="outline" onClick={(e) => sendPasswordReset(contact, e)} disabled={sendingResetId === contact.id}>
+                              <KeyRound className="w-4 h-4 mr-2" />
+                              {sendingResetId === contact.id ? 'Sending reset...' : 'Password Reset'}
+                            </Button>
+                          </>
+                        )}
+                      </div>
                     </div>
-                    <CardTitle>
-                      <button
-                        type="button"
-                        onClick={(e) => handleAccountClick(contact, e)}
-                        className="text-lg font-semibold text-left text-slate-900 hover:text-[#e2231a] transition-colors disabled:pointer-events-none disabled:text-slate-900"
-                        disabled={!contact.account_id}
-                      >
-                        {contact.company_name || 'No Company'}
-                      </button>
-                    </CardTitle>
-                    <CardDescription className="font-medium text-slate-700">
-                      {contact.contact_name}
-                    </CardDescription>
                   </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="flex items-center gap-2 text-sm text-slate-600">
-                      <Mail className="w-4 h-4 text-slate-400" />
-                      <span className="truncate">{contact.email}</span>
+                  <CardContent>
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                      <div className="flex items-center gap-3">
+                        <Mail className="w-5 h-5 text-slate-400" />
+                        <div>
+                          <p className="text-xs text-slate-500">Email</p>
+                          <p className="text-sm font-medium text-slate-900 break-all">{contact.email || '—'}</p>
+                        </div>
+                      </div>
+                      {contact.phone && (
+                        <div className="flex items-center gap-3">
+                          <Phone className="w-5 h-5 text-slate-400" />
+                          <div>
+                            <p className="text-xs text-slate-500">Phone</p>
+                            <p className="text-sm font-medium text-slate-900">{contact.phone}</p>
+                          </div>
+                        </div>
+                      )}
+                      <div className="flex items-center gap-3">
+                        <FileText className="w-5 h-5 text-slate-400" />
+                        <div>
+                          <p className="text-xs text-slate-500">Total Orders</p>
+                          <p className="text-sm font-medium text-slate-900">{contact.total_orders}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <Building2 className="w-5 h-5 text-slate-400" />
+                        <div>
+                          <p className="text-xs text-slate-500">Total Value</p>
+                          <p className="text-sm font-medium text-slate-900">{formatPrice(contact.total_value)}</p>
+                        </div>
+                      </div>
                     </div>
-                    {contact.phone && (
-                      <div className="flex items-center gap-2 text-sm text-slate-600">
-                        <Phone className="w-4 h-4 text-slate-400" />
-                        <span>{contact.phone}</span>
-                      </div>
-                    )}
-                    <div className="pt-3 border-t border-slate-200 space-y-1">
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-slate-500">Total Value:</span>
-                        <span className="font-semibold text-slate-900">
-                          {formatPrice(contact.total_value)}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-slate-500">Last Order:</span>
-                        <span className="font-medium text-slate-700">
-                          {new Date(contact.last_order_date).toLocaleDateString()}
-                        </span>
-                      </div>
+                    <div className="mt-4 pt-4 border-t border-slate-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-sm">
+                      <span className="text-slate-500">Last activity</span>
+                      <span className="font-medium text-slate-700">{new Date(contact.last_order_date).toLocaleDateString()}</span>
                     </div>
-                    {contact.source === 'contact' && contact.email && (
-                      <div className="pt-3 border-t border-slate-200 grid grid-cols-1 gap-2">
-                        <Button size="sm" className="bg-[#e2231a] hover:bg-[#b01b13]" onClick={(e) => sendInvite(contact, e)} disabled={sendingInviteId === contact.id}>
-                          <Send className="w-4 h-4 mr-2" />
-                          {sendingInviteId === contact.id ? 'Sending invite...' : 'Send Dealer Invite'}
-                        </Button>
-                        <Button size="sm" variant="outline" onClick={(e) => sendPasswordReset(contact, e)} disabled={sendingResetId === contact.id}>
-                          <KeyRound className="w-4 h-4 mr-2" />
-                          {sendingResetId === contact.id ? 'Sending reset...' : 'Send Password Reset'}
-                        </Button>
-                      </div>
-                    )}
                   </CardContent>
                 </Card>
               </motion.div>

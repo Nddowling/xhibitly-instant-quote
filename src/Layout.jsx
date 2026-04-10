@@ -165,7 +165,7 @@ export default function Layout({ children, currentPageName }) {
 
   // Primary nav (always visible on desktop)
   const primaryNav = [
-    { page: 'Contacts',     label: 'Clients', icon: Users },
+    { page: 'Contacts',     label: 'Contacts', icon: Users },
     { page: 'CatalogQuote', label: 'Catalog', icon: BookOpen },
     { page: 'RecentQuotes', label: 'Quotes',  icon: ClipboardList },
     { page: 'PricingRules', label: 'Pricing', icon: Tag },
@@ -222,7 +222,7 @@ export default function Layout({ children, currentPageName }) {
   // Bottom mobile nav (5 max)
   const bottomNav = [
     { page: 'SalesDashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { page: 'Contacts',       label: 'Clients',   icon: Users },
+    { page: 'Contacts',       label: 'Contacts',  icon: Users },
     { page: 'CatalogQuote',   label: 'Catalog',   icon: BookOpen },
     { page: 'RecentQuotes',   label: 'Quotes',    icon: ClipboardList },
     { page: 'Reports',        label: 'Reports',   icon: BarChart2 },
