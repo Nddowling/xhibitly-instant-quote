@@ -35,7 +35,8 @@ export default function XhibitlyStart() {
       }
 
       const brand = brandDetails?.company_name || previewOrder.customer_company || previewOrder.customer_name || 'Client brand';
-      const booth = previewOrder.booth_size || 'trade show booth';
+      const booth = previewOrder.booth_size || '10x10';
+      const boothType = previewOrder.booth_type || 'Inline';
       const show = previewOrder.show_name || 'event booth';
       const itemNames = previewLineItems
         .map((item) => item.product_name || item.sku)
@@ -43,17 +44,18 @@ export default function XhibitlyStart() {
       const referenceUrls = previewLineItems
         .map((item) => item.image_url)
         .filter(Boolean)
-        .slice(0, 4);
+        .slice(0, 6);
       const colorNotes = [brandDetails?.primary_color, brandDetails?.secondary_color, brandDetails?.accent_color_1, brandDetails?.accent_color_2]
         .filter(Boolean)
         .join(', ');
       const logoNote = brandDetails?.logo_cached_url || brandDetails?.logo_url;
+      const websiteNote = cleanWebsite || previewOrder.website_url || brandDetails?.domain || '';
 
-      const prompt = `Create a polished branded trade show booth concept for ${brand}. Booth size: ${booth}. Event: ${show}. The customer is considering purchase, so make this look like a realistic, production-ready trade show proposal image. Use only these selected items from the quote and do not invent any extra products, structures, counters, seating, lighting, or furniture beyond what is shown in the provided references: ${itemNames.join(', ')}. Keep the layout realistic, within the stated booth footprint, and visually centered on the chosen items. ${colorNotes ? `Use these brand colors: ${colorNotes}. ` : ''}${logoNote ? 'Apply the provided brand logo and graphics where appropriate. ' : ''}If a selected item is unclear, stay conservative and do not add substitutes.`;
+      const prompt = `Create a realistic, production-ready branded trade show booth concept for ${brand}. Booth size: ${booth}. Booth type: ${boothType} inline booth for a convention center. Event: ${show}. Use the provided product reference images as the actual quoted products and keep the design spatially correct for the stated footprint. Do not invent extra products, counters, furniture, lighting, or architectural features beyond what is shown in the references. Build a clean exhibitor presentation image that looks like a real inline convention booth proposal, with the selected items arranged in a believable 10x10 trade show layout.${websiteNote ? ` Brand website: ${websiteNote}.` : ''}${colorNotes ? ` Use these brand colors: ${colorNotes}.` : ''}${logoNote ? ' Apply the provided logo and brand graphics naturally across the visible booth surfaces where appropriate.' : ''} Selected quoted items: ${itemNames.join(', ')}. If any item is unclear, stay conservative and preserve the referenced product shapes.`;
 
       const response = await base44.functions.invoke('generateBoothRender', {
         prompt,
-        reference_urls: logoNote ? [logoNote, ...referenceUrls].slice(0, 4) : referenceUrls,
+        reference_urls: logoNote ? [logoNote, ...referenceUrls].slice(0, 6) : referenceUrls,
       });
 
       if (response?.data?.task_id) {

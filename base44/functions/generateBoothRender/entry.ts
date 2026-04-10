@@ -60,7 +60,7 @@ async function getGenerationStatus(id) {
   const task = await res.json();
   const status = task?.data?.status || task?.status || 'pending';
   const output = task?.data?.output || task?.output || {};
-  const imageUrl = output?.image_url || output?.url || output?.rendered_image || output?.result_url || output?.image || output?.images?.[0]?.url || output?.images?.[0] || task?.data?.image_url || task?.image_url;
+  const imageUrl = output?.generated_image || output?.image_url || output?.url || output?.rendered_image || output?.result_url || output?.image || output?.images?.[0]?.url || output?.images?.[0] || task?.data?.image_url || task?.image_url;
 
   console.log('[generateBoothRender] Status response:', JSON.stringify(task));
 
