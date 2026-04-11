@@ -15,6 +15,7 @@ import SetupBrokerInstances from '@/components/setup/SetupBrokerInstances';
 import SetupDataLoader from '@/components/setup/SetupDataLoader';
 import SetupCrmConnectors from '@/components/setup/SetupCrmConnectors';
 import SetupBrokerOnboarding from '@/components/setup/SetupBrokerOnboarding';
+import CustomerProfileSeeder from '@/components/setup/CustomerProfileSeeder';
 import HotspotAudit from '@/pages/HotspotAudit';
 import CatalogAudit from '@/pages/CatalogAudit';
 
@@ -29,6 +30,7 @@ const SECTIONS = [
       { key: 'data-loader',      label: 'Data Loader',      icon: Upload,   component: SetupDataLoader },
       { key: 'crm-connectors',   label: 'CRM Connectors',   icon: PlugZap,  component: SetupCrmConnectors },
       { key: 'broker-onboarding', label: 'Dealer Support & KB', icon: Bot, component: SetupBrokerOnboarding },
+      { key: 'customer-profile', label: 'Customer Portal Profile', icon: Shield, component: CustomerProfileSeeder },
       { key: 'seed',             label: 'Initialize Data',  icon: Wrench,   component: SetupSeeder },
     ]
   },

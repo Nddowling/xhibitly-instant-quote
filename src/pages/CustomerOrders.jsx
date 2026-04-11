@@ -22,8 +22,9 @@ export default function CustomerOrders() {
   const loadOrders = async () => {
     const me = await base44.auth.me();
     setUser(me);
-    const email = me?.email || '';
-    const result = await base44.entities.Order.filter({ customer_email: email }, '-created_date', 200);
+    const email = String(me?.email || '').trim().toLowerCase();
+    const allOrders = await base44.entities.Order.list('-created_date', 200);
+    const result = (allOrders || []).filter((order) => String(order.customer_email || '').trim().toLowerCase() === email);
     setOrders(result || []);
     setLoading(false);
   };
@@ -45,6 +46,7 @@ export default function CustomerOrders() {
           <div>
             <h1 className="text-3xl font-bold text-slate-900">My Orders & Quotes</h1>
             <p className="text-slate-500 mt-1">Only your own Exhibitly orders and quote activity are shown here.</p>
+            {user?.email && <p className="text-xs text-slate-400 mt-2">Signed in as {user.email}</p>}
           </div>
           <Button asChild className="bg-[#e2231a] hover:bg-[#c41e17] text-white">
             <Link to="/XhibitlyStart2"><Plus className="w-4 h-4 mr-2" />Start New Quote</Link>

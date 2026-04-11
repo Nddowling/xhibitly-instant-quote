@@ -160,7 +160,14 @@ const AuthenticatedApp = () => {
       />
       <Route path="/XhibitlyStart" element={<XhibitlyStart />} />
       <Route path="/XhibitlyStart2" element={<XhibitlyStart2 />} />
-      <Route path="/CustomerOrders" element={<CustomerOrders />} />
+      <Route
+        path="/CustomerOrders"
+        element={
+          <LayoutWrapper currentPageName="CustomerOrders">
+            <CustomerOrders />
+          </LayoutWrapper>
+        }
+      />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

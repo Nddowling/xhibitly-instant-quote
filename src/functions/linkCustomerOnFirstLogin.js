@@ -33,6 +33,8 @@ Deno.serve(async (req) => {
     const data = customerContact.data || {};
     const updates = {
       owner_user_id: user.id,
+      linked_user_id: user.id,
+      portal_status: 'linked',
       record_type: customerContact.record_type || data.record_type || 'Customer Contact',
     };
 
@@ -41,6 +43,10 @@ Deno.serve(async (req) => {
     }
 
     await base44.asServiceRole.entities.Contact.update(customerContact.id, updates);
+    await base44.asServiceRole.auth.updateUser(user.id, {
+      role: 'user',
+      contact_id: customerContact.id,
+    });
 
     return Response.json({
       linked: true,
