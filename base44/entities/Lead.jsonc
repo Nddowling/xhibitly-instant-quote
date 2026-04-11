@@ -1,0 +1,75 @@
+{
+  "name": "Lead",
+  "type": "object",
+  "properties": {
+    "first_name": {
+      "type": "string",
+      "description": "Lead first name"
+    },
+    "last_name": {
+      "type": "string",
+      "description": "Lead last name"
+    },
+    "full_name": {
+      "type": "string",
+      "description": "Lead full name"
+    },
+    "email": {
+      "type": "string",
+      "description": "Lead email"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Lead phone"
+    },
+    "title": {
+      "type": "string",
+      "description": "Lead title"
+    },
+    "department": {
+      "type": "string",
+      "description": "Lead department"
+    },
+    "company_name": {
+      "type": "string",
+      "description": "Associated business name"
+    },
+    "account_id": {
+      "type": "string",
+      "description": "Associated account record"
+    },
+    "dealer_instance_id": {
+      "type": "string",
+      "description": "Dealer workspace scope"
+    },
+    "owner_user_id": {
+      "type": "string",
+      "description": "Lead owner user id"
+    },
+    "source_contact_id": {
+      "type": "string",
+      "description": "Original contact record migrated into this lead"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "converted"
+      ],
+      "default": "open",
+      "description": "Lead lifecycle status"
+    },
+    "converted_contact_id": {
+      "type": "string",
+      "description": "Contact created from this lead"
+    },
+    "converted_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the lead was converted"
+    }
+  },
+  "required": [
+    "full_name"
+  ]
+}
