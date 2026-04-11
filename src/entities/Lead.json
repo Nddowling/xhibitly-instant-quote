@@ -34,6 +34,30 @@
       "type": "string",
       "description": "Associated business name"
     },
+    "website": {
+      "type": "string",
+      "description": "Company website"
+    },
+    "toll_free": {
+      "type": "string",
+      "description": "Toll free phone number"
+    },
+    "contact_type": {
+      "type": "string",
+      "description": "Lead contact type or role from import"
+    },
+    "show_name": {
+      "type": "string",
+      "description": "Expo or event this lead is associated with"
+    },
+    "source_file_name": {
+      "type": "string",
+      "description": "Imported source file name"
+    },
+    "source_row_index": {
+      "type": "number",
+      "description": "Original row number from the import file"
+    },
     "account_id": {
       "type": "string",
       "description": "Associated account record"
@@ -50,9 +74,17 @@
       "type": "string",
       "description": "Original contact record migrated into this lead"
     },
+    "source_contact_created_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Original contact created date"
+    },
     "status": {
       "type": "string",
-      "enum": ["open", "converted"],
+      "enum": [
+        "open",
+        "converted"
+      ],
       "default": "open",
       "description": "Lead lifecycle status"
     },
@@ -66,5 +98,7 @@
       "description": "When the lead was converted"
     }
   },
-  "required": ["full_name"]
+  "required": [
+    "full_name"
+  ]
 }
