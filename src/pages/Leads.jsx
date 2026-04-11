@@ -73,7 +73,12 @@ export default function Leads() {
     const brokerContext = await loadBrokerContext();
     const dealerId = brokerContext.effectiveDealerId || brokerContext.effectiveBrokerId;
     const isGlobalAdminView = window.location.pathname === '/DesignerDashboard' || window.location.pathname === '/ExecutiveDashboard';
-    const scopedLeads = isGlobalAdminView ? (data || []) : scopeItems(data || [], dealerId);
+    const scopedLeads = isGlobalAdminView
+      ? (data || [])
+      : (data || []).filter((lead) => {
+          const leadDealerId = lead?.dealer_instance_id || lead?.broker_instance_id || lead?.data?.dealer_instance_id || lead?.data?.broker_instance_id;
+          return !leadDealerId || leadDealerId === dealerId;
+        });
     setRecords(scopedLeads.filter((lead) => (lead.status || lead.data?.status || 'open') === 'open'));
     setLoading(false);
   };
