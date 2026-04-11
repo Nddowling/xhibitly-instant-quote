@@ -68,6 +68,9 @@ export default function Contacts() {
           accountsByEmail.get(contactEmail) ||
           accountsByName.get(contact.account_name || contact.data?.account_name || contact.company_name || contact.data?.company_name);
 
+        const portalStatus = contact.portal_status || contact.data?.portal_status || 'lead';
+        const recordType = contact.record_type || contact.data?.record_type || '';
+
         contactsMap.set(key, {
           id: contact.id,
           record_id: contact.id,
@@ -78,6 +81,9 @@ export default function Contacts() {
           contact_name: contact.full_name || contact.data?.full_name,
           phone: contact.phone || contact.data?.phone,
           title: contact.title || contact.data?.title,
+          record_type: recordType,
+          portal_status: portalStatus,
+          relationship_label: portalStatus === 'linked' ? 'Contact' : 'Lead',
           total_orders: 0,
           last_order_date: contact.created_date,
           total_value: 0,
@@ -101,6 +107,9 @@ export default function Contacts() {
             company_name: order.dealer_company,
             contact_name: order.dealer_name,
             phone: order.dealer_phone,
+            record_type: '',
+            portal_status: 'lead',
+            relationship_label: 'Lead',
             total_orders: 0,
             last_order_date: order.created_date,
             total_value: 0,
@@ -275,6 +284,9 @@ export default function Contacts() {
                         </div>
                       </div>
                       <div className="flex flex-wrap gap-2">
+                        <Badge variant="outline" className="text-xs">
+                          {contact.relationship_label || 'Lead'}
+                        </Badge>
                         <Badge variant="outline" className="text-xs">
                           {contact.total_orders} order{contact.total_orders !== 1 ? 's' : ''}
                         </Badge>

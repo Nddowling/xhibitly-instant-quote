@@ -38,36 +38,42 @@ export default function ContactDetail() {
       return;
     }
 
-    const [contactRecords, contactOrders, dealerInstances] = await Promise.all([
+    const [contactRecords, allOrders, accounts] = await Promise.all([
       contactId
         ? base44.entities.Contact.filter({ id: contactId }, '-created_date', 1)
         : base44.entities.Contact.filter({ email }, '-created_date', 10),
-      email ? base44.entities.Order.filter({ dealer_email: email }, '-created_date', 100) : Promise.resolve([]),
-      base44.entities.DealerInstance.list('name', 1000),
+      base44.entities.Order.list('-created_date', 500),
+      base44.entities.Account.list('-created_date', 1000),
     ]);
 
-    const dealerContact = (contactRecords || []).find(item => (item.record_type || item.data?.record_type) === 'Dealer') || (contactRecords || [])[0];
-    const dealerInstanceId = dealerContact?.dealer_instance_id || dealerContact?.data?.dealer_instance_id;
-    const dealerInstance = (dealerInstances || []).find(item => item.id === dealerInstanceId);
-    const firstOrder = contactOrders[0];
+    const selectedContact = (contactRecords || [])[0];
+    const selectedEmail = (selectedContact?.email || selectedContact?.data?.email || email || '').toLowerCase();
+    const contactOrders = (allOrders || []).filter((order) => String(order.dealer_email || '').toLowerCase() === selectedEmail);
+    const matchedAccount = (accounts || []).find((account) => account.id === (selectedContact?.account_id || selectedContact?.data?.account_id));
 
-    if (!dealerContact && contactOrders.length === 0) {
+    if (!selectedContact && contactOrders.length === 0) {
       navigate(createPageUrl('Contacts'));
       return;
     }
 
+    const portalStatus = selectedContact?.portal_status || selectedContact?.data?.portal_status || 'lead';
+    const relationshipLabel = portalStatus === 'linked' ? 'Contact' : 'Lead';
+    const firstOrder = contactOrders[0];
+
     setContact({
-      id: dealerContact?.id || email,
-      email: dealerContact?.email || dealerContact?.data?.email || firstOrder?.dealer_email || email || '—',
-      company_name: dealerInstance?.company_name || dealerInstance?.name || dealerContact?.company_name || dealerContact?.data?.company_name || firstOrder?.dealer_company || 'No Company',
-      contact_name: dealerContact?.full_name || dealerContact?.data?.full_name || firstOrder?.dealer_name || 'Unknown Contact',
-      phone: dealerContact?.phone || dealerContact?.data?.phone || firstOrder?.dealer_phone,
-      title: dealerContact?.title || dealerContact?.data?.title,
-      record_type: dealerContact?.record_type || dealerContact?.data?.record_type || null,
-      dealer_instance_id: dealerContact?.dealer_instance_id || dealerContact?.data?.dealer_instance_id,
+      id: selectedContact?.id || email,
+      email: selectedContact?.email || selectedContact?.data?.email || firstOrder?.dealer_email || email || '—',
+      company_name: matchedAccount?.name || matchedAccount?.company_name || matchedAccount?.data?.name || matchedAccount?.data?.company_name || selectedContact?.company_name || selectedContact?.data?.company_name || firstOrder?.dealer_company || 'No Company',
+      contact_name: selectedContact?.full_name || selectedContact?.data?.full_name || firstOrder?.dealer_name || 'Unknown Contact',
+      phone: selectedContact?.phone || selectedContact?.data?.phone || firstOrder?.dealer_phone,
+      title: selectedContact?.title || selectedContact?.data?.title,
+      record_type: selectedContact?.record_type || selectedContact?.data?.record_type || null,
+      portal_status: portalStatus,
+      relationship_label: relationshipLabel,
+      dealer_instance_id: selectedContact?.dealer_instance_id || selectedContact?.data?.dealer_instance_id,
       total_orders: contactOrders.length,
       total_value: contactOrders.reduce((sum, o) => sum + (o.quoted_price || 0), 0),
-      is_dealer_contact: Boolean(dealerContact),
+      is_dealer_contact: false,
     });
     setOrders(contactOrders);
     setIsLoading(false);
@@ -134,7 +140,10 @@ export default function ContactDetail() {
                     <Building2 className="w-8 h-8 text-[#e2231a]" />
                   </div>
                   <div>
-                    <CardTitle className="text-2xl">{contact.company_name || 'No Company'}</CardTitle>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <CardTitle className="text-2xl">{contact.company_name || 'No Company'}</CardTitle>
+                      <Badge variant="outline">{contact.relationship_label || 'Lead'}</Badge>
+                    </div>
                     <CardDescription className="text-base font-medium text-slate-700 mt-1">
                       {contact.contact_name}
                     </CardDescription>
@@ -149,7 +158,7 @@ export default function ContactDetail() {
                     <>
                       <Button onClick={sendInvite} disabled={sendingInvite} className="bg-slate-900 hover:bg-slate-800">
                         <Send className="w-4 h-4 mr-2" />
-                        {sendingInvite ? 'Sending invite...' : 'Send Dealer Invite'}
+                        {sendingInvite ? 'Sending invite...' : 'Send Invite'}
                       </Button>
                       <Button onClick={sendPasswordReset} disabled={sendingReset} variant="outline">
                         <KeyRound className="w-4 h-4 mr-2" />
@@ -182,7 +191,7 @@ export default function ContactDetail() {
                   <div className="flex items-center gap-3">
                     <User className="w-5 h-5 text-slate-400" />
                     <div>
-                      <p className="text-xs text-slate-500">Record Type</p>
+                      <p className="text-xs text-slate-500">Type</p>
                       <p className="text-sm font-medium text-slate-900">{contact.record_type}</p>
                     </div>
                   </div>
