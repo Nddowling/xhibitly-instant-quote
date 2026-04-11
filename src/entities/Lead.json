@@ -58,6 +58,54 @@
       "type": "number",
       "description": "Original row number from the import file"
     },
+    "next_location": {
+      "type": "string",
+      "description": "Next show location from import"
+    },
+    "address_line_1": {
+      "type": "string",
+      "description": "Primary street address"
+    },
+    "address_line_2": {
+      "type": "string",
+      "description": "Secondary address line"
+    },
+    "city": {
+      "type": "string",
+      "description": "City"
+    },
+    "state": {
+      "type": "string",
+      "description": "State"
+    },
+    "zip": {
+      "type": "string",
+      "description": "Postal code"
+    },
+    "all_shows_exhibited_in": {
+      "type": "string",
+      "description": "All shows exhibited in from source file"
+    },
+    "all_booth_sizes": {
+      "type": "string",
+      "description": "Historical booth sizes from source file"
+    },
+    "primary_sic_code": {
+      "type": "string",
+      "description": "Primary SIC code"
+    },
+    "business_description": {
+      "type": "string",
+      "description": "Business description from source file"
+    },
+    "employee_size": {
+      "type": "string",
+      "description": "Employee size range"
+    },
+    "sales_volume": {
+      "type": "string",
+      "description": "Sales volume range"
+    },
     "account_id": {
       "type": "string",
       "description": "Associated account record"

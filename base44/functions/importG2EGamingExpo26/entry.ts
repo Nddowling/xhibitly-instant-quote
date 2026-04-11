@@ -1,0 +1,142 @@
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.23';
+import * as XLSX from 'npm:xlsx@0.18.5';
+
+const FILE_URL = 'https://media.base44.com/files/public/69834d9e0d7220d671bfd124/3398f4daa_G2EGamingExpo26.xlsx';
+const FILE_NAME = 'G2EGamingExpo26.xlsx';
+const DEFAULT_SHOW_NAME = 'G2E Gaming Expo 26';
+const DEFAULT_DEALER_INSTANCE_ID = '69d94c853e7e9e5c36953834';
+
+function splitName(fullName) {
+  const normalized = String(fullName || '').trim();
+  if (!normalized) {
+    return { first_name: '', last_name: '' };
+  }
+
+  const parts = normalized.split(/\s+/);
+  return {
+    first_name: parts[0] || '',
+    last_name: parts.slice(1).join(' '),
+  };
+}
+
+function normalizePhone(value) {
+  if (value === null || value === undefined || value === '') return '';
+  return String(value).replace(/\.0$/, '').trim();
+}
+
+function normalizeWebsite(value) {
+  const normalized = String(value || '').trim();
+  if (!normalized) return '';
+  if (normalized.startsWith('http://') || normalized.startsWith('https://')) return normalized;
+  return `https://${normalized}`;
+}
+
+function pick(record, key) {
+  return record?.[key] ?? record?.data?.[key] ?? null;
+}
+
+Deno.serve(async (req) => {
+  try {
+    const base44 = createClientFromRequest(req);
+    const user = await base44.auth.me();
+
+    if (user?.role !== 'admin') {
+      return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
+    }
+
+    const response = await fetch(FILE_URL);
+    if (!response.ok) {
+      return Response.json({ error: 'Failed to download Excel file' }, { status: 500 });
+    }
+
+    const buffer = await response.arrayBuffer();
+    const workbook = XLSX.read(buffer, { type: 'array' });
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+    const rows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+
+    const existingLeads = await base44.asServiceRole.entities.Lead.list('-created_date', 10000);
+
+    let skipped = 0;
+    const leadsToCreate = [];
+
+    for (let index = 0; index < rows.length; index += 1) {
+      const row = rows[index];
+      const companyName = String(row['Company Name'] || '').trim();
+      const contactName = String(row['Contact Name'] || '').trim();
+      const email = String(row['Email_address'] || '').trim().toLowerCase();
+      const phone = normalizePhone(row['Phone']);
+      const tollFree = normalizePhone(row['Toll']);
+      const title = String(row['Title'] || '').trim();
+      const website = normalizeWebsite(row['Web Site']);
+      const { first_name, last_name } = splitName(contactName);
+
+      if (!contactName && !email && !companyName) {
+        continue;
+      }
+
+      const existingLead = existingLeads.find((lead) => {
+        const leadEmail = String(pick(lead, 'email') || '').trim().toLowerCase();
+        const leadFullName = String(pick(lead, 'full_name') || '').trim().toLowerCase();
+        const leadCompany = String(pick(lead, 'company_name') || '').trim().toLowerCase();
+        const leadShow = String(pick(lead, 'show_name') || '').trim().toLowerCase();
+        const sameEmail = email && leadEmail === email;
+        const samePersonCompany = contactName && companyName && leadFullName === contactName.toLowerCase() && leadCompany === companyName.toLowerCase();
+        return (sameEmail || samePersonCompany) && leadShow === DEFAULT_SHOW_NAME.toLowerCase();
+      });
+
+      if (existingLead) {
+        skipped += 1;
+        continue;
+      }
+
+      leadsToCreate.push({
+        first_name,
+        last_name,
+        full_name: contactName || companyName,
+        email,
+        phone,
+        title,
+        department: '',
+        company_name: companyName,
+        website,
+        toll_free: tollFree,
+        contact_type: title,
+        show_name: DEFAULT_SHOW_NAME,
+        source_file_name: FILE_NAME,
+        source_row_index: index + 1,
+        next_location: String(row['Next Location'] || '').trim(),
+        address_line_1: String(row['Address Line 1'] || '').trim(),
+        address_line_2: String(row['Address Line 2'] || '').trim(),
+        city: String(row['City'] || '').trim(),
+        state: String(row['State'] || '').trim(),
+        zip: String(row['Zip'] || '').trim(),
+        all_shows_exhibited_in: String(row['AllShowsExhibitedIn'] || '').trim(),
+        all_booth_sizes: String(row['AllBoothSizes'] || '').trim(),
+        primary_sic_code: String(row['Primary SIC code'] || '').trim(),
+        business_description: String(row['Business Description'] || '').trim(),
+        employee_size: String(row['Employee-Size'] || '').trim(),
+        sales_volume: String(row['Sales-Volume'] || '').trim(),
+        dealer_instance_id: DEFAULT_DEALER_INSTANCE_ID,
+        owner_user_id: user.id,
+        status: 'open'
+      });
+    }
+
+    if (leadsToCreate.length > 0) {
+      await base44.asServiceRole.entities.Lead.bulkCreate(leadsToCreate);
+    }
+
+    return Response.json({
+      success: true,
+      file_name: FILE_NAME,
+      sheet_name: sheetName,
+      processed_rows: rows.length,
+      created_leads: leadsToCreate.length,
+      skipped_leads: skipped,
+      show_name: DEFAULT_SHOW_NAME
+    });
+  } catch (error) {
+    return Response.json({ error: error.message }, { status: 500 });
+  }
+});
