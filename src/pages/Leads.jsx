@@ -1,4 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
+
+const MIN_COLUMN_WIDTH = 120;
 import { useNavigate } from 'react-router-dom';
 import { Search } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
@@ -8,15 +10,15 @@ import { loadBrokerContext, scopeItems } from '@/lib/brokerAccess';
 import LeadGridFilters from '@/components/leads/LeadGridFilters';
 
 const columns = [
-  { key: 'show_name', label: 'Show' },
-  { key: 'company_name', label: 'Company' },
-  { key: 'title', label: 'Title' },
-  { key: 'full_name', label: 'Lead Name / Contact Name' },
-  { key: 'phone', label: 'Phone Number' },
-  { key: 'email', label: 'Email' },
-  { key: 'website', label: 'Website' },
-  { key: 'contact_type', label: 'Contact Type' },
-  { key: 'created_date', label: 'Created' },
+  { key: 'show_name', label: 'Show', width: 160 },
+  { key: 'company_name', label: 'Company', width: 220 },
+  { key: 'title', label: 'Title', width: 200 },
+  { key: 'full_name', label: 'Lead Name / Contact Name', width: 240 },
+  { key: 'phone', label: 'Phone Number', width: 170 },
+  { key: 'email', label: 'Email', width: 220 },
+  { key: 'website', label: 'Website', width: 220 },
+  { key: 'contact_type', label: 'Contact Type', width: 170 },
+  { key: 'created_date', label: 'Created', width: 170 },
 ];
 
 const createEmptyFilter = () => ({ field: 'show_name', operator: 'contains', value: '' });
@@ -59,6 +61,7 @@ export default function Leads() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [filters, setFilters] = useState([createEmptyFilter()]);
+  const [columnWidths, setColumnWidths] = useState(() => Object.fromEntries(columns.map((column) => [column.key, column.width])));
 
   useEffect(() => {
     loadRecords();
@@ -107,6 +110,27 @@ export default function Leads() {
     setSearch('');
   };
 
+  const handleResizeStart = (event, columnKey) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const startX = event.clientX;
+    const startWidth = columnWidths[columnKey] || MIN_COLUMN_WIDTH;
+
+    const handlePointerMove = (moveEvent) => {
+      const nextWidth = Math.max(MIN_COLUMN_WIDTH, startWidth + (moveEvent.clientX - startX));
+      setColumnWidths((current) => ({ ...current, [columnKey]: nextWidth }));
+    };
+
+    const handlePointerUp = () => {
+      window.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('pointerup', handlePointerUp);
+    };
+
+    window.addEventListener('pointermove', handlePointerMove);
+    window.addEventListener('pointerup', handlePointerUp);
+  };
+
   return (
     <div className="min-h-[calc(100vh-56px)] md:min-h-[calc(100vh-64px)] bg-slate-50 p-4 md:p-8 pb-24 md:pb-10">
       <div className="max-w-[95vw] mx-auto space-y-6">
@@ -141,12 +165,22 @@ export default function Leads() {
         ) : (
           <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
             <div className="overflow-auto">
-              <table className="min-w-full text-sm">
+              <table className="min-w-full text-sm table-fixed">
                 <thead className="bg-slate-100 border-b border-slate-200">
                   <tr>
                     {columns.map((column) => (
-                      <th key={column.key} className="px-4 py-3 text-left font-semibold text-slate-700 whitespace-nowrap">
-                        {column.label}
+                      <th
+                        key={column.key}
+                        className="relative px-4 py-3 text-left font-semibold text-slate-700 whitespace-nowrap"
+                        style={{ width: `${columnWidths[column.key]}px` }}
+                      >
+                        <div className="pr-3">{column.label}</div>
+                        <div
+                          className="absolute top-0 right-0 h-full w-2 cursor-col-resize select-none touch-none"
+                          onPointerDown={(event) => handleResizeStart(event, column.key)}
+                        >
+                          <div className="mx-auto h-full w-px bg-slate-300" />
+                        </div>
                       </th>
                     ))}
                   </tr>
@@ -159,7 +193,11 @@ export default function Leads() {
                       className="border-b border-slate-100 hover:bg-[#fff8f7] cursor-pointer"
                     >
                       {columns.map((column) => (
-                        <td key={column.key} className="px-4 py-3 text-slate-700 whitespace-nowrap align-top">
+                        <td
+                          key={column.key}
+                          className="px-4 py-3 text-slate-700 whitespace-nowrap align-top overflow-hidden text-ellipsis"
+                          style={{ width: `${columnWidths[column.key]}px` }}
+                        >
                           {getValue(record, column.key)}
                         </td>
                       ))}
