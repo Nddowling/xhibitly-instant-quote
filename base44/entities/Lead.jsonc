@@ -50,6 +50,11 @@
       "type": "string",
       "description": "Original contact record migrated into this lead"
     },
+    "source_contact_created_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Original contact created date"
+    },
     "status": {
       "type": "string",
       "enum": [
@@ -67,6 +72,10 @@
       "type": "string",
       "format": "date-time",
       "description": "When the lead was converted"
+    },
+    "show_name": {
+      "type": "string",
+      "description": "Expo or event this lead is associated with"
     }
   },
   "required": [
