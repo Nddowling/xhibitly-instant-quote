@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const MIN_COLUMN_WIDTH = 120;
-import { useNavigate } from 'react-router-dom';
 import { Search } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { Input } from '@/components/ui/input';
@@ -117,18 +117,18 @@ export default function Leads() {
     const startX = event.clientX;
     const startWidth = columnWidths[columnKey] || MIN_COLUMN_WIDTH;
 
-    const handlePointerMove = (moveEvent) => {
+    const handleMouseMove = (moveEvent) => {
       const nextWidth = Math.max(MIN_COLUMN_WIDTH, startWidth + (moveEvent.clientX - startX));
       setColumnWidths((current) => ({ ...current, [columnKey]: nextWidth }));
     };
 
-    const handlePointerUp = () => {
-      window.removeEventListener('pointermove', handlePointerMove);
-      window.removeEventListener('pointerup', handlePointerUp);
+    const handleMouseUp = () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
     };
 
-    window.addEventListener('pointermove', handlePointerMove);
-    window.addEventListener('pointerup', handlePointerUp);
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
   };
 
   return (
@@ -175,12 +175,14 @@ export default function Leads() {
                         style={{ width: `${columnWidths[column.key]}px` }}
                       >
                         <div className="pr-3">{column.label}</div>
-                        <div
-                          className="absolute top-0 right-0 h-full w-2 cursor-col-resize select-none touch-none"
-                          onPointerDown={(event) => handleResizeStart(event, column.key)}
+                        <button
+                          type="button"
+                          aria-label={`Resize ${column.label} column`}
+                          className="absolute top-0 right-0 h-full w-3 cursor-col-resize select-none touch-none z-10 bg-transparent"
+                          onMouseDown={(event) => handleResizeStart(event, column.key)}
                         >
                           <div className="mx-auto h-full w-px bg-slate-300" />
-                        </div>
+                        </button>
                       </th>
                     ))}
                   </tr>
