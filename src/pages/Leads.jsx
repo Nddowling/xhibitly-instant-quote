@@ -8,16 +8,14 @@ import { loadBrokerContext, scopeItems } from '@/lib/brokerAccess';
 import LeadGridFilters from '@/components/leads/LeadGridFilters';
 
 const columns = [
-  { key: 'full_name', label: 'Contact Name' },
-  { key: 'company_name', label: 'Company' },
-  { key: 'email', label: 'Email' },
-  { key: 'phone', label: 'Phone' },
-  { key: 'toll_free', label: 'Toll Free' },
-  { key: 'title', label: 'Title' },
-  { key: 'contact_type', label: 'Contact Type' },
   { key: 'show_name', label: 'Show' },
-  { key: 'status', label: 'Status' },
+  { key: 'company_name', label: 'Company' },
+  { key: 'title', label: 'Title' },
+  { key: 'full_name', label: 'Lead Name / Contact Name' },
+  { key: 'phone', label: 'Phone Number' },
+  { key: 'email', label: 'Email' },
   { key: 'website', label: 'Website' },
+  { key: 'contact_type', label: 'Contact Type' },
   { key: 'created_date', label: 'Created' },
 ];
 
