@@ -50,6 +50,13 @@ export default function ContactDetail() {
     const selectedEmail = (selectedContact?.email || selectedContact?.data?.email || email || '').toLowerCase();
     const contactOrders = (allOrders || []).filter((order) => String(order.dealer_email || '').toLowerCase() === selectedEmail);
     const matchedAccount = (accounts || []).find((account) => account.id === (selectedContact?.account_id || selectedContact?.data?.account_id));
+    const fallbackCompanyName =
+      selectedContact?.company_name ||
+      selectedContact?.data?.company_name ||
+      selectedContact?.account_name ||
+      selectedContact?.data?.account_name ||
+      contactRecords?.[0]?.company_name ||
+      contactRecords?.[0]?.data?.company_name;
 
     if (!selectedContact && contactOrders.length === 0) {
       navigate(createPageUrl('Contacts'));
@@ -63,7 +70,7 @@ export default function ContactDetail() {
     setContact({
       id: selectedContact?.id || email,
       email: selectedContact?.email || selectedContact?.data?.email || firstOrder?.dealer_email || email || '—',
-      company_name: matchedAccount?.name || matchedAccount?.company_name || matchedAccount?.data?.name || matchedAccount?.data?.company_name || selectedContact?.company_name || selectedContact?.data?.company_name || firstOrder?.dealer_company || 'No Company',
+      company_name: matchedAccount?.name || matchedAccount?.company_name || matchedAccount?.data?.name || matchedAccount?.data?.company_name || fallbackCompanyName || firstOrder?.dealer_company || 'No Company',
       contact_name: selectedContact?.full_name || selectedContact?.data?.full_name || firstOrder?.dealer_name || 'Unknown Contact',
       phone: selectedContact?.phone || selectedContact?.data?.phone || firstOrder?.dealer_phone,
       title: selectedContact?.title || selectedContact?.data?.title,
