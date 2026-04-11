@@ -61,7 +61,7 @@ Deno.serve(async (req) => {
         source_contact_id: contact.id,
         source_contact_created_date: contact.created_date ? new Date(contact.created_date).toISOString() : null,
         status: 'open',
-        show_name,
+        show_name: showName,
       });
 
       createdLeadIds.push(lead.id);
