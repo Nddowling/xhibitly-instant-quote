@@ -4,7 +4,7 @@ import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import {
   LogOut, Users, Menu, X, LayoutDashboard, Settings as SettingsIcon,
-  ArrowLeft, BookOpen, ClipboardList, Tag, BarChart2, ChevronDown, Settings2, ShieldCheck, Briefcase, FolderKanban
+  ArrowLeft, BookOpen, ClipboardList, Tag, BarChart2, ChevronDown, Settings2, ShieldCheck, Briefcase, FolderKanban, UserPlus
 } from 'lucide-react';
 import ErrorBoundary from './components/ErrorBoundary';
 import HeaderTabEditor from '@/components/layout/HeaderTabEditor';
@@ -179,6 +179,7 @@ export default function Layout({ children, currentPageName }) {
 
   const defaultWorkspaceNav = [
     { page: '/objects/Account', label: 'Accounts', icon: Briefcase },
+    { page: '/Leads', label: 'Leads', icon: UserPlus },
   ];
 
   const workspaceNav = [...defaultWorkspaceNav, ...objectNav, ...primaryNav].filter(
