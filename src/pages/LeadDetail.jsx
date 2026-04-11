@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Mail, Phone, Building2, User, Repeat } from 'lucide-react';
+import { Mail, Phone, Building2, User, Repeat, CalendarDays } from 'lucide-react';
 
 export default function LeadDetail() {
   const navigate = useNavigate();
@@ -63,11 +63,11 @@ export default function LeadDetail() {
                 </div>
                 <div>
                   <div className="flex items-center gap-2 flex-wrap">
-                    <CardTitle className="text-2xl">{lead.company_name || 'No Company'}</CardTitle>
+                    <CardTitle className="text-2xl">{lead.full_name || 'Unknown Lead'}</CardTitle>
                     <Badge variant="outline">{lead.status === 'converted' ? 'Converted' : 'Lead'}</Badge>
                   </div>
                   <CardDescription className="text-base font-medium text-slate-700 mt-1">
-                    {lead.full_name || 'Unknown Lead'}
+                    {lead.company_name || 'No Company'}
                   </CardDescription>
                 </div>
               </div>
@@ -98,6 +98,20 @@ export default function LeadDetail() {
                 <div>
                   <p className="text-xs text-slate-500">Title</p>
                   <p className="text-sm font-medium text-slate-900">{lead.title || '—'}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <Building2 className="w-5 h-5 text-slate-400" />
+                <div>
+                  <p className="text-xs text-slate-500">Company</p>
+                  <p className="text-sm font-medium text-slate-900">{lead.company_name || '—'}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <CalendarDays className="w-5 h-5 text-slate-400" />
+                <div>
+                  <p className="text-xs text-slate-500">Event</p>
+                  <p className="text-sm font-medium text-slate-900">{lead.show_name || '—'}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
