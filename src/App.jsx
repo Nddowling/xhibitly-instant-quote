@@ -23,6 +23,8 @@ import XhibitlyStart from './pages/XhibitlyStart';
 import XhibitlyStart2 from './pages/XhibitlyStart2';
 import Home from './pages/Home';
 import CustomerOrders from './pages/CustomerOrders';
+import Leads from './pages/Leads';
+import LeadDetail from './pages/LeadDetail';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -165,6 +167,22 @@ const AuthenticatedApp = () => {
         element={
           <LayoutWrapper currentPageName="CustomerOrders">
             <CustomerOrders />
+          </LayoutWrapper>
+        }
+      />
+      <Route
+        path="/Leads"
+        element={
+          <LayoutWrapper currentPageName="Leads">
+            <Leads />
+          </LayoutWrapper>
+        }
+      />
+      <Route
+        path="/LeadDetail"
+        element={
+          <LayoutWrapper currentPageName="LeadDetail">
+            <LeadDetail />
           </LayoutWrapper>
         }
       />

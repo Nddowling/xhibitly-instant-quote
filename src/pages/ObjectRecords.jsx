@@ -10,6 +10,10 @@ export default function ObjectRecords() {
     return <RecentQuotes />;
   }
 
+  if (objectApiName === 'Lead') {
+    return <ObjectListPage objectApiName="Lead" title="Leads" />;
+  }
+
   const title = objectApiName === 'LineItem' ? 'Quote Line Items' : `${objectApiName}s`;
   return <ObjectListPage objectApiName={objectApiName} title={title} />;
 }

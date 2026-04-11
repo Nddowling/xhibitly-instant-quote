@@ -31,7 +31,10 @@ export async function getAllObjects() {
     allow_reports: def.allow_reports !== false,
     history_object_api_name: 'ObjectHistory',
   }));
-  return [...builtIn, ...customObjects.map(o => ({ ...o, is_custom: true }))];
+  const pinnedBuiltIns = [
+    { api_name: 'Lead', label: 'Leads', label_plural: 'Leads', is_custom: false, allow_reports: true, history_object_api_name: 'ObjectHistory' },
+  ];
+  return [...pinnedBuiltIns, ...builtIn, ...customObjects.map(o => ({ ...o, is_custom: true }))];
 }
 
 export async function getObjectFields(objectApiName) {

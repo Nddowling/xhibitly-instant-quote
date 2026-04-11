@@ -50,7 +50,8 @@ export default function Contacts() {
       const orders = scopeItems(allOrders || [], brokerId);
       const customerContacts = scopeItems(allContacts || [], brokerId).filter(contact => {
         const recordType = contact.record_type || contact.data?.record_type;
-        return recordType !== 'Dealer';
+        const portalStatus = contact.portal_status || contact.data?.portal_status;
+        return recordType !== 'Dealer' && portalStatus !== 'lead';
       });
       const accounts = scopeItems(allAccounts || [], brokerId);
       const dealerInstanceMap = new Map((allDealerInstances || []).map(instance => [instance.id, instance]));

@@ -29,9 +29,20 @@ export default function ObjectListPage({ objectApiName, title }) {
       const scopedContacts = isGlobalAdminView ? (data || []) : scopeItems(data || [], dealerId);
       const customerContacts = scopedContacts.filter(contact => {
         const recordType = contact.record_type || contact.data?.record_type;
-        return recordType !== 'Dealer';
+        const portalStatus = contact.portal_status || contact.data?.portal_status;
+        return recordType !== 'Dealer' && portalStatus !== 'lead';
       });
       setRecords(customerContacts);
+      setLoading(false);
+      return;
+    }
+
+    if (objectApiName === 'Lead') {
+      const brokerContext = await loadBrokerContext();
+      const dealerId = brokerContext.effectiveDealerId || brokerContext.effectiveBrokerId;
+      const isGlobalAdminView = window.location.pathname === '/DesignerDashboard' || window.location.pathname === '/ExecutiveDashboard';
+      const scopedLeads = isGlobalAdminView ? (data || []) : scopeItems(data || [], dealerId);
+      setRecords(scopedLeads.filter((lead) => (lead.status || 'open') === 'open'));
       setLoading(false);
       return;
     }
@@ -54,6 +65,9 @@ export default function ObjectListPage({ objectApiName, title }) {
     if (objectApiName === 'Product') {
       return [record.sku, record.category, record.product_line].filter(Boolean).join(' • ') || record.id;
     }
+    if (objectApiName === 'Lead') {
+      return [record.email, record.company_name, record.phone].filter(Boolean).join(' • ') || record.id;
+    }
     return record.email || record.data?.email || record.phone || record.data?.phone || record.website || record.object_api_name || record.id;
   };
 
@@ -68,6 +82,10 @@ export default function ObjectListPage({ objectApiName, title }) {
     }
     if (objectApiName === 'Contact') {
       navigate(`/ContactDetail?email=${encodeURIComponent(record.email || record.data?.email || '')}`);
+      return;
+    }
+    if (objectApiName === 'Lead') {
+      navigate(`/LeadDetail?id=${record.id}`);
       return;
     }
     navigate(`/ObjectRecordDetail?object=${encodeURIComponent(objectApiName)}&id=${record.id}`);
@@ -100,6 +118,9 @@ export default function ObjectListPage({ objectApiName, title }) {
                       <p className="font-semibold text-slate-900 truncate">{getPrimaryLabel(record)}</p>
                       {objectApiName === 'Product' && record.is_active !== undefined && (
                         <Badge variant="outline" className="text-[10px]">{record.is_active ? 'Active' : 'Inactive'}</Badge>
+                      )}
+                      {objectApiName === 'Lead' && (
+                        <Badge variant="outline" className="text-[10px]">{record.status || 'open'}</Badge>
                       )}
                     </div>
                     <p className="text-sm text-slate-500 truncate">{getSecondaryLabel(record)}</p>

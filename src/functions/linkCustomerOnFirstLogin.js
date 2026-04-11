@@ -4,6 +4,10 @@ function normalizeEmail(value) {
   return String(value || '').trim().toLowerCase();
 }
 
+function normalizeName(value) {
+  return String(value || '').trim().toLowerCase().replace(/\s+/g, ' ');
+}
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -19,7 +23,7 @@ Deno.serve(async (req) => {
     }
 
     const contacts = await base44.asServiceRole.entities.Contact.filter({ email }, '-created_date', 20);
-    const customerContact = (contacts || []).find((contact) => {
+    let customerContact = (contacts || []).find((contact) => {
       const data = contact.data || {};
       const recordType = String(contact.record_type || data.record_type || '').toLowerCase();
       const fullName = contact.full_name || data.full_name;
@@ -27,7 +31,19 @@ Deno.serve(async (req) => {
     });
 
     if (!customerContact) {
-      return Response.json({ linked: false, reason: 'no_matching_contact' });
+      const leads = await base44.asServiceRole.entities.Lead.filter({ email }, '-created_date', 20);
+      const matchedLead = (leads || []).find((lead) => normalizeName(lead.full_name) === normalizeName(user.full_name));
+
+      if (!matchedLead) {
+        return Response.json({ linked: false, reason: 'no_matching_contact' });
+      }
+
+      const conversion = await base44.asServiceRole.functions.invoke('convertLeadToContact', { leadId: matchedLead.id, linkedUserId: user.id });
+      const convertedContactId = conversion?.data?.contactId;
+      if (!convertedContactId) {
+        return Response.json({ linked: false, reason: 'lead_conversion_failed' });
+      }
+      customerContact = await base44.asServiceRole.entities.Contact.get(convertedContactId);
     }
 
     const data = customerContact.data || {};
@@ -35,6 +51,8 @@ Deno.serve(async (req) => {
       owner_user_id: user.id,
       linked_user_id: user.id,
       portal_status: 'linked',
+      account_id: customerContact.account_id || data.account_id || null,
+      company_name: customerContact.company_name || data.company_name || null,
       record_type: customerContact.record_type || data.record_type || 'Customer Contact',
     };
 
