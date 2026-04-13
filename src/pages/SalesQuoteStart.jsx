@@ -36,10 +36,11 @@ export default function SalesQuoteStart() {
       const profile = profiles[0] || null;
 
       const exists = orders.length > 0 || !!profile;
+      const currentContactName = `${firstName} ${lastName}`.trim();
       const customerInfo = profile
-        ? { company_name: profile.customer_company || companyName, contact_name: profile.customer_name || contactName, phone: profile.customer_phone || phone }
+        ? { company_name: profile.customer_company || companyName, contact_name: profile.customer_name || currentContactName, phone: profile.customer_phone || phone }
         : orders.length > 0
-          ? { company_name: orders[0].customer_company || companyName, contact_name: orders[0].customer_name || contactName, phone: orders[0].customer_phone || phone }
+          ? { company_name: orders[0].customer_company || companyName, contact_name: orders[0].customer_name || currentContactName, phone: orders[0].customer_phone || phone }
           : null;
 
       const data = { exists, orders, customerInfo };

@@ -33,7 +33,7 @@ export default class ErrorBoundary extends React.Component {
             >
               Return Home
             </Button>
-            {process.env.NODE_ENV === 'development' && this.state.error && (
+            {import.meta.env.DEV && this.state.error && (
               <div className="mt-6 text-left bg-slate-100 p-4 rounded-lg overflow-auto max-h-40">
                 <p className="text-xs text-slate-800 font-mono whitespace-pre-wrap">
                   {this.state.error.toString()}
