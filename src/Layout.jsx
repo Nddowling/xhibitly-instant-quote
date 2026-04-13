@@ -197,7 +197,7 @@ export default function Layout({ children, currentPageName }) {
   const canSeeSetup = ['admin', 'designer'].includes(user?.role);
 
   const adminNav = [
-    ...(canSeeExecutive ? [{ page: 'ExecutiveDashboard', label: 'Executive', icon: ShieldCheck }] : []),
+    ...(canSeeExecutive ? [{ page: 'XhibitlyStart2', label: 'E-commerce', icon: ShieldCheck }] : []),
   ];
 
   const analyticsActive = analyticsNav.some(n => n.page === currentPageName) ||
