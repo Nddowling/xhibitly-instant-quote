@@ -1,7 +1,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.23';
 import * as XLSX from 'npm:xlsx@0.18.5';
 
-const FILE_URL = 'https://media.base44.com/files/public/69834d9e0d7220d671bfd124/a79ed91ef_NBAA26.xlsx';
+const FILE_URL = 'https://media.base44.com/files/public/69834d9e0d7220d671bfd124/b29981615_NBAA26.xlsx';
 const FILE_NAME = 'NBAA26.xlsx';
 const DEFAULT_SHOW_NAME = 'NBAA 26';
 const DEFAULT_DEALER_INSTANCE_ID = '69d94c853e7e9e5c36953834';
