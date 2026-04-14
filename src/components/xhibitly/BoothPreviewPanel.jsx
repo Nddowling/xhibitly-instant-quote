@@ -49,7 +49,7 @@ function PreviewThumb({ item, onRemove, onQuantityChange }) {
   );
 }
 
-export default function BoothPreviewPanel({ order, lineItems, pricingResult, onGeneratePreview, onRemoveItem, onQuantityChange, isGeneratingPreview = false, previewStatus = '' }) {
+export default function BoothPreviewPanel({ order, lineItems, pricingResult, onGeneratePreview, onRemoveItem, onQuantityChange, isGeneratingPreview = false, previewStatus = '', brandWebsite = '' }) {
   const [showBrandPrompt, setShowBrandPrompt] = useState(false);
   const [websiteInput, setWebsiteInput] = useState(order?.website_url || '');
 
@@ -121,12 +121,17 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult, onG
           </div>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3 min-h-0 max-h-[230px] flex flex-col overflow-hidden">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500 flex-shrink-0">Preview Inputs</p>
-          <div className="mt-2 min-h-0 overflow-y-auto pr-1">
+        <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3 min-h-0 max-h-[280px] flex flex-col overflow-hidden">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500 flex-shrink-0">Current Render Inputs</p>
+          <div className="mt-2 min-h-0 overflow-y-auto pr-1 space-y-3">
+            <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">Brand</p>
+              <p className="mt-1 text-xs font-semibold text-slate-800">{order?.customer_company || order?.customer_name || 'Client brand'}</p>
+              <p className="mt-1 text-[11px] text-slate-500 break-all">{brandWebsite || order?.website_url || 'No website added'}</p>
+            </div>
             <p className="text-xs text-slate-600 leading-relaxed">{previewPrompt}</p>
             {lineItems?.length > 0 && (
-              <div className="mt-3 grid gap-2">
+              <div className="grid gap-2">
                 {(lineItems || []).map((item) => (
                   <PreviewThumb
                     key={item.id || item.sku}

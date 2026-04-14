@@ -67,7 +67,7 @@ function parseBrandfetchResponse(brandfetchData, domain) {
     ? brandfetchData.logos.flatMap((logo) =>
         Array.isArray(logo?.formats)
           ? logo.formats
-              .filter((format) => format?.src && (format.format === 'png' || format.format === 'svg' || format.format === 'jpeg'))
+              .filter((format) => format?.src && (format.format === 'png' || format.format === 'jpeg' || format.format === 'jpg' || format.format === 'webp'))
               .map((format) => ({
                 url: format.src,
                 format: format.format,
@@ -79,6 +79,16 @@ function parseBrandfetchResponse(brandfetchData, domain) {
       )
     : [];
 
+  const sortedLogoOptions = [...logoOptions].sort((a, b) => {
+    const score = (item) => {
+      const typeScore = item?.type === 'icon' ? 0 : 10;
+      const formatScore = item?.format === 'png' ? 5 : item?.format === 'webp' ? 4 : 3;
+      const sizeScore = Number(item?.width || 0);
+      return typeScore + formatScore + sizeScore;
+    };
+    return score(b) - score(a);
+  });
+
   return {
     company_name: brandfetchData.name || domain || null,
     domain: domain || null,
@@ -86,8 +96,8 @@ function parseBrandfetchResponse(brandfetchData, domain) {
     secondary_color: colors[1] || null,
     accent_color_1: colors[2] || null,
     accent_color_2: colors[3] || null,
-    logo_url: logoOptions[0]?.url || null,
-    logo_options: logoOptions,
+    logo_url: sortedLogoOptions[0]?.url || null,
+    logo_options: sortedLogoOptions,
     industry: Array.isArray(brandfetchData.industries) ? brandfetchData.industries[0] || null : null,
   };
 }
@@ -122,10 +132,10 @@ async function fetchBrandDetails(base44, websiteUrl) {
   const parsed = parseBrandfetchResponse(data, domain);
   if (!parsed) return null;
 
-  if (parsed.logo_url) {
+  if (parsed.logo_url && !String(parsed.logo_url).toLowerCase().includes('.svg')) {
     try {
       const cacheRes = await base44.functions.invoke('cacheExternalImage', { url: parsed.logo_url });
-      if (cacheRes?.data?.success && cacheRes?.data?.cached_url) {
+      if (cacheRes?.data?.success && cacheRes?.data?.cached_url && !String(cacheRes.data.cached_url).toLowerCase().includes('.svg')) {
         parsed.logo_cached_url = cacheRes.data.cached_url;
       }
     } catch {
@@ -142,11 +152,32 @@ async function fetchBrandDetails(base44, websiteUrl) {
 }
 
 function buildPrompt({ boothSize, boothType, showName, brandName, brandDetails, quoteItems }) {
-  const itemSummary = (quoteItems || []).map((item) => `${item?.sku ? `${item.sku} ` : ''}${item?.name || 'Product'}`.trim()).join(', ');
+  const selectedItems = (quoteItems || []).map((item, index) => `${index + 1}. ${item?.sku ? `${item.sku} — ` : ''}${item?.name || 'Product'}`.trim()).join('\n');
   const colorNotes = [brandDetails?.primary_color, brandDetails?.secondary_color, brandDetails?.accent_color_1, brandDetails?.accent_color_2].filter(Boolean).join(', ');
   const resolvedBoothType = String(boothType || 'Inline').toLowerCase();
+  const resolvedBrandName = brandName || brandDetails?.company_name || 'Client brand';
 
-  return `Create a realistic, production-ready branded exhibitors booth rendering for a convention center. Brand: ${brandName || brandDetails?.company_name || 'Client brand'}. Booth size: ${boothSize || '10x10'}. Booth type: ${resolvedBoothType}. Event: ${showName || 'Convention event'}. This must be spatially correct for the stated booth footprint and booth type. Use the provided quoted product images as the actual products in the booth. Do not invent extra structures, counters, furniture, lighting, flooring, hanging signs, or accessories that are not represented by the quoted items. Selected quote items: ${itemSummary || 'Quoted products'}.${colorNotes ? ` Use these brand colors: ${colorNotes}.` : ''}${brandDetails?.logo_cached_url || brandDetails?.logo_url ? ' Apply the provided brand logo and graphic style naturally across the booth.' : ''} If any item is unclear, stay conservative and preserve the referenced shapes and proportions.`;
+  return `Create one realistic trade show booth rendering for ${resolvedBrandName}.
+Booth size: ${boothSize || '10x10'}.
+Booth type: ${resolvedBoothType}.
+Event: ${showName || 'Convention event'}.
+
+STRICT GOAL:
+- Show only the products from the current quote.
+- Do not add any extra exhibit pieces, structures, counters, tables, seating, lighting, flooring, hanging signs, accessories, or architectural elements that are not in the quoted product references.
+- Match the referenced product shapes, sizes, proportions, and placement style as closely as possible.
+- Keep the booth physically realistic for the stated footprint.
+- Prominently brand the booth for ${resolvedBrandName}; do not use any other brand name or invented company name.
+
+CURRENT QUOTED PRODUCTS:
+${selectedItems || 'Quoted products'}
+
+BRAND DIRECTION:
+${colorNotes ? `Use these brand colors: ${colorNotes}.` : 'Use a clean branded graphic treatment.'}
+${brandDetails?.logo_cached_url || brandDetails?.logo_url ? `Use the provided ${resolvedBrandName} logo as the branding source.` : `Use the provided brand name ${resolvedBrandName} in the booth graphics.`}
+
+OUTPUT:
+A polished sales-preview rendering that reflects the exact current quote, not an upsell concept.`;
 }
 
 function extractImageUrl(task) {
@@ -251,8 +282,9 @@ Deno.serve(async (req) => {
     const quoteItemUrls = Array.isArray(quote_items)
       ? quote_items.map((item) => item?.image_url).filter(Boolean)
       : [];
-    const logoUrl = brandDetails?.logo_cached_url || brandDetails?.logo_url || '';
-    const combinedReferenceUrls = [logoUrl, ...reference_urls, ...quoteItemUrls]
+    const logoUrl = [brandDetails?.logo_cached_url, brandDetails?.logo_url]
+      .filter((url) => url && !String(url).toLowerCase().includes('.svg'))[0] || '';
+    const combinedReferenceUrls = [logoUrl, ...quoteItemUrls, ...reference_urls]
       .filter(Boolean)
       .filter((url, index, arr) => arr.indexOf(url) === index)
       .slice(0, 6);

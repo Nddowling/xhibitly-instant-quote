@@ -10,6 +10,7 @@ export default function XhibitlyStart2() {
   const [queuedPromptForCatalog, setQueuedPromptForCatalog] = useState('');
   const [previewLineItems, setPreviewLineItems] = useState([]);
   const [previewPricingResult, setPreviewPricingResult] = useState(null);
+  const [previewBrandWebsite, setPreviewBrandWebsite] = useState('');
   const [isGeneratingPreview, setIsGeneratingPreview] = useState(false);
   const [previewStatus, setPreviewStatus] = useState('');
   const [renderTaskId, setRenderTaskId] = useState('');
@@ -33,6 +34,7 @@ export default function XhibitlyStart2() {
       .filter((item) => item.sku || item.name);
     const productImageUrls = quoteItems.map((item) => item.image_url).filter(Boolean).slice(0, 6);
 
+    setPreviewBrandWebsite(cleanWebsite);
     setIsGeneratingPreview(true);
     setPreviewStatus(cleanWebsite ? 'Pulling brand details and starting render…' : 'Starting booth preview…');
     setRenderTaskId('');
@@ -201,6 +203,7 @@ export default function XhibitlyStart2() {
                 order={previewOrder}
                 lineItems={previewLineItems}
                 pricingResult={previewPricingResult}
+                brandWebsite={previewBrandWebsite}
                 onGeneratePreview={handleGeneratePreview}
                 onRemoveItem={handleRemovePreviewItem}
                 onQuantityChange={handleQuantityChange}
