@@ -143,7 +143,7 @@ function CustomerStep({ onSelect, onNewCustomer, onDismiss, canDismiss }) {
 }
 
 // Step 2 (existing client): New or Existing Quote choice + open quotes list
-function QuoteChoiceStep({ client, onNewQuote, onResumeQuote, onBack, onDismiss, canDismiss }) {
+function QuoteChoiceStep({ client, onNewQuote, onResumeQuote, onBack }) {
   const [openQuotes, setOpenQuotes] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -166,16 +166,9 @@ function QuoteChoiceStep({ client, onNewQuote, onResumeQuote, onBack, onDismiss,
           <p className="text-sm font-bold text-green-800">{client.client_company || client.client_email}</p>
           <p className="text-xs text-green-600">{client.contact_name ? `${client.contact_name} · ` : ''}{client.client_email}</p>
         </div>
-        <div className="flex items-center gap-2">
-          <button onClick={onBack} className="text-green-400 hover:text-green-600">
-            <X className="w-4 h-4" />
-          </button>
-          {canDismiss && (
-            <button onClick={onDismiss} className="w-8 h-8 rounded-full border border-slate-200 bg-white flex items-center justify-center text-slate-400 hover:text-slate-700 hover:border-slate-300 transition-colors">
-              <X className="w-4 h-4" />
-            </button>
-          )}
-        </div>
+        <button onClick={onBack} className="text-green-400 hover:text-green-600">
+          <X className="w-4 h-4" />
+        </button>
       </div>
 
       {/* New Quote button */}
@@ -234,7 +227,7 @@ function QuoteChoiceStep({ client, onNewQuote, onResumeQuote, onBack, onDismiss,
 }
 
 // Step 3: New quote show info form
-function NewQuoteStep({ client, user, onBack, onComplete, onDismiss, canDismiss }) {
+function NewQuoteStep({ client, user, onBack, onComplete }) {
   const [starting, setStarting] = useState(false);
   const [form, setForm] = useState({
     first_name: client?.contact_name?.split(' ')[0] || '',
@@ -283,16 +276,9 @@ function NewQuoteStep({ client, user, onBack, onComplete, onDismiss, canDismiss 
           <p className="text-sm font-bold text-green-800">{client.client_company || client.client_email}</p>
           <p className="text-xs text-green-600">{client.client_email}</p>
         </div>
-        <div className="flex items-center gap-2">
-          <button onClick={onBack} className="text-green-400 hover:text-green-600">
-            <X className="w-4 h-4" />
-          </button>
-          {canDismiss && (
-            <button onClick={onDismiss} className="w-8 h-8 rounded-full border border-slate-200 bg-white flex items-center justify-center text-slate-400 hover:text-slate-700 hover:border-slate-300 transition-colors">
-              <X className="w-4 h-4" />
-            </button>
-          )}
-        </div>
+        <button onClick={onBack} className="text-green-400 hover:text-green-600">
+          <X className="w-4 h-4" />
+        </button>
       </div>
 
       {/* Contact name */}
@@ -359,7 +345,7 @@ function NewQuoteStep({ client, user, onBack, onComplete, onDismiss, canDismiss 
 }
 
 // Step: New Customer form
-function NewCustomerStep({ user, onBack, onComplete, onDismiss, canDismiss }) {
+function NewCustomerStep({ user, onBack, onComplete }) {
   const [starting, setStarting] = useState(false);
   const [form, setForm] = useState({
     first_name: '', last_name: '', customer_email: '', customer_phone: '', customer_company: '',
@@ -417,14 +403,7 @@ function NewCustomerStep({ user, onBack, onComplete, onDismiss, canDismiss }) {
     <div className="p-6 space-y-4">
       <div className="flex items-center justify-between mb-1">
         <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">New Customer</label>
-        <div className="flex items-center gap-3">
-          <button onClick={onBack} className="text-xs text-slate-400 hover:text-slate-600">← Back</button>
-          {canDismiss && (
-            <button onClick={onDismiss} className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-700 hover:border-slate-300 transition-colors">
-              <X className="w-4 h-4" />
-            </button>
-          )}
-        </div>
+        <button onClick={onBack} className="text-xs text-slate-400 hover:text-slate-600">← Back</button>
       </div>
       <div className="grid grid-cols-2 gap-3">
         {[
@@ -554,8 +533,6 @@ export default function SessionStartModal({ onComplete, onDismiss, user }) {
                   onNewQuote={() => setStep('new_quote')}
                   onResumeQuote={handleResumeQuote}
                   onBack={() => { setSelectedClient(null); setStep('search'); }}
-                  onDismiss={onDismiss}
-                  canDismiss={canDismiss}
                 />
               </motion.div>
             )}
@@ -567,8 +544,6 @@ export default function SessionStartModal({ onComplete, onDismiss, user }) {
                   user={user}
                   onBack={() => setStep('choice')}
                   onComplete={onComplete}
-                  onDismiss={onDismiss}
-                  canDismiss={canDismiss}
                 />
               </motion.div>
             )}
@@ -579,8 +554,6 @@ export default function SessionStartModal({ onComplete, onDismiss, user }) {
                   user={user}
                   onBack={() => setStep('search')}
                   onComplete={onComplete}
-                  onDismiss={onDismiss}
-                  canDismiss={canDismiss}
                 />
               </motion.div>
             )}
