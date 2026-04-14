@@ -1477,7 +1477,7 @@ export default function CatalogQuote({ embeddedMode = false, onOrderChange, onLi
         <SessionStartModal
           user={user}
           onComplete={handleSessionComplete}
-          onDismiss={isEmbeddedOnXhibitlyStart ? undefined : () => setShowSessionModal(false)}
+          onDismiss={() => setShowSessionModal(false)}
         />
       )}
 

@@ -502,14 +502,14 @@ export default function SessionStartModal({ onComplete, onDismiss, user }) {
             <p className="text-xs text-white/40 mt-0.5">{sub}</p>
           </div>
           <div className="flex items-center gap-2">
-            <div className="rounded-xl overflow-hidden">
-              <img src={CUSTOMER_PORTAL_LOGO} alt="Xhibitly" className="h-8 w-auto object-contain block" />
-            </div>
             {onDismiss && (
-              <button onClick={onDismiss} className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-white/50 hover:text-white hover:border-white/20 hover:bg-white/5 transition-colors ml-1">
+              <button onClick={onDismiss} className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:border-white/20 hover:bg-white/5 transition-colors">
                 <X className="w-4 h-4" />
               </button>
             )}
+            <div className="rounded-xl overflow-hidden">
+              <img src={CUSTOMER_PORTAL_LOGO} alt="Xhibitly" className="h-8 w-auto object-contain block" />
+            </div>
           </div>
         </div>
 
