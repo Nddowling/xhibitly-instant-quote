@@ -149,7 +149,7 @@ export default function XhibitlyAgentPane({ queuedPrompt, onPromptConsumed }) {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSend()}
               placeholder="Tell me your booth size, event, company, or product idea"
-              className="h-12 rounded-xl"
+              className="h-12 rounded-xl border-[#0D4FB3] focus-visible:ring-[#0D4FB3]"
             />
             <Button onClick={() => handleSend()} className="h-12 px-5 rounded-xl bg-[#0D4FB3] hover:bg-[#0b428f] text-white">
               <Send className="w-4 h-4" />
