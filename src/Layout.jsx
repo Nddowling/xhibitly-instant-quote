@@ -348,16 +348,19 @@ export default function Layout({ children, currentPageName }) {
                   </button>
                 )}
 
-                {adminNav.map(({ page, label, icon: Icon }) => (
-                  <Link key={page} to={createPageUrl(page)}>
-                    <button className={`flex items-center gap-1.5 px-2.5 lg:px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
-                      currentPageName === page ? 'bg-[#e2231a] text-white' : 'text-white/60 hover:text-white hover:bg-white/8'
-                    }`}>
-                      <Icon className="w-4 h-4" />
-                      {label}
-                    </button>
-                  </Link>
-                ))}
+                {adminNav.map(({ page, label, icon: Icon }) => {
+                  const href = page.startsWith('/') ? page : `/${page}`;
+                  return (
+                    <Link key={page} to={href}>
+                      <button className={`flex items-center gap-1.5 px-2.5 lg:px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
+                        currentPageName === page ? 'bg-[#e2231a] text-white' : 'text-white/60 hover:text-white hover:bg-white/8'
+                      }`}>
+                        <Icon className="w-4 h-4" />
+                        {label}
+                      </button>
+                    </Link>
+                  );
+                })}
 
               </nav>
 
@@ -426,7 +429,7 @@ export default function Layout({ children, currentPageName }) {
             <div className="md:hidden bg-[#111] border-t border-white/5">
               <div className="px-4 py-3 space-y-1">
                 {allMobileNav.map((item) => {
-                  const href = item.page.startsWith('/') ? item.page : createPageUrl(item.page);
+                  const href = item.page.startsWith('/') ? item.page : `/${item.page}`;
                   const isActive = currentPageName === item.page || window.location.pathname === item.page;
                   const ItemIcon = item.icon;
                   return (
