@@ -68,7 +68,7 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult, onG
     <div className="rounded-[28px] border border-slate-200 bg-white shadow-[0_18px_40px_rgba(15,23,42,0.08)] overflow-hidden h-full flex flex-col">
       <div className="px-4 py-4 border-b border-slate-200 bg-white">
         <div className="flex items-start gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#eaf6ff] text-[#18C3F8]">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#0D4FB3]/10 text-[#0D4FB3]">
             <ImageIcon className="w-5 h-5" />
           </div>
           <div className="min-w-0 flex-1">
@@ -101,7 +101,7 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult, onG
             <Button
               onClick={handleGenerateClick}
               disabled={!lineItems?.length || isGeneratingPreview}
-              className="rounded-xl bg-[#18C3F8] hover:bg-[#0fb2e4] text-white shadow-sm"
+              className="rounded-xl bg-[#0D4FB3] hover:bg-[#0b428f] text-white shadow-sm"
             >
               {isGeneratingPreview ? <><Loader2 className="w-4 h-4 animate-spin" />Generating…</> : 'Generate AI Booth Image'}
             </Button>
@@ -127,13 +127,13 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult, onG
             <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Running Total</p>
             <p className="text-[11px] text-slate-500 mt-1">{lineItems?.length || 0} line items</p>
           </div>
-          <span className="text-lg font-black text-[#18C3F8]">{fmt(pricingResult?.finalTotal ?? lineItems?.reduce((sum, item) => sum + (item.final_total_price ?? item.total_price ?? 0), 0))}</span>
+          <span className="text-lg font-black text-[#0D4FB3]">{fmt(pricingResult?.finalTotal ?? lineItems?.reduce((sum, item) => sum + (item.final_total_price ?? item.total_price ?? 0), 0))}</span>
         </div>
         {showBrandPrompt && (
           <div className="absolute inset-0 z-10 flex items-center justify-center bg-slate-950/45 p-4">
             <div className="w-full max-w-sm rounded-3xl border border-slate-200 bg-white p-5 shadow-2xl">
               <div className="flex items-start gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#eaf6ff] text-[#18C3F8]">
+                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#0D4FB3]/10 text-[#0D4FB3]">
                   <Palette className="w-4 h-4" />
                 </div>
                 <div>
@@ -150,7 +150,7 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult, onG
                 />
               </div>
               <div className="mt-4 flex gap-2">
-                <Button onClick={handleBrandConfirm} className="flex-1 rounded-xl bg-[#18C3F8] hover:bg-[#0fb2e4] text-white">Use Website</Button>
+                <Button onClick={handleBrandConfirm} className="flex-1 rounded-xl bg-[#0D4FB3] hover:bg-[#0b428f] text-white">Use Website</Button>
                 <Button variant="outline" onClick={handleSkipBranding} className="flex-1 rounded-xl">Skip Branding</Button>
               </div>
             </div>
