@@ -39,11 +39,13 @@ export default function XhibitlyCustomerGate() {
       <div className="relative z-10 px-6 py-10 md:px-10 md:py-14">
         <div className="mx-auto max-w-6xl">
           <div className="flex justify-center mb-10">
-            <img
-              src="https://media.base44.com/images/public/69834d9e0d7220d671bfd124/f3c8fd783_IMG_1062.png"
-              alt="Xhibitly"
-              className="h-12 md:h-14 w-auto object-contain rounded-2xl overflow-hidden"
-            />
+            <div className="rounded-2xl overflow-hidden">
+              <img
+                src="https://media.base44.com/images/public/69834d9e0d7220d671bfd124/f3c8fd783_IMG_1062.png"
+                alt="Xhibitly"
+                className="h-12 md:h-14 w-auto object-contain block"
+              />
+            </div>
           </div>
 
           <div className="grid gap-8 lg:grid-cols-[1.2fr_0.9fr] items-center">
