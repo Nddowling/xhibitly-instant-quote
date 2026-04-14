@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { X, Search, Building, Loader2, Plus, FileText, ChevronRight, Clock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+const CUSTOMER_PORTAL_LOGO = 'https://media.base44.com/images/public/69834d9e0d7220d671bfd124/f3c8fd783_IMG_1062.png';
+
 const BOOTH_SIZES = ['10x10', '10x20', '20x20', '20x30'];
 const BOOTH_TYPES = ['Inline', 'Corner', 'Island'];
 const OPEN_STATUSES = ['Draft', 'Pending', 'Quoted', 'Negotiating', 'Contacted'];
@@ -521,10 +523,12 @@ export default function SessionStartModal({ onComplete, onDismiss, user }) {
             <p className="text-xs text-white/40 mt-0.5">{sub}</p>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-[#e2231a] rounded-lg flex items-center justify-center text-white font-black text-xs">XQ</div>
+            <div className="rounded-xl overflow-hidden">
+              <img src={CUSTOMER_PORTAL_LOGO} alt="Xhibitly" className="h-8 w-auto object-contain block" />
+            </div>
             {onDismiss && (
-              <button onClick={onDismiss} className="text-white/40 hover:text-white/80 transition-colors ml-1">
-                <X className="w-5 h-5" />
+              <button onClick={onDismiss} className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-white/50 hover:text-white hover:border-white/20 hover:bg-white/5 transition-colors ml-1">
+                <X className="w-4 h-4" />
               </button>
             )}
           </div>
