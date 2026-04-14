@@ -2,14 +2,29 @@ import React, { useMemo, useState } from 'react';
 import { Sparkles, Image as ImageIcon, Package, Loader2, X, Palette } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { SKU_TO_IMAGE } from '@/data/skuImageMap';
+
+const SUPABASE_URL = 'https://xpgvpzbzmkubahyxwipk.supabase.co/storage/v1/object/public/orbus-assets';
 
 function fmt(n) {
   if (!n && n !== 0) return '—';
   return '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
+function getPreviewThumbUrl(item) {
+  if (item?.sku && SKU_TO_IMAGE[item.sku]) return SKU_TO_IMAGE[item.sku];
+
+  const productLikeUrl = item?.image_url;
+  if (productLikeUrl) {
+    if (productLikeUrl.includes('/products/')) return productLikeUrl;
+    if (productLikeUrl.startsWith('/products/')) return `${SUPABASE_URL}${productLikeUrl}`;
+  }
+
+  return null;
+}
+
 function PreviewThumb({ item, onRemove, onQuantityChange }) {
-  const src = item?.image_url;
+  const src = getPreviewThumbUrl(item);
 
   return (
     <div className="rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-2">
