@@ -5,6 +5,8 @@ import { X, Search, Building, Loader2, Plus, FileText, ChevronRight, Clock } fro
 import { motion, AnimatePresence } from 'framer-motion';
 
 const CUSTOMER_PORTAL_LOGO = 'https://media.base44.com/images/public/69834d9e0d7220d671bfd124/f3c8fd783_IMG_1062.png';
+const EXHIBIT_BLUE = '#0D4FB3';
+const EXHIBIT_BLUE_DARK = '#0b428f';
 
 const BOOTH_SIZES = ['10x10', '10x20', '20x20', '20x30'];
 const BOOTH_TYPES = ['Inline', 'Corner', 'Island'];
@@ -185,7 +187,7 @@ function QuoteChoiceStep({ client, onNewQuote, onResumeQuote, onBack }) {
       {/* New Quote button */}
       <button
         onClick={onNewQuote}
-        className="w-full flex items-center gap-3 px-4 py-3.5 bg-[#18C3F8] hover:bg-[#0fb2e4] text-white rounded-xl transition-colors font-semibold text-sm"
+        className="w-full flex items-center gap-3 px-4 py-3.5 bg-[#0D4FB3] hover:bg-[#0b428f] text-white rounded-xl transition-colors font-semibold text-sm"
       >
         <Plus className="w-4 h-4 flex-shrink-0" />
         <span className="flex-1 text-left">Start New Quote</span>
@@ -326,7 +328,7 @@ function NewQuoteStep({ client, user, onBack, onComplete }) {
             {BOOTH_SIZES.map(s => (
               <button key={s} onClick={() => setField('booth_size', s)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
-                  form.booth_size === s ? 'bg-[#18C3F8] text-white border-[#18C3F8]' : 'bg-white text-slate-600 border-slate-200 hover:border-[#18C3F8]/40'
+                  form.booth_size === s ? 'bg-[#0D4FB3] text-white border-[#0D4FB3]' : 'bg-white text-slate-600 border-slate-200 hover:border-[#0D4FB3]/40'
                 }`}>{s}</button>
             ))}
           </div>
@@ -337,7 +339,7 @@ function NewQuoteStep({ client, user, onBack, onComplete }) {
             {BOOTH_TYPES.map(t => (
               <button key={t} onClick={() => setField('booth_type', t)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
-                  form.booth_type === t ? 'bg-[#18C3F8] text-white border-[#18C3F8]' : 'bg-white text-slate-600 border-slate-200 hover:border-[#18C3F8]/40'
+                  form.booth_type === t ? 'bg-[#0D4FB3] text-white border-[#0D4FB3]' : 'bg-white text-slate-600 border-slate-200 hover:border-[#0D4FB3]/40'
                 }`}>{t}</button>
             ))}
           </div>
@@ -347,7 +349,7 @@ function NewQuoteStep({ client, user, onBack, onComplete }) {
       <Button
         onClick={handleStart}
         disabled={starting || !canSubmit}
-        className="w-full bg-[#18C3F8] hover:bg-[#0fb2e4] text-white h-11 font-bold disabled:opacity-40"
+        className="w-full bg-[#0D4FB3] hover:bg-[#0b428f] text-white h-11 font-bold disabled:opacity-40"
       >
         {starting ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Creating Quote…</> : 'Start Session →'}
       </Button>
@@ -359,10 +361,27 @@ function NewQuoteStep({ client, user, onBack, onComplete }) {
 function NewCustomerStep({ user, onBack, onComplete }) {
   const [starting, setStarting] = useState(false);
   const [form, setForm] = useState({
-    first_name: '', last_name: '', customer_email: '', customer_phone: '', customer_company: '',
+    first_name: user?.full_name?.split(' ')[0] || '',
+    last_name: user?.full_name?.split(' ').slice(1).join(' ') || '',
+    customer_email: user?.email || '',
+    customer_phone: user?.phone || user?.data?.phone || '',
+    customer_company: user?.company || user?.company_name || user?.data?.company || user?.data?.company_name || '',
     show_name: '', booth_size: '10x10', booth_type: 'Inline',
   });
   const setField = (k, v) => setForm(p => ({ ...p, [k]: v }));
+
+  useEffect(() => {
+    if (!user) return;
+    setForm((prev) => ({
+      ...prev,
+      first_name: prev.first_name || user?.full_name?.split(' ')[0] || '',
+      last_name: prev.last_name || user?.full_name?.split(' ').slice(1).join(' ') || '',
+      customer_email: prev.customer_email || user?.email || '',
+      customer_phone: prev.customer_phone || user?.phone || user?.data?.phone || '',
+      customer_company: prev.customer_company || user?.company || user?.company_name || user?.data?.company || user?.data?.company_name || '',
+    }));
+  }, [user]);
+
   const customerName = `${form.first_name} ${form.last_name}`.trim();
   const canSubmit = customerName && form.customer_email && form.show_name;
 
@@ -428,7 +447,7 @@ function NewCustomerStep({ user, onBack, onComplete }) {
             <label className="text-[10px] text-slate-500 font-semibold uppercase tracking-wide">{f.label}</label>
             <input type={f.type || 'text'} value={form[f.key]} onChange={e => setField(f.key, e.target.value)}
               placeholder={f.placeholder}
-              className="w-full mt-1 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#18C3F8]/30" />
+              className="w-full mt-1 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#0D4FB3]/30" />
           </div>
         ))}
       </div>
@@ -437,14 +456,14 @@ function NewCustomerStep({ user, onBack, onComplete }) {
         <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide block">Show Information</label>
         <input value={form.show_name} onChange={e => setField('show_name', e.target.value)}
           placeholder="Show Name *"
-          className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#18C3F8]/30" />
+          className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#0D4FB3]/30" />
         <div>
           <label className="text-[10px] text-slate-500 font-semibold uppercase tracking-wide">Booth Size</label>
           <div className="flex flex-wrap gap-2 mt-1.5">
             {BOOTH_SIZES.map(s => (
               <button key={s} onClick={() => setField('booth_size', s)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
-                  form.booth_size === s ? 'bg-[#18C3F8] text-white border-[#18C3F8]' : 'bg-white text-slate-600 border-slate-200 hover:border-[#18C3F8]/40'
+                  form.booth_size === s ? 'bg-[#0D4FB3] text-white border-[#0D4FB3]' : 'bg-white text-slate-600 border-slate-200 hover:border-[#0D4FB3]/40'
                 }`}>{s}</button>
             ))}
           </div>
@@ -455,7 +474,7 @@ function NewCustomerStep({ user, onBack, onComplete }) {
             {BOOTH_TYPES.map(t => (
               <button key={t} onClick={() => setField('booth_type', t)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
-                  form.booth_type === t ? 'bg-[#18C3F8] text-white border-[#18C3F8]' : 'bg-white text-slate-600 border-slate-200 hover:border-[#18C3F8]/40'
+                  form.booth_type === t ? 'bg-[#0D4FB3] text-white border-[#0D4FB3]' : 'bg-white text-slate-600 border-slate-200 hover:border-[#0D4FB3]/40'
                 }`}>{t}</button>
             ))}
           </div>
@@ -463,7 +482,7 @@ function NewCustomerStep({ user, onBack, onComplete }) {
       </div>
 
       <Button onClick={handleStart} disabled={starting || !canSubmit}
-        className="w-full bg-[#18C3F8] hover:bg-[#0fb2e4] text-white h-11 font-bold disabled:opacity-40">
+        className="w-full bg-[#0D4FB3] hover:bg-[#0b428f] text-white h-11 font-bold disabled:opacity-40">
         {starting ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Creating…</> : 'Start Session →'}
       </Button>
     </div>
