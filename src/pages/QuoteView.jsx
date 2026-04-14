@@ -126,37 +126,39 @@ export default function QuoteView() {
       `}</style>
 
       {/* Action bar */}
-      <div className="no-print bg-[#1a1a1a] px-6 py-3 flex items-center justify-between sticky top-0 z-10">
-        <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 bg-[#e2231a] rounded-lg flex items-center justify-center font-black text-xs text-white">XQ</div>
-          <span className="text-white font-bold text-sm">Xhibitly Quote</span>
-          <span className="text-white/30 text-xs font-mono">· {order.reference_number}</span>
-        </div>
-        <div className="flex gap-2">
-          <Button onClick={() => window.print()} variant="outline" size="sm"
-            className="border-white/20 text-white bg-transparent hover:bg-white/10 gap-1.5 text-xs">
-            <Printer className="w-3.5 h-3.5" /> Print / PDF
-          </Button>
-          <Button onClick={downloadExcel} variant="outline" size="sm"
-            className="border-white/20 text-white bg-transparent hover:bg-white/10 gap-1.5 text-xs">
-            <Download className="w-3.5 h-3.5" /> Excel
-          </Button>
+      <div className="no-print bg-[#1a1a1a] px-4 md:px-6 py-3 sticky top-0 z-10">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex min-w-0 items-center gap-2.5">
+            <div className="w-7 h-7 bg-[#e2231a] rounded-lg flex items-center justify-center font-black text-xs text-white">XQ</div>
+            <span className="text-white font-bold text-sm">Xhibitly Quote</span>
+            <span className="truncate text-white/30 text-xs font-mono">· {order.reference_number}</span>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full sm:w-auto">
+            <Button onClick={() => window.print()} variant="outline" size="sm"
+              className="w-full border-white/20 text-white bg-transparent hover:bg-white/10 gap-1.5 text-xs">
+              <Printer className="w-3.5 h-3.5" /> Print / PDF
+            </Button>
+            <Button onClick={downloadExcel} variant="outline" size="sm"
+              className="w-full border-white/20 text-white bg-transparent hover:bg-white/10 gap-1.5 text-xs">
+              <Download className="w-3.5 h-3.5" /> Excel
+            </Button>
+          </div>
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-6 py-10 space-y-8">
+      <div className="max-w-4xl mx-auto px-4 md:px-6 py-6 md:py-10 space-y-6 md:space-y-8">
         {/* Header block */}
-        <div className="flex items-start justify-between flex-wrap gap-4">
-          <div className="flex items-center gap-3">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="flex items-center gap-3 min-w-0">
             <div className="w-12 h-12 bg-[#e2231a] rounded-xl flex items-center justify-center font-black text-sm text-white">XQ</div>
-            <div>
-              <p className="font-black text-xl text-slate-900">{order.dealer_company || 'Xhibitly'}</p>
-              {order.dealer_name && <p className="text-sm text-slate-400">{order.dealer_name}</p>}
-              {order.dealer_email && <p className="text-xs text-slate-400">{order.dealer_email}</p>}
+            <div className="min-w-0">
+              <p className="font-black text-lg sm:text-xl text-slate-900 break-words">{order.dealer_company || 'Xhibitly'}</p>
+              {order.dealer_name && <p className="text-sm text-slate-400 break-words">{order.dealer_name}</p>}
+              {order.dealer_email && <p className="text-xs text-slate-400 break-all">{order.dealer_email}</p>}
             </div>
           </div>
-          <div className="text-right">
-            <p className="text-2xl font-black text-slate-900">{order.reference_number}</p>
+          <div className="text-left sm:text-right">
+            <p className="text-xl sm:text-2xl font-black text-slate-900 break-words">{order.reference_number}</p>
             <p className="text-sm text-slate-400 mt-1">{quoteDate}</p>
             <span className="inline-block mt-1 bg-[#e2231a]/10 text-[#e2231a] text-xs font-bold px-2.5 py-0.5 rounded-full">
               {order.status}
@@ -201,7 +203,7 @@ export default function QuoteView() {
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Line Items — {lineItems.length} product{lineItems.length !== 1 ? 's' : ''}</p>
           </div>
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="w-[760px] sm:w-full text-sm">
               <thead>
                 <tr className="border-b border-slate-100 bg-slate-50/50">
                   <th className="px-6 py-3 text-left text-[10px] font-bold text-slate-400 uppercase tracking-wide">Product</th>

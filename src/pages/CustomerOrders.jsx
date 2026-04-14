@@ -42,8 +42,8 @@ export default function CustomerOrders() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 p-4 md:p-8">
-      <div className="max-w-6xl mx-auto space-y-6">
+    <div className="min-h-screen bg-slate-50 px-4 py-4 md:p-8">
+      <div className="max-w-6xl mx-auto space-y-5 md:space-y-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
             <div className="rounded-2xl overflow-hidden inline-block mb-4">
@@ -53,7 +53,7 @@ export default function CustomerOrders() {
             <p className="text-slate-500 mt-1">Only your own Exhibitly orders and quote activity are shown here.</p>
             {user?.email && <p className="text-xs text-slate-400 mt-2">Signed in as {user.email}</p>}
           </div>
-          <Button asChild className="bg-[#e2231a] hover:bg-[#c41e17] text-white">
+          <Button asChild className="w-full md:w-auto bg-[#e2231a] hover:bg-[#c41e17] text-white">
             <Link to="/XhibitlyStart2"><Plus className="w-4 h-4 mr-2" />Start New Quote</Link>
           </Button>
         </div>
@@ -89,13 +89,13 @@ export default function CustomerOrders() {
                       <span>{order.show_date ? new Date(order.show_date).toLocaleDateString() : 'No date'}</span>
                     </div>
                   </div>
-                  <div className="flex items-center gap-4 md:min-w-[240px] md:justify-end">
-                    <div className="text-right">
+                  <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center md:min-w-[240px] md:justify-end">
+                    <div className="text-left sm:text-right">
                       <p className="text-xs uppercase tracking-wide text-slate-400">Quote Value</p>
                       <p className="text-lg font-bold text-[#e2231a]">{formatMoney(order.final_price || order.quoted_price)}</p>
                     </div>
                     {order.share_token && (
-                      <Button asChild variant="outline">
+                      <Button asChild variant="outline" className="w-full sm:w-auto">
                         <a href={`/QuoteView?token=${encodeURIComponent(order.share_token)}`} target="_blank" rel="noreferrer">
                           View Quote <ArrowRight className="w-4 h-4 ml-2" />
                         </a>
