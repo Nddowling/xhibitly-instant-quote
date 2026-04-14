@@ -1531,7 +1531,7 @@ export default function CatalogQuote({ embeddedMode = false, onOrderChange, onLi
             <div className="relative w-full">
               <input
                 type="text"
-                placeholder="Search by product name, SKU, or category"
+                placeholder="Search by products"
                 value={searchSku}
                 onChange={e => handleProductSearch(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleSkuSearch()}
