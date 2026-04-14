@@ -42,7 +42,7 @@ export default function XhibitlyCustomerGate() {
             <img
               src="https://media.base44.com/images/public/69834d9e0d7220d671bfd124/f3c8fd783_IMG_1062.png"
               alt="Xhibitly"
-              className="h-12 md:h-14 w-auto object-contain"
+              className="h-12 md:h-14 w-auto object-contain rounded-2xl overflow-hidden"
             />
           </div>
 
