@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { base44 } from '@/api/base44Client';
 import { Sparkles, Image as ImageIcon, Package, Loader2, X, Palette } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,30 +9,43 @@ function fmt(n) {
   return '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
-function PreviewThumb({ item, onRemove }) {
+function PreviewThumb({ item, onRemove, onQuantityChange }) {
   const src = item?.image_url;
 
   return (
-    <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-2">
-      <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-lg bg-white border border-slate-200 flex items-center justify-center">
-        {src ? (
-          <img src={src} alt={item?.product_name || item?.sku || 'Product'} className="h-full w-full object-contain p-1" />
-        ) : (
-          <Package className="w-4 h-4 text-slate-300" />
-        )}
+    <div className="rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-2">
+      <div className="flex items-center gap-2">
+        <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-lg bg-white border border-slate-200 flex items-center justify-center">
+          {src ? (
+            <img src={src} alt={item?.product_name || item?.sku || 'Product'} className="h-full w-full object-contain p-1" />
+          ) : (
+            <Package className="w-4 h-4 text-slate-300" />
+          )}
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="text-[11px] font-semibold text-slate-700 leading-tight line-clamp-2">{item?.product_name || item?.sku || 'Product'}</p>
+          {item?.sku && <p className="text-[10px] text-slate-400 mt-0.5 font-mono truncate">{item.sku}</p>}
+        </div>
+        <button
+          type="button"
+          onClick={() => onRemove?.(item)}
+          className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-400 hover:border-red-200 hover:text-red-500"
+          title="Remove from quote"
+        >
+          <X className="w-3.5 h-3.5" />
+        </button>
       </div>
-      <div className="min-w-0 flex-1">
-        <p className="text-[11px] font-semibold text-slate-700 leading-tight line-clamp-2">{item?.product_name || item?.sku || 'Product'}</p>
-        {item?.sku && <p className="text-[10px] text-slate-400 mt-0.5 font-mono truncate">{item.sku}</p>}
+      <div className="mt-2 flex items-center justify-between border-t border-slate-200 pt-2">
+        <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">Qty</span>
+        <input
+          type="number"
+          min="1"
+          value={item?.quantity || 1}
+          onChange={(e) => onQuantityChange?.(item, e.target.value)}
+          className="h-8 w-16 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-bold text-slate-700 text-center focus:outline-none focus:ring-1 focus:ring-[#0D4FB3]"
+          aria-label={`Quantity for ${item?.product_name || item?.sku || 'product'}`}
+        />
       </div>
-      <button
-        type="button"
-        onClick={() => onRemove?.(item)}
-        className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-400 hover:border-red-200 hover:text-red-500"
-        title="Remove from quote"
-      >
-        <X className="w-3.5 h-3.5" />
-      </button>
     </div>
   );
 }
@@ -39,6 +53,17 @@ function PreviewThumb({ item, onRemove }) {
 export default function BoothPreviewPanel({ order, lineItems, pricingResult, onGeneratePreview, onRemoveItem, isGeneratingPreview = false, previewStatus = '' }) {
   const [showBrandPrompt, setShowBrandPrompt] = useState(false);
   const [websiteInput, setWebsiteInput] = useState(order?.website_url || '');
+
+  const handleQuantityChange = async (item, value) => {
+    if (!item?.id) return;
+    const parsedQty = parseInt(value, 10);
+    const newQty = Number.isNaN(parsedQty) ? 1 : Math.max(1, parsedQty);
+    await base44.entities.LineItem.update(item.id, {
+      quantity: newQty,
+      total_price: parseFloat((newQty * (item.unit_price || 0)).toFixed(2)),
+    });
+    window.location.reload();
+  };
 
   const previewPrompt = useMemo(() => {
     const items = (lineItems || []).map(item => item.product_name || item.sku).filter(Boolean);
@@ -115,7 +140,12 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult, onG
             {lineItems?.length > 0 && (
               <div className="mt-3 grid gap-2">
                 {(lineItems || []).map((item) => (
-                  <PreviewThumb key={item.id || item.sku} item={item} onRemove={onRemoveItem} />
+                  <PreviewThumb
+                    key={item.id || item.sku}
+                    item={item}
+                    onRemove={onRemoveItem}
+                    onQuantityChange={handleQuantityChange}
+                  />
                 ))}
               </div>
             )}
