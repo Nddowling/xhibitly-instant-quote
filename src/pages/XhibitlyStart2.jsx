@@ -4,9 +4,11 @@ import { toast } from 'sonner';
 import CatalogQuote from '@/pages/CatalogQuote';
 import XhibitlyAgentPane from '@/components/xhibitly/XhibitlyAgentPane';
 import BoothPreviewPanel from '@/components/xhibitly/BoothPreviewPanel';
+import SessionStartModal from '@/components/catalog/SessionStartModal';
 
 export default function XhibitlyStart2() {
   const [previewOrder, setPreviewOrder] = useState(null);
+  const [showSessionModal, setShowSessionModal] = useState(false);
   const [queuedPromptForCatalog, setQueuedPromptForCatalog] = useState('');
   const [previewLineItems, setPreviewLineItems] = useState([]);
   const [previewPricingResult, setPreviewPricingResult] = useState(null);
@@ -150,6 +152,32 @@ export default function XhibitlyStart2() {
     setPreviewStatus('');
   };
 
+  const startFreshQuote = () => {
+    setPreviewOrder(null);
+    setPreviewLineItems([]);
+    setPreviewPricingResult(null);
+    setPreviewBrandWebsite('');
+    setQueuedPromptForCatalog('');
+    setRenderTaskId('');
+    setPollAttempts(0);
+    setIsGeneratingPreview(false);
+    setPreviewStatus('');
+    setShowSessionModal(true);
+  };
+
+  const handleSessionComplete = (order) => {
+    setPreviewOrder(order || null);
+    setPreviewLineItems([]);
+    setPreviewPricingResult(null);
+    setPreviewBrandWebsite(order?.website_url || '');
+    setQueuedPromptForCatalog('');
+    setRenderTaskId('');
+    setPollAttempts(0);
+    setIsGeneratingPreview(false);
+    setPreviewStatus('');
+    setShowSessionModal(false);
+  };
+
   const handleQuantityChange = async (item, value) => {
     if (!item?.id) return;
     const parsedQty = parseInt(value, 10);
@@ -181,8 +209,16 @@ export default function XhibitlyStart2() {
       setQueuedPromptForCatalog(prompt);
     };
 
+    const handleNewQuote = () => {
+      startFreshQuote();
+    };
+
     window.addEventListener('xhibitly:catalog-prompt', handleCatalogPrompt);
-    return () => window.removeEventListener('xhibitly:catalog-prompt', handleCatalogPrompt);
+    window.addEventListener('xhibitly:new-quote', handleNewQuote);
+    return () => {
+      window.removeEventListener('xhibitly:catalog-prompt', handleCatalogPrompt);
+      window.removeEventListener('xhibitly:new-quote', handleNewQuote);
+    };
   }, []);
 
   return (
@@ -191,6 +227,13 @@ export default function XhibitlyStart2() {
       <div className="absolute inset-0 opacity-70" style={{ backgroundImage: 'linear-gradient(rgba(13,79,179,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(13,79,179,0.08) 1px, transparent 1px)', backgroundSize: '46px 46px' }} />
       <div className="relative z-10 px-4 md:px-8 py-4 md:py-6">
         <div className="max-w-[1560px] mx-auto">
+          {showSessionModal && (
+            <SessionStartModal
+              onComplete={handleSessionComplete}
+              onDismiss={() => setShowSessionModal(false)}
+            />
+          )}
+
           <div className="flex items-center justify-center mb-5 md:mb-6">
             <div className="rounded-2xl overflow-hidden">
               <img src="https://media.base44.com/images/public/69834d9e0d7220d671bfd124/f3c8fd783_IMG_1062.png" alt="Xhibitly" className="h-10 md:h-12 w-auto object-contain block" />

@@ -68,9 +68,20 @@ export default function XhibitlyAgentPane({ queuedPrompt, onPromptConsumed }) {
     const trimmed = String(messageText || '').trim();
     if (!trimmed || !conversation || !isAuthenticated) return;
 
-    window.dispatchEvent(new CustomEvent('xhibitly:catalog-prompt', {
-      detail: { prompt: trimmed }
-    }));
+    const normalized = trimmed.toLowerCase();
+    const shouldStartNewQuote =
+      normalized.includes('start a new quote') ||
+      normalized.includes('new quote') ||
+      normalized.includes('start over') ||
+      normalized.includes('wipe it and start');
+
+    if (shouldStartNewQuote) {
+      window.dispatchEvent(new CustomEvent('xhibitly:new-quote'));
+    } else {
+      window.dispatchEvent(new CustomEvent('xhibitly:catalog-prompt', {
+        detail: { prompt: trimmed }
+      }));
+    }
 
     setLoading(true);
     setInput('');
