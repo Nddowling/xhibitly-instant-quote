@@ -157,7 +157,9 @@ export default function XhibitlyStart2() {
       <div className="relative z-10 px-4 md:px-8 py-4 md:py-6">
         <div className="max-w-[1560px] mx-auto">
           <div className="flex items-center justify-center mb-5 md:mb-6">
-            <img src="https://media.base44.com/images/public/69834d9e0d7220d671bfd124/f3c8fd783_IMG_1062.png" alt="Xhibitly" className="h-10 md:h-12 w-auto object-contain" />
+            <div className="rounded-2xl overflow-hidden">
+              <img src="https://media.base44.com/images/public/69834d9e0d7220d671bfd124/f3c8fd783_IMG_1062.png" alt="Xhibitly" className="h-10 md:h-12 w-auto object-contain block" />
+            </div>
           </div>
 
           <div className="grid gap-6 lg:grid-cols-[minmax(280px,0.9fr)_minmax(720px,1.65fr)_minmax(340px,1fr)] items-start min-h-[calc(100vh-24px)]">

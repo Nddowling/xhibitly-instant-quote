@@ -6,6 +6,8 @@ import { Badge } from '@/components/ui/badge';
 import { ClipboardList, ArrowRight, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+const CUSTOMER_PORTAL_LOGO = 'https://media.base44.com/images/public/69834d9e0d7220d671bfd124/f3c8fd783_IMG_1062.png';
+
 function formatMoney(value) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(value || 0);
 }
@@ -44,6 +46,9 @@ export default function CustomerOrders() {
       <div className="max-w-6xl mx-auto space-y-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
+            <div className="rounded-2xl overflow-hidden inline-block mb-4">
+              <img src={CUSTOMER_PORTAL_LOGO} alt="Xhibitly" className="h-12 w-auto object-contain block" />
+            </div>
             <h1 className="text-3xl font-bold text-slate-900">My Orders & Quotes</h1>
             <p className="text-slate-500 mt-1">Only your own Exhibitly orders and quote activity are shown here.</p>
             {user?.email && <p className="text-xs text-slate-400 mt-2">Signed in as {user.email}</p>}
