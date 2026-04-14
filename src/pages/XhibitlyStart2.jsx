@@ -7,6 +7,7 @@ import BoothPreviewPanel from '@/components/xhibitly/BoothPreviewPanel';
 
 export default function XhibitlyStart2() {
   const [previewOrder, setPreviewOrder] = useState(null);
+  const [queuedPromptForCatalog, setQueuedPromptForCatalog] = useState('');
   const [previewLineItems, setPreviewLineItems] = useState([]);
   const [previewPricingResult, setPreviewPricingResult] = useState(null);
   const [isGeneratingPreview, setIsGeneratingPreview] = useState(false);
@@ -171,6 +172,17 @@ export default function XhibitlyStart2() {
     resetPreviewRenderState();
   };
 
+  useEffect(() => {
+    const handleCatalogPrompt = (event) => {
+      const prompt = event?.detail?.prompt || '';
+      if (!prompt) return;
+      setQueuedPromptForCatalog(prompt);
+    };
+
+    window.addEventListener('xhibitly:catalog-prompt', handleCatalogPrompt);
+    return () => window.removeEventListener('xhibitly:catalog-prompt', handleCatalogPrompt);
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#f6f8fc] text-slate-900 overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(24,195,248,0.16),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(13,79,179,0.12),transparent_30%)]" />
@@ -201,6 +213,7 @@ export default function XhibitlyStart2() {
               <div className="h-full bg-white">
                 <CatalogQuote
                   embeddedMode
+                  initialPrompt={queuedPromptForCatalog}
                   onOrderChange={setPreviewOrder}
                   onLineItemsChange={setPreviewLineItems}
                   onPricingResult={setPreviewPricingResult}

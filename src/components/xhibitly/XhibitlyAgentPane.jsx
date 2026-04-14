@@ -67,6 +67,11 @@ export default function XhibitlyAgentPane({ queuedPrompt, onPromptConsumed }) {
   const handleSend = async (messageText = input) => {
     const trimmed = String(messageText || '').trim();
     if (!trimmed || !conversation || !isAuthenticated) return;
+
+    window.dispatchEvent(new CustomEvent('xhibitly:catalog-prompt', {
+      detail: { prompt: trimmed }
+    }));
+
     setLoading(true);
     setInput('');
     await base44.agents.addMessage(conversation, {

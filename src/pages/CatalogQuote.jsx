@@ -196,6 +196,24 @@ function normalizeSearchText(value) {
     .trim();
 }
 
+function getCatalogPageFromPrompt(prompt) {
+  const text = normalizeSearchText(prompt);
+  if (!text) return null;
+
+  const categoryPageMap = [
+    { keywords: ['ipad stand', 'ipad stands', 'tablet stand', 'tablet stands'], page: 150 },
+    { keywords: ['table', 'tables'], page: 151 },
+    { keywords: ['counter', 'counters', 'kiosk', 'kiosks', 'podium', 'podiums'], page: 150 },
+    { keywords: ['banner stand', 'banner stands', 'retractable banner'], page: 24 },
+    { keywords: ['backwall', 'back wall', 'backdrop', 'fabric wall'], page: 32 },
+    { keywords: ['hanging sign', 'hanging signs'], page: 86 },
+    { keywords: ['flooring', 'floor'], page: 144 },
+  ];
+
+  const match = categoryPageMap.find((entry) => entry.keywords.some((keyword) => text.includes(keyword)));
+  return match?.page || null;
+}
+
 function getProductTagging(product) {
   const text = normalizeSearchText([
     product?.sku,
@@ -989,7 +1007,7 @@ function OrderItem({ item, onQtyChange, onRemove, onSizeChange }) {
 }
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
-export default function CatalogQuote({ embeddedMode = false, onOrderChange, onLineItemsChange, onPricingResult }) {
+export default function CatalogQuote({ embeddedMode = false, initialPrompt = '', onOrderChange, onLineItemsChange, onPricingResult }) {
   const navigate = useNavigate();
   const location = useLocation();
   const isEmbeddedOnXhibitlyStart = embeddedMode || location.pathname === '/' || location.pathname === '/XhibitlyStart';
@@ -1240,6 +1258,18 @@ export default function CatalogQuote({ embeddedMode = false, onOrderChange, onLi
     const skus = new Set(currentHotspots.flatMap(h => h.groupedSkus || [h.sku]));
     skus.forEach(sku => fetchProduct(sku));
   }, [currentHotspots, fetchProduct]);
+
+  useEffect(() => {
+    const targetPage = getCatalogPageFromPrompt(initialPrompt);
+    if (targetPage) {
+      setDirection(targetPage > currentPage ? 1 : -1);
+      setCurrentPage(targetPage);
+      setPageInput(String(targetPage));
+      setSelectedHotspot(null);
+      setShowVariants(false);
+      setAddingHotspot(false);
+    }
+  }, [initialPrompt]);
 
   // Navigation
   const goToPage = useCallback((n) => {
