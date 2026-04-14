@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from 'react';
-import { base44 } from '@/api/base44Client';
 import { Sparkles, Image as ImageIcon, Package, Loader2, X, Palette } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -50,20 +49,9 @@ function PreviewThumb({ item, onRemove, onQuantityChange }) {
   );
 }
 
-export default function BoothPreviewPanel({ order, lineItems, pricingResult, onGeneratePreview, onRemoveItem, isGeneratingPreview = false, previewStatus = '' }) {
+export default function BoothPreviewPanel({ order, lineItems, pricingResult, onGeneratePreview, onRemoveItem, onQuantityChange, isGeneratingPreview = false, previewStatus = '' }) {
   const [showBrandPrompt, setShowBrandPrompt] = useState(false);
   const [websiteInput, setWebsiteInput] = useState(order?.website_url || '');
-
-  const handleQuantityChange = async (item, value) => {
-    if (!item?.id) return;
-    const parsedQty = parseInt(value, 10);
-    const newQty = Number.isNaN(parsedQty) ? 1 : Math.max(1, parsedQty);
-    await base44.entities.LineItem.update(item.id, {
-      quantity: newQty,
-      total_price: parseFloat((newQty * (item.unit_price || 0)).toFixed(2)),
-    });
-    window.location.reload();
-  };
 
   const previewPrompt = useMemo(() => {
     const items = (lineItems || []).map(item => item.product_name || item.sku).filter(Boolean);
@@ -144,7 +132,7 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult, onG
                     key={item.id || item.sku}
                     item={item}
                     onRemove={onRemoveItem}
-                    onQuantityChange={handleQuantityChange}
+                    onQuantityChange={onQuantityChange}
                   />
                 ))}
               </div>

@@ -140,14 +140,35 @@ export default function XhibitlyStart2() {
     toast.error('Preview generation timed out. Please try again.');
   }, [pollAttempts, renderTaskId]);
 
-  const handleRemovePreviewItem = async (item) => {
-    if (!item?.id) return;
-    await base44.entities.LineItem.delete(item.id);
-    setPreviewLineItems((prev) => prev.filter((entry) => entry.id !== item.id));
+  const resetPreviewRenderState = () => {
     setPreviewOrder((prev) => prev ? { ...prev, booth_rendering_url: '' } : prev);
     setRenderTaskId('');
     setIsGeneratingPreview(false);
     setPreviewStatus('');
+  };
+
+  const handleQuantityChange = async (item, value) => {
+    if (!item?.id) return;
+    const parsedQty = parseInt(value, 10);
+    const newQty = Number.isNaN(parsedQty) ? 1 : Math.max(1, parsedQty);
+    const total_price = parseFloat((newQty * (item.unit_price || 0)).toFixed(2));
+
+    await base44.entities.LineItem.update(item.id, {
+      quantity: newQty,
+      total_price,
+    });
+
+    setPreviewLineItems((prev) => prev.map((entry) => (
+      entry.id === item.id ? { ...entry, quantity: newQty, total_price } : entry
+    )));
+    resetPreviewRenderState();
+  };
+
+  const handleRemovePreviewItem = async (item) => {
+    if (!item?.id) return;
+    await base44.entities.LineItem.delete(item.id);
+    setPreviewLineItems((prev) => prev.filter((entry) => entry.id !== item.id));
+    resetPreviewRenderState();
   };
 
   return (
@@ -170,6 +191,7 @@ export default function XhibitlyStart2() {
                 pricingResult={previewPricingResult}
                 onGeneratePreview={handleGeneratePreview}
                 onRemoveItem={handleRemovePreviewItem}
+                onQuantityChange={handleQuantityChange}
                 isGeneratingPreview={isGeneratingPreview}
                 previewStatus={previewStatus}
               />
