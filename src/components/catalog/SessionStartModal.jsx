@@ -148,9 +148,20 @@ function QuoteChoiceStep({ client, onNewQuote, onResumeQuote, onBack }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    base44.entities.Order.filter({ customer_email: client.client_email }, '-created_date', 50)
-      .then(orders => {
-        const open = (orders || []).filter(o => OPEN_STATUSES.includes(o.status));
+    Promise.all([
+      base44.entities.Order.filter({ customer_email: client.client_email }, '-created_date', 50),
+      base44.entities.LineItem.list('-created_date', 500),
+    ])
+      .then(([orders, lineItems]) => {
+        const quantityByOrderId = (lineItems || []).reduce((acc, item) => {
+          const orderId = item.order_id;
+          if (!orderId) return acc;
+          acc[orderId] = (acc[orderId] || 0) + (item.quantity || 1);
+          return acc;
+        }, {});
+        const open = (orders || [])
+          .filter(o => OPEN_STATUSES.includes(o.status))
+          .map(o => ({ ...o, item_count: quantityByOrderId[o.id] || 0 }));
         setOpenQuotes(open);
       })
       .catch(() => {})
@@ -203,7 +214,7 @@ function QuoteChoiceStep({ client, onNewQuote, onResumeQuote, onBack }) {
                   <p className="text-sm font-semibold text-slate-800 truncate">{order.show_name || 'Unnamed Show'}</p>
                   <p className="text-[10px] text-slate-400 font-mono mt-0.5 flex items-center gap-1.5">
                     <Clock className="w-2.5 h-2.5" />
-                    {order.reference_number} · {order.booth_size}
+                    {order.reference_number} · {order.booth_size} · {order.item_count || 0} item{(order.item_count || 0) === 1 ? '' : 's'}
                     {order.quoted_price ? ` · ${fmt(order.quoted_price)}` : ''}
                   </p>
                 </div>

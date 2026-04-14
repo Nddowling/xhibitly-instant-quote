@@ -127,9 +127,16 @@ export default function QuoteSidebar({ order, lineItems, onLineItemsChange, onCr
                     <ProductThumb src={getThumbUrl(item, productCache)} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[11px] font-bold text-slate-900 leading-tight line-clamp-2">{item.product_name}</p>
-                    <p className="text-[9px] text-slate-400 font-mono mt-0.5">{item.sku}</p>
-                    {item.category && <p className="text-[9px] text-slate-400 mt-0.5 line-clamp-1">{item.category}</p>}
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <p className="text-[11px] font-bold text-slate-900 leading-tight line-clamp-2">{item.product_name}</p>
+                        <p className="text-[9px] text-slate-400 font-mono mt-0.5">{item.sku}</p>
+                        {item.category && <p className="text-[9px] text-slate-400 mt-0.5 line-clamp-1">{item.category}</p>}
+                      </div>
+                      <span className="rounded-full bg-[#18C3F8]/10 px-2 py-0.5 text-[9px] font-bold text-[#18C3F8] whitespace-nowrap">
+                        Qty {item.quantity || 0}
+                      </span>
+                    </div>
                   </div>
                   <button onClick={() => removeItem(item)} className="text-slate-300 hover:text-red-400 transition-colors flex-shrink-0 p-0.5">
                     <X className="w-4 h-4" />
