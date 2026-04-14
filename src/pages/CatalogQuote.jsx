@@ -362,11 +362,11 @@ function CatalogPageView({ pageNum, hotspots, onHotspotClick, selectedHotspot, o
               cursor: 'pointer',
             }}
             className={`group border-2 rounded transition-all duration-150
-              ${isSelected ? 'border-[#18C3F8] bg-[#18C3F8]/20' : 'border-transparent hover:border-[#18C3F8]/60 hover:bg-[#18C3F8]/10'}`}
+              ${isSelected ? 'border-[#0D4FB3] bg-[#0D4FB3]/20' : 'border-transparent hover:border-[#0D4FB3]/60 hover:bg-[#0D4FB3]/10'}`}
             title={spot.name}
           >
             <div className={`absolute top-1 right-1 transition-opacity ${isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
-              <div className="bg-[#18C3F8] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-lg flex items-center gap-1">
+              <div className="bg-[#0D4FB3] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-lg flex items-center gap-1">
                 <Plus className="w-2.5 h-2.5" />Add
               </div>
             </div>
@@ -427,8 +427,8 @@ function EditHotspotDialog({ spot, pageProducts, productCache, onSave, onCancel 
                 return (
                   <button key={p.sku} onClick={() => togglePageProduct(p)}
                     className={`w-full text-left px-3 py-2 rounded-lg text-xs border transition-all flex items-center gap-2
-                      ${checked ? 'border-[#18C3F8] bg-[#18C3F8]/10 font-bold' : 'border-slate-200 hover:border-[#18C3F8]/40'}`}>
-                    <div className={`w-3.5 h-3.5 rounded border flex-shrink-0 flex items-center justify-center ${checked ? 'bg-[#18C3F8] border-[#18C3F8]' : 'border-slate-300'}`}>
+                      ${checked ? 'border-[#0D4FB3] bg-[#0D4FB3]/10 font-bold' : 'border-slate-200 hover:border-[#0D4FB3]/40'}`}>
+                    <div className={`w-3.5 h-3.5 rounded border flex-shrink-0 flex items-center justify-center ${checked ? 'bg-[#0D4FB3] border-[#0D4FB3]' : 'border-slate-300'}`}>
                       {checked && <span className="text-white text-[8px] font-bold">✓</span>}
                     </div>
                     <span className="text-slate-400 font-mono mr-1">{p.sku}</span>
@@ -458,7 +458,7 @@ function EditHotspotDialog({ spot, pageProducts, productCache, onSave, onCancel 
             <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide mb-1.5">SKUs ({groupedSkus.length})</p>
             <div className="flex flex-wrap gap-1.5">
               {groupedSkus.map(s => (
-                <div key={s} className="flex items-center gap-1 bg-[#18C3F8]/10 border border-[#18C3F8]/30 text-[#18C3F8] rounded-full px-2.5 py-1 text-[10px] font-bold">
+                <div key={s} className="flex items-center gap-1 bg-[#0D4FB3]/10 border border-[#0D4FB3]/30 text-[#0D4FB3] rounded-full px-2.5 py-1 text-[10px] font-bold">
                   {s}
                   <button onClick={() => removeSku(s)} className="hover:text-[#0D4FB3] ml-0.5"><X className="w-2.5 h-2.5" /></button>
                 </div>
@@ -472,7 +472,7 @@ function EditHotspotDialog({ spot, pageProducts, productCache, onSave, onCancel 
 
         <div className="flex gap-2">
           <Button size="sm" onClick={submit} disabled={groupedSkus.length === 0}
-            className="flex-1 bg-[#18C3F8] hover:bg-[#0fb2e4] text-white disabled:opacity-50">
+            className="flex-1 bg-[#0D4FB3] hover:bg-[#0fb2e4] text-white disabled:opacity-50">
             Save Changes
           </Button>
           <Button size="sm" variant="outline" onClick={onCancel} className="flex-1">Cancel</Button>
@@ -771,7 +771,7 @@ function NewHotspotForm({ pageProducts, productCache, autoDetecting, autoDetecte
         </div>
 
         {autoDetecting && (
-          <div className="bg-[#18C3F8]/10 border border-[#18C3F8]/20 rounded-lg px-3 py-2.5 text-xs text-[#0D4FB3]">
+          <div className="bg-[#0D4FB3]/10 border border-[#0D4FB3]/20 rounded-lg px-3 py-2.5 text-xs text-[#0D4FB3]">
             Reading SKUs from the selected area…
           </div>
         )}
@@ -788,9 +788,9 @@ function NewHotspotForm({ pageProducts, productCache, autoDetecting, autoDetecte
                     key={p.sku}
                     onClick={() => togglePageProduct(p)}
                     className={`w-full text-left px-3 py-2 rounded-lg text-xs border transition-all flex items-center gap-2
-                      ${checked ? 'border-[#18C3F8] bg-[#18C3F8]/10 font-bold' : 'border-slate-200 hover:border-[#18C3F8]/40'}`}
+                      ${checked ? 'border-[#0D4FB3] bg-[#0D4FB3]/10 font-bold' : 'border-slate-200 hover:border-[#0D4FB3]/40'}`}
                   >
-                    <div className={`w-3.5 h-3.5 rounded border flex-shrink-0 flex items-center justify-center ${checked ? 'bg-[#18C3F8] border-[#18C3F8]' : 'border-slate-300'}`}>
+                    <div className={`w-3.5 h-3.5 rounded border flex-shrink-0 flex items-center justify-center ${checked ? 'bg-[#0D4FB3] border-[#0D4FB3]' : 'border-slate-300'}`}>
                       {checked && <span className="text-white text-[8px] font-bold">✓</span>}
                     </div>
                     <span className="text-slate-400 font-mono mr-1">{p.sku}</span>
@@ -827,7 +827,7 @@ function NewHotspotForm({ pageProducts, productCache, autoDetecting, autoDetecte
             </p>
             <div className="flex flex-wrap gap-1.5">
               {groupedSkus.map(s => (
-                <div key={s} className="flex items-center gap-1 bg-[#18C3F8]/10 border border-[#18C3F8]/30 text-[#18C3F8] rounded-full px-2.5 py-1 text-[10px] font-bold">
+                <div key={s} className="flex items-center gap-1 bg-[#0D4FB3]/10 border border-[#0D4FB3]/30 text-[#0D4FB3] rounded-full px-2.5 py-1 text-[10px] font-bold">
                   {s}
                   <button onClick={() => removeSku(s)} className="hover:text-[#0D4FB3] ml-0.5">
                     <X className="w-2.5 h-2.5" />
@@ -843,11 +843,11 @@ function NewHotspotForm({ pageProducts, productCache, autoDetecting, autoDetecte
           placeholder="Hotspot display name"
           value={displayName}
           onChange={e => setDisplayName(e.target.value)}
-          className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#18C3F8]/30"
+          className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0D4FB3]/30"
         />
 
         <div className="flex gap-2">
-          <Button size="sm" onClick={submit} disabled={autoDetecting || groupedSkus.length === 0} className="flex-1 bg-[#18C3F8] hover:bg-[#0fb2e4] text-white disabled:opacity-50">
+          <Button size="sm" onClick={submit} disabled={autoDetecting || groupedSkus.length === 0} className="flex-1 bg-[#0D4FB3] hover:bg-[#0fb2e4] text-white disabled:opacity-50">
             Add Hotspot ({groupedSkus.length} SKU{groupedSkus.length !== 1 ? 's' : ''})
           </Button>
           <Button size="sm" variant="outline" onClick={onCancel} className="flex-1">Cancel</Button>
@@ -882,7 +882,7 @@ function VariantPicker({ spot, products, fetchProduct, onAdd, onClose, hasSessio
     if (!p) return (
       <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/40 rounded-lg">
         <div className="bg-white rounded-2xl p-6 flex items-center gap-3 shadow-xl">
-          <Loader2 className="w-5 h-5 animate-spin text-[#18C3F8]" />
+          <Loader2 className="w-5 h-5 animate-spin text-[#0D4FB3]" />
           <span className="text-sm text-slate-600">Loading product...</span>
         </div>
       </div>
@@ -903,7 +903,7 @@ function VariantPicker({ spot, products, fetchProduct, onAdd, onClose, hasSessio
         {!hasSession && (
           <div className="px-4 py-3 bg-amber-50 border-b border-amber-100 flex items-center justify-between gap-3">
             <p className="text-xs text-amber-700">Start a quote session to add items.</p>
-            <button onClick={onStartSession} className="text-xs font-bold text-[#18C3F8] hover:underline whitespace-nowrap">Start Session →</button>
+            <button onClick={onStartSession} className="text-xs font-bold text-[#0D4FB3] hover:underline whitespace-nowrap">Start Session →</button>
           </div>
         )}
         <div className="overflow-y-auto p-3 space-y-1.5">
@@ -914,7 +914,7 @@ function VariantPicker({ spot, products, fetchProduct, onAdd, onClose, hasSessio
               <button
                 key={sku}
                 onClick={() => { if (hasSession) { onAdd({ sku, name: p?.name || sku, price: p?.base_price, imageUrl: imgSrc }); onClose(); } else { onStartSession(); } }}
-                className="w-full flex items-center gap-3 p-2.5 rounded-xl border border-slate-200 hover:border-[#18C3F8]/40 hover:bg-[#18C3F8]/5 transition-all text-left group"
+                className="w-full flex items-center gap-3 p-2.5 rounded-xl border border-slate-200 hover:border-[#0D4FB3]/40 hover:bg-[#0D4FB3]/5 transition-all text-left group"
               >
                 <div className="w-14 h-14 flex-shrink-0 rounded-lg bg-slate-100 overflow-hidden flex items-center justify-center border border-slate-100">
                   {p === null ? (
@@ -926,9 +926,9 @@ function VariantPicker({ spot, products, fetchProduct, onAdd, onClose, hasSessio
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-semibold text-slate-800 leading-tight">{p?.name || sku}</p>
                   <p className="text-[10px] text-slate-400 mt-0.5 font-mono">{sku}</p>
-                  {p?.base_price && <p className="text-xs font-bold text-[#18C3F8] mt-0.5">{fmt(p.base_price)}</p>}
+                  {p?.base_price && <p className="text-xs font-bold text-[#0D4FB3] mt-0.5">{fmt(p.base_price)}</p>}
                 </div>
-                {hasSession && <Plus className="w-4 h-4 text-[#18C3F8] opacity-0 group-hover:opacity-100 flex-shrink-0" />}
+                {hasSession && <Plus className="w-4 h-4 text-[#0D4FB3] opacity-0 group-hover:opacity-100 flex-shrink-0" />}
               </button>
             );
           })}
@@ -954,7 +954,7 @@ function OrderItem({ item, onQtyChange, onRemove, onSizeChange }) {
           <p className="text-[10px] text-slate-500 mt-0.5 font-mono">{item.sku}</p>
           {sizes && (
             <select
-              className="mt-2 w-full text-xs border border-slate-200 rounded-md p-1.5 bg-slate-50 text-slate-700 focus:outline-none focus:ring-1 focus:ring-[#18C3F8]"
+              className="mt-2 w-full text-xs border border-slate-200 rounded-md p-1.5 bg-slate-50 text-slate-700 focus:outline-none focus:ring-1 focus:ring-[#0D4FB3]"
               value={item.selectedSize || ''}
               onChange={(e) => onSizeChange(item.id, e.target.value)}
             >
@@ -1518,7 +1518,7 @@ export default function CatalogQuote({ embeddedMode = false, onOrderChange, onLi
       <div className="relative z-40 bg-white/95 backdrop-blur border-b border-slate-200 px-3 sm:px-4 py-2.5 flex-shrink-0 shadow-sm">
         <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between lg:gap-3">
           <div className="flex items-center gap-3 min-w-0 lg:flex-[1.2]">
-            <div className="w-10 h-10 bg-[#18C3F8] rounded-2xl flex items-center justify-center shadow-lg shadow-[#18C3F8]/20 flex-shrink-0">
+            <div className="w-10 h-10 bg-[#0D4FB3] rounded-2xl flex items-center justify-center shadow-lg shadow-[#18C3F8]/20 flex-shrink-0">
               <FileText className="w-5 h-5 text-white" />
             </div>
             <div className="min-w-0">
@@ -1537,7 +1537,7 @@ export default function CatalogQuote({ embeddedMode = false, onOrderChange, onLi
                 onKeyDown={e => e.key === 'Enter' && handleSkuSearch()}
                 onFocus={() => searchResults.length > 0 && setShowSearchDropdown(true)}
                 onBlur={() => setTimeout(() => setShowSearchDropdown(false), 200)}
-                className="text-sm border border-slate-200 rounded-xl pl-3.5 pr-11 py-2 w-full focus:outline-none focus:ring-2 focus:ring-[#18C3F8]/20"
+                className="text-sm border border-slate-200 rounded-xl pl-3.5 pr-11 py-2 w-full focus:outline-none focus:ring-2 focus:ring-[#0D4FB3]/20"
               />
               <button onClick={handleSkuSearch} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
                 <Search className="w-4 h-4" />
@@ -1562,7 +1562,7 @@ export default function CatalogQuote({ embeddedMode = false, onOrderChange, onLi
                       )}
                     </div>
                     {(p.catalog_pages?.[0] || SKU_TO_PAGE[p.sku]) && (
-                      <span className="text-[10px] text-[#18C3F8] font-bold flex-shrink-0">
+                      <span className="text-[10px] text-[#0D4FB3] font-bold flex-shrink-0">
                         p.{Math.min(p.catalog_pages?.[0] || SKU_TO_PAGE[p.sku], 212)}
                       </span>
                     )}
@@ -1581,7 +1581,7 @@ export default function CatalogQuote({ embeddedMode = false, onOrderChange, onLi
             ) : !isEmbeddedOnXhibitlyStart ? (
               <button
                 onClick={() => setShowSessionModal(true)}
-                className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:border-[#18C3F8]/30 hover:text-[#18C3F8] transition-colors"
+                className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:border-[#0D4FB3]/30 hover:text-[#0D4FB3] transition-colors"
               >
                 <Plus className="w-4 h-4" />
                 Start Quote Session
@@ -1614,13 +1614,13 @@ export default function CatalogQuote({ embeddedMode = false, onOrderChange, onLi
             </div>
 
             {hasHotspots && !editMode && (
-              <Badge className="hidden 2xl:inline-flex bg-[#18C3F8]/10 text-[#18C3F8] text-[10px] rounded-full px-3 py-1">{currentHotspots.length} hotspots</Badge>
+              <Badge className="hidden 2xl:inline-flex bg-[#0D4FB3]/10 text-[#0D4FB3] text-[10px] rounded-full px-3 py-1">{currentHotspots.length} hotspots</Badge>
             )}
             {isEdited && <Badge className="hidden 2xl:inline-flex bg-amber-100 text-amber-700 text-[10px] rounded-full px-3 py-1">unsaved edits</Badge>}
 
             <button
               onClick={() => setShowMobileQuote(true)}
-              className="lg:hidden flex items-center gap-1.5 bg-[#18C3F8] text-white px-3.5 py-2 rounded-xl text-xs font-bold hover:bg-[#0fb2e4] transition-colors shadow-sm"
+              className="lg:hidden flex items-center gap-1.5 bg-[#0D4FB3] text-white px-3.5 py-2 rounded-xl text-xs font-bold hover:bg-[#0fb2e4] transition-colors shadow-sm"
             >
               <ShoppingCart className="w-3.5 h-3.5" />
               Quote ({lineItems.reduce((s, i) => s + (i.quantity || 0), 0)})
@@ -1629,7 +1629,7 @@ export default function CatalogQuote({ embeddedMode = false, onOrderChange, onLi
             {lineItems.length > 0 && (
               <button
                 onClick={handleCreateQuote}
-                className="hidden 2xl:flex items-center gap-1.5 bg-[#18C3F8] text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-[#0fb2e4] transition-colors shadow-sm"
+                className="hidden 2xl:flex items-center gap-1.5 bg-[#0D4FB3] text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-[#0fb2e4] transition-colors shadow-sm"
               >
                 <ShoppingCart className="w-4 h-4" />
                 Review Quote ({lineItems.reduce((s, i) => s + (i.quantity || 0), 0)})
@@ -1860,7 +1860,7 @@ export default function CatalogQuote({ embeddedMode = false, onOrderChange, onLi
                             handleAddToQuote({ sku: p.sku, name: pd?.name || p.name, price: pd?.base_price, imageUrl: getImageUrl(pd) });
                           }
                         }}
-                        className="flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-200 hover:border-[#18C3F8]/40 hover:bg-[#18C3F8]/5 text-left transition-all group"
+                        className="flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-200 hover:border-[#0D4FB3]/40 hover:bg-[#0D4FB3]/5 text-left transition-all group"
                       >
                         <div className="w-12 h-12 flex-shrink-0 rounded-lg bg-slate-100 overflow-hidden flex items-center justify-center">
                           <ProductImage src={getImageUrl(pd)} alt={p.name} fallbackClassName="w-4 h-4 text-slate-300" />
@@ -1868,9 +1868,9 @@ export default function CatalogQuote({ embeddedMode = false, onOrderChange, onLi
                         <div className="flex-1 min-w-0">
                           <p className="text-xs font-semibold text-slate-800 leading-tight line-clamp-2">{pd?.name || p.name}</p>
                           <p className="text-[9px] text-slate-400 font-mono">{p.sku}</p>
-                          {pd?.base_price && <p className="text-xs font-bold text-[#18C3F8]">{fmt(pd.base_price)}</p>}
+                          {pd?.base_price && <p className="text-xs font-bold text-[#0D4FB3]">{fmt(pd.base_price)}</p>}
                         </div>
-                        {activeOrder && <Plus className="w-4 h-4 text-[#18C3F8] opacity-0 group-hover:opacity-100 flex-shrink-0" />}
+                        {activeOrder && <Plus className="w-4 h-4 text-[#0D4FB3] opacity-0 group-hover:opacity-100 flex-shrink-0" />}
                       </button>
                     );
                   })}
