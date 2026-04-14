@@ -69,6 +69,16 @@ export default function QuoteSidebar({ order, lineItems, onLineItemsChange, onCr
     onLineItemsChange();
   };
 
+  const setQty = async (item, value) => {
+    const parsedQty = parseInt(value, 10);
+    const newQty = Number.isNaN(parsedQty) ? 1 : Math.max(1, parsedQty);
+    await base44.entities.LineItem.update(item.id, {
+      quantity: newQty,
+      total_price: parseFloat((newQty * (item.unit_price || 0)).toFixed(2)),
+    });
+    onLineItemsChange();
+  };
+
   const removeItem = async (item) => {
     await base44.entities.LineItem.delete(item.id);
     onLineItemsChange();
@@ -127,20 +137,23 @@ export default function QuoteSidebar({ order, lineItems, onLineItemsChange, onCr
                     <ProductThumb src={getThumbUrl(item, productCache)} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="min-w-0">
-                        <p className="text-[11px] font-bold text-slate-900 leading-tight line-clamp-2">{item.product_name}</p>
-                        <p className="text-[9px] text-slate-400 font-mono mt-0.5">{item.sku}</p>
-                        {item.category && <p className="text-[9px] text-slate-400 mt-0.5 line-clamp-1">{item.category}</p>}
-                      </div>
-                      <span className="rounded-full bg-[#18C3F8]/10 px-2 py-0.5 text-[9px] font-bold text-[#18C3F8] whitespace-nowrap">
-                        Qty {item.quantity || 0}
-                      </span>
-                    </div>
+                    <p className="text-[11px] font-bold text-slate-900 leading-tight line-clamp-2">{item.product_name}</p>
+                    <p className="text-[9px] text-slate-400 font-mono mt-0.5">{item.sku}</p>
+                    {item.category && <p className="text-[9px] text-slate-400 mt-0.5 line-clamp-1">{item.category}</p>}
                   </div>
-                  <button onClick={() => removeItem(item)} className="text-slate-300 hover:text-red-400 transition-colors flex-shrink-0 p-0.5">
-                    <X className="w-4 h-4" />
-                  </button>
+                  <div className="flex items-center gap-1.5 flex-shrink-0">
+                    <input
+                      type="number"
+                      min="1"
+                      value={item.quantity || 1}
+                      onChange={(e) => setQty(item, e.target.value)}
+                      className="h-7 w-14 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-bold text-slate-700 text-center focus:outline-none focus:ring-1 focus:ring-[#18C3F8]"
+                      aria-label={`Quantity for ${item.product_name}`}
+                    />
+                    <button onClick={() => removeItem(item)} className="text-slate-300 hover:text-red-400 transition-colors flex-shrink-0 p-0.5">
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
 
                 <div className="mt-2.5 grid grid-cols-2 gap-x-2 gap-y-1 rounded-lg bg-slate-50 px-2.5 py-2 text-[9px] border border-slate-100">
