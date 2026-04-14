@@ -157,27 +157,27 @@ function buildPrompt({ boothSize, boothType, showName, brandName, brandDetails, 
   const resolvedBoothType = String(boothType || 'Inline').toLowerCase();
   const resolvedBrandName = brandName || brandDetails?.company_name || 'Client brand';
 
-  return `Create one realistic trade show booth rendering for ${resolvedBrandName}.
+  return `Create a professional 3D-style trade show booth concept for ${resolvedBrandName}.
 Booth size: ${boothSize || '10x10'}.
 Booth type: ${resolvedBoothType}.
 Event: ${showName || 'Convention event'}.
 
-STRICT GOAL:
-- Show only the products from the current quote.
-- Do not add any extra exhibit pieces, structures, counters, tables, seating, lighting, flooring, hanging signs, accessories, or architectural elements that are not in the quoted product references.
-- Match the referenced product shapes, sizes, proportions, and placement style as closely as possible.
-- Keep the booth physically realistic for the stated footprint.
-- Prominently brand the booth for ${resolvedBrandName}; do not use any other brand name or invented company name.
+Design intent:
+- Base the concept on the referenced quote products.
+- Keep the layout visually realistic for the stated footprint.
+- Match the referenced product forms and overall arrangement as closely as practical.
+- Keep the brand treatment focused on ${resolvedBrandName}.
+- Avoid unrelated products or unrelated branding.
 
-CURRENT QUOTED PRODUCTS:
+Quoted products:
 ${selectedItems || 'Quoted products'}
 
-BRAND DIRECTION:
-${colorNotes ? `Use these brand colors: ${colorNotes}.` : 'Use a clean branded graphic treatment.'}
-${brandDetails?.logo_cached_url || brandDetails?.logo_url ? `Use the provided ${resolvedBrandName} logo as the branding source.` : `Use the provided brand name ${resolvedBrandName} in the booth graphics.`}
+Brand direction:
+${colorNotes ? `Use these brand colors where appropriate: ${colorNotes}.` : 'Use a clean branded graphic treatment.'}
+${brandDetails?.logo_cached_url || brandDetails?.logo_url ? `Use the provided ${resolvedBrandName} logo as a visual branding reference.` : `Use the provided brand name ${resolvedBrandName} in the booth graphics.`}
 
-OUTPUT:
-A polished sales-preview rendering that reflects the exact current quote, not an upsell concept.`;
+Output:
+A polished sales-preview booth concept image for client presentation.`;
 }
 
 function extractImageUrl(task) {
