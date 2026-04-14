@@ -1302,23 +1302,44 @@ export default function CatalogQuote({ embeddedMode = false, onOrderChange, onLi
           base44.entities.Product.filter({ description: regex }),
         ]);
         const normalizedQuery = normalizeSearchText(trimmed);
+        const queryWords = normalizedQuery.split(' ').filter(Boolean);
         const combined = [...(byName || []), ...(bySku || []), ...(byCategory || []), ...(bySubcategory || []), ...(byDescription || [])];
         const unique = combined.filter((v, i, a) => a.findIndex(x => x.id === v.id) === i);
         const ranked = unique
           .map(product => {
             const tagging = getProductTagging(product);
             const text = tagging.text;
+            const nameText = normalizeSearchText(product?.name);
+            const skuText = normalizeSearchText(product?.sku);
+            const categoryText = normalizeSearchText(product?.category);
+            const subcategoryText = normalizeSearchText(product?.subcategory);
+            const allWordsMatch = queryWords.every(word => text.includes(word));
+            const exactNameMatch = nameText === normalizedQuery;
+            const exactSkuMatch = skuText === normalizedQuery;
+            const startsWithName = nameText.startsWith(normalizedQuery);
+            const nameWordMatch = queryWords.every(word => nameText.includes(word));
+            const tagMatch = tagging.tags.some(tag => {
+              const normalizedTag = normalizeSearchText(tag);
+              return normalizedTag === normalizedQuery || normalizedQuery.includes(normalizedTag) || normalizedTag.includes(normalizedQuery);
+            });
+            const categoryMatch = categoryText.includes(normalizedQuery) || subcategoryText.includes(normalizedQuery);
             const score = [
-              text.includes(normalizedQuery) ? 100 : 0,
-              tagging.tags.some(tag => tag.includes(normalizedQuery) || normalizedQuery.includes(tag)) ? 60 : 0,
-              normalizeSearchText(product?.name).includes(normalizedQuery) ? 40 : 0,
-              normalizeSearchText(product?.category).includes(normalizedQuery) ? 20 : 0,
-              normalizeSearchText(product?.subcategory).includes(normalizedQuery) ? 20 : 0,
+              exactSkuMatch ? 500 : 0,
+              exactNameMatch ? 400 : 0,
+              startsWithName ? 220 : 0,
+              nameWordMatch ? 180 : 0,
+              allWordsMatch ? 120 : 0,
+              text.includes(normalizedQuery) ? 70 : 0,
+              tagMatch ? 45 : 0,
+              categoryMatch ? 20 : 0,
             ].reduce((sum, n) => sum + n, 0);
-            return { product, score };
+            return { product, score, nameText };
           })
           .filter(item => item.score > 0)
-          .sort((a, b) => b.score - a.score)
+          .sort((a, b) => {
+            if (b.score !== a.score) return b.score - a.score;
+            return a.nameText.localeCompare(b.nameText);
+          })
           .slice(0, 15)
           .map(item => item.product);
         setSearchResults(ranked);
@@ -1516,7 +1537,7 @@ export default function CatalogQuote({ embeddedMode = false, onOrderChange, onLi
                 onKeyDown={e => e.key === 'Enter' && handleSkuSearch()}
                 onFocus={() => searchResults.length > 0 && setShowSearchDropdown(true)}
                 onBlur={() => setTimeout(() => setShowSearchDropdown(false), 200)}
-                className="text-sm border border-slate-200 rounded-xl px-3.5 py-2 w-full focus:outline-none focus:ring-2 focus:ring-[#18C3F8]/20"
+                className="text-sm border border-slate-200 rounded-xl pl-3.5 pr-11 py-2 w-full focus:outline-none focus:ring-2 focus:ring-[#18C3F8]/20"
               />
               <button onClick={handleSkuSearch} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
                 <Search className="w-4 h-4" />
