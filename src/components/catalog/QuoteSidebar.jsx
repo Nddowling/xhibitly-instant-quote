@@ -147,7 +147,7 @@ export default function QuoteSidebar({ order, lineItems, onLineItemsChange, onCr
                       min="1"
                       value={item.quantity || 1}
                       onChange={(e) => setQty(item, e.target.value)}
-                      className="h-7 w-14 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-bold text-slate-700 text-center focus:outline-none focus:ring-1 focus:ring-[#18C3F8]"
+                      className="h-7 w-14 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-bold text-slate-700 text-center focus:outline-none focus:ring-1 focus:ring-[#0D4FB3]"
                       aria-label={`Quantity for ${item.product_name}`}
                     />
                     <button onClick={() => removeItem(item)} className="text-slate-300 hover:text-red-400 transition-colors flex-shrink-0 p-0.5">

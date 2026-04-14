@@ -79,7 +79,7 @@ export default function XhibitlyAgentPane({ queuedPrompt, onPromptConsumed }) {
     <div className="w-full h-full min-h-0 flex flex-col bg-white overflow-hidden">
       <div className="border-b border-slate-200 bg-white px-5 py-5 flex-shrink-0">
         <div className="flex items-start gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eaf6ff] text-[#18C3F8]">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#0D4FB3]/10 text-[#0D4FB3]">
             <MessageSquare className="w-5 h-5" />
           </div>
           <div className="min-w-0 flex-1">
@@ -101,7 +101,7 @@ export default function XhibitlyAgentPane({ queuedPrompt, onPromptConsumed }) {
           <button
             key={item}
             onClick={() => handleSend(item)}
-            className="px-3 py-2 rounded-full bg-white border border-slate-200 text-xs font-semibold text-[#0D4FB3] hover:border-[#18C3F8]/50"
+            className="px-3 py-2 rounded-full bg-white border border-slate-200 text-xs font-semibold text-[#0D4FB3] hover:border-[#0D4FB3]/50"
           >
             {item}
           </button>
@@ -121,7 +121,7 @@ export default function XhibitlyAgentPane({ queuedPrompt, onPromptConsumed }) {
             <p className="text-xs text-slate-500 mt-1 leading-relaxed">
               Once you sign in, the assistant can start a conversation and help build the booth.
             </p>
-            <Button onClick={() => base44.auth.redirectToLogin()} className="mt-4 rounded-xl bg-[#18C3F8] hover:bg-[#0fb2e4] text-white">
+            <Button onClick={() => base44.auth.redirectToLogin()} className="mt-4 rounded-xl bg-[#0D4FB3] hover:bg-[#0b428f] text-white">
               Sign In
             </Button>
           </div>
@@ -151,12 +151,12 @@ export default function XhibitlyAgentPane({ queuedPrompt, onPromptConsumed }) {
               placeholder="Tell me your booth size, event, company, or product idea"
               className="h-12 rounded-xl"
             />
-            <Button onClick={() => handleSend()} className="h-12 px-5 rounded-xl bg-[#18C3F8] hover:bg-[#0fb2e4] text-white">
+            <Button onClick={() => handleSend()} className="h-12 px-5 rounded-xl bg-[#0D4FB3] hover:bg-[#0b428f] text-white">
               <Send className="w-4 h-4" />
             </Button>
           </div>
         ) : (
-          <Button onClick={() => base44.auth.redirectToLogin()} className="w-full h-12 rounded-xl bg-[#18C3F8] hover:bg-[#0fb2e4] text-white">
+          <Button onClick={() => base44.auth.redirectToLogin()} className="w-full h-12 rounded-xl bg-[#0D4FB3] hover:bg-[#0b428f] text-white">
             <LogIn className="w-4 h-4" />
             Sign In to Chat
           </Button>
