@@ -1075,7 +1075,10 @@ export default function CatalogQuote({ embeddedMode = false, initialPrompt = '',
   const handleAddToQuote = useCallback(async (product) => {
     if (!activeOrder) return;
     const { sku, name, price, imageUrl } = product;
-    const existing = lineItems.find(i => i.sku === sku);
+
+    const liveLineItems = await base44.entities.LineItem.filter({ order_id: activeOrder.id }, '-created_date', 500);
+    const existing = (liveLineItems || []).find(i => i.sku === sku);
+
     if (existing) {
       const newQty = (existing.quantity || 1) + 1;
       await base44.entities.LineItem.update(existing.id, {
@@ -1103,8 +1106,9 @@ export default function CatalogQuote({ embeddedMode = false, initialPrompt = '',
         image_url: resolvedImageUrl || '',
       });
     }
-    refreshLineItems();
-  }, [activeOrder, lineItems, refreshLineItems]);
+
+    await refreshLineItems();
+  }, [activeOrder, refreshLineItems]);
 
   const handleCreateQuote = async () => {
     if (!activeOrder || lineItems.length === 0) return;
