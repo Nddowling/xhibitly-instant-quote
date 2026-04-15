@@ -7,6 +7,84 @@ const CORS = {
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
 };
 
+function dedupeUrls(urls) {
+  return Array.from(new Set((urls || []).filter(Boolean)));
+}
+
+function buildPlacementInstructions(products, quantities) {
+  const zoneOrder = ['overhead', 'back_wall', 'side', 'flanking', 'front', 'center', 'accent', 'accessory'];
+  const zoneLabels = {
+    overhead: 'OVERHEAD / CEILING',
+    back_wall: 'BACK WALL',
+    side: 'SIDE AREAS',
+    flanking: 'FLANKING / ENTRANCE',
+    front: 'FRONT / AISLE-FACING',
+    center: 'CENTER OF BOOTH',
+    accent: 'ACCENT STRUCTURES',
+    accessory: 'ACCESSORIES',
+  };
+
+  const grouped = {};
+  for (const product of products) {
+    const zone = product.placement_zone || 'center';
+    if (zone === 'hidden') continue;
+    if (!grouped[zone]) grouped[zone] = [];
+    grouped[zone].push(product);
+  }
+
+  const lines = [];
+  for (const zone of zoneOrder) {
+    const items = grouped[zone] || [];
+    if (items.length === 0) continue;
+
+    lines.push(`--- ${zoneLabels[zone] || zone.toUpperCase()} ---`);
+    for (const product of items) {
+      const qty = quantities[product.sku] || 1;
+      lines.push(`- ${product.name || product.sku} (${product.sku}) x${qty}`);
+      if (product.render_category) lines.push(`  Render category: ${product.render_category}`);
+      if (product.physical_description) lines.push(`  Physical: ${product.physical_description}`);
+      if (product.material) lines.push(`  Material: ${product.material}`);
+      if (product.render_instruction) lines.push(`  Render instruction: ${product.render_instruction}`);
+      if (product.footprint_w_ft || product.footprint_d_ft || product.height_ft) {
+        lines.push(`  Dimensions: ${product.footprint_w_ft || '?'}ft W x ${product.height_ft || '?'}ft H x ${product.footprint_d_ft || '?'}ft D`);
+      }
+      lines.push('');
+    }
+  }
+
+  return lines.join('\n');
+}
+
+function buildRenderPrompt({ boothInfo, products, placementInstructions }) {
+  const referenceLines = products.map((product) => `- ${product.sku}: ${product.name || product.sku}`).join('\n');
+
+  return `You are an expert trade show booth designer and photorealistic exhibit render prompt writer.
+
+Create one detailed image-generation prompt for a ${boothInfo.boothSize} ${boothInfo.boothType} trade show booth for ${boothInfo.brandName} at ${boothInfo.showName}.
+
+Use the exact quoted products only. Do not add any extra structures, counters, monitors, furniture, banners, signage, shelving, or accessories unless they are explicitly listed.
+
+PRODUCT DATA FROM CATALOG RECORDS:
+${placementInstructions}
+
+BRANDING DIRECTION:
+${boothInfo.colorNotes ? `Use these brand colors as guidance: ${boothInfo.colorNotes}.` : 'Apply a clean professional branded graphic treatment.'}
+${boothInfo.logoUrl ? 'A logo reference image is provided and should be incorporated naturally on the main branded surfaces.' : `Display the brand name "${boothInfo.brandName}" prominently on key graphic surfaces.`}
+
+REFERENCE PRODUCTS:
+${referenceLines}
+
+CRITICAL RULES:
+1. Match each product's physical form, size, and material based on the provided product record data.
+2. Respect the placement_zone guidance when arranging the booth.
+3. Keep all products scaled realistically inside the booth footprint.
+4. Convention center setting, polished trade show look, professional lighting, no people.
+5. Show a strong 3/4 perspective that clearly reveals layout depth and product placement.
+6. Do not invent products or duplicate quoted items.
+
+Write only the final image prompt.`;
+}
+
 function extractDomain(url) {
   try {
     const cleanUrl = String(url || '').trim().replace(/^https?:\/\/(www\.)?/, '');
@@ -145,40 +223,33 @@ Deno.serve(async (req) => {
       logoUrl: brandDetails?.logo_cached_url || brandDetails?.logo_url || ''
     };
 
-    const registryResponse = await fetch(
-      'https://xpgvpzbzmkubahyxwipk.supabase.co/functions/v1/get-render-data',
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          skus,
-          quantities,
-          boothInfo,
-        })
-      }
+    const allProducts = await base44.asServiceRole.entities.Product.filter({ is_active: true }, 'sku', 5000);
+    const productBySku = new Map(
+      (allProducts || []).map((product) => {
+        const normalized = { ...product, ...(product?.data || {}) };
+        return [normalized.sku, normalized];
+      }).filter(([sku]) => Boolean(sku))
     );
 
-    if (!registryResponse.ok) {
-      const registryError = await registryResponse.text();
-      throw new Error(`Render registry failed (${registryResponse.status}): ${registryError}`);
+    const selectedProducts = skus
+      .map((sku) => productBySku.get(sku))
+      .filter(Boolean);
+
+    if (selectedProducts.length === 0) {
+      throw new Error('No matching Product records were found for the selected SKUs');
     }
 
-    const registryData = await registryResponse.json();
-    const finalPrompt = registryData?.prompt;
-    const combinedReferenceUrls = (registryData?.image_urls || [])
-      .map((item) => item?.url)
-      .filter(Boolean)
-      .filter((url, index, arr) => arr.indexOf(url) === index)
-      .slice(0, 6);
+    const placementInstructions = buildPlacementInstructions(selectedProducts, quantities);
+    const finalPrompt = buildRenderPrompt({ boothInfo, products: selectedProducts, placementInstructions });
+    const combinedReferenceUrls = dedupeUrls([
+      ...selectedProducts.map((product) => product.image_cached_url || product.image_url || null),
+      boothInfo.logoUrl || null,
+    ]).slice(0, 6);
 
-    if (!finalPrompt) {
-      throw new Error('Render registry failed: no prompt returned');
-    }
-
-    console.log('[generateBoothRender] Using render registry prompt');
-    console.log('[generateBoothRender] Registry request:', JSON.stringify({ skus, quantities, boothInfo }));
-    console.log('[generateBoothRender] Registry prompt:', finalPrompt);
-    console.log('[generateBoothRender] Registry refs:', JSON.stringify(combinedReferenceUrls));
+    console.log('[generateBoothRender] Using Base44 Product records');
+    console.log('[generateBoothRender] Selected SKUs:', JSON.stringify(skus));
+    console.log('[generateBoothRender] Prompt:', finalPrompt);
+    console.log('[generateBoothRender] Reference URLs:', JSON.stringify(combinedReferenceUrls));
 
     const imageResult = await base44.asServiceRole.integrations.Core.GenerateImage({
       prompt: finalPrompt,
