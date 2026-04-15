@@ -58,31 +58,19 @@ function buildPlacementInstructions(products, quantities) {
 function buildRenderPrompt({ boothInfo, products, placementInstructions }) {
   const referenceLines = products.map((product) => `- ${product.sku}: ${product.name || product.sku}`).join('\n');
 
-  return `You are an expert trade show booth designer and photorealistic exhibit render prompt writer.
+  return `Photorealistic 3/4 view trade show booth render for ${boothInfo.brandName} at ${boothInfo.showName}. Booth size: ${boothInfo.boothSize}. Booth type: ${boothInfo.boothType}. Professional convention center environment, premium exhibit photography look, polished flooring, overhead trade show lighting, no people.
 
-Create one detailed image-generation prompt for a ${boothInfo.boothSize} ${boothInfo.boothType} trade show booth for ${boothInfo.brandName} at ${boothInfo.showName}.
-
-Use the exact quoted products only. Do not add any extra structures, counters, monitors, furniture, banners, signage, shelving, or accessories unless they are explicitly listed.
-
-PRODUCT DATA FROM CATALOG RECORDS:
+Use only these quoted products and do not add any unquoted elements:
 ${placementInstructions}
 
-BRANDING DIRECTION:
-${boothInfo.colorNotes ? `Use these brand colors as guidance: ${boothInfo.colorNotes}.` : 'Apply a clean professional branded graphic treatment.'}
-${boothInfo.logoUrl ? 'A logo reference image is provided and should be incorporated naturally on the main branded surfaces.' : `Display the brand name "${boothInfo.brandName}" prominently on key graphic surfaces.`}
+Branding direction:
+${boothInfo.colorNotes ? `Use these brand colors: ${boothInfo.colorNotes}.` : 'Use a clean professional branded graphic treatment.'}
+${boothInfo.logoUrl ? 'Apply the provided logo naturally to primary graphic surfaces.' : `Show the brand name ${boothInfo.brandName} on key graphic surfaces.`}
 
-REFERENCE PRODUCTS:
+Reference products:
 ${referenceLines}
 
-CRITICAL RULES:
-1. Match each product's physical form, size, and material based on the provided product record data.
-2. Respect the placement_zone guidance when arranging the booth.
-3. Keep all products scaled realistically inside the booth footprint.
-4. Convention center setting, polished trade show look, professional lighting, no people.
-5. Show a strong 3/4 perspective that clearly reveals layout depth and product placement.
-6. Do not invent products or duplicate quoted items.
-
-Write only the final image prompt.`;
+Critical requirements: match each product's physical form, material, and approximate dimensions from the product record data; respect placement zones; keep all items realistically scaled within the booth footprint; maintain a clean, balanced composition with strong depth and accurate spacing; do not duplicate products; do not invent furniture, monitors, counters, hanging signs, or accessories unless explicitly listed.`;
 }
 
 function extractDomain(url) {
