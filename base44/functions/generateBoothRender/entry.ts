@@ -1,51 +1,11 @@
-/**
- * generateBoothRender.ts
- *
- * Generates a branded booth concept image using Tripo's image generation task flow.
- * Uses the selected quote item images as references and returns a single preview image URL.
- */
-
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
-const TRIPO_API_KEY = (Deno.env.get('TRIPO_API_KEY') ?? '').trim();
 const BRANDFETCH_API_KEY = (Deno.env.get('BRANDFETCH_API_KEY') ?? '').trim();
-
-const TRIPO_BASE = 'https://api.tripo3d.ai/v2/openapi';
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
 };
-
-async function createGeneration(prompt, referenceUrls) {
-  const imageUrls = referenceUrls.slice(0, 6);
-
-  const body = {
-    type: 'generate_image',
-    prompt,
-    ...(imageUrls.length > 0 ? { image_urls: imageUrls } : {}),
-  };
-
-  const res = await fetch(`${TRIPO_BASE}/task`, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${TRIPO_API_KEY}`,
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    },
-    body: JSON.stringify(body),
-  });
-
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`Tripo create failed (${res.status}): ${err}`);
-  }
-
-  const data = await res.json();
-  const taskId = data?.data?.task_id || data?.task_id;
-  if (!taskId) throw new Error('Tripo did not return a task id');
-  return taskId;
-}
 
 function extractDomain(url) {
   try {
@@ -151,87 +111,9 @@ async function fetchBrandDetails(base44, websiteUrl) {
   return parsed;
 }
 
-
-function extractImageUrl(task) {
-  const data = task?.data || {};
-  const output = data?.output || task?.output || {};
-  const result = data?.result || task?.result || {};
-
-  return output?.generated_image
-    || output?.image_url
-    || output?.url
-    || output?.rendered_image
-    || output?.result_url
-    || output?.image
-    || output?.images?.[0]?.url
-    || output?.images?.[0]
-    || result?.generated_image
-    || result?.image_url
-    || result?.url
-    || result?.rendered_image
-    || result?.result_url
-    || result?.image
-    || result?.images?.[0]?.url
-    || result?.images?.[0]
-    || data?.image_url
-    || data?.rendered_image
-    || data?.url
-    || task?.image_url
-    || task?.url
-    || null;
-}
-
-async function getGenerationStatus(id) {
-  const res = await fetch(`${TRIPO_BASE}/task/${id}`, {
-    headers: {
-      'Authorization': `Bearer ${TRIPO_API_KEY}`,
-      'Accept': 'application/json',
-    },
-  });
-
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`Tripo status failed (${res.status}): ${err}`);
-  }
-
-  const task = await res.json();
-  const rawStatus = task?.data?.status || task?.status || 'pending';
-  const imageUrl = extractImageUrl(task);
-  const createTime = Number(task?.data?.create_time || task?.create_time || 0);
-  const ageSeconds = createTime ? Math.max(0, Math.floor(Date.now() / 1000) - createTime) : 0;
-  const status = imageUrl && ['running', 'processing', 'queued', 'pending'].includes(rawStatus) ? 'completed' : rawStatus;
-
-  console.log('[generateBoothRender] Status response:', JSON.stringify(task));
-
-  if (!imageUrl && ['running', 'processing'].includes(rawStatus) && ageSeconds > 180) {
-    throw new Error('Render timed out before an image was returned');
-  }
-
-  return {
-    status,
-    url: imageUrl,
-    raw: task,
-  };
-}
-
-// ─── Main handler ─────────────────────────────────────────────────────────────
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: CORS });
-  }
-
-  if (!TRIPO_API_KEY) {
-    return Response.json(
-      { error: 'TRIPO_API_KEY not configured — add it to Base44 environment variables' },
-      { status: 500, headers: CORS }
-    );
-  }
-
-  if ([...TRIPO_API_KEY].some((char) => char.charCodeAt(0) > 255)) {
-    return Response.json(
-      { error: 'TRIPO_API_KEY contains unsupported characters. Please re-save the secret as plain text.' },
-      { status: 500, headers: CORS }
-    );
   }
 
   let body;
@@ -241,14 +123,9 @@ Deno.serve(async (req) => {
     return Response.json({ error: 'Invalid JSON body' }, { status: 400, headers: CORS });
   }
 
-  const { prompt, reference_urls = [], task_id, website_url = '', brand_name = '', booth_size = '', booth_type = '', show_name = '', quote_items = [] } = body;
+  const { website_url = '', brand_name = '', booth_size = '', booth_type = '', show_name = '', quote_items = [] } = body;
 
   try {
-    if (task_id) {
-      const result = await getGenerationStatus(task_id);
-      return Response.json(result, { headers: CORS });
-    }
-
     const base44 = createClientFromRequest(req);
     const brandDetails = website_url ? await fetchBrandDetails(base44, website_url) : null;
     const skus = Array.isArray(quote_items)
@@ -259,6 +136,15 @@ Deno.serve(async (req) => {
       if (item?.sku) quantities[item.sku] = item.quantity || 1;
     });
 
+    const boothInfo = {
+      brandName: brand_name || brandDetails?.company_name || 'Client brand',
+      boothSize: booth_size || '10x10',
+      boothType: booth_type || 'Inline',
+      showName: show_name || 'Convention event',
+      colorNotes: [brandDetails?.primary_color, brandDetails?.secondary_color, brandDetails?.accent_color_1, brandDetails?.accent_color_2].filter(Boolean).join(', '),
+      logoUrl: brandDetails?.logo_cached_url || brandDetails?.logo_url || ''
+    };
+
     const registryResponse = await fetch(
       'https://xpgvpzbzmkubahyxwipk.supabase.co/functions/v1/get-render-data',
       {
@@ -267,14 +153,7 @@ Deno.serve(async (req) => {
         body: JSON.stringify({
           skus,
           quantities,
-          boothInfo: {
-            brandName: brand_name || brandDetails?.company_name || 'Client brand',
-            boothSize: booth_size || '10x10',
-            boothType: booth_type || 'Inline',
-            showName: show_name || 'Convention event',
-            colorNotes: [brandDetails?.primary_color, brandDetails?.secondary_color, brandDetails?.accent_color_1, brandDetails?.accent_color_2].filter(Boolean).join(', '),
-            logoUrl: brandDetails?.logo_cached_url || brandDetails?.logo_url || ''
-          }
+          boothInfo,
         })
       }
     );
@@ -297,23 +176,20 @@ Deno.serve(async (req) => {
     }
 
     console.log('[generateBoothRender] Using render registry prompt');
-    console.log('[generateBoothRender] Registry request:', JSON.stringify({
-      skus,
-      quantities,
-      boothInfo: {
-        brandName: brand_name || brandDetails?.company_name || 'Client brand',
-        boothSize: booth_size || '10x10',
-        boothType: booth_type || 'Inline',
-        showName: show_name || 'Convention event',
-        colorNotes: [brandDetails?.primary_color, brandDetails?.secondary_color, brandDetails?.accent_color_1, brandDetails?.accent_color_2].filter(Boolean).join(', '),
-        logoUrl: brandDetails?.logo_cached_url || brandDetails?.logo_url || ''
-      }
-    }));
+    console.log('[generateBoothRender] Registry request:', JSON.stringify({ skus, quantities, boothInfo }));
     console.log('[generateBoothRender] Registry prompt:', finalPrompt);
     console.log('[generateBoothRender] Registry refs:', JSON.stringify(combinedReferenceUrls));
 
-    const id = await createGeneration(finalPrompt, combinedReferenceUrls);
-    return Response.json({ task_id: id, status: 'pending' }, { headers: CORS });
+    const imageResult = await base44.asServiceRole.integrations.Core.GenerateImage({
+      prompt: finalPrompt,
+      existing_image_urls: combinedReferenceUrls.length > 0 ? combinedReferenceUrls : undefined,
+    });
+
+    if (!imageResult?.url) {
+      throw new Error('GPT Image did not return an image URL');
+    }
+
+    return Response.json({ status: 'completed', url: imageResult.url }, { headers: CORS });
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
     console.error('[generateBoothRender] Error:', msg);
