@@ -5,7 +5,7 @@
  * Uses the selected quote item images as references and returns a single preview image URL.
  */
 
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.23';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
 const TRIPO_API_KEY = (Deno.env.get('TRIPO_API_KEY') ?? '').trim();
 const BRANDFETCH_API_KEY = (Deno.env.get('BRANDFETCH_API_KEY') ?? '').trim();
@@ -151,34 +151,6 @@ async function fetchBrandDetails(base44, websiteUrl) {
   return parsed;
 }
 
-function buildPrompt({ boothSize, boothType, showName, brandName, brandDetails, quoteItems }) {
-  const selectedItems = (quoteItems || []).map((item, index) => `${index + 1}. ${item?.sku ? `${item.sku} — ` : ''}${item?.name || 'Product'}`.trim()).join('\n');
-  const colorNotes = [brandDetails?.primary_color, brandDetails?.secondary_color, brandDetails?.accent_color_1, brandDetails?.accent_color_2].filter(Boolean).join(', ');
-  const resolvedBoothType = String(boothType || 'Inline').toLowerCase();
-  const resolvedBrandName = brandName || brandDetails?.company_name || 'Client brand';
-
-  return `Create a professional 3D-style trade show booth concept for ${resolvedBrandName}.
-Booth size: ${boothSize || '10x10'}.
-Booth type: ${resolvedBoothType}.
-Event: ${showName || 'Convention event'}.
-
-Design intent:
-- Base the concept on the referenced quote products.
-- Keep the layout visually realistic for the stated footprint.
-- Match the referenced product forms and overall arrangement as closely as practical.
-- Keep the brand treatment focused on ${resolvedBrandName}.
-- Avoid unrelated products or unrelated branding.
-
-Quoted products:
-${selectedItems || 'Quoted products'}
-
-Brand direction:
-${colorNotes ? `Use these brand colors where appropriate: ${colorNotes}.` : 'Use a clean branded graphic treatment.'}
-${brandDetails?.logo_cached_url || brandDetails?.logo_url ? `Use the provided ${resolvedBrandName} logo as a visual branding reference.` : `Use the provided brand name ${resolvedBrandName} in the booth graphics.`}
-
-Output:
-A polished sales-preview booth concept image for client presentation.`;
-}
 
 function extractImageUrl(task) {
   const data = task?.data || {};
@@ -279,25 +251,67 @@ Deno.serve(async (req) => {
 
     const base44 = createClientFromRequest(req);
     const brandDetails = website_url ? await fetchBrandDetails(base44, website_url) : null;
-    const quoteItemUrls = Array.isArray(quote_items)
-      ? quote_items.map((item) => item?.image_url).filter(Boolean)
+    const skus = Array.isArray(quote_items)
+      ? quote_items.map((item) => item?.sku).filter(Boolean)
       : [];
-    const logoUrl = [brandDetails?.logo_cached_url, brandDetails?.logo_url]
-      .filter((url) => url && !String(url).toLowerCase().includes('.svg'))[0] || '';
-    const combinedReferenceUrls = [logoUrl, ...quoteItemUrls, ...reference_urls]
+    const quantities = {};
+    (quote_items || []).forEach((item) => {
+      if (item?.sku) quantities[item.sku] = item.quantity || 1;
+    });
+
+    const registryResponse = await fetch(
+      'https://xpgvpzbzmkubahyxwipk.supabase.co/functions/v1/get-render-data',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          skus,
+          quantities,
+          boothInfo: {
+            brandName: brand_name || brandDetails?.company_name || 'Client brand',
+            boothSize: booth_size || '10x10',
+            boothType: booth_type || 'Inline',
+            showName: show_name || 'Convention event',
+            colorNotes: [brandDetails?.primary_color, brandDetails?.secondary_color, brandDetails?.accent_color_1, brandDetails?.accent_color_2].filter(Boolean).join(', '),
+            logoUrl: brandDetails?.logo_cached_url || brandDetails?.logo_url || ''
+          }
+        })
+      }
+    );
+
+    if (!registryResponse.ok) {
+      const registryError = await registryResponse.text();
+      throw new Error(`Render registry failed (${registryResponse.status}): ${registryError}`);
+    }
+
+    const registryData = await registryResponse.json();
+    const finalPrompt = registryData?.prompt;
+    const combinedReferenceUrls = (registryData?.image_urls || [])
+      .map((item) => item?.url)
       .filter(Boolean)
       .filter((url, index, arr) => arr.indexOf(url) === index)
       .slice(0, 6);
-    const finalPrompt = buildPrompt({
-      boothSize: booth_size,
-      boothType: booth_type,
-      showName: show_name,
-      brandName: brand_name,
-      brandDetails,
-      quoteItems: quote_items,
-    });
 
-    console.log(`[generateBoothRender] Creating Tripo generation | refs: ${combinedReferenceUrls.length}`);
+    if (!finalPrompt) {
+      throw new Error('Render registry failed: no prompt returned');
+    }
+
+    console.log('[generateBoothRender] Using render registry prompt');
+    console.log('[generateBoothRender] Registry request:', JSON.stringify({
+      skus,
+      quantities,
+      boothInfo: {
+        brandName: brand_name || brandDetails?.company_name || 'Client brand',
+        boothSize: booth_size || '10x10',
+        boothType: booth_type || 'Inline',
+        showName: show_name || 'Convention event',
+        colorNotes: [brandDetails?.primary_color, brandDetails?.secondary_color, brandDetails?.accent_color_1, brandDetails?.accent_color_2].filter(Boolean).join(', '),
+        logoUrl: brandDetails?.logo_cached_url || brandDetails?.logo_url || ''
+      }
+    }));
+    console.log('[generateBoothRender] Registry prompt:', finalPrompt);
+    console.log('[generateBoothRender] Registry refs:', JSON.stringify(combinedReferenceUrls));
+
     const id = await createGeneration(finalPrompt, combinedReferenceUrls);
     return Response.json({ task_id: id, status: 'pending' }, { headers: CORS });
   } catch (e) {
