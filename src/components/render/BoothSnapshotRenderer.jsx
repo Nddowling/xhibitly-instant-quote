@@ -24,12 +24,9 @@ import {
   makeContactShadowTex,
   makeGridTex,
   makeCarpetTex,
-  makeAisleTex,
   makeBackwallTex,
   makeDrapeTex,
   makeConcreteFloorTex,
-  makeHallCeilingTex,
-  makeHallWallTex,
   makeLabelTex,
   makePlaceholderTex
 } from './textureGenerators';
