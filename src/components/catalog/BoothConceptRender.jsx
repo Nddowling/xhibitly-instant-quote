@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { SKU_TO_IMAGE } from '@/data/skuImageMap';
 import { base44 } from '@/api/base44Client';
 import { Wand2, Loader2, RefreshCw, ZoomIn, X, Sparkles, Images, ScanSearch, CheckCircle2 } from 'lucide-react';
-import { fetchRenderRegistry, buildEnrichedPlacementInstructions, buildEnrichedRenderPrompt, mergeImageUrls } from '@/utils/renderRegistry';
 
 function resolveProductImage(item) {
   if (item.sku && SKU_TO_IMAGE[item.sku]) return SKU_TO_IMAGE[item.sku];
@@ -218,43 +217,52 @@ Write ONLY the final image generation prompt — no explanation, no preamble, no
 
 // ─── Generate via GPT Image 1.5 (direct OpenAI — spatial accuracy) ────────────
 async function generatePhotoRender(order, lineItems) {
-  const { w: boothW, d: boothD } = parseBoothSize(order?.booth_size);
   const boothType = order?.booth_type || 'Inline';
   const brandName = order?.customer_company || order?.customer_name || 'Client Brand';
   const showName = order?.show_name || 'Trade Show';
 
-  // ── Try enriched registry flow first ──────────────────────────────────────
+  // ── Build SKU + quantity map ───────────────────────────────────────────────
   const skus = lineItems.map(item => item.sku).filter(Boolean);
-  const registry = await fetchRenderRegistry(skus);
+  const quantities = {};
+  lineItems.forEach(item => { if (item.sku) quantities[item.sku] = item.quantity || 1; });
 
+  // ── Call edge function v2 — returns pre-built prompt + image URLs ──────────
   let prompt;
-  let allReferenceUrls;
+  let allReferenceUrls = [];
 
-  if (registry.products.length > 0) {
-    const placementText = buildEnrichedPlacementInstructions(
-      registry.products,
-      { boothSize: order?.booth_size || '10x10', boothType, brandName }
-    );
-    const enrichedSystemPrompt = buildEnrichedRenderPrompt({
-      brandName,
-      boothSize: order?.booth_size || '10x10',
-      boothType,
-      showName,
-      placementInstructions: placementText,
-      colorNotes: order?.brand_colors || '',
-      brandDetails: order?.brand_details || null,
-      registryProducts: registry.products,
+  try {
+    const res = await fetch('https://xpgvpzbzmkubahyxwipk.supabase.co/functions/v1/get-render-data', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        skus,
+        quantities,
+        boothInfo: {
+          brandName,
+          boothSize: order?.booth_size || '10x10',
+          boothType,
+          showName,
+          colorNotes: order?.brand_colors || '',
+          logoUrl: order?.brand_details?.logo_cached_url || order?.brand_details?.logo_url || '',
+        },
+      }),
     });
-    const registryImageUrls = mergeImageUrls(registry.products, lineItems);
 
-    prompt = await base44.integrations.Core.InvokeLLM({
-      prompt: enrichedSystemPrompt,
-      file_urls: registryImageUrls.length > 0 ? registryImageUrls.slice(0, 8) : undefined,
-      model: 'claude_sonnet_4_6',
-    });
-    allReferenceUrls = registryImageUrls;
-  } else {
-    // ── Fallback: existing categorize/placement flow ───────────────────────
+    if (res.ok) {
+      const data = await res.json();
+      if (data.prompt) {
+        prompt = data.prompt;
+        allReferenceUrls = (data.image_urls || []).map(i => i.url || i).filter(Boolean);
+        console.log('[BoothRender] Using enriched registry prompt. Products:', data.products?.length, 'Images:', allReferenceUrls.length);
+      }
+    }
+  } catch (err) {
+    console.warn('[BoothRender] Registry fetch failed, falling back:', err?.message);
+  }
+
+  // ── Fallback: old categorize/placement flow if registry didn't return a prompt ──
+  if (!prompt) {
+    console.warn('[BoothRender] Falling back to basic render flow.');
     const result = await buildRenderingPrompt(order, lineItems);
     prompt = result.prompt;
     allReferenceUrls = result.referenceImages.map(r => r.url);
