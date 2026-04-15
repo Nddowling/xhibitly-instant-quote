@@ -1,0 +1,248 @@
+{
+  "name": "Product",
+  "type": "object",
+  "properties": {
+    "sku": {
+      "type": "string",
+      "description": "Product SKU"
+    },
+    "name": {
+      "type": "string",
+      "description": "Product name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Full product description"
+    },
+    "category": {
+      "type": "string",
+      "description": "Orbus product category"
+    },
+    "subcategory": {
+      "type": "string",
+      "description": "Subcategory within the main category"
+    },
+    "product_line": {
+      "type": "string",
+      "description": "Product line (e.g., Formulate, Hybrid Pro, Vector Frame, Hopup)"
+    },
+    "booth_sizes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "10x10",
+          "10x20",
+          "20x20"
+        ]
+      },
+      "description": "Compatible booth sizes"
+    },
+    "price_tier": {
+      "type": "string",
+      "enum": [
+        "Modular",
+        "Hybrid",
+        "Custom"
+      ],
+      "description": "Price tier"
+    },
+    "base_price": {
+      "type": "number",
+      "description": "Base price USD"
+    },
+    "rental_price": {
+      "type": "number",
+      "description": "Rental price per event USD (for rental items)"
+    },
+    "market_value": {
+      "type": "number",
+      "description": "Estimated market value USD"
+    },
+    "dealer_cost": {
+      "type": "number",
+      "description": "Dealer cost (wholesale price)"
+    },
+    "dealer_margin_percent": {
+      "type": "number",
+      "description": "Dealer margin percentage"
+    },
+    "retail_price": {
+      "type": "number",
+      "description": "Retail price (MSRP)"
+    },
+    "pricing_category": {
+      "type": "string",
+      "description": "Pricing category (e.g., hanging_structure, backwall, counter)"
+    },
+    "handbook_page": {
+      "type": "string",
+      "description": "Page number in the 2026 Exhibitors Handbook"
+    },
+    "is_rental": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this is a rental product"
+    },
+    "dimensions": {
+      "type": "string",
+      "description": "Product dimensions"
+    },
+    "features": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Product features"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Product image URL"
+    },
+    "customizable": {
+      "type": "boolean",
+      "default": true,
+      "description": "Can be customized with branding"
+    },
+    "design_style": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "Modern",
+          "Industrial",
+          "Minimalist",
+          "Luxury",
+          "Tech",
+          "Organic",
+          "Bold",
+          "Classic",
+          "Creative"
+        ]
+      },
+      "description": "Design style tags"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether product is active"
+    },
+    "template_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "URLs to graphic templates"
+    },
+    "instruction_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "URLs to setup instructions"
+    },
+    "catalog_pages": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "description": "Page numbers in catalog"
+    },
+    "source": {
+      "type": "string",
+      "description": "Source of the product data"
+    },
+    "imported_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Import timestamp"
+    },
+    "raw_attributes": {
+      "type": "object",
+      "description": "Raw attributes from import"
+    },
+    "sizes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Available sizes"
+    },
+    "colors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Available colors"
+    },
+    "product_id": {
+      "type": "string",
+      "description": "External product ID from catalog"
+    },
+    "original_url": {
+      "type": "string",
+      "description": "Original product URL from source"
+    },
+    "tier": {
+      "type": "string",
+      "description": "Original tier from catalog (Standard, Premium, etc.)"
+    },
+    "footprint_w_ft": {
+      "type": "number",
+      "description": "Width of the product footprint in feet"
+    },
+    "footprint_d_ft": {
+      "type": "number",
+      "description": "Depth of the product footprint in feet"
+    },
+    "height_ft": {
+      "type": "number",
+      "description": "Height of the product in feet"
+    },
+    "model_glb_url": {
+      "type": "string",
+      "description": "URL to a 3D GLB model for rendering"
+    },
+    "model_url": {
+      "type": "string",
+      "description": "URL to a 3D GLB model for rendering"
+    },
+    "image_cached_url": {
+      "type": "string",
+      "description": "Cached URL of the product image to avoid CORS issues"
+    },
+    "render_kind": {
+      "type": "string",
+      "enum": [
+        "glb",
+        "box",
+        "billboard"
+      ],
+      "default": "box",
+      "description": "How the product should be rendered"
+    },
+    "render_category": {
+      "type": "string",
+      "description": "Render category ID (e.g., collapsible_backwall, counter, banner_stand_retractable)"
+    },
+    "physical_description": {
+      "type": "string",
+      "description": "Detailed physical description of the product for AI rendering"
+    },
+    "placement_zone": {
+      "type": "string",
+      "description": "Where in the booth: back_wall, front, flanking, overhead, center, side, accent, accessory, hidden"
+    },
+    "render_instruction": {
+      "type": "string",
+      "description": "How the AI should visually render this product"
+    },
+    "material": {
+      "type": "string",
+      "description": "Material composition (e.g., aluminum frame, dye-sub stretch fabric)"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}
