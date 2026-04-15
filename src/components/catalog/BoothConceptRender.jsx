@@ -218,55 +218,53 @@ Write ONLY the final image generation prompt — no explanation, no preamble, no
 // ─── Generate via GPT Image 1.5 (direct OpenAI — spatial accuracy) ────────────
 async function generatePhotoRender(order, lineItems) {
   const boothType = order?.booth_type || 'Inline';
+  const boothSize = order?.booth_size || '10x10';
   const brandName = order?.customer_company || order?.customer_name || 'Client Brand';
   const showName = order?.show_name || 'Trade Show';
+  const colorNotes = order?.brand_colors || '';
+  const brandDetails = order?.brand_details || null;
 
-  // ── Build SKU + quantity map ───────────────────────────────────────────────
+  // --- START: Registry Integration ---
   const skus = lineItems.map(item => item.sku).filter(Boolean);
   const quantities = {};
-  lineItems.forEach(item => { if (item.sku) quantities[item.sku] = item.quantity || 1; });
+  lineItems.forEach(item => {
+    if (item.sku) quantities[item.sku] = item.quantity || 1;
+  });
 
-  // ── Call edge function v2 — returns pre-built prompt + image URLs ──────────
-  let prompt;
-  let allReferenceUrls = [];
-
-  try {
-    const res = await fetch('https://xpgvpzbzmkubahyxwipk.supabase.co/functions/v1/get-render-data', {
+  const registryRes = await fetch(
+    'https://xpgvpzbzmkubahyxwipk.supabase.co/functions/v1/get-render-data',
+    {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         skus,
         quantities,
         boothInfo: {
-          brandName,
-          boothSize: order?.booth_size || '10x10',
-          boothType,
-          showName,
-          colorNotes: order?.brand_colors || '',
-          logoUrl: order?.brand_details?.logo_cached_url || order?.brand_details?.logo_url || '',
-        },
-      }),
-    });
-
-    if (res.ok) {
-      const data = await res.json();
-      if (data.prompt) {
-        prompt = data.prompt;
-        allReferenceUrls = (data.image_urls || []).map(i => i.url || i).filter(Boolean);
-        console.log('[BoothRender] Using enriched registry prompt. Products:', data.products?.length, 'Images:', allReferenceUrls.length);
-      }
+          brandName: brandName || order?.customer_company || '',
+          boothSize: boothSize || order?.booth_size || '10x10',
+          boothType: boothType || order?.booth_type || 'Inline',
+          showName: showName || order?.show_name || '',
+          colorNotes: colorNotes || '',
+          logoUrl: brandDetails?.logo_cached_url || brandDetails?.logo_url || ''
+        }
+      })
     }
-  } catch (err) {
-    console.warn('[BoothRender] Registry fetch failed, falling back:', err?.message);
-  }
+  ).then(r => r.json()).catch(() => null);
 
-  // ── Fallback: old categorize/placement flow if registry didn't return a prompt ──
-  if (!prompt) {
-    console.warn('[BoothRender] Falling back to basic render flow.');
+  let prompt;
+  let allReferenceUrls = [];
+
+  if (registryRes?.prompt) {
+    prompt = registryRes.prompt;
+    allReferenceUrls = (registryRes.image_urls || []).map(i => i.url).filter(Boolean);
+    console.log('[BoothRender] Using registry prompt. Products:', registryRes.products?.length, 'Images:', allReferenceUrls.length, 'Missing:', registryRes.missing_skus || []);
+  } else {
+    console.warn('[BoothRender] Registry unavailable, falling back to basic render flow.');
     const result = await buildRenderingPrompt(order, lineItems);
     prompt = result.prompt;
     allReferenceUrls = result.referenceImages.map(r => r.url);
   }
+  // --- END: Registry Integration ---
 
   // ── Send to image generation ───────────────────────────────────────────────
   let result;
@@ -277,7 +275,9 @@ async function generatePhotoRender(order, lineItems) {
         reference_urls: allReferenceUrls,
       },
     });
-    if (!result?.url) throw new Error('No URL returned');
+    const renderUrl = result?.data?.url || result?.url;
+    if (!renderUrl) throw new Error('No URL returned');
+    result = { url: renderUrl };
   } catch (fnErr) {
     console.warn('Luma render function failed, falling back to built-in GenerateImage:', fnErr?.message);
     const fallback = await base44.integrations.Core.GenerateImage({
