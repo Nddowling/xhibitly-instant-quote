@@ -258,6 +258,20 @@ async function generatePhotoRender(order, lineItems) {
     prompt = registryRes.prompt;
     allReferenceUrls = (registryRes.image_urls || []).map(i => i.url).filter(Boolean);
     console.log('[BoothRender] Using registry prompt. Products:', registryRes.products?.length, 'Images:', allReferenceUrls.length, 'Missing:', registryRes.missing_skus || []);
+    console.log('[BoothRender] Request payload:', {
+      skus,
+      quantities,
+      boothInfo: {
+        brandName: brandName || order?.customer_company || '',
+        boothSize: boothSize || order?.booth_size || '10x10',
+        boothType: boothType || order?.booth_type || 'Inline',
+        showName: showName || order?.show_name || '',
+        colorNotes: colorNotes || '',
+        logoUrl: brandDetails?.logo_cached_url || brandDetails?.logo_url || ''
+      }
+    });
+    console.log('[BoothRender] Registry prompt:', prompt);
+    console.log('[BoothRender] Registry image URLs:', allReferenceUrls);
   } else {
     console.error('[BoothRender] Registry did not return a prompt.', registryRes);
     throw new Error('Render registry failed: no prompt returned from get-render-data.');
@@ -285,7 +299,24 @@ async function generatePhotoRender(order, lineItems) {
     result = fallback;
   }
 
-  return { url: result.url, prompt };
+  return {
+    url: result.url,
+    prompt,
+    requestPayload: {
+      skus,
+      quantities,
+      boothInfo: {
+        brandName: brandName || order?.customer_company || '',
+        boothSize: boothSize || order?.booth_size || '10x10',
+        boothType: boothType || order?.booth_type || 'Inline',
+        showName: showName || order?.show_name || '',
+        colorNotes: colorNotes || '',
+        logoUrl: brandDetails?.logo_cached_url || brandDetails?.logo_url || ''
+      }
+    },
+    referenceUrls: allReferenceUrls,
+    registryResponse: registryRes,
+  };
 }
 
 // ─── Product thumbnail card ───────────────────────────────────────────────────
@@ -394,6 +425,7 @@ export default function BoothConceptRender({ order, lineItems = [], onRenderingS
   const [genStep, setGenStep] = useState('');
   const [genStepIndex, setGenStepIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [renderDebug, setRenderDebug] = useState(null);
 
   const handleGenerate = async () => {
     setIsGenerating(true);
@@ -407,8 +439,10 @@ export default function BoothConceptRender({ order, lineItems = [], onRenderingS
       await new Promise(resolve => setTimeout(resolve, 1100));
       setGenStep('Building final render with Luma Photon-1…');
       setGenStepIndex(2);
-      const { url } = await generatePhotoRender(order, lineItems);
+      const renderResult = await generatePhotoRender(order, lineItems);
+      const { url } = renderResult;
 
+      setRenderDebug(renderResult);
       setRenderUrl(url);
 
       if (order?.id) {
@@ -483,6 +517,23 @@ export default function BoothConceptRender({ order, lineItems = [], onRenderingS
         )}
         {genError && (
           <p className="text-[10px] text-red-500 text-center">{genError}</p>
+        )}
+        {renderDebug && (
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-left space-y-2">
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Last Render Debug</p>
+            <div>
+              <p className="text-[10px] font-semibold text-slate-700">Sent payload</p>
+              <pre className="mt-1 text-[10px] text-slate-600 whitespace-pre-wrap break-words bg-white rounded-lg border border-slate-200 p-2 overflow-auto max-h-40">{JSON.stringify(renderDebug.requestPayload, null, 2)}</pre>
+            </div>
+            <div>
+              <p className="text-[10px] font-semibold text-slate-700">Prompt used</p>
+              <pre className="mt-1 text-[10px] text-slate-600 whitespace-pre-wrap break-words bg-white rounded-lg border border-slate-200 p-2 overflow-auto max-h-64">{renderDebug.prompt}</pre>
+            </div>
+            <div>
+              <p className="text-[10px] font-semibold text-slate-700">Reference images</p>
+              <pre className="mt-1 text-[10px] text-slate-600 whitespace-pre-wrap break-words bg-white rounded-lg border border-slate-200 p-2 overflow-auto max-h-32">{JSON.stringify(renderDebug.referenceUrls, null, 2)}</pre>
+            </div>
+          </div>
         )}
       </div>
 
