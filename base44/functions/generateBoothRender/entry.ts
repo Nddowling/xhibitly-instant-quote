@@ -11,66 +11,50 @@ function dedupeUrls(urls) {
   return Array.from(new Set((urls || []).filter(Boolean)));
 }
 
-function buildPlacementInstructions(products, quantities) {
-  const zoneOrder = ['overhead', 'back_wall', 'side', 'flanking', 'front', 'center', 'accent', 'accessory'];
-  const zoneLabels = {
-    overhead: 'OVERHEAD / CEILING',
-    back_wall: 'BACK WALL',
-    side: 'SIDE AREAS',
-    flanking: 'FLANKING / ENTRANCE',
-    front: 'FRONT / AISLE-FACING',
-    center: 'CENTER OF BOOTH',
-    accent: 'ACCENT STRUCTURES',
-    accessory: 'ACCESSORIES',
-  };
-
-  const grouped = {};
-  for (const product of products) {
-    const zone = product.placement_zone || 'center';
-    if (zone === 'hidden') continue;
-    if (!grouped[zone]) grouped[zone] = [];
-    grouped[zone].push(product);
-  }
-
-  const lines = [];
-  for (const zone of zoneOrder) {
-    const items = grouped[zone] || [];
-    if (items.length === 0) continue;
-
-    lines.push(`--- ${zoneLabels[zone] || zone.toUpperCase()} ---`);
-    for (const product of items) {
-      const qty = quantities[product.sku] || 1;
-      lines.push(`- ${product.name || product.sku} (${product.sku}) x${qty}`);
-      if (product.render_category) lines.push(`  Render category: ${product.render_category}`);
-      if (product.physical_description) lines.push(`  Physical: ${product.physical_description}`);
-      if (product.material) lines.push(`  Material: ${product.material}`);
-      if (product.render_instruction) lines.push(`  Render instruction: ${product.render_instruction}`);
-      if (product.footprint_w_ft || product.footprint_d_ft || product.height_ft) {
-        lines.push(`  Dimensions: ${product.footprint_w_ft || '?'}ft W x ${product.height_ft || '?'}ft H x ${product.footprint_d_ft || '?'}ft D`);
-      }
-      lines.push('');
-    }
-  }
-
-  return lines.join('\n');
+function buildProductLines(products, quantities) {
+  return products.map((product) => {
+    const qty = quantities[product.sku] || 1;
+    return [
+      `${product.name || product.sku} (${product.sku}) x${qty}`,
+      product.render_category ? `Category: ${product.render_category}` : null,
+      product.placement_zone ? `Placement: ${product.placement_zone}` : null,
+      product.physical_description ? `Physical description: ${product.physical_description}` : null,
+      product.render_instruction ? `Rendering notes: ${product.render_instruction}` : null,
+      product.material ? `Material: ${product.material}` : null,
+      (product.footprint_w_ft || product.footprint_d_ft || product.height_ft)
+        ? `Approx size: ${product.footprint_w_ft || '?'}ft W x ${product.footprint_d_ft || '?'}ft D x ${product.height_ft || '?'}ft H`
+        : null,
+    ].filter(Boolean).join('\n');
+  }).join('\n\n');
 }
 
-function buildRenderPrompt({ boothInfo, products, placementInstructions }) {
-  const referenceLines = products.map((product) => `- ${product.sku}: ${product.name || product.sku}`).join('\n');
+function buildRenderPrompt({ boothInfo, products, productLines }) {
+  return `Create a photorealistic concept render of a trade show booth.
 
-  return `Photorealistic 3/4 view trade show booth render for ${boothInfo.brandName} at ${boothInfo.showName}. Booth size: ${boothInfo.boothSize}. Booth type: ${boothInfo.boothType}. Professional convention center environment, premium exhibit photography look, polished flooring, overhead trade show lighting, no people.
+Booth requirements:
+- Booth size: ${boothInfo.boothSize}
+- Booth type: ${boothInfo.boothType}
+- Brand name: ${boothInfo.brandName}
+- Event: ${boothInfo.showName}
+- Environment: professional indoor convention center
+- Camera view: wide 3/4 perspective showing the full booth clearly
+- People: none
 
-Use only these quoted products and do not add any unquoted elements:
-${placementInstructions}
+Use only the quoted products below. Do not add any extra products, furniture, counters, monitors, signs, hanging elements, or accessories unless they are listed below.
 
-Branding direction:
-${boothInfo.colorNotes ? `Use these brand colors: ${boothInfo.colorNotes}.` : 'Use a clean professional branded graphic treatment.'}
-${boothInfo.logoUrl ? 'Apply the provided logo naturally to primary graphic surfaces.' : `Show the brand name ${boothInfo.brandName} on key graphic surfaces.`}
+Quoted products from the Product records:
+${productLines}
 
-Reference products:
-${referenceLines}
+Branding:
+- ${boothInfo.colorNotes ? `Use these colors in the booth graphics: ${boothInfo.colorNotes}` : 'Use a clean professional branded graphic treatment'}
+- ${boothInfo.logoUrl ? 'Use the provided logo reference on the booth graphics' : `Show the brand name ${boothInfo.brandName} on the booth graphics`}
 
-Critical requirements: match each product's physical form, material, and approximate dimensions from the product record data; respect placement zones; keep all items realistically scaled within the booth footprint; maintain a clean, balanced composition with strong depth and accurate spacing; do not duplicate products; do not invent furniture, monitors, counters, hanging signs, or accessories unless explicitly listed.`;
+Important:
+- Build only the booth structure and quoted products
+- Keep product scale realistic for the booth footprint
+- Match each product's physical look and materials based on its Product record
+- Respect the booth type and layout
+- Make the final image look like a polished exhibit concept render for a sales proposal`;
 }
 
 function extractDomain(url) {
@@ -227,8 +211,8 @@ Deno.serve(async (req) => {
       throw new Error('No matching Product records were found for the selected SKUs');
     }
 
-    const placementInstructions = buildPlacementInstructions(selectedProducts, quantities);
-    const finalPrompt = buildRenderPrompt({ boothInfo, products: selectedProducts, placementInstructions });
+    const productLines = buildProductLines(selectedProducts, quantities);
+    const finalPrompt = buildRenderPrompt({ boothInfo, products: selectedProducts, productLines });
     const combinedReferenceUrls = dedupeUrls([
       ...selectedProducts.map((product) => product.image_cached_url || product.image_url || null),
       boothInfo.logoUrl || null,
