@@ -259,10 +259,8 @@ async function generatePhotoRender(order, lineItems) {
     allReferenceUrls = (registryRes.image_urls || []).map(i => i.url).filter(Boolean);
     console.log('[BoothRender] Using registry prompt. Products:', registryRes.products?.length, 'Images:', allReferenceUrls.length, 'Missing:', registryRes.missing_skus || []);
   } else {
-    console.warn('[BoothRender] Registry unavailable, falling back to basic render flow.');
-    const result = await buildRenderingPrompt(order, lineItems);
-    prompt = result.prompt;
-    allReferenceUrls = result.referenceImages.map(r => r.url);
+    console.error('[BoothRender] Registry did not return a prompt.', registryRes);
+    throw new Error('Render registry failed: no prompt returned from get-render-data.');
   }
   // --- END: Registry Integration ---
 
