@@ -10,7 +10,6 @@ import LineItemsSection from '@/components/order/LineItemsSection';
 import RelatedTab from '@/components/order/RelatedTab';
 import FollowUpSection from '@/components/order/FollowUpSection';
 import BoothConceptRender from '@/components/catalog/BoothConceptRender';
-import { ensureBrokerInstance } from '@/lib/brokerInstance';
 import { loadBrokerContext } from '@/lib/brokerAccess';
 
 export default function OrderDetail() {

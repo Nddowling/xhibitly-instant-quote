@@ -1,12 +1,11 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
-import { Star, ArrowRight, Sparkles, Palette, Loader2, Check } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
+import { Star, ArrowRight, Palette } from 'lucide-react';
 import BoothSnapshotRenderer from '@/components/render/BoothSnapshotRenderer';
 import { BoothEngine } from '@/components/booth/BoothEngine';
 

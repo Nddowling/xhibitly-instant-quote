@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
-import { ArrowLeft, ShoppingCart, Loader2, Sparkles, Check, Package, Palette, DollarSign, X, ZoomIn } from 'lucide-react';
+import { ArrowLeft, ShoppingCart, Loader2, Sparkles, Check, Package } from 'lucide-react';
 import BoothSnapshotRenderer from '@/components/render/BoothSnapshotRenderer';
 import { BoothEngine } from '@/components/booth/BoothEngine';
 
