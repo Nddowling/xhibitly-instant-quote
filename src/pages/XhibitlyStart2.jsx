@@ -32,6 +32,7 @@ export default function XhibitlyStart2() {
         sku: item?.sku || '',
         name: item?.product_name || item?.sku || 'Quoted product',
         image_url: item?.image_url || '',
+        quantity: item?.quantity || 1,
       }))
       .filter((item) => item.sku || item.name);
     const productImageUrls = quoteItems.map((item) => item.image_url).filter(Boolean).slice(0, 6);

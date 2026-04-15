@@ -23,7 +23,7 @@ async function createGeneration(prompt, referenceUrls) {
   const body = {
     type: 'generate_image',
     prompt,
-    image_urls: imageUrls,
+    ...(imageUrls.length > 0 ? { image_urls: imageUrls } : {}),
   };
 
   const res = await fetch(`${TRIPO_BASE}/task`, {
