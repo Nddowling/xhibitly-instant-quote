@@ -11,6 +11,10 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const body = await req.json().catch(() => ({}));
+    const startIndex = Number(body?.startIndex || 0);
+    const batchSize = Number(body?.batchSize || 5);
+
     const fileResponse = await fetch(FILE_URL);
     if (!fileResponse.ok) {
       return Response.json({ error: 'Failed to load backfill file' }, { status: 400 });
@@ -25,7 +29,6 @@ Deno.serve(async (req) => {
       (allProducts || []).map((product) => [product?.sku || product?.data?.sku, product]).filter(([sku]) => Boolean(sku))
     );
 
-    const matched = [];
     const unmatched = [];
     const updates = [];
 
@@ -52,20 +55,24 @@ Deno.serve(async (req) => {
       });
     }
 
-    const batchSize = 50;
-    for (let i = 0; i < updates.length; i += batchSize) {
-      const batch = updates.slice(i, i + batchSize);
-      await Promise.all(batch.map((item) =>
-        base44.asServiceRole.entities.Product.update(item.id, item.data)
-      ));
-      matched.push(...batch.map((item) => item.sku));
+    const batch = updates.slice(startIndex, startIndex + batchSize);
+    const matched = [];
+
+    for (const item of batch) {
+      await base44.asServiceRole.entities.Product.update(item.id, item.data);
+      matched.push(item.sku);
     }
 
     return Response.json({
       total_json_skus: skuList.length,
-      matched_count: matched.length,
+      total_matchable_count: updates.length,
       unmatched_count: unmatched.length,
       unmatched_skus: unmatched,
+      processed_start_index: startIndex,
+      processed_batch_size: batch.length,
+      processed_skus: matched,
+      next_start_index: startIndex + batch.length,
+      done: startIndex + batch.length >= updates.length,
     });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
