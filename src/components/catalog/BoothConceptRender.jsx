@@ -3,6 +3,9 @@ import { SKU_TO_IMAGE } from '@/data/skuImageMap';
 import { base44 } from '@/api/base44Client';
 import { Wand2, Loader2, RefreshCw, ZoomIn, X, Sparkles, Images, ScanSearch, CheckCircle2 } from 'lucide-react';
 
+// ─── Config ────────────────────────────────────────────────────────────────────
+const REGISTRY_ENDPOINT = 'https://xpgvpzbzmkubahyxwipk.supabase.co/functions/v1/get-render-data';
+
 function resolveProductImage(item) {
   if (item.sku && SKU_TO_IMAGE[item.sku]) return SKU_TO_IMAGE[item.sku];
   if (item.image_url && item.image_url.includes('/products/')) return item.image_url;
@@ -21,7 +24,8 @@ function getGridCols(boothW, itemCount) {
   return Math.min(itemCount, 3);
 }
 
-// ─── Categorize products into booth zones ─────────────────────────────────────
+// ─── OLD FLOW (fallback only) ─────────────────────────────────────────────────
+
 function categorizeProducts(lineItems) {
   const backWall = [];
   const bannerStands = [];
@@ -31,113 +35,76 @@ function categorizeProducts(lineItems) {
   for (const item of lineItems) {
     const name = (item.product_name || item.sku || '').toLowerCase();
     const sku = (item.sku || '').toLowerCase();
-    const accessoryOnly = /case|cases|carry bag|carrybag|bag|shipping case|transport case|roller bag/.test(name);
+    if (/case|cases|carry bag|carrybag|bag|shipping case|transport case|roller bag/.test(name)) continue;
 
-    if (accessoryOnly) {
-      continue;
-    }
-
-    if (
-      /pegasus|formulate|embrace|panoramic|back wall|backwall|waveline|lumiere|vector frame|infinite|hop|cove/.test(name) ||
-      /pgsus|fml|emb|pan|wvl|lmr|hop|cove/.test(sku)
-    ) {
+    if (/pegasus|formulate|embrace|panoramic|back wall|backwall|waveline|lumiere|vector frame|infinite|hop|cove/.test(name) ||
+        /pgsus|fml|emb|pan|wvl|lmr|hop|cove/.test(sku)) {
       backWall.push(item);
-    } else if (
-      /orient|banner stand|retract|roll.?up|blade|spring/.test(name) ||
-      /^ont|^bld|^rst|^spr/.test(sku)
-    ) {
+    } else if (/orient|banner stand|retract|roll.?up|blade|spring/.test(name) ||
+               /^ont|^bld|^rst|^spr/.test(sku)) {
       bannerStands.push(item);
-    } else if (
-      /counter|kiosk|pedestal|podium|reception/.test(name) ||
-      /-ct\b|ksk|ped/.test(sku)
-    ) {
+    } else if (/counter|kiosk|pedestal|podium|reception/.test(name) ||
+               /-ct\b|ksk|ped/.test(sku)) {
       counters.push(item);
     } else {
       accessories.push(item);
     }
   }
-
   return { backWall, bannerStands, counters, accessories };
 }
 
-// ─── Derive exact pixel-accurate placement instructions from zones ─────────────
 function buildPlacementInstructions(boothW, boothD, boothType, zones, imageIndexMap) {
   const { backWall, bannerStands, counters, accessories } = zones;
   const type = (boothType || 'Inline').toLowerCase();
   const instructions = [];
 
-  // Booth shell
   if (type === 'island') {
-    instructions.push(`BOOTH SHELL: ${boothW}x${boothD} foot island booth — open on all 4 sides, no back wall, visible from every direction.`);
+    instructions.push(`BOOTH SHELL: ${boothW}x${boothD} foot island booth — open on all 4 sides.`);
   } else if (type === 'corner') {
-    instructions.push(`BOOTH SHELL: ${boothW}x${boothD} foot corner booth — back wall along the left and rear sides (L-shape), two aisle-facing open sides.`);
+    instructions.push(`BOOTH SHELL: ${boothW}x${boothD} foot corner booth — L-shape walls.`);
   } else {
-    instructions.push(`BOOTH SHELL: ${boothW}x${boothD} foot inline booth viewed from the aisle. Single unbroken back wall spanning the full ${boothW} feet wide. ${boothD} feet deep. Open front facing viewer.`);
+    instructions.push(`BOOTH SHELL: ${boothW}x${boothD} foot inline booth. Back wall spans full ${boothW} feet.`);
   }
 
-  // Back wall — spans full width
   if (backWall.length > 0) {
     for (const item of backWall) {
       const qty = item.quantity || 1;
       const ref = imageIndexMap[item.sku] ? ` [Reference photo ${imageIndexMap[item.sku]}]` : '';
-      const panelDesc = qty > 1
-        ? `show exactly ${qty} units arranged side-by-side across the back wall`
-        : `show exactly 1 unit on the back wall`;
-      instructions.push(`BACK WALL — ${item.product_name || item.sku}${ref}: ${panelDesc}. ` +
-        `Do not add duplicate panels, extra wings, side pieces, matching accessories, or additional display structures beyond the exact quoted quantity. ` +
-        `Reproduce the graphic panel design exactly as it appears in the reference photo — same colors, layout, imagery style, and visual treatment. The hardware frame (aluminum extrusions, feet, base) must also match the reference photo exactly.`);
+      instructions.push(`BACK WALL — ${item.product_name || item.sku}${ref}: show exactly ${qty} unit(s). Do not add extras.`);
     }
   }
 
-  // Banner stands — explicit left/right/center positioning
   if (bannerStands.length > 0) {
     const expanded = [];
     for (const item of bannerStands) {
       for (let q = 0; q < (item.quantity || 1); q++) expanded.push(item);
     }
     const total = expanded.length;
-    const positions = total === 1
-      ? ['centered slightly in front of the back wall']
-      : total === 2
-      ? ['far left side of booth', 'far right side of booth']
-      : total === 3
-      ? ['far left', 'center', 'far right']
-      : total === 4
-      ? ['far left', 'left of center', 'right of center', 'far right']
-      : ['leftmost', 'left', 'center', 'right', 'rightmost'].slice(0, total);
-
+    const positions = total === 1 ? ['center'] : total === 2 ? ['far left', 'far right'] : ['far left', 'center', 'far right'].slice(0, total);
     expanded.forEach((item, i) => {
       const ref = imageIndexMap[item.sku] ? ` [Reference photo ${imageIndexMap[item.sku]}]` : '';
-      instructions.push(`FLOOR STANDING (${i + 1}/${total}) — ${item.product_name || item.sku}${ref}: ` +
-        `positioned at ${positions[i]}, standing upright on floor, in front of the back wall. Show exactly 1 unit here and do not add any extra matching banner stands or duplicate displays. ` +
-        `Reproduce the graphic panel design exactly as shown in the reference photo — same colors, imagery, and visual style. Hardware (cassette base, retractable mechanism, feet) must match the reference photo exactly.`);
+      instructions.push(`FLOOR STANDING (${i + 1}/${total}) — ${item.product_name || item.sku}${ref}: positioned at ${positions[i]}.`);
     });
   }
 
-  // Counters — front center
   if (counters.length > 0) {
     counters.forEach((item, i) => {
       const ref = imageIndexMap[item.sku] ? ` [Reference photo ${imageIndexMap[item.sku]}]` : '';
-      instructions.push(`FRONT CENTER (${i + 1}) — ${item.product_name || item.sku}${ref}: ` +
-        `positioned at the front edge of the booth, centered, near the aisle. Show exactly 1 counter here and do not add any extra counters, tables, kiosks, or reception pieces. ` +
-        `Reproduce the graphic panel design exactly as shown in the reference photo — same colors, imagery, and visual style. Hardware must match the reference photo exactly.`);
+      instructions.push(`FRONT CENTER (${i + 1}) — ${item.product_name || item.sku}${ref}: positioned at front edge, centered.`);
     });
   }
 
-  // Accessories
   if (accessories.length > 0) {
     accessories.forEach(item => {
       const ref = imageIndexMap[item.sku] ? ` [Reference photo ${imageIndexMap[item.sku]}]` : '';
-      const qty = item.quantity || 1;
-      instructions.push(`ADDITIONAL — ${item.product_name || item.sku}${ref}: show exactly ${qty} unit${qty === 1 ? '' : 's'} placed naturally within the booth space, with no extra matching accessories or duplicate items.`);
+      instructions.push(`ADDITIONAL — ${item.product_name || item.sku}${ref}: show exactly ${item.quantity || 1} unit(s).`);
     });
   }
 
   return instructions.join('\n\n');
 }
 
-// ─── Core render prompt builder ───────────────────────────────────────────────
-async function buildRenderingPrompt(order, lineItems) {
+async function buildFallbackPrompt(order, lineItems) {
   const { w: boothW, d: boothD } = parseBoothSize(order?.booth_size);
   const boothType = order?.booth_type || 'Inline';
   const renderableLineItems = lineItems.filter(item => {
@@ -146,11 +113,9 @@ async function buildRenderingPrompt(order, lineItems) {
   });
   const zones = categorizeProducts(renderableLineItems);
 
-  // Collect reference images — one per unique SKU, max 8
   const seen = new Set();
   const referenceImages = [];
-  const imageIndexMap = {}; // sku → 1-based index
-
+  const imageIndexMap = {};
   for (const item of renderableLineItems) {
     if (seen.has(item.sku)) continue;
     const url = resolveProductImage(item);
@@ -161,53 +126,26 @@ async function buildRenderingPrompt(order, lineItems) {
     }
   }
 
-  // Build reference legend for the prompt
   const refLegend = referenceImages.length > 0
     ? `REFERENCE PHOTOS PROVIDED (${referenceImages.length} images attached):\n` +
-      referenceImages.map((r, i) =>
-        `  Photo ${i + 1}: ${r.item.product_name || r.item.sku} (SKU: ${r.item.sku}) — reproduce this product faithfully: match the hardware structure (frame, base, feet, mechanism) AND the graphic panel design (colors, imagery, visual style) exactly as shown.`
-      ).join('\n')
+      referenceImages.map((r, i) => `  Photo ${i + 1}: ${r.item.product_name || r.item.sku} (SKU: ${r.item.sku})`).join('\n')
     : '';
-
-  // Aspect ratio
-  const ratio = boothW / boothD;
-  const cameraDirective = ratio >= 2
-    ? `Ultra-wide camera, low horizontal angle, back wall spans full image width`
-    : `Wide-angle lens, slightly elevated eye level (~5.5 feet from floor), centered on booth, booth fills the full frame`;
 
   const placementInstructions = buildPlacementInstructions(boothW, boothD, boothType, zones, imageIndexMap);
 
   const prompt = await base44.integrations.Core.InvokeLLM({
-    prompt: `You are a professional trade show exhibit render artist creating a precise DALL-E / gpt-image-1 image generation prompt. Your job is to write a single detailed, technically accurate prompt that will produce a photorealistic visualization of a specific trade show booth build.
+    prompt: `You are a professional trade show exhibit render artist creating a precise image generation prompt.
 
 ${refLegend}
 
-EXACT PRODUCT PLACEMENT — follow these instructions precisely, one product at a time:
+EXACT PRODUCT PLACEMENT:
 ${placementInstructions}
 
-GRAPHIC PANEL APPEARANCE (critical):
-Each product's graphic panels must display the design shown in its reference photo — reproduce the colors, imagery, visual style, and overall graphic treatment faithfully. Each product has its own distinct graphic: do not apply one product's graphic to another product. The goal is for the render to look like a real booth with professionally printed, fully-designed graphics already on the displays.
+QUANTITY CONTROL: Render only the exact products and quantities listed. Do not add any extra elements.
 
-QUANTITY CONTROL (critical):
-Render only the exact products and quantities listed in the placement instructions. Do not invent, infer, auto-complete, mirror, duplicate, or add any extra exhibit elements, side panels, shelving, kiosks, counters, monitors, tables, chairs, hanging signs, architectural features, or branded accessories unless they are explicitly listed in the quote. If the quote contains 3 items, the final booth must visibly contain only those 3 quoted items.
+SCENE: Professional trade show convention center, gray carpet, high ceiling, pipe-and-drape, no people.
 
-SCENE & ENVIRONMENT:
-- Professional trade show convention center interior
-- Medium-gray commercial carpet floor
-- High ceiling (15+ feet) with exposed industrial structure
-- Overhead track lighting with warm halogen spotlights aimed at the booth
-- White pipe-and-drape curtain walls forming the backdrop behind and to the sides
-- Clean, open aisle space in front of the booth
-- No people in the scene
-
-CAMERA & RENDER QUALITY:
-- ${cameraDirective}
-- Photorealistic architectural visualization quality
-- Accurate shadows and soft directional lighting from overhead spots
-- Sharp product edges with realistic material textures (aluminum, fabric, carpet)
-- Professional product photography composition
-
-Write ONLY the final image generation prompt — no explanation, no preamble, no quotes around it. The prompt must be specific enough that a generative model produces the exact booth configuration described above.`,
+Write ONLY the final image generation prompt — no explanation, no preamble.`,
     file_urls: referenceImages.length > 0 ? referenceImages.map(r => r.url) : undefined,
     model: 'claude_sonnet_4_6',
   });
@@ -215,7 +153,8 @@ Write ONLY the final image generation prompt — no explanation, no preamble, no
   return { prompt, referenceImages };
 }
 
-// ─── Generate via GPT Image 1.5 (direct OpenAI — spatial accuracy) ────────────
+// ─── NEW FLOW: Registry → Sonnet → Image Gen ──────────────────────────────────
+
 async function generatePhotoRender(order, lineItems) {
   const boothType = order?.booth_type || 'Inline';
   const boothSize = order?.booth_size || '10x10';
@@ -224,61 +163,81 @@ async function generatePhotoRender(order, lineItems) {
   const colorNotes = order?.brand_colors || '';
   const brandDetails = order?.brand_details || null;
 
-  // --- START: Registry Integration ---
+  // ── Step 1: Call Supabase product registry ──────────────────────────────────
   const skus = lineItems.map(item => item.sku).filter(Boolean);
   const quantities = {};
   lineItems.forEach(item => {
     if (item.sku) quantities[item.sku] = item.quantity || 1;
   });
 
-  const registryRes = await fetch(
-    'https://xpgvpzbzmkubahyxwipk.supabase.co/functions/v1/get-render-data',
-    {
+  let registryRes = null;
+  try {
+    const regResponse = await fetch(REGISTRY_ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         skus,
         quantities,
         boothInfo: {
-          brandName: brandName || order?.customer_company || '',
-          boothSize: boothSize || order?.booth_size || '10x10',
-          boothType: boothType || order?.booth_type || 'Inline',
-          showName: showName || order?.show_name || '',
-          colorNotes: colorNotes || '',
-          logoUrl: brandDetails?.logo_cached_url || brandDetails?.logo_url || ''
-        }
-      })
-    }
-  ).then(r => r.json()).catch(() => null);
+          brandName,
+          boothSize,
+          boothType,
+          showName,
+          colorNotes,
+          logoUrl: brandDetails?.logo_cached_url || brandDetails?.logo_url || '',
+        },
+      }),
+    });
+    registryRes = await regResponse.json();
+    console.log('[BoothRender] Registry returned', registryRes?.total, 'products,', registryRes?.missing_skus?.length, 'missing');
+  } catch (e) {
+    console.warn('[BoothRender] Registry fetch failed, using fallback:', e);
+  }
 
   let prompt;
   let allReferenceUrls = [];
 
+  // ── Step 2: Build prompt via Claude Sonnet ──────────────────────────────────
   if (registryRes?.prompt) {
-    prompt = registryRes.prompt;
-    allReferenceUrls = (registryRes.image_urls || []).map(i => i.url).filter(Boolean);
-    console.log('[BoothRender] Using registry prompt. Products:', registryRes.products?.length, 'Images:', allReferenceUrls.length, 'Missing:', registryRes.missing_skus || []);
-    console.log('[BoothRender] Request payload:', {
-      skus,
-      quantities,
-      boothInfo: {
-        brandName: brandName || order?.customer_company || '',
-        boothSize: boothSize || order?.booth_size || '10x10',
-        boothType: boothType || order?.booth_type || 'Inline',
-        showName: showName || order?.show_name || '',
-        colorNotes: colorNotes || '',
-        logoUrl: brandDetails?.logo_cached_url || brandDetails?.logo_url || ''
-      }
-    });
-    console.log('[BoothRender] Registry prompt:', prompt);
-    console.log('[BoothRender] Registry image URLs:', allReferenceUrls);
-  } else {
-    console.error('[BoothRender] Registry did not return a prompt.', registryRes);
-    throw new Error('Render registry failed: no prompt returned from get-render-data.');
-  }
-  // --- END: Registry Integration ---
+    // ENRICHED PATH: Registry returned a system prompt with physical descriptions.
+    // Send it through Claude Sonnet so Sonnet writes the actual image gen prompt.
+    const registryImageUrls = (registryRes.image_urls || []).map(i => i.url).filter(Boolean);
 
-  // ── Send to image generation ───────────────────────────────────────────────
+    // Also grab any line item images as extra references
+    const lineItemImageUrls = lineItems
+      .map(item => resolveProductImage(item))
+      .filter(Boolean);
+
+    // Merge and deduplicate: registry images first, then line item images
+    const seenUrls = new Set();
+    allReferenceUrls = [];
+    for (const url of [...registryImageUrls, ...lineItemImageUrls]) {
+      if (!seenUrls.has(url)) {
+        seenUrls.add(url);
+        allReferenceUrls.push(url);
+      }
+    }
+
+    console.log('[BoothRender] Sending enriched prompt to Sonnet with', allReferenceUrls.length, 'reference images');
+
+    // Send the enriched prompt to Claude Sonnet — Sonnet writes the actual image gen prompt
+    prompt = await base44.integrations.Core.InvokeLLM({
+      prompt: registryRes.prompt,
+      file_urls: allReferenceUrls.length > 0 ? allReferenceUrls : undefined,
+      model: 'claude_sonnet_4_6',
+    });
+
+    console.log('[BoothRender] Sonnet wrote image gen prompt:', typeof prompt === 'string' ? prompt.substring(0, 200) + '...' : prompt);
+
+  } else {
+    // FALLBACK PATH: Registry unavailable, use old prompt builder
+    console.warn('[BoothRender] No registry prompt available, falling back to old flow');
+    const fallback = await buildFallbackPrompt(order, lineItems);
+    prompt = fallback.prompt;
+    allReferenceUrls = fallback.referenceImages.map(r => r.url);
+  }
+
+  // ── Step 3: Generate the image ──────────────────────────────────────────────
   let result;
   try {
     result = await base44.functions.invoke('generateBoothRender', {
@@ -288,10 +247,10 @@ async function generatePhotoRender(order, lineItems) {
       },
     });
     const renderUrl = result?.data?.url || result?.url;
-    if (!renderUrl) throw new Error('No URL returned');
+    if (!renderUrl) throw new Error('No URL returned from generateBoothRender');
     result = { url: renderUrl };
   } catch (fnErr) {
-    console.warn('Luma render function failed, falling back to built-in GenerateImage:', fnErr?.message);
+    console.warn('[BoothRender] generateBoothRender failed, falling back to GenerateImage:', fnErr?.message);
     const fallback = await base44.integrations.Core.GenerateImage({
       prompt,
       existing_image_urls: allReferenceUrls.length > 0 ? allReferenceUrls : undefined,
@@ -305,14 +264,7 @@ async function generatePhotoRender(order, lineItems) {
     requestPayload: {
       skus,
       quantities,
-      boothInfo: {
-        brandName: brandName || order?.customer_company || '',
-        boothSize: boothSize || order?.booth_size || '10x10',
-        boothType: boothType || order?.booth_type || 'Inline',
-        showName: showName || order?.show_name || '',
-        colorNotes: colorNotes || '',
-        logoUrl: brandDetails?.logo_cached_url || brandDetails?.logo_url || ''
-      }
+      boothInfo: { brandName, boothSize, boothType, showName, colorNotes },
     },
     referenceUrls: allReferenceUrls,
     registryResponse: registryRes,
@@ -365,7 +317,7 @@ function RenderProgressMonitor({ currentStepIndex, steps }) {
         </div>
         <div className="min-w-0 flex-1">
           <p className="text-sm font-black tracking-tight">Rendering your booth concept</p>
-          <p className="mt-1 text-xs text-white/65">Luma Photon-1 is building the scene from your selected products and booth layout.</p>
+          <p className="mt-1 text-xs text-white/65">Building the scene from your selected products and booth layout.</p>
         </div>
       </div>
 
@@ -414,9 +366,9 @@ export default function BoothConceptRender({ order, lineItems = [], onRenderingS
   const gridCols = getGridCols(boothW, lineItems.length);
 
   const renderSteps = [
-    { label: 'Reading product references', fun: 'Pulling the best product images into the scene plan.', icon: Images },
-    { label: 'Mapping booth layout', fun: 'Placing walls, counters, and stand positions inside the footprint.', icon: ScanSearch },
-    { label: 'Building final render', fun: 'Luma Photon-1 is now painting the finished booth concept.', icon: Sparkles },
+    { label: 'Loading product registry', fun: 'Fetching physical descriptions and placement rules from Supabase.', icon: Images },
+    { label: 'Writing render prompt', fun: 'Claude Sonnet is composing a precise scene description from your products.', icon: ScanSearch },
+    { label: 'Generating booth image', fun: 'Creating the photorealistic booth concept from the scene description.', icon: Sparkles },
   ];
 
   const [renderUrl, setRenderUrl] = useState(order?.booth_rendering_url || null);
@@ -430,18 +382,20 @@ export default function BoothConceptRender({ order, lineItems = [], onRenderingS
   const handleGenerate = async () => {
     setIsGenerating(true);
     setGenError(null);
-    setGenStep('Reading product references…');
+    setGenStep('Loading product registry…');
     setGenStepIndex(0);
     try {
-      await new Promise(resolve => setTimeout(resolve, 700));
-      setGenStep('Mapping booth layout…');
+      await new Promise(resolve => setTimeout(resolve, 500));
+      setGenStep('Writing render prompt via Claude Sonnet…');
       setGenStepIndex(1);
-      await new Promise(resolve => setTimeout(resolve, 1100));
-      setGenStep('Building final render with Luma Photon-1…');
-      setGenStepIndex(2);
-      const renderResult = await generatePhotoRender(order, lineItems);
-      const { url } = renderResult;
+      await new Promise(resolve => setTimeout(resolve, 500));
 
+      const renderResult = await generatePhotoRender(order, lineItems);
+
+      setGenStep('Generating booth image…');
+      setGenStepIndex(2);
+
+      const { url } = renderResult;
       setRenderDebug(renderResult);
       setRenderUrl(url);
 
@@ -453,7 +407,7 @@ export default function BoothConceptRender({ order, lineItems = [], onRenderingS
       setGenStep('');
     } catch (err) {
       console.error('Render failed:', err);
-      setGenError('Rendering failed. Please try again.');
+      setGenError('Rendering failed: ' + (err?.message || 'Unknown error. Please try again.'));
       setGenStep('');
     }
     setIsGenerating(false);
@@ -487,7 +441,7 @@ export default function BoothConceptRender({ order, lineItems = [], onRenderingS
           />
           <div className="px-4 py-2 bg-slate-50 border-t border-slate-100">
             <p className="text-[10px] text-slate-400">
-              {boothW}' × {boothD}' {boothType} · {lineItems.length} product{lineItems.length !== 1 ? 's' : ''} · Rendered with Luma Photon-1
+              {boothW}' × {boothD}' {boothType} · {lineItems.length} product{lineItems.length !== 1 ? 's' : ''} · Registry-enriched render
             </p>
           </div>
         </div>
@@ -503,16 +457,16 @@ export default function BoothConceptRender({ order, lineItems = [], onRenderingS
           {isGenerating ? (
             <><Loader2 className="w-4 h-4 animate-spin" /> {genStep || 'Generating…'}</>
           ) : renderUrl ? (
-            <><RefreshCw className="w-4 h-4" /> Regenerate Photorealistic Render</>
+            <><RefreshCw className="w-4 h-4" /> Regenerate Booth Render</>
           ) : (
-            <><Wand2 className="w-4 h-4" /> Generate Photorealistic Booth Rendering</>
+            <><Wand2 className="w-4 h-4" /> Generate Booth Rendering</>
           )}
         </button>
         {isGenerating ? (
           <RenderProgressMonitor currentStepIndex={genStepIndex} steps={renderSteps} />
         ) : (
           <p className="text-[10px] text-slate-400 text-center">
-            Uses Luma Photon-1 to map your {lineItems.length} selected product{lineItems.length !== 1 ? 's' : ''} into a photorealistic booth concept
+            Uses product registry + Claude Sonnet to map your {lineItems.length} product{lineItems.length !== 1 ? 's' : ''} into a photorealistic booth concept
           </p>
         )}
         {genError && (
@@ -522,15 +476,23 @@ export default function BoothConceptRender({ order, lineItems = [], onRenderingS
           <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-left space-y-2">
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Last Render Debug</p>
             <div>
+              <p className="text-[10px] font-semibold text-slate-700">Registry status</p>
+              <pre className="mt-1 text-[10px] text-slate-600 whitespace-pre-wrap break-words bg-white rounded-lg border border-slate-200 p-2 overflow-auto max-h-20">
+                {renderDebug.registryResponse
+                  ? `✅ Registry returned ${renderDebug.registryResponse.total} products, ${renderDebug.registryResponse.missing_skus?.length || 0} missing`
+                  : '❌ Registry unavailable — used fallback prompt'}
+              </pre>
+            </div>
+            <div>
               <p className="text-[10px] font-semibold text-slate-700">Sent payload</p>
               <pre className="mt-1 text-[10px] text-slate-600 whitespace-pre-wrap break-words bg-white rounded-lg border border-slate-200 p-2 overflow-auto max-h-40">{JSON.stringify(renderDebug.requestPayload, null, 2)}</pre>
             </div>
             <div>
-              <p className="text-[10px] font-semibold text-slate-700">Prompt used</p>
+              <p className="text-[10px] font-semibold text-slate-700">Image gen prompt (written by Sonnet)</p>
               <pre className="mt-1 text-[10px] text-slate-600 whitespace-pre-wrap break-words bg-white rounded-lg border border-slate-200 p-2 overflow-auto max-h-64">{renderDebug.prompt}</pre>
             </div>
             <div>
-              <p className="text-[10px] font-semibold text-slate-700">Reference images</p>
+              <p className="text-[10px] font-semibold text-slate-700">Reference images ({renderDebug.referenceUrls?.length || 0})</p>
               <pre className="mt-1 text-[10px] text-slate-600 whitespace-pre-wrap break-words bg-white rounded-lg border border-slate-200 p-2 overflow-auto max-h-32">{JSON.stringify(renderDebug.referenceUrls, null, 2)}</pre>
             </div>
           </div>
