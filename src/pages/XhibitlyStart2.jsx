@@ -194,7 +194,7 @@ export default function XhibitlyStart2() {
               />
             </section>
 
-            <section className="min-w-0 rounded-[24px] md:rounded-[30px] overflow-hidden border border-slate-200 bg-white shadow-[0_25px_70px_rgba(15,23,42,0.10)] min-h-[70vh] lg:h-[calc(100vh-8px)]">
+            <section className="min-w-0 rounded-[24px] md:rounded-[30px] overflow-hidden border border-slate-200 bg-white shadow-[0_25px_70px_rgba(15,23,42,0.10)] min-h-[70vh] lg:h-[calc(100vh-16px)]">
               <div className="h-full bg-white">
                 <CatalogQuote
                   embeddedMode

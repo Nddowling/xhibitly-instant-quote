@@ -348,7 +348,7 @@ function CatalogPageView({ pageNum, hotspots, onHotspotClick, selectedHotspot, o
         src={pageImageUrl(pageNum)}
         alt={`Catalog page ${pageNum}`}
         className="block rounded-lg shadow-2xl"
-        style={{ maxHeight: 'calc(100vh - 96px)', width: 'auto', maxWidth: '100%' }}
+        style={{ maxHeight: 'calc(100vh - 128px)', width: 'auto', maxWidth: '100%' }}
         onLoad={() => setImgLoaded(true)}
         onError={() => setImgError(true)}
       />
@@ -633,7 +633,7 @@ function HotspotEditor({ pageNum, spots, onChange, pageProducts, productCache, a
         src={pageImageUrl(pageNum)}
         alt={`Page ${pageNum}`}
         className="block rounded-lg shadow-2xl"
-        style={{ maxHeight: 'calc(100vh - 96px)', width: 'auto', maxWidth: '100%' }}
+        style={{ maxHeight: 'calc(100vh - 128px)', width: 'auto', maxWidth: '100%' }}
         onLoad={() => setImgLoaded(true)}
         draggable={false}
       />
