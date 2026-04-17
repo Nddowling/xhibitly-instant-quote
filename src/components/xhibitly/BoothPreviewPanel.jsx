@@ -220,11 +220,7 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult, onG
 
       <div className="flex-1 min-h-0 p-4 bg-slate-50/70 flex flex-col gap-4 overflow-visible">
         <div className="relative min-h-[260px] flex-1 rounded-[24px] border border-dashed border-slate-200 bg-white overflow-hidden">
-          {isGeneratingPreview ? (
-            <div className="absolute inset-0 p-3 sm:p-4">
-              <RenderProgressCard isGeneratingPreview={isGeneratingPreview} />
-            </div>
-          ) : order?.booth_rendering_url ? (
+          {order?.booth_rendering_url ? (
             <img
               src={order.booth_rendering_url}
               alt="Booth preview"
@@ -335,8 +331,16 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult, onG
           </div>
         )}
 
+        {isGeneratingPreview && (
+          <div className="fixed inset-0 z-[120] flex items-center justify-center bg-slate-950/60 p-4 backdrop-blur-sm">
+            <div className="w-full max-w-md">
+              <RenderProgressCard isGeneratingPreview={isGeneratingPreview} />
+            </div>
+          </div>
+        )}
+
         {imageModalOpen && order?.booth_rendering_url && (
-          <div className="absolute inset-0 z-40 flex items-center justify-center bg-slate-950/90 p-4" onClick={() => setImageModalOpen(false)}>
+          <div className="fixed inset-0 z-[130] flex items-center justify-center bg-slate-950/90 p-4" onClick={() => setImageModalOpen(false)}>
             <button
               type="button"
               onClick={() => setImageModalOpen(false)}
