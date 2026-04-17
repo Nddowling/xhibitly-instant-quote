@@ -1560,8 +1560,8 @@ export default function CatalogQuote({ embeddedMode = false, initialPrompt = '',
             </div>
           </div>
 
-          <div className="flex items-center gap-2 relative w-full xl:flex-1 xl:max-w-sm" ref={searchRef}>
-            <div className="relative w-full">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 relative w-full xl:flex-1 xl:max-w-[36rem]" ref={searchRef}>
+            <div className="relative flex-1 min-w-0">
               <input
                 type="text"
                 placeholder="Search by products"
@@ -1575,53 +1575,36 @@ export default function CatalogQuote({ embeddedMode = false, initialPrompt = '',
               <button onClick={handleSkuSearch} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
                 <Search className="w-4 h-4" />
               </button>
-            </div>
-            {showSearchDropdown && (
-              <div className="absolute top-full left-0 mt-1.5 w-full bg-white border border-slate-200 rounded-2xl shadow-xl z-50 overflow-hidden max-h-72 overflow-y-auto">
-                {searchResults.map(p => (
-                  <button
-                    key={p.id}
-                    onMouseDown={() => handleSearchResultClick(p)}
-                    className="w-full flex items-center gap-3 px-3 py-3 hover:bg-slate-50 text-left border-b border-slate-100 last:border-0"
-                  >
-                    <div className="w-14 h-14 flex-shrink-0 rounded-lg bg-slate-100 overflow-hidden flex items-center justify-center border border-slate-100">
-                      <ProductImage src={getImageUrl(p)} alt={p.name} className="w-full h-full object-contain p-1" fallbackClassName="w-5 h-5 text-slate-300" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-semibold text-slate-800 truncate">{p.name}</p>
-                      <p className="text-[10px] text-slate-400 font-mono">{p.sku} · {p.category}</p>
-                      {getProductTagging(p).tags.length > 0 && (
-                        <p className="text-[10px] text-slate-500 mt-0.5">{getProductTagging(p).tags.join(' · ')}</p>
+              {showSearchDropdown && (
+                <div className="absolute top-full left-0 mt-1.5 w-full bg-white border border-slate-200 rounded-2xl shadow-xl z-50 overflow-hidden max-h-72 overflow-y-auto">
+                  {searchResults.map(p => (
+                    <button
+                      key={p.id}
+                      onMouseDown={() => handleSearchResultClick(p)}
+                      className="w-full flex items-center gap-3 px-3 py-3 hover:bg-slate-50 text-left border-b border-slate-100 last:border-0"
+                    >
+                      <div className="w-14 h-14 flex-shrink-0 rounded-lg bg-slate-100 overflow-hidden flex items-center justify-center border border-slate-100">
+                        <ProductImage src={getImageUrl(p)} alt={p.name} className="w-full h-full object-contain p-1" fallbackClassName="w-5 h-5 text-slate-300" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-semibold text-slate-800 truncate">{p.name}</p>
+                        <p className="text-[10px] text-slate-400 font-mono">{p.sku} · {p.category}</p>
+                        {getProductTagging(p).tags.length > 0 && (
+                          <p className="text-[10px] text-slate-500 mt-0.5">{getProductTagging(p).tags.join(' · ')}</p>
+                        )}
+                      </div>
+                      {(p.catalog_pages?.[0] || SKU_TO_PAGE[p.sku]) && (
+                        <span className="text-[10px] text-[#0D4FB3] font-bold flex-shrink-0">
+                          p.{Math.min(p.catalog_pages?.[0] || SKU_TO_PAGE[p.sku], 212)}
+                        </span>
                       )}
-                    </div>
-                    {(p.catalog_pages?.[0] || SKU_TO_PAGE[p.sku]) && (
-                      <span className="text-[10px] text-[#0D4FB3] font-bold flex-shrink-0">
-                        p.{Math.min(p.catalog_pages?.[0] || SKU_TO_PAGE[p.sku], 212)}
-                      </span>
-                    )}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
 
-          <div className="flex flex-wrap items-center gap-2 xl:justify-end">
-            {activeOrder ? (
-              <div className="hidden 2xl:flex items-center gap-2 rounded-2xl border border-green-200 bg-green-50 px-3 py-2 text-xs font-semibold text-green-700 max-w-[20rem]">
-                <span className="w-2 h-2 rounded-full bg-green-500 inline-block flex-shrink-0"></span>
-                <span className="truncate">{activeOrder.customer_name || activeOrder.customer_email} · {activeOrder.show_name || 'Show not set'}{activeOrder.booth_size ? ` · ${activeOrder.booth_size}` : ''}</span>
-              </div>
-            ) : !isEmbeddedOnXhibitlyStart ? (
-              <button
-                onClick={() => setShowSessionModal(true)}
-                className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:border-[#0D4FB3]/30 hover:text-[#0D4FB3] transition-colors"
-              >
-                <Plus className="w-4 h-4" />
-                Start Quote Session
-              </button>
-            ) : null}
-
-            <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-2xl px-3 py-2 shadow-sm w-full sm:w-auto justify-between sm:justify-start">
+            <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-2xl px-3 py-2 shadow-sm w-full sm:w-auto justify-between sm:justify-start sm:flex-shrink-0">
               <button onClick={() => goToPage(currentPage - 1)} disabled={currentPage <= FIRST_VISIBLE_CATALOG_PAGE}
                 className="p-1.5 rounded-lg hover:bg-slate-100 disabled:opacity-30 text-slate-600">
                 <ChevronLeft className="w-4 h-4" />
@@ -1645,6 +1628,23 @@ export default function CatalogQuote({ embeddedMode = false, initialPrompt = '',
                 <ChevronRight className="w-4 h-4" />
               </button>
             </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2 xl:justify-end">
+            {activeOrder ? (
+              <div className="hidden 2xl:flex items-center gap-2 rounded-2xl border border-green-200 bg-green-50 px-3 py-2 text-xs font-semibold text-green-700 max-w-[20rem]">
+                <span className="w-2 h-2 rounded-full bg-green-500 inline-block flex-shrink-0"></span>
+                <span className="truncate">{activeOrder.customer_name || activeOrder.customer_email} · {activeOrder.show_name || 'Show not set'}{activeOrder.booth_size ? ` · ${activeOrder.booth_size}` : ''}</span>
+              </div>
+            ) : !isEmbeddedOnXhibitlyStart ? (
+              <button
+                onClick={() => setShowSessionModal(true)}
+                className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:border-[#0D4FB3]/30 hover:text-[#0D4FB3] transition-colors"
+              >
+                <Plus className="w-4 h-4" />
+                Start Quote Session
+              </button>
+            ) : null}
 
             {hasHotspots && !editMode && (
               <Badge className="hidden 2xl:inline-flex bg-[#0D4FB3]/10 text-[#0D4FB3] text-[10px] rounded-full px-3 py-1">{currentHotspots.length} hotspots</Badge>
