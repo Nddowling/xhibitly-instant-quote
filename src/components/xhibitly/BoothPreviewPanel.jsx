@@ -141,7 +141,7 @@ function RenderProgressCard({ isGeneratingPreview }) {
         ))}
       </div>
 
-      <div className="relative mt-4 flex-1 overflow-hidden rounded-[22px] border border-white/8 bg-white/6">
+      <div className="relative mt-4 min-h-[210px] flex-1 overflow-hidden rounded-[22px] border border-white/8 bg-white/6">
         <div
           className="flex h-full transition-transform duration-500 ease-out"
           style={{ width: `${steps.length * 100}%`, transform: `translateX(-${activeStep * (100 / steps.length)}%)` }}
@@ -150,7 +150,7 @@ function RenderProgressCard({ isGeneratingPreview }) {
             const Icon = step.icon;
             const state = index < activeStep ? 'done' : index === activeStep ? 'live' : 'queued';
             return (
-              <div key={step.title} className="flex h-full w-full items-center px-4 py-5" style={{ width: `${100 / steps.length}%` }}>
+              <div key={step.title} className="flex h-full w-full items-center px-4 py-5 overflow-hidden" style={{ width: `${100 / steps.length}%` }}>
                 <div className="flex w-full items-center gap-4">
                   <div className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl ${state === 'done' ? 'bg-emerald-500/15 text-emerald-300' : state === 'live' ? 'bg-[#2B6EF3]/20 text-[#7FB0FF]' : 'bg-white/8 text-white/55'}`}>
                     <Icon className={`w-5 h-5 ${state === 'live' ? 'animate-pulse' : ''}`} />
@@ -218,7 +218,7 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult, onG
         </div>
       </div>
 
-      <div className="flex-1 min-h-0 p-4 bg-slate-50/70 flex flex-col gap-4 overflow-hidden">
+      <div className="flex-1 min-h-0 p-4 bg-slate-50/70 flex flex-col gap-4 overflow-visible">
         <div className="relative min-h-[260px] flex-1 rounded-[24px] border border-dashed border-slate-200 bg-white overflow-hidden">
           {isGeneratingPreview ? (
             <div className="absolute inset-0 p-3 sm:p-4">
