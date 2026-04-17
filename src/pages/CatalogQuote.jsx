@@ -348,7 +348,7 @@ function CatalogPageView({ pageNum, hotspots, onHotspotClick, selectedHotspot, o
         src={pageImageUrl(pageNum)}
         alt={`Catalog page ${pageNum}`}
         className="block rounded-lg shadow-2xl"
-        style={{ maxHeight: 'calc(100vh - 128px)', width: 'auto', maxWidth: '100%' }}
+        style={{ maxHeight: 'calc(100vh - 82px)', width: 'auto', maxWidth: '100%' }}
         onLoad={() => setImgLoaded(true)}
         onError={() => setImgError(true)}
       />
@@ -633,7 +633,7 @@ function HotspotEditor({ pageNum, spots, onChange, pageProducts, productCache, a
         src={pageImageUrl(pageNum)}
         alt={`Page ${pageNum}`}
         className="block rounded-lg shadow-2xl"
-        style={{ maxHeight: 'calc(100vh - 128px)', width: 'auto', maxWidth: '100%' }}
+        style={{ maxHeight: 'calc(100vh - 82px)', width: 'auto', maxWidth: '100%' }}
         onLoad={() => setImgLoaded(true)}
         draggable={false}
       />
@@ -1548,19 +1548,9 @@ export default function CatalogQuote({ embeddedMode = false, initialPrompt = '',
       )}
 
       {/* ── Top bar ── */}
-      <div className="relative z-20 bg-white/95 backdrop-blur border-b border-slate-200 px-3 sm:px-4 py-2.5 flex-shrink-0 shadow-sm">
-        <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between xl:gap-3">
-          <div className="flex items-center gap-3 min-w-0 lg:flex-[1.2]">
-            <div className="w-10 h-10 bg-[#0D4FB3] rounded-2xl flex items-center justify-center shadow-lg shadow-[#18C3F8]/20 flex-shrink-0">
-              <FileText className="w-5 h-5 text-white" />
-            </div>
-            <div className="min-w-0">
-              <h1 className="text-lg font-black tracking-tight text-slate-900 leading-none">Catalog Quote</h1>
-              <p className="text-xs text-slate-500 mt-1 truncate">Search the catalog, confirm booth products, and build a cleaner client quote.</p>
-            </div>
-          </div>
-
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 relative w-full xl:flex-1 xl:max-w-[36rem]" ref={searchRef}>
+      <div className="relative z-20 bg-white/95 backdrop-blur border-b border-slate-200 px-3 sm:px-4 py-1.5 flex-shrink-0 shadow-sm">
+        <div className="flex flex-col gap-2 xl:flex-row xl:items-center xl:justify-between xl:gap-3">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 relative w-full xl:max-w-[36rem]" ref={searchRef}>
             <div className="relative flex-1 min-w-0">
               <input
                 type="text"
