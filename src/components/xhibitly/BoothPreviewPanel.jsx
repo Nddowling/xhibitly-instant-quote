@@ -168,8 +168,8 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult, onG
           <span className="text-lg font-black text-[#0D4FB3]">{fmt(pricingResult?.finalTotal ?? lineItems?.reduce((sum, item) => sum + (item.final_total_price ?? item.total_price ?? 0), 0))}</span>
         </div>
         {showBrandPrompt && (
-          <div className="absolute inset-0 z-10 flex items-center justify-center bg-slate-950/45 p-4">
-            <div className="w-full max-w-sm rounded-3xl border border-slate-200 bg-white p-5 shadow-2xl">
+          <div className="absolute inset-0 z-30 flex items-center justify-center bg-slate-950/45 p-3 sm:p-4">
+            <div className="w-full max-w-sm rounded-3xl border border-slate-200 bg-white p-4 sm:p-5 shadow-2xl max-h-[calc(100%-1.5rem)] overflow-y-auto">
               <div className="flex items-start gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#0D4FB3]/10 text-[#0D4FB3]">
                   <Palette className="w-4 h-4" />

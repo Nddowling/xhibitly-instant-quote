@@ -1559,8 +1559,8 @@ export default function CatalogQuote({ embeddedMode = false, initialPrompt = '',
       )}
 
       {/* ── Top bar ── */}
-      <div className="relative z-40 bg-white/95 backdrop-blur border-b border-slate-200 px-3 sm:px-4 py-2.5 flex-shrink-0 shadow-sm">
-        <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between lg:gap-3">
+      <div className="relative z-20 bg-white/95 backdrop-blur border-b border-slate-200 px-3 sm:px-4 py-2.5 flex-shrink-0 shadow-sm">
+        <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between xl:gap-3">
           <div className="flex items-center gap-3 min-w-0 lg:flex-[1.2]">
             <div className="w-10 h-10 bg-[#0D4FB3] rounded-2xl flex items-center justify-center shadow-lg shadow-[#18C3F8]/20 flex-shrink-0">
               <FileText className="w-5 h-5 text-white" />
@@ -1571,7 +1571,7 @@ export default function CatalogQuote({ embeddedMode = false, initialPrompt = '',
             </div>
           </div>
 
-          <div className="flex items-center gap-2 relative lg:flex-1 lg:max-w-sm" ref={searchRef}>
+          <div className="flex items-center gap-2 relative w-full xl:flex-1 xl:max-w-sm" ref={searchRef}>
             <div className="relative w-full">
               <input
                 type="text"
@@ -1616,7 +1616,7 @@ export default function CatalogQuote({ embeddedMode = false, initialPrompt = '',
             )}
           </div>
 
-          <div className="flex flex-wrap lg:flex-nowrap items-center gap-2 lg:justify-end">
+          <div className="flex flex-wrap items-center gap-2 xl:justify-end">
             {activeOrder ? (
               <div className="hidden 2xl:flex items-center gap-2 rounded-2xl border border-green-200 bg-green-50 px-3 py-2 text-xs font-semibold text-green-700 max-w-[20rem]">
                 <span className="w-2 h-2 rounded-full bg-green-500 inline-block flex-shrink-0"></span>
@@ -1632,7 +1632,7 @@ export default function CatalogQuote({ embeddedMode = false, initialPrompt = '',
               </button>
             ) : null}
 
-            <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-2xl px-3 py-2 shadow-sm">
+            <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-2xl px-3 py-2 shadow-sm w-full sm:w-auto justify-between sm:justify-start">
               <button onClick={() => goToPage(currentPage - 1)} disabled={currentPage <= FIRST_VISIBLE_CATALOG_PAGE}
                 className="p-1.5 rounded-lg hover:bg-slate-100 disabled:opacity-30 text-slate-600">
                 <ChevronLeft className="w-4 h-4" />
@@ -1659,7 +1659,7 @@ export default function CatalogQuote({ embeddedMode = false, initialPrompt = '',
 
             <button
               onClick={handleExportCatalogSkus}
-              className="flex items-center gap-1.5 rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:border-[#0D4FB3]/30 hover:text-[#0D4FB3] transition-colors"
+              className="flex items-center justify-center gap-1.5 rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:border-[#0D4FB3]/30 hover:text-[#0D4FB3] transition-colors w-full sm:w-auto"
             >
               <Download className="w-4 h-4" />
               Export SKU CSV
@@ -1672,7 +1672,7 @@ export default function CatalogQuote({ embeddedMode = false, initialPrompt = '',
 
             <button
               onClick={() => setShowMobileQuote(true)}
-              className="lg:hidden flex items-center gap-1.5 bg-[#0D4FB3] text-white px-3.5 py-2 rounded-xl text-xs font-bold hover:bg-[#0fb2e4] transition-colors shadow-sm"
+              className="lg:hidden flex items-center justify-center gap-1.5 bg-[#0D4FB3] text-white px-3.5 py-2 rounded-xl text-xs font-bold hover:bg-[#0fb2e4] transition-colors shadow-sm w-full sm:w-auto"
             >
               <ShoppingCart className="w-3.5 h-3.5" />
               Quote ({lineItems.reduce((s, i) => s + (i.quantity || 0), 0)})
