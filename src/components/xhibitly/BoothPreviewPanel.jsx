@@ -202,8 +202,12 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult, onG
       </div>
 
       <div className="flex-1 min-h-0 p-4 bg-slate-50/70 flex flex-col gap-4 overflow-hidden">
-        <div className="relative min-h-[260px] flex-1 rounded-[24px] border border-dashed border-slate-200 bg-white flex flex-col items-center justify-center text-center px-6 overflow-hidden">
-          {order?.booth_rendering_url ? (
+        <div className="relative min-h-[260px] flex-1 rounded-[24px] border border-dashed border-slate-200 bg-white overflow-hidden">
+          {isGeneratingPreview ? (
+            <div className="absolute inset-0 p-3 sm:p-4">
+              <RenderProgressCard isGeneratingPreview={isGeneratingPreview} />
+            </div>
+          ) : order?.booth_rendering_url ? (
             <img
               src={order.booth_rendering_url}
               alt="Booth preview"
@@ -211,29 +215,30 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult, onG
               onClick={() => setImageModalOpen(true)}
             />
           ) : (
-            <>
+            <div className="h-full flex flex-col items-center justify-center text-center px-6">
               <Sparkles className="w-8 h-8 text-slate-300 mb-3" />
               <p className="text-sm font-semibold text-slate-800">AI booth image will appear here</p>
               <p className="text-xs text-slate-500 mt-1 leading-relaxed max-w-xs">As products, booth details, and brand info are captured, this panel can show the generated concept.</p>
-            </>
+            </div>
           )}
-          <div className="absolute bottom-4 left-4 right-4 flex flex-col items-center gap-2">
-            {previewStatus ? (
-              <div className="rounded-full bg-slate-900/85 px-3 py-1.5 text-[11px] font-medium text-white shadow-sm">
-                {previewStatus}
-              </div>
-            ) : null}
-            <Button
-              onClick={handleGenerateClick}
-              disabled={!lineItems?.length || isGeneratingPreview}
-              className="rounded-xl bg-[#0D4FB3] hover:bg-[#0b428f] text-white shadow-sm"
-            >
-              {isGeneratingPreview ? <><Loader2 className="w-4 h-4 animate-spin" />Generating…</> : 'Generate AI Booth Image'}
-            </Button>
-          </div>
-        </div>
 
-        {isGeneratingPreview && <RenderProgressCard isGeneratingPreview={isGeneratingPreview} />}
+          {!isGeneratingPreview && (
+            <div className="absolute bottom-4 left-4 right-4 flex flex-col items-center gap-2">
+              {previewStatus ? (
+                <div className="rounded-full bg-slate-900/85 px-3 py-1.5 text-[11px] font-medium text-white shadow-sm">
+                  {previewStatus}
+                </div>
+              ) : null}
+              <Button
+                onClick={handleGenerateClick}
+                disabled={!lineItems?.length || isGeneratingPreview}
+                className="rounded-xl bg-[#0D4FB3] hover:bg-[#0b428f] text-white shadow-sm"
+              >
+                Generate AI Booth Image
+              </Button>
+            </div>
+          )}
+        </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3 min-h-0 max-h-[280px] flex flex-col overflow-hidden">
           <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500 flex-shrink-0">Current Render Inputs</p>
