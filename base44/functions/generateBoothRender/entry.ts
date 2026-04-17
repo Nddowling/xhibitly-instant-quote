@@ -11,6 +11,15 @@ function dedupeUrls(urls) {
   return Array.from(new Set((urls || []).filter(Boolean)));
 }
 
+function normalizeReferenceUrl(url) {
+  if (!url) return null;
+  if (String(url).startsWith('http')) return url;
+  if (String(url).startsWith('/images/')) {
+    return `https://xpgvpzbzmkubahyxwipk.supabase.co/storage/v1/object/public/orbus-assets${url}`;
+  }
+  return url;
+}
+
 function summarizeText(text, maxLength = 120) {
   if (!text) return '';
   return String(text).replace(/\s+/g, ' ').trim().slice(0, maxLength);
@@ -49,7 +58,7 @@ function buildRenderPrompt({ boothInfo, productLines, compact = false }) {
       ? 'peninsula, open on three sides'
       : 'inline, open at front with back wall';
 
-  return `Create a photorealistic trade show booth concept render.
+  return `Create a photorealistic trade show booth render that looks like a literal visual mockup of the exact quoted items.
 
 BOOTH:
 - Size: ${boothInfo.boothSize}
@@ -58,24 +67,30 @@ BOOTH:
 - Event: ${boothInfo.showName}
 - Indoor convention hall, 3/4 view, full booth visible, no people
 
+CRITICAL GOAL:
+This image must look like the actual products in the quote, arranged into a believable booth layout.
+Do NOT invent a custom booth design. Do NOT swap products for nicer-looking retail fixtures. Do NOT add hanging signs, shelving walls, shoe displays, monitors, counters, benches, tables, or architecture unless they are explicitly in the quoted items.
+If the quote mostly contains banner stands and a backwall, show exactly that.
+If the quote contains repeated banner stands, show the repeated banner stands.
+
 BRANDING:
 ${boothInfo.colorNotes ? `- Use these brand colors: ${boothInfo.colorNotes}` : '- Use clean professional branded graphics'}
-${boothInfo.logoUrl ? '- A logo reference image is provided; reproduce it accurately' : `- Show the brand name "${boothInfo.brandName}" on graphics`}
+${boothInfo.logoUrl ? '- A logo reference image is provided; reproduce it accurately' : `- Show the brand name "${boothInfo.brandName}" on graphics only where it makes sense on the quoted products`}
 
-PRODUCTS:
-Render ONLY these quoted products. Do not add unlisted furniture or accessories.
+QUOTED ITEMS ONLY:
 ${productLines}
 
-LAYOUT:
+LAYOUT RULES:
 - Respect placement zones
 - Keep realistic scale within the booth footprint
-- Match the provided reference images for geometry and materials
-${compact ? '- Prioritize the main structural pieces and clean composition if the booth is crowded' : ''}
+- Match the provided reference images for geometry, silhouette, and materials
+- Banner stands must remain banner stands, not built-in shelving or permanent retail fixtures
+- Lighting accessories should stay small and supportive
+${compact ? '- For crowded quotes, keep the layout simple and prioritize the primary structural items first' : ''}
 
 OUTPUT:
-Polished exhibit concept render, well-lit, neutral convention floor, subtle show-floor background.`;
+A clean, believable sales render showing the exact quoted products assembled together, with realistic trade show styling and no extra unquoted elements.`;
 }
-
 function extractDomain(url) {
   try {
     const cleanUrl = String(url || '').trim().replace(/^https?:\/\/(www\.)?/, '');
@@ -178,12 +193,13 @@ Deno.serve(async (req) => {
   catch { return Response.json({ error: 'Invalid JSON body' }, { status: 400, headers: CORS }); }
 
   const {
-    website_url = '',
-    brand_name  = '',
-    booth_size  = '',
-    booth_type  = '',
-    show_name   = '',
-    quote_items = [],
+  website_url = '',
+  brand_name  = '',
+  booth_size  = '',
+  booth_type  = '',
+  show_name   = '',
+  quote_items = [],
+  reference_urls = [],
   } = body;
 
   try {
@@ -255,9 +271,10 @@ Deno.serve(async (req) => {
     }
 
     const combinedReferenceUrls = dedupeUrls([
-      ...selectedProducts.map((p) => p.image_cached_url || p.image_url || null),
+      ...(reference_urls || []).map(normalizeReferenceUrl),
+      ...selectedProducts.map((p) => normalizeReferenceUrl(p.image_cached_url || p.image_url || null)),
       boothInfo.logoUrl || null,
-    ]).slice(0, 6);
+    ]).slice(0, 10);
 
     console.log('[generateBoothRender] Prompt length:', finalPrompt.length);
     console.log('[generateBoothRender] Prompt:\n', finalPrompt);
