@@ -203,12 +203,12 @@ export default function QuoteView() {
                   <Button onClick={sendQuote} disabled={!deliveryEmail || emailing} className="bg-[#0D4FB3] hover:bg-[#0b428f] text-white gap-2">
                     {emailing ? <><Send className="w-4 h-4" />Sending…</> : emailed ? <><CheckCircle2 className="w-4 h-4" />Sent</> : <><Send className="w-4 h-4" />Email Quote</>}
                   </Button>
-                  <Button onClick={copyLink} variant="outline" className="gap-2">
+                  <Button onClick={copyLink} variant="outline" className="gap-2 hover:bg-[#0D4FB3] hover:text-white hover:border-[#0D4FB3]">
                     <Link2 className="w-4 h-4" />{copied ? 'Copied' : 'Copy Link'}
                   </Button>
                   <a href={shareUrl} target="_blank" rel="noopener noreferrer" className="w-full">
-                    <Button variant="outline" className="w-full gap-2">
-                      <ExternalLink className="w-4 h-4" />Open Share Link
+                    <Button variant="outline" className="w-full gap-2 text-sm hover:bg-[#0D4FB3] hover:text-white hover:border-[#0D4FB3]">
+                      <ExternalLink className="w-4 h-4" />Share Link
                     </Button>
                   </a>
                 </div>
