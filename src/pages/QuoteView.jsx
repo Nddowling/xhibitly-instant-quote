@@ -11,7 +11,7 @@ function ExhibitlyLogo({ className = '' }) {
     <img
       src="https://media.base44.com/images/public/69834d9e0d7220d671bfd124/f3c8fd783_IMG_1062.png"
       alt="Xhibitly"
-      className={`object-contain block ${className}`}
+      className={`object-contain block rounded-xl overflow-hidden ${className}`}
     />
   );
 }
