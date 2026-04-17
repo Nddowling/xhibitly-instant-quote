@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Sparkles, Image as ImageIcon, Package, Loader2, X, Palette, CheckCircle2, Wand2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -84,24 +85,40 @@ function RenderProgressCard({ isGeneratingPreview }) {
     },
   ];
 
+  const exhibitFacts = [
+    'Strong booth design helps brands stop more attendees in crowded 2026 exhibit halls.',
+    'Clear branding and bold visuals make booths easier to remember after the show ends.',
+    'Interactive exhibits are a major 2026 trend because they keep visitors engaged longer.',
+    'A polished booth helps sales teams start better conversations and qualify leads faster.',
+    'Modular exhibit systems are growing in 2026 because they scale across multiple show sizes.',
+    'Premium graphics can make the same footprint feel more established and more valuable.',
+    'Attendees judge credibility fast, so booth presentation matters before anyone says hello.',
+    'Open, well-planned layouts help staff greet more visitors without making the booth feel cramped.',
+    'Brands investing in stronger exhibit presence often get more photo-sharing and social visibility.',
+    'A better booth experience can improve traffic quality, not just traffic volume.'
+  ];
+
   const [activeStep, setActiveStep] = useState(0);
   const [progress, setProgress] = useState(12);
+  const [factIndex, setFactIndex] = useState(0);
 
   useEffect(() => {
     if (!isGeneratingPreview) {
       setActiveStep(0);
       setProgress(12);
+      setFactIndex(0);
       return;
     }
 
     setActiveStep(0);
     setProgress(12);
+    setFactIndex(0);
 
     const startedAt = Date.now();
     const totalDuration = 12000;
     const stepDuration = totalDuration / steps.length;
 
-    const timer = window.setInterval(() => {
+    const progressTimer = window.setInterval(() => {
       const elapsed = Date.now() - startedAt;
       const boundedElapsed = Math.min(elapsed, totalDuration);
       const nextStep = Math.min(Math.floor(boundedElapsed / stepDuration), steps.length - 1);
@@ -111,7 +128,14 @@ function RenderProgressCard({ isGeneratingPreview }) {
       setProgress(nextProgress);
     }, 180);
 
-    return () => window.clearInterval(timer);
+    const factTimer = window.setInterval(() => {
+      setFactIndex((prev) => (prev + 1) % exhibitFacts.length);
+    }, 4000);
+
+    return () => {
+      window.clearInterval(progressTimer);
+      window.clearInterval(factTimer);
+    };
   }, [isGeneratingPreview]);
 
   return (
@@ -142,31 +166,34 @@ function RenderProgressCard({ isGeneratingPreview }) {
         ))}
       </div>
 
-      <div className="relative mt-4 min-h-[210px] flex-1 overflow-hidden rounded-[22px] border border-white/8 bg-white/6">
-        <div
-          className="flex h-full transition-transform duration-500 ease-out"
-          style={{ width: `${steps.length * 100}%`, transform: `translateX(-${activeStep * (100 / steps.length)}%)` }}
-        >
-          {steps.map((step, index) => {
-            const Icon = step.icon;
-            const state = index < activeStep ? 'done' : index === activeStep ? 'live' : 'queued';
-            return (
-              <div key={step.title} className="flex h-full w-full items-center px-4 py-5 overflow-hidden" style={{ width: `${100 / steps.length}%` }}>
-                <div className="flex w-full items-center gap-4">
-                  <div className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl ${state === 'done' ? 'bg-emerald-500/15 text-emerald-300' : state === 'live' ? 'bg-[#2B6EF3]/20 text-[#7FB0FF]' : 'bg-white/8 text-white/55'}`}>
-                    <Icon className={`w-5 h-5 ${state === 'live' ? 'animate-pulse' : ''}`} />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center justify-between gap-3">
-                      <p className="text-lg font-black text-white">{step.title}</p>
-                      <span className="text-[10px] font-bold uppercase tracking-[0.28em] text-white/45">{state}</span>
-                    </div>
-                    <p className="mt-2 max-w-[16rem] text-sm leading-relaxed text-white/65">{step.description}</p>
-                  </div>
-                </div>
+      <div className="relative mt-4 min-h-[210px] flex-1 overflow-hidden rounded-[22px] border border-white/8 bg-white/6 px-5 py-6">
+        <div className="flex h-full flex-col justify-center">
+          <div className="flex items-center gap-4">
+            <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-[#2B6EF3]/20 text-[#7FB0FF]">
+              <Sparkles className="w-5 h-5 animate-pulse" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center justify-between gap-3">
+                <p className="text-lg font-black text-white">2026 Exhibit Insight</p>
+                <span className="text-[10px] font-bold uppercase tracking-[0.28em] text-white/45">LIVE</span>
               </div>
-            );
-          })}
+            </div>
+          </div>
+
+          <div className="relative mt-6 min-h-[96px] overflow-hidden">
+            <AnimatePresence mode="wait">
+              <motion.p
+                key={factIndex}
+                initial={{ opacity: 0, x: 120 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -120 }}
+                transition={{ duration: 0.45, ease: 'easeInOut' }}
+                className="absolute inset-0 text-[22px] font-bold leading-tight text-white/95 sm:text-[26px]"
+              >
+                {exhibitFacts[factIndex]}
+              </motion.p>
+            </AnimatePresence>
+          </div>
         </div>
       </div>
     </div>
