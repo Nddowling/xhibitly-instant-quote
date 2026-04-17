@@ -342,7 +342,7 @@ function buildDenseProductLine(item, index) {
   return parts.join(' | ');
 }
 
-function buildStrictRenderPrompt({ boothInfo, denseProductLines, referenceImageCount, hasFullSpanBackwall }) {
+function buildStrictRenderPrompt({ boothInfo, denseProductLines, referenceImageCount, hasFullSpanBackwall, itemCount, structureCount, bannerStandCount, counterCount, towerCount }) {
   const boothTypeLower = (boothInfo.boothType || '').toLowerCase();
 
   const boothTypeDesc =
@@ -363,6 +363,8 @@ function buildStrictRenderPrompt({ boothInfo, denseProductLines, referenceImageC
   const referenceBlock = referenceImageCount > 0
     ? `REFERENCE IMAGES:\n${referenceImageCount} reference images are provided. Each corresponds to a quoted product or the brand logo.\nThese images are the DEFINITIVE visual reference for each item's geometry, form factor, materials, and finish.\nIf a reference image conflicts with any text description, the reference image wins.\nMatch the reference image faithfully — do not reinterpret, stylize, or substitute a different object.`
     : '';
+
+  const countBlock = `QUANTITY LOCK:\n- Total quoted line items to show: ${itemCount}\n- Backwall structures quoted: ${structureCount}\n- Banner stands quoted: ${bannerStandCount}\n- Counters quoted: ${counterCount}\n- Towers quoted: ${towerCount}\nDo not invent any additional walls, towers, counters, kiosks, banner stands, iPad pedestals, or signs beyond these counts.`;
 
   return `ROLE: You are a purchase-order-accurate booth render engine for trade show exhibit sales proposals. Your output is a visual contract — it must show exactly what the customer is purchasing, nothing more, nothing less.
 
@@ -388,6 +390,8 @@ ${brandBlock}
 
 ${referenceBlock}
 
+${countBlock}
+
 QUOTED ITEMS — RENDER ALL OF THESE, RENDER NOTHING ELSE:
 ${denseProductLines}
 
@@ -412,6 +416,9 @@ SPATIAL RULES:
 - Maintain realistic human scale — a 6ft tall person should be able to stand next to any product and the proportions look correct
 - Multi-section backwalls that share a SKU family prefix connect together as one continuous structure
 - If a quoted backwall is approximately booth-width, render it as one continuous full rear-span master backwall, not a smaller centered panel with empty wall space beside it
+- If no towers are quoted, do not create side towers, endcaps, columns, or vertical lightboxes flanking the backwall
+- If no banner stands are quoted, do not create freestanding aisle signs anywhere in the booth
+- If only one backwall is quoted, show one backwall only — do not split it into multiple wall objects
 - Do not mount counters, beds, shelves, or horizontal surfaces on banner stands or iPad towers
 
 OUTPUT:
@@ -514,6 +521,11 @@ Deno.serve(async (req) => {
       denseProductLines,
       referenceImageCount: combinedReferenceUrls.length,
       hasFullSpanBackwall,
+      itemCount: renderContract.items.length,
+      structureCount: renderContract.structures.length,
+      bannerStandCount: renderContract.items.filter((item) => item.object_class === 'banner_stand').reduce((sum, item) => sum + Number(item.quantity || 1), 0),
+      counterCount: renderContract.items.filter((item) => item.object_class === 'counter').reduce((sum, item) => sum + Number(item.quantity || 1), 0),
+      towerCount: renderContract.items.filter((item) => item.object_class === 'tower').reduce((sum, item) => sum + Number(item.quantity || 1), 0),
     });
 
     console.log('[generateBoothRender] Prompt length:', finalPrompt.length);
