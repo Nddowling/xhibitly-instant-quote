@@ -294,7 +294,7 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult, onG
           </Button>
         </div>
         {showBrandPrompt && (
-          <div className="absolute inset-0 z-30 flex items-center justify-center bg-slate-950/45 p-3 sm:p-4">
+          <div className="fixed inset-0 z-[10001] flex items-center justify-center bg-slate-950/60 p-3 sm:p-4 backdrop-blur-sm">
             <div className="w-full max-w-sm rounded-3xl border border-slate-200 bg-white p-4 sm:p-5 shadow-2xl max-h-[calc(100%-1.5rem)] overflow-y-auto">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-start gap-3 min-w-0">
