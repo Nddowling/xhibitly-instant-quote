@@ -189,14 +189,14 @@ Deno.serve(async (req) => {
       if (item?.sku) quantities[item.sku] = item.quantity || 1;
     });
 
-    // Paginated full catalog load — fixes the broken .filter('sku', 5000) bug
+    // Load catalog products with stable pagination
     const productBySku = new Map();
     let skip = 0;
     while (true) {
-      const batch = await base44.asServiceRole.entities.Product.list({ limit: 500, skip });
+      const batch = await base44.asServiceRole.entities.Product.list('-updated_date', 500, skip);
       if (!batch?.length) break;
       for (const p of batch) {
-        if (p.sku) productBySku.set(p.sku, p);
+        if (p?.sku) productBySku.set(p.sku, p);
       }
       if (batch.length < 500) break;
       skip += 500;
