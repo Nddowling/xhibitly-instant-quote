@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
@@ -6,6 +6,8 @@ import CatalogQuote from '@/pages/CatalogQuote';
 import XhibitlyAgentPane from '@/components/xhibitly/XhibitlyAgentPane';
 import BoothPreviewPanel from '@/components/xhibitly/BoothPreviewPanel';
 import SessionStartModal from '@/components/catalog/SessionStartModal';
+
+const ACTIVE_SESSION_KEY = 'xhibitly-active-order-id';
 
 export default function XhibitlyStart2() {
   const navigate = useNavigate();
@@ -17,6 +19,25 @@ export default function XhibitlyStart2() {
   const [previewBrandWebsite, setPreviewBrandWebsite] = useState('');
   const [isGeneratingPreview, setIsGeneratingPreview] = useState(false);
   const [previewStatus, setPreviewStatus] = useState('');
+
+  const restoreSavedSession = useCallback(async () => {
+    const savedOrderId = window.localStorage.getItem(ACTIVE_SESSION_KEY);
+    if (!savedOrderId) return;
+
+    const orders = await base44.entities.Order.filter({ id: savedOrderId }, '-created_date', 1);
+    const order = orders?.[0] || null;
+
+    if (!order) {
+      window.localStorage.removeItem(ACTIVE_SESSION_KEY);
+      return;
+    }
+
+    const items = await base44.entities.LineItem.filter({ order_id: order.id });
+    setPreviewOrder(order);
+    setPreviewLineItems(items || []);
+    setPreviewBrandWebsite(order?.website_url || '');
+    setShowSessionModal(false);
+  }, []);
 
   const handleGeneratePreview = async ({ website_url = '' } = {}) => {
     if (!previewOrder || previewLineItems.length === 0 || isGeneratingPreview) return;
@@ -95,6 +116,7 @@ export default function XhibitlyStart2() {
   };
 
   const startFreshQuote = () => {
+    window.localStorage.removeItem(ACTIVE_SESSION_KEY);
     setPreviewOrder(null);
     setPreviewLineItems([]);
     setPreviewPricingResult(null);
@@ -106,6 +128,9 @@ export default function XhibitlyStart2() {
   };
 
   const handleSessionComplete = (order) => {
+    if (order?.id) {
+      window.localStorage.setItem(ACTIVE_SESSION_KEY, order.id);
+    }
     setPreviewOrder(order || null);
     setPreviewLineItems([]);
     setPreviewPricingResult(null);
@@ -141,6 +166,10 @@ export default function XhibitlyStart2() {
   };
 
   useEffect(() => {
+    restoreSavedSession();
+  }, [restoreSavedSession]);
+
+  useEffect(() => {
     const handleCatalogPrompt = (event) => {
       const prompt = event?.detail?.prompt || '';
       if (!prompt) return;
@@ -157,7 +186,7 @@ export default function XhibitlyStart2() {
       window.removeEventListener('xhibitly:catalog-prompt', handleCatalogPrompt);
       window.removeEventListener('xhibitly:new-quote', handleNewQuote);
     };
-  }, []);
+  }, [restoreSavedSession]);
 
   return (
     <div className="min-h-screen bg-[#f6f8fc] text-slate-900 overflow-x-hidden">

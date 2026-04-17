@@ -158,6 +158,7 @@ The goal is that each hotspot opens a selectable list of SKUs exactly like the c
 // ─── Config ─────────────────────────────────────────────────────────────────
 const SUPABASE_URL = 'https://xpgvpzbzmkubahyxwipk.supabase.co/storage/v1/object/public/orbus-assets';
 const LS_KEY = 'catalog-hotspot-edits';
+const ACTIVE_SESSION_KEY = 'xhibitly-active-order-id';
 // Catalog print pages (1–218) are stored in Supabase as PDF page numbers (print + 2).
 // page-007.jpg in the catalog = page-009.jpg in Supabase.
 const CATALOG_PAGE_OFFSET = 2;
@@ -1042,9 +1043,25 @@ export default function CatalogQuote({ embeddedMode = false, initialPrompt = '',
 
   useEffect(() => {
     base44.auth.me()
-      .then(u => {
+      .then(async (u) => {
         setUser(u);
-        setShowSessionModal(!isEmbeddedOnXhibitlyStart);
+
+        const savedOrderId = window.localStorage.getItem(ACTIVE_SESSION_KEY);
+        if (!savedOrderId) {
+          setShowSessionModal(!isEmbeddedOnXhibitlyStart);
+          return;
+        }
+
+        const savedOrders = await base44.entities.Order.filter({ id: savedOrderId }, '-created_date', 1);
+        const savedOrder = savedOrders?.[0] || null;
+
+        if (savedOrder) {
+          setActiveOrder(savedOrder);
+          setShowSessionModal(false);
+        } else {
+          window.localStorage.removeItem(ACTIVE_SESSION_KEY);
+          setShowSessionModal(!isEmbeddedOnXhibitlyStart);
+        }
       })
       .catch(() => setShowSessionModal(!isEmbeddedOnXhibitlyStart));
   }, [isEmbeddedOnXhibitlyStart]);
@@ -1068,6 +1085,9 @@ export default function CatalogQuote({ embeddedMode = false, initialPrompt = '',
 
   const handleSessionComplete = async (order) => {
     setActiveOrder(order);
+    if (order?.id) {
+      window.localStorage.setItem(ACTIVE_SESSION_KEY, order.id);
+    }
     setShowSessionModal(false);
   };
 
