@@ -15,6 +15,8 @@ export default function QuoteConfirmModal({ order, lineItems, onClose, isPreview
   const [copied, setCopied] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [emailing, setEmailing] = useState(false);
+  const [emailed, setEmailed] = useState(false);
 
   const submitToQueue = async () => {
     if (!order?.id || submitted) return;
@@ -98,6 +100,17 @@ export default function QuoteConfirmModal({ order, lineItems, onClose, isPreview
     if (shareUrl) window.open(shareUrl + '&print=1', '_blank');
   };
 
+  const emailQuote = async () => {
+    if (!order?.id || emailing || !order?.customer_email) return;
+    setEmailing(true);
+    try {
+      await base44.functions.invoke('emailQuote', { order_id: order.id });
+      setEmailed(true);
+    } finally {
+      setEmailing(false);
+    }
+  };
+
   if (!order) return null;
 
   return (
@@ -166,6 +179,20 @@ export default function QuoteConfirmModal({ order, lineItems, onClose, isPreview
                 <Download className="w-3.5 h-3.5" /> Excel
               </Button>
             </div>
+
+            <Button
+              onClick={emailQuote}
+              disabled={emailing || emailed || !order?.customer_email}
+              className="w-full h-10 text-sm font-bold gap-2 bg-[#0D4FB3] hover:bg-[#0b428f] text-white disabled:opacity-50"
+            >
+              {emailing ? (
+                <><Loader2 className="w-4 h-4 animate-spin" /> Sending Quote…</>
+              ) : emailed ? (
+                <><CheckCircle2 className="w-4 h-4" /> Quote Emailed</>
+              ) : (
+                <><Send className="w-4 h-4" /> Email Quote to Customer</>
+              )}
+            </Button>
 
             {shareUrl && (
               <a href={shareUrl} target="_blank" rel="noopener noreferrer"
