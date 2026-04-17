@@ -130,7 +130,7 @@ function RenderProgressCard({ isGeneratingPreview }) {
 
     const factTimer = window.setInterval(() => {
       setFactIndex((prev) => (prev + 1) % exhibitFacts.length);
-    }, 4000);
+    }, 8000);
 
     return () => {
       window.clearInterval(progressTimer);
@@ -188,7 +188,7 @@ function RenderProgressCard({ isGeneratingPreview }) {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -120 }}
                 transition={{ duration: 0.45, ease: 'easeInOut' }}
-                className="absolute inset-0 text-[22px] font-bold leading-tight text-white/95 sm:text-[26px]"
+                className="absolute inset-0 text-[22px] font-medium leading-[1.15] tracking-[-0.02em] text-white/95 sm:text-[26px]"
               >
                 {exhibitFacts[factIndex]}
               </motion.p>
