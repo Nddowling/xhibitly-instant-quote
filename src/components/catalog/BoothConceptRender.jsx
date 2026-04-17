@@ -55,6 +55,12 @@ async function generatePhotoRender(order, lineItems) {
   return {
     url: renderUrl,
     prompt: response?.data?.prompt || '',
+    boothInfo: response?.data?.booth_info || {
+      brandName: order?.customer_company || order?.customer_name || 'Client brand',
+      boothSize: order?.booth_size || '10x10',
+      boothType: order?.booth_type || 'Inline',
+      showName: order?.show_name || 'Trade Show',
+    },
     requestPayload: {
       quote_items: quoteItems,
       boothInfo: {
@@ -284,6 +290,10 @@ export default function BoothConceptRender({ order, lineItems = [], onRenderingS
                   ? `✅ Using ${renderDebug.registryResponse.total} quote product records`
                   : 'No product record summary available'}
               </pre>
+            </div>
+            <div>
+              <p className="text-[10px] font-semibold text-slate-700">Booth setup used</p>
+              <pre className="mt-1 text-[10px] text-slate-600 whitespace-pre-wrap break-words bg-white rounded-lg border border-slate-200 p-2 overflow-auto max-h-24">{JSON.stringify(renderDebug.boothInfo, null, 2)}</pre>
             </div>
             <div>
               <p className="text-[10px] font-semibold text-slate-700">Sent payload</p>

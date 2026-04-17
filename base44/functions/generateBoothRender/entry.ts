@@ -51,18 +51,22 @@ function buildProductLines(products, quantities, compact = false) {
 }
 
 function buildRenderPrompt({ boothInfo, productLines, compact = false }) {
+  const boothTypeLower = (boothInfo.boothType || '').toLowerCase();
   const boothTypeDesc =
-    (boothInfo.boothType || '').toLowerCase() === 'island'
+    boothTypeLower === 'island'
       ? 'island, open on all four sides'
-      : (boothInfo.boothType || '').toLowerCase() === 'peninsula'
+      : boothTypeLower === 'peninsula'
       ? 'peninsula, open on three sides'
-      : 'inline, open at front with back wall';
+      : boothTypeLower === 'corner'
+      ? 'corner, open on two sides with graphics concentrated on the back and one side wall'
+      : 'inline, open only at the front with a hard back wall and neighboring booths tight on both left and right sides';
 
   return `Create a photorealistic trade show booth render that looks like a literal visual mockup of the exact quoted items.
 
 BOOTH:
-- Size: ${boothInfo.boothSize}
-- Type: ${boothTypeDesc}
+- Exact footprint: ${boothInfo.boothSize}
+- Booth type: ${boothInfo.boothType}
+- Spatial rule: ${boothTypeDesc}
 - Brand: ${boothInfo.brandName}
 - Event: ${boothInfo.showName}
 - Indoor convention hall, 3/4 view, full booth visible, no people
@@ -82,6 +86,9 @@ ${productLines}
 
 LAYOUT RULES:
 - Respect placement zones
+- Everything must physically fit inside the exact ${boothInfo.boothSize} footprint
+- Treat booth type as mandatory: for inline booths, do not show open sides, wraparound architecture, or island layouts
+- Use the back wall as the main anchor for inline booths and keep all products facing the aisle/front opening
 - Keep realistic scale within the booth footprint
 - Match the provided reference images for geometry, silhouette, and materials
 - Banner stands must remain banner stands, not built-in shelving or permanent retail fixtures
@@ -287,7 +294,12 @@ Deno.serve(async (req) => {
 
     if (!imageResult?.url) throw new Error('Image generation returned no URL');
 
-    return Response.json({ status: 'completed', url: imageResult.url }, { headers: CORS });
+    return Response.json({
+      status: 'completed',
+      url: imageResult.url,
+      prompt: finalPrompt,
+      booth_info: boothInfo,
+    }, { headers: CORS });
 
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
