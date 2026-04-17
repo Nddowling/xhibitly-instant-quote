@@ -117,7 +117,7 @@ export default function QuoteView() {
 
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50">
-      <div className="w-8 h-8 border-4 border-[#e2231a] border-t-transparent rounded-full animate-spin" />
+      <div className="w-8 h-8 border-4 border-[#0D4FB3] border-t-transparent rounded-full animate-spin" />
     </div>
   );
 
