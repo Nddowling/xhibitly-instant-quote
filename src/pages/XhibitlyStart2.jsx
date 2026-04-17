@@ -163,7 +163,7 @@ export default function XhibitlyStart2() {
     <div className="min-h-screen bg-[#f6f8fc] text-slate-900 overflow-x-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(24,195,248,0.16),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(13,79,179,0.12),transparent_30%)]" />
       <div className="absolute inset-0 opacity-70" style={{ backgroundImage: 'linear-gradient(rgba(13,79,179,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(13,79,179,0.08) 1px, transparent 1px)', backgroundSize: '46px 46px' }} />
-      <div className="relative z-10 px-4 md:px-8 py-4 md:py-6">
+      <div className="relative z-10 px-4 md:px-8 py-2 md:py-3">
         <div className="max-w-[1560px] mx-auto">
           {showSessionModal && (
             <SessionStartModal
@@ -172,13 +172,13 @@ export default function XhibitlyStart2() {
             />
           )}
 
-          <div className="flex items-center justify-center mb-5 md:mb-6">
+          <div className="flex items-center justify-center mb-2 md:mb-3">
             <div className="rounded-2xl overflow-hidden">
-              <img src="https://media.base44.com/images/public/69834d9e0d7220d671bfd124/f3c8fd783_IMG_1062.png" alt="Xhibitly" className="h-10 md:h-12 w-auto object-contain block rounded-[28px]" />
+              <img src="https://media.base44.com/images/public/69834d9e0d7220d671bfd124/f3c8fd783_IMG_1062.png" alt="Xhibitly" className="h-8 md:h-10 w-auto object-contain block rounded-[28px]" />
             </div>
           </div>
 
-          <div className="grid gap-4 md:gap-6 lg:grid-cols-[minmax(280px,0.9fr)_minmax(720px,1.65fr)_minmax(340px,1fr)] items-start min-h-[calc(100vh-24px)]">
+          <div className="grid gap-3 md:gap-4 lg:grid-cols-[minmax(280px,0.9fr)_minmax(720px,1.65fr)_minmax(340px,1fr)] items-start min-h-[calc(100vh-12px)]">
             <section className="min-w-0 h-auto lg:h-[calc(100vh-8px)] lg:sticky lg:top-2">
               <BoothPreviewPanel
                 order={previewOrder}
@@ -211,7 +211,7 @@ export default function XhibitlyStart2() {
             </section>
           </div>
 
-          <p className="text-center text-xs md:text-sm text-slate-500 mt-4">The Speed of AI. The Power of The Handbook.</p>
+          <p className="text-center text-xs md:text-sm text-slate-500 mt-2">The Speed of AI. The Power of The Handbook.</p>
         </div>
       </div>
     </div>
