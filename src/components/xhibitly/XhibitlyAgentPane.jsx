@@ -131,7 +131,7 @@ export default function XhibitlyAgentPane({ queuedPrompt, onPromptConsumed }) {
             <p className="text-sm font-semibold text-slate-800">Checking access…</p>
           </div>
         ) : !isAuthenticated ? (
-          <div className="rounded-3xl border border-dashed border-slate-200 bg-white px-4 py-6 text-center shadow-sm"
+          <div className="rounded-3xl border border-dashed border-slate-200 bg-white px-4 py-6 text-center shadow-sm">
             <LogIn className="w-8 h-8 text-slate-300 mx-auto mb-3" />
             <p className="text-sm font-semibold text-slate-800">Sign in to use the AI booth guide</p>
             <p className="text-xs text-slate-500 mt-1 leading-relaxed">
@@ -142,7 +142,7 @@ export default function XhibitlyAgentPane({ queuedPrompt, onPromptConsumed }) {
             </Button>
           </div>
         ) : messages.length === 0 ? (
-          <div className="rounded-3xl border border-dashed border-slate-200 bg-white px-4 py-6 text-center shadow-sm"
+          <div className="rounded-3xl border border-dashed border-slate-200 bg-white px-4 py-6 text-center shadow-sm">
             <Sparkles className="w-8 h-8 text-slate-200 mx-auto mb-3" />
             <p className="text-sm font-semibold text-slate-800">No conversation started yet</p>
             <p className="text-xs text-slate-500 mt-1 leading-relaxed">
