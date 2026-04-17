@@ -204,7 +204,7 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult, onG
               </div>
               <div className="mt-4 flex gap-2">
                 <Button onClick={handleBrandConfirm} className="flex-1 rounded-xl bg-[#0D4FB3] hover:bg-[#0b428f] text-white">Use Website</Button>
-                <Button variant="outline" onClick={handleSkipBranding} className="flex-1 rounded-xl">Skip Branding</Button>
+                <Button variant="outline" onClick={handleSkipBranding} className="flex-1 rounded-xl hover:bg-slate-100 hover:text-slate-900 hover:border-slate-300">Skip Branding</Button>
               </div>
             </div>
           </div>
