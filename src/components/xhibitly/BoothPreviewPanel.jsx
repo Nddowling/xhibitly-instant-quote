@@ -185,14 +185,24 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult, onG
         {showBrandPrompt && (
           <div className="absolute inset-0 z-30 flex items-center justify-center bg-slate-950/45 p-3 sm:p-4">
             <div className="w-full max-w-sm rounded-3xl border border-slate-200 bg-white p-4 sm:p-5 shadow-2xl max-h-[calc(100%-1.5rem)] overflow-y-auto">
-              <div className="flex items-start gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#0D4FB3]/10 text-[#0D4FB3]">
-                  <Palette className="w-4 h-4" />
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-start gap-3 min-w-0">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#0D4FB3]/10 text-[#0D4FB3] flex-shrink-0">
+                    <Palette className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-black text-slate-900">Add branding first?</p>
+                    <p className="mt-1 text-xs leading-relaxed text-slate-500">If you have a company website, we can pull saved brand details first and use them in the render.</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm font-black text-slate-900">Add branding first?</p>
-                  <p className="mt-1 text-xs leading-relaxed text-slate-500">If you have a company website, we can pull saved brand details first and use them in the render.</p>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowBrandPrompt(false)}
+                  className="flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-400 transition-colors hover:border-slate-300 hover:bg-slate-100 hover:text-slate-700 flex-shrink-0"
+                  aria-label="Close branding modal"
+                >
+                  <X className="w-4 h-4" />
+                </button>
               </div>
               <div className="mt-4">
                 <Input
