@@ -8,12 +8,11 @@ import BoothConceptRender from '@/components/catalog/BoothConceptRender';
 
 function ExhibitlyLogo({ className = '' }) {
   return (
-    <div className={`relative overflow-hidden rounded-xl bg-[#0D4FB3] ${className}`}>
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.28),transparent_48%)]" />
-      <div className="absolute left-[22%] top-[20%] h-[60%] w-[60%] rounded-full border-[3px] border-white/95" />
-      <div className="absolute left-[50%] top-[18%] h-[64%] w-[26%] -translate-x-1/2 rounded-full bg-[#0D4FB3]" />
-      <div className="absolute left-[22%] top-[46%] h-[14%] w-[60%] -translate-y-1/2 bg-white/95" />
-    </div>
+    <img
+      src="https://media.base44.com/images/public/69834d9e0d7220d671bfd124/f3c8fd783_IMG_1062.png"
+      alt="Xhibitly"
+      className={`object-contain block ${className}`}
+    />
   );
 }
 

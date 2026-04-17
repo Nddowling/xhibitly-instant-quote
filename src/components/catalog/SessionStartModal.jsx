@@ -83,10 +83,10 @@ function CustomerStep({ onSelect, onNewCustomer, onDismiss, canDismiss }) {
                 <button
                   key={cp.client_email}
                   onMouseDown={() => onSelect(cp)}
-                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-50 text-left border-b border-slate-100 last:border-0 transition-colors"
+                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-[#0D4FB3]/5 text-left border-b border-slate-100 last:border-0 transition-colors"
                 >
-                  <div className="w-8 h-8 bg-[#e2231a]/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Building className="w-4 h-4 text-[#e2231a]" />
+                  <div className="w-8 h-8 bg-[#0D4FB3]/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Building className="w-4 h-4 text-[#0D4FB3]" />
                   </div>
                   <div className="min-w-0">
                     <p className="text-sm font-semibold text-slate-800 truncate">{cp.client_company || cp.client_email}</p>
@@ -116,7 +116,7 @@ function CustomerStep({ onSelect, onNewCustomer, onDismiss, canDismiss }) {
               <button
                 key={cp.client_email}
                 onClick={() => onSelect(cp)}
-                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl border border-slate-100 hover:border-[#e2231a]/30 hover:bg-[#e2231a]/5 text-left transition-all"
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl border border-slate-100 hover:border-[#0D4FB3]/30 hover:bg-[#0D4FB3]/5 text-left transition-all"
               >
                 <div className="w-7 h-7 bg-slate-100 rounded-lg flex items-center justify-center flex-shrink-0">
                   <Building className="w-3.5 h-3.5 text-slate-400" />
@@ -135,7 +135,7 @@ function CustomerStep({ onSelect, onNewCustomer, onDismiss, canDismiss }) {
       <div className="pt-2 border-t border-slate-100">
         <button
           onClick={onNewCustomer}
-          className="flex items-center gap-2 text-sm font-semibold text-[#e2231a] hover:underline"
+          className="flex items-center gap-2 text-sm font-semibold text-[#0D4FB3] hover:text-[#0b428f] hover:underline"
         >
           <Plus className="w-4 h-4" /> New Customer
         </button>
@@ -207,7 +207,7 @@ function QuoteChoiceStep({ client, onNewQuote, onResumeQuote, onBack }) {
               <button
                 key={order.id}
                 onClick={() => onResumeQuote(order)}
-                className="w-full flex items-center gap-3 px-3 py-3 rounded-xl border border-slate-200 hover:border-[#e2231a]/40 hover:bg-[#e2231a]/5 text-left transition-all group"
+                className="w-full flex items-center gap-3 px-3 py-3 rounded-xl border border-slate-200 hover:border-[#0D4FB3]/40 hover:bg-[#0D4FB3]/5 text-left transition-all group"
               >
                 <div className="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center flex-shrink-0">
                   <FileText className="w-4 h-4 text-slate-500" />
@@ -226,7 +226,7 @@ function QuoteChoiceStep({ client, onNewQuote, onResumeQuote, onBack }) {
                     order.status === 'Quoted' ? 'bg-blue-100 text-blue-600' :
                     'bg-amber-100 text-amber-600'
                   }`}>{order.status}</span>
-                  <ChevronRight className="w-3.5 h-3.5 text-slate-300 group-hover:text-[#e2231a] transition-colors" />
+                  <ChevronRight className="w-3.5 h-3.5 text-slate-300 group-hover:text-[#0D4FB3] transition-colors" />
                 </div>
               </button>
             ))}
