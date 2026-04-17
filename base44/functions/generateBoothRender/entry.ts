@@ -11,56 +11,69 @@ function dedupeUrls(urls) {
   return Array.from(new Set((urls || []).filter(Boolean)));
 }
 
-function buildProductLines(products, quantities) {
+function summarizeText(text, maxLength = 120) {
+  if (!text) return '';
+  return String(text).replace(/\s+/g, ' ').trim().slice(0, maxLength);
+}
+
+function buildProductLines(products, quantities, compact = false) {
   return products.map((product) => {
     const qty = quantities[product.sku] || 1;
     const dims = (product.footprint_w_ft || product.footprint_d_ft || product.height_ft)
       ? `${product.footprint_w_ft || '?'}ft W x ${product.footprint_d_ft || '?'}ft D x ${product.height_ft || '?'}ft H`
       : null;
+
+    if (compact) {
+      return [
+        `${product.name || product.sku} (${product.sku})${qty > 1 ? ` x${qty}` : ''}`,
+        product.placement_zone ? `Zone: ${product.placement_zone}` : null,
+        product.render_instruction ? `Render: ${summarizeText(product.render_instruction, 70)}` : null,
+      ].filter(Boolean).join(' | ');
+    }
+
     return [
       `${product.name || product.sku} (${product.sku})${qty > 1 ? ` x${qty}` : ''}`,
       product.render_category ? `Category: ${product.render_category}` : null,
       product.placement_zone ? `Zone: ${product.placement_zone}` : null,
-      product.render_instruction ? `Render: ${product.render_instruction}` : null,
+      product.render_instruction ? `Render: ${summarizeText(product.render_instruction, 140)}` : null,
       dims ? `Size: ${dims}` : null,
     ].filter(Boolean).join('\n');
-  }).join('\n\n');
+  }).join(compact ? '\n' : '\n\n');
 }
 
-function buildRenderPrompt({ boothInfo, productLines }) {
+function buildRenderPrompt({ boothInfo, productLines, compact = false }) {
   const boothTypeDesc =
     (boothInfo.boothType || '').toLowerCase() === 'island'
-      ? 'island — freestanding, open on all four sides'
+      ? 'island, open on all four sides'
       : (boothInfo.boothType || '').toLowerCase() === 'peninsula'
-      ? 'peninsula — open on three sides, closed on one back wall'
-      : 'inline — open at the front only, backed against a back wall';
+      ? 'peninsula, open on three sides'
+      : 'inline, open at front with back wall';
 
-  return `Create a photorealistic trade show booth concept render for a professional sales proposal.
+  return `Create a photorealistic trade show booth concept render.
 
-BOOTH SPECS:
-- Size: ${boothInfo.boothSize} feet
+BOOTH:
+- Size: ${boothInfo.boothSize}
 - Type: ${boothTypeDesc}
 - Brand: ${boothInfo.brandName}
 - Event: ${boothInfo.showName}
-- Environment: indoor convention center hall
-- Camera: 3/4 perspective from slightly above eye level, full booth visible
-- No people in the render
+- Indoor convention hall, 3/4 view, full booth visible, no people
 
 BRANDING:
-${boothInfo.colorNotes ? `- Apply these exact brand colors to all graphic panels, fabric, and signage: ${boothInfo.colorNotes}` : '- Use a clean professional branded graphic treatment'}
-${boothInfo.logoUrl ? '- A logo reference image is provided — reproduce it accurately on all branded surfaces, do not distort or hallucinate it' : `- Display the brand name "${boothInfo.brandName}" prominently on booth graphics`}
+${boothInfo.colorNotes ? `- Use these brand colors: ${boothInfo.colorNotes}` : '- Use clean professional branded graphics'}
+${boothInfo.logoUrl ? '- A logo reference image is provided; reproduce it accurately' : `- Show the brand name "${boothInfo.brandName}" on graphics`}
 
-QUOTED PRODUCTS — render ONLY these products, exactly as described. Do NOT add any extra furniture, counters, monitors, kiosks, lighting rigs, hanging signs, or accessories not listed here:
-
+PRODUCTS:
+Render ONLY these quoted products. Do not add unlisted furniture or accessories.
 ${productLines}
 
-SPATIAL RULES:
-- Respect each product's placement zone (back_wall = rear of booth, flanking = sides, front = near aisle, accessory = attached to main structure)
-- Maintain realistic scale for each product relative to the booth footprint and a 6ft human figure
-- Products labeled back_wall should span the rear; flanking products go left/right sides; front products face the aisle
-- Each product image provided is a reference photo of that exact item — match its geometry, form factor, and materials
+LAYOUT:
+- Respect placement zones
+- Keep realistic scale within the booth footprint
+- Match the provided reference images for geometry and materials
+${compact ? '- Prioritize the main structural pieces and clean composition if the booth is crowded' : ''}
 
-OUTPUT: Polished exhibit concept render, sharp, well-lit with overhead fluorescent + track spotlights on key products, neutral gray convention floor, slightly blurred show floor background for depth.`;
+OUTPUT:
+Polished exhibit concept render, well-lit, neutral convention floor, subtle show-floor background.`;
 }
 
 function extractDomain(url) {
@@ -227,14 +240,26 @@ Deno.serve(async (req) => {
       logoUrl:    brandDetails?.logo_cached_url || brandDetails?.logo_url || '',
     };
 
-    const productLines = buildProductLines(selectedProducts, quantities);
-    const finalPrompt  = buildRenderPrompt({ boothInfo, productLines });
+    let productLines = buildProductLines(selectedProducts, quantities, false);
+    let finalPrompt = buildRenderPrompt({ boothInfo, productLines, compact: false });
+
+    if (finalPrompt.length > 3600) {
+      productLines = buildProductLines(selectedProducts, quantities, true);
+      finalPrompt = buildRenderPrompt({ boothInfo, productLines, compact: true });
+    }
+
+    if (finalPrompt.length > 3900) {
+      const cappedProducts = selectedProducts.slice(0, 12);
+      productLines = buildProductLines(cappedProducts, quantities, true);
+      finalPrompt = buildRenderPrompt({ boothInfo, productLines, compact: true });
+    }
 
     const combinedReferenceUrls = dedupeUrls([
       ...selectedProducts.map((p) => p.image_cached_url || p.image_url || null),
       boothInfo.logoUrl || null,
     ]).slice(0, 6);
 
+    console.log('[generateBoothRender] Prompt length:', finalPrompt.length);
     console.log('[generateBoothRender] Prompt:\n', finalPrompt);
     console.log('[generateBoothRender] Reference URLs:', JSON.stringify(combinedReferenceUrls));
 
