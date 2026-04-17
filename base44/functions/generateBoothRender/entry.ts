@@ -58,7 +58,7 @@ function buildProductLines(products, quantities, compact = false) {
   }).join(compact ? '\n' : '\n\n');
 }
 
-function buildRenderPrompt({ boothInfo, productLines, compact = false }) {
+function buildRenderPrompt({ boothInfo, productLines, compact = false, hasInlineFullSpanBackwall = false }) {
   const boothTypeLower = (boothInfo.boothType || '').toLowerCase();
   const boothTypeDesc =
     boothTypeLower === 'island'
@@ -99,6 +99,9 @@ LAYOUT RULES:
 - Use the back wall as the main anchor for inline booths and keep all products facing the aisle/front opening
 - Any quoted backwall wider than 15ft must read visually as a wide full-span structural backwall across the rear wall, never as a centered 8ft or 10ft popup
 - If a quoted backwall is approximately 20ft wide in a 10x20 booth, it should dominate most of the rear width of the booth
+${hasInlineFullSpanBackwall ? '- In this quote, the main 20ft master backwall is the rear structural wall itself. Do not reinterpret it as an overhead sign, hanging cube, ceiling frame, wraparound portal, or top canopy.' : ''}
+${hasInlineFullSpanBackwall ? '- Show the 20ft backwall running horizontally across the entire rear of the 10x20 inline booth at floor level, with vertical structure rising from the floor at the back edge.' : ''}
+${hasInlineFullSpanBackwall ? '- Do not create a second large backwall, do not float the structure above the booth, and do not turn the rear wall into a box truss environment.' : ''}
 - Keep realistic scale within the booth footprint
 - Match the provided reference images for geometry, silhouette, and materials
 - Banner stands must remain banner stands, not built-in shelving or permanent retail fixtures
@@ -273,18 +276,24 @@ Deno.serve(async (req) => {
       logoUrl:    brandDetails?.logo_cached_url || brandDetails?.logo_url || '',
     };
 
+    const hasInlineFullSpanBackwall = boothInfo.boothSize === '10x20' && (boothInfo.boothType || '').toLowerCase() === 'inline' && selectedProducts.some((product) => {
+      const width = Number(product.footprint_w_ft || 0);
+      const skuText = `${product.sku || ''} ${product.name || ''} ${product.render_category || ''}`.toLowerCase();
+      return width >= 18 || skuText.includes('20ft') || skuText.includes('20 ft') || skuText.includes('master backwall');
+    });
+
     let productLines = buildProductLines(selectedProducts, quantities, false);
-    let finalPrompt = buildRenderPrompt({ boothInfo, productLines, compact: false });
+    let finalPrompt = buildRenderPrompt({ boothInfo, productLines, compact: false, hasInlineFullSpanBackwall });
 
     if (finalPrompt.length > 3600) {
       productLines = buildProductLines(selectedProducts, quantities, true);
-      finalPrompt = buildRenderPrompt({ boothInfo, productLines, compact: true });
+      finalPrompt = buildRenderPrompt({ boothInfo, productLines, compact: true, hasInlineFullSpanBackwall });
     }
 
     if (finalPrompt.length > 3900) {
       const cappedProducts = selectedProducts.slice(0, 12);
       productLines = buildProductLines(cappedProducts, quantities, true);
-      finalPrompt = buildRenderPrompt({ boothInfo, productLines, compact: true });
+      finalPrompt = buildRenderPrompt({ boothInfo, productLines, compact: true, hasInlineFullSpanBackwall });
     }
 
     const combinedReferenceUrls = dedupeUrls([
