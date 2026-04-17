@@ -200,6 +200,24 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult, onG
             </div>
           </div>
         )}
+
+        {imageModalOpen && order?.booth_rendering_url && (
+          <div className="absolute inset-0 z-40 flex items-center justify-center bg-slate-950/90 p-4" onClick={() => setImageModalOpen(false)}>
+            <button
+              type="button"
+              onClick={() => setImageModalOpen(false)}
+              className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <img
+              src={order.booth_rendering_url}
+              alt="Booth preview full size"
+              className="max-h-full max-w-full rounded-[20px] object-contain shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
