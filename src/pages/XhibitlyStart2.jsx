@@ -174,7 +174,7 @@ export default function XhibitlyStart2() {
 
           <div className="flex items-center justify-center mb-5 md:mb-6">
             <div className="rounded-2xl overflow-hidden">
-              <img src="https://media.base44.com/images/public/69834d9e0d7220d671bfd124/f3c8fd783_IMG_1062.png" alt="Xhibitly" className="h-10 md:h-12 w-auto object-contain block" />
+              <img src="https://media.base44.com/images/public/69834d9e0d7220d671bfd124/f3c8fd783_IMG_1062.png" alt="Xhibitly" className="h-10 md:h-12 w-auto object-contain block rounded-[28px]" />
             </div>
           </div>
 

@@ -538,7 +538,7 @@ export default function SessionStartModal({ onComplete, onDismiss, user }) {
               </button>
             )}
             <div className="rounded-xl overflow-hidden">
-              <img src={CUSTOMER_PORTAL_LOGO} alt="Xhibitly" className="h-8 w-auto object-contain block" />
+              <img src={CUSTOMER_PORTAL_LOGO} alt="Xhibitly" className="h-8 w-auto object-contain block rounded-[28px]" />
             </div>
           </div>
         </div>
