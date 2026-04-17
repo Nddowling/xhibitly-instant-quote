@@ -107,7 +107,7 @@ function ProductCard({ item }) {
         <p className="text-[9px] font-bold text-slate-800 leading-tight line-clamp-2">{item.product_name || item.sku}</p>
         <p className="text-[8px] text-slate-400 font-mono mt-0.5">{item.sku}</p>
         {item.quantity > 1 && (
-          <span className="inline-block mt-1 bg-[#e2231a] text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full leading-none">
+          <span className="inline-block mt-1 bg-[#0D4FB3] text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full leading-none">
             ×{item.quantity}
           </span>
         )}
@@ -120,7 +120,7 @@ function RenderProgressMonitor({ currentStepIndex, steps }) {
   return (
     <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 text-white p-4 shadow-sm">
       <div className="flex items-start gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/10 text-[#ff5a52]">
+        <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/10 text-[#5ea2ff]">
           <Sparkles className="w-5 h-5" />
         </div>
         <div className="min-w-0 flex-1">
@@ -131,7 +131,7 @@ function RenderProgressMonitor({ currentStepIndex, steps }) {
 
       <div className="mt-4 h-2 rounded-full bg-white/10 overflow-hidden">
         <div
-          className="h-full rounded-full bg-gradient-to-r from-[#e2231a] via-orange-400 to-amber-300 transition-all duration-700"
+          className="h-full rounded-full bg-gradient-to-r from-[#0D4FB3] via-[#2f74de] to-[#8ab4ff] transition-all duration-700"
           style={{ width: `${Math.max(8, ((currentStepIndex + 1) / steps.length) * 100)}%` }}
         />
       </div>
@@ -149,7 +149,7 @@ function RenderProgressMonitor({ currentStepIndex, steps }) {
                 isCurrent ? 'bg-white/10 border border-white/10' : 'bg-white/5'
               }`}
             >
-              <div className={`flex h-8 w-8 items-center justify-center rounded-full ${isDone ? 'bg-emerald-500/20 text-emerald-300' : isCurrent ? 'bg-[#e2231a]/20 text-[#ff8c86]' : 'bg-white/10 text-white/45'}`}>
+              <div className={`flex h-8 w-8 items-center justify-center rounded-full ${isDone ? 'bg-emerald-500/20 text-emerald-300' : isCurrent ? 'bg-[#0D4FB3]/25 text-[#8ab4ff]' : 'bg-white/10 text-white/45'}`}>
                 {isDone ? <CheckCircle2 className="w-4 h-4" /> : <Icon className={`w-4 h-4 ${isCurrent ? 'animate-pulse' : ''}`} />}
               </div>
               <div className="min-w-0 flex-1">
@@ -229,7 +229,7 @@ export default function BoothConceptRender({ order, lineItems = [], onRenderingS
         <div className="rounded-xl border border-slate-200 overflow-hidden shadow-sm bg-white">
           <div className="px-4 py-2.5 bg-[#1a1a1a] flex items-center justify-between">
             <span className="text-xs font-bold text-white flex items-center gap-2">
-              <Wand2 className="w-3.5 h-3.5 text-[#e2231a]" />
+              <Wand2 className="w-3.5 h-3.5 text-[#5ea2ff]" />
               Photorealistic Booth Concept
             </span>
             <div className="flex items-center gap-2">
@@ -278,7 +278,7 @@ export default function BoothConceptRender({ order, lineItems = [], onRenderingS
           </p>
         )}
         {genError && (
-          <p className="text-[10px] text-red-500 text-center">{genError}</p>
+          <p className="text-[10px] text-[#0D4FB3] text-center">{genError}</p>
         )}
         {renderDebug && (
           <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-left space-y-2">

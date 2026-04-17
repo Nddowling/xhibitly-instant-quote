@@ -177,7 +177,7 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult, onG
           <Button
             onClick={onGenerateQuote}
             disabled={!order?.id || !lineItems?.length}
-            className="w-full rounded-xl bg-[#e2231a] hover:bg-[#b01b13] text-white"
+            className="w-full rounded-xl bg-[#0D4FB3] hover:bg-[#0b428f] text-white"
           >
             Generate Quote
           </Button>
