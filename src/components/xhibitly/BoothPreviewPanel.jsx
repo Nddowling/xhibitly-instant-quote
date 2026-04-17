@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from 'react';
-import { Sparkles, Image as ImageIcon, Package, Loader2, X, Palette } from 'lucide-react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Sparkles, Image as ImageIcon, Package, Loader2, X, Palette, CheckCircle2, Wand2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { SKU_TO_IMAGE } from '@/data/skuImageMap';
@@ -59,6 +59,97 @@ function PreviewThumb({ item, onRemove, onQuantityChange }) {
           className="h-8 w-16 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-bold text-slate-700 text-center focus:outline-none focus:ring-1 focus:ring-[#0D4FB3]"
           aria-label={`Quantity for ${item?.product_name || item?.sku || 'product'}`}
         />
+      </div>
+    </div>
+  );
+}
+
+function RenderProgressCard({ isGeneratingPreview }) {
+  const [progress, setProgress] = useState(18);
+
+  useEffect(() => {
+    if (!isGeneratingPreview) {
+      setProgress(18);
+      return;
+    }
+
+    setProgress(18);
+    const timer = window.setInterval(() => {
+      setProgress((current) => {
+        if (current >= 92) return current;
+        const increment = current < 52 ? 8 : current < 76 ? 5 : 2;
+        return Math.min(current + increment, 92);
+      });
+    }, 900);
+
+    return () => window.clearInterval(timer);
+  }, [isGeneratingPreview]);
+
+  const steps = [
+    {
+      title: 'Reading quote products',
+      description: 'Collecting your selected SKUs and booth details.',
+      state: 'done',
+      icon: CheckCircle2,
+      tone: 'done',
+    },
+    {
+      title: 'Building booth prompt',
+      description: 'Preparing the branded render instructions.',
+      state: 'live',
+      icon: Wand2,
+      tone: 'live',
+    },
+    {
+      title: 'Generating booth image',
+      description: 'Creating the booth concept preview image.',
+      state: 'queued',
+      icon: Sparkles,
+      tone: 'queued',
+    },
+  ];
+
+  const toneClasses = {
+    done: 'bg-emerald-500/15 text-emerald-300',
+    live: 'bg-[#2B6EF3]/20 text-[#7FB0FF]',
+    queued: 'bg-white/8 text-white/55',
+  };
+
+  return (
+    <div className="rounded-[24px] border border-[#1f3f86] bg-[linear-gradient(180deg,#0d1730_0%,#16233d_100%)] p-4 text-white shadow-[0_18px_40px_rgba(13,79,179,0.22)]">
+      <div className="flex items-start gap-3">
+        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/8 text-[#6EA8FF]">
+          <Sparkles className="w-5 h-5" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-black tracking-tight">Rendering your booth concept</p>
+          <p className="mt-1 text-xs text-white/65">Building the scene from your selected products and booth layout.</p>
+        </div>
+      </div>
+
+      <div className="mt-4 h-2 rounded-full bg-white/10 overflow-hidden">
+        <div
+          className="h-full rounded-full bg-[linear-gradient(90deg,#0D4FB3_0%,#4A8DFF_100%)] transition-all duration-700"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+
+      <div className="mt-4 space-y-2.5">
+        {steps.map((step) => {
+          const Icon = step.icon;
+          return (
+            <div key={step.title} className="flex items-center gap-3 rounded-2xl border border-white/8 bg-white/6 px-3 py-3">
+              <div className={`flex h-10 w-10 items-center justify-center rounded-2xl ${toneClasses[step.tone]}`}>
+                <Icon className={`w-4 h-4 ${step.state === 'live' ? 'animate-pulse' : ''}`} />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-bold text-white">{step.title}</p>
+                <p className="text-xs text-white/55">{step.description}</p>
+              </div>
+              <span className="text-[10px] font-bold uppercase tracking-[0.28em] text-white/45">{step.state}</span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -141,6 +232,8 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult, onG
             </Button>
           </div>
         </div>
+
+        {isGeneratingPreview && <RenderProgressCard isGeneratingPreview={isGeneratingPreview} />}
 
         <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3 min-h-0 max-h-[280px] flex flex-col overflow-hidden">
           <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500 flex-shrink-0">Current Render Inputs</p>
