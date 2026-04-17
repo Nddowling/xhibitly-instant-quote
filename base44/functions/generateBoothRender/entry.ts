@@ -28,14 +28,21 @@ function summarizeText(text, maxLength = 120) {
 function buildProductLines(products, quantities, compact = false) {
   return products.map((product) => {
     const qty = quantities[product.sku] || 1;
-    const dims = (product.footprint_w_ft || product.footprint_d_ft || product.height_ft)
-      ? `${product.footprint_w_ft || '?'}ft W x ${product.footprint_d_ft || '?'}ft D x ${product.height_ft || '?'}ft H`
+    const width = Number(product.footprint_w_ft || 0);
+    const depth = Number(product.footprint_d_ft || 0);
+    const height = Number(product.height_ft || 0);
+    const dims = (width || depth || height)
+      ? `${width || '?'}ft W x ${depth || '?'}ft D x ${height || '?'}ft H`
       : null;
+    const isWideBackwall = (product.placement_zone === 'back_wall' || product.render_category?.includes('backwall')) && width >= 18;
+    const spanRule = isWideBackwall ? `MANDATORY SPAN: treat as a full-width backwall spanning about ${width}ft across the rear of the booth, not a small banner stand or 10ft backdrop` : null;
 
     if (compact) {
       return [
         `${product.name || product.sku} (${product.sku})${qty > 1 ? ` x${qty}` : ''}`,
         product.placement_zone ? `Zone: ${product.placement_zone}` : null,
+        dims ? `Size: ${dims}` : null,
+        spanRule,
         product.render_instruction ? `Render: ${summarizeText(product.render_instruction, 70)}` : null,
       ].filter(Boolean).join(' | ');
     }
@@ -44,8 +51,9 @@ function buildProductLines(products, quantities, compact = false) {
       `${product.name || product.sku} (${product.sku})${qty > 1 ? ` x${qty}` : ''}`,
       product.render_category ? `Category: ${product.render_category}` : null,
       product.placement_zone ? `Zone: ${product.placement_zone}` : null,
-      product.render_instruction ? `Render: ${summarizeText(product.render_instruction, 140)}` : null,
       dims ? `Size: ${dims}` : null,
+      spanRule,
+      product.render_instruction ? `Render: ${summarizeText(product.render_instruction, 140)}` : null,
     ].filter(Boolean).join('\n');
   }).join(compact ? '\n' : '\n\n');
 }
@@ -89,6 +97,8 @@ LAYOUT RULES:
 - Everything must physically fit inside the exact ${boothInfo.boothSize} footprint
 - Treat booth type as mandatory: for inline booths, do not show open sides, wraparound architecture, or island layouts
 - Use the back wall as the main anchor for inline booths and keep all products facing the aisle/front opening
+- Any quoted backwall wider than 15ft must read visually as a wide full-span structural backwall across the rear wall, never as a centered 8ft or 10ft popup
+- If a quoted backwall is approximately 20ft wide in a 10x20 booth, it should dominate most of the rear width of the booth
 - Keep realistic scale within the booth footprint
 - Match the provided reference images for geometry, silhouette, and materials
 - Banner stands must remain banner stands, not built-in shelving or permanent retail fixtures
