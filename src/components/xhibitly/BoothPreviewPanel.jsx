@@ -332,7 +332,7 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult, onG
         )}
 
         {isGeneratingPreview && (
-          <div className="fixed inset-0 z-[120] flex items-center justify-center bg-slate-950/60 p-4 backdrop-blur-sm">
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-950/60 p-4 backdrop-blur-sm">
             <div className="w-full max-w-md">
               <RenderProgressCard isGeneratingPreview={isGeneratingPreview} />
             </div>
@@ -340,7 +340,7 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult, onG
         )}
 
         {imageModalOpen && order?.booth_rendering_url && (
-          <div className="fixed inset-0 z-[130] flex items-center justify-center bg-slate-950/90 p-4" onClick={() => setImageModalOpen(false)}>
+          <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-slate-950/90 p-4" onClick={() => setImageModalOpen(false)}>
             <button
               type="button"
               onClick={() => setImageModalOpen(false)}
