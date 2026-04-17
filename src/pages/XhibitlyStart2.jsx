@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
 import CatalogQuote from '@/pages/CatalogQuote';
@@ -15,9 +15,6 @@ export default function XhibitlyStart2() {
   const [previewBrandWebsite, setPreviewBrandWebsite] = useState('');
   const [isGeneratingPreview, setIsGeneratingPreview] = useState(false);
   const [previewStatus, setPreviewStatus] = useState('');
-  const [renderTaskId, setRenderTaskId] = useState('');
-  const [pollAttempts, setPollAttempts] = useState(0);
-  const pollTimerRef = useRef(null);
 
   const handleGeneratePreview = async ({ website_url = '' } = {}) => {
     if (!previewOrder || previewLineItems.length === 0 || isGeneratingPreview) return;
@@ -39,9 +36,7 @@ export default function XhibitlyStart2() {
 
     setPreviewBrandWebsite(cleanWebsite);
     setIsGeneratingPreview(true);
-    setPreviewStatus(cleanWebsite ? 'Pulling brand details and starting render…' : 'Starting booth preview…');
-    setRenderTaskId('');
-    setPollAttempts(0);
+    setPreviewStatus(cleanWebsite ? 'Pulling brand details and generating render…' : 'Generating booth preview…');
     setPreviewOrder((prev) => prev ? { ...prev, booth_rendering_url: '' } : prev);
 
     try {
@@ -55,100 +50,28 @@ export default function XhibitlyStart2() {
         reference_urls: productImageUrls,
       });
 
-      if (response?.data?.task_id) {
-        setPreviewStatus('Render started. Checking for the finished image…');
-        setRenderTaskId(response.data.task_id);
-        setPreviewOrder((prev) => prev ? {
-          ...prev,
-          website_url: cleanWebsite || prev?.website_url,
-        } : prev);
-      } else {
-        throw new Error('No render task was returned');
+      const renderUrl = response?.data?.url;
+      if (!renderUrl) {
+        throw new Error(response?.data?.error || 'No booth render image was returned');
       }
+
+      setPreviewOrder((prev) => prev ? {
+        ...prev,
+        website_url: cleanWebsite || prev?.website_url,
+        booth_rendering_url: renderUrl,
+      } : prev);
+      setPreviewStatus('');
+      toast.success('Booth preview is ready.');
     } catch (error) {
-      setIsGeneratingPreview(false);
       setPreviewStatus('');
       toast.error(error?.message || 'Preview generation failed. Please try again.');
     }
-  };
 
-  useEffect(() => {
-    if (!renderTaskId) return;
-
-    pollTimerRef.current = window.setInterval(async () => {
-      try {
-        const response = await base44.functions.invoke('generateBoothRender', { task_id: renderTaskId });
-        const status = response?.data?.status;
-        const url = response?.data?.url;
-
-        setPollAttempts((prev) => prev + 1);
-
-        if (status === 'pending' || status === 'queued') {
-          setPreviewStatus('Queueing your booth preview…');
-        }
-
-        if (status === 'running' || status === 'processing') {
-          setPreviewStatus('Rendering your booth preview…');
-        }
-
-        if (url && (status === 'success' || status === 'completed' || status === 'finished')) {
-          window.clearInterval(pollTimerRef.current);
-          pollTimerRef.current = null;
-          setRenderTaskId('');
-          setPollAttempts(0);
-          setIsGeneratingPreview(false);
-          setPreviewStatus('');
-          setPreviewOrder((prev) => prev ? { ...prev, booth_rendering_url: url } : prev);
-          toast.success('Booth preview is ready.');
-          return;
-        }
-
-        if (status === 'failed' || status === 'error') {
-          window.clearInterval(pollTimerRef.current);
-          pollTimerRef.current = null;
-          setRenderTaskId('');
-          setPollAttempts(0);
-          setIsGeneratingPreview(false);
-          setPreviewStatus('');
-          toast.error('Preview generation failed. Please try again.');
-        }
-      } catch (error) {
-        window.clearInterval(pollTimerRef.current);
-        pollTimerRef.current = null;
-        setRenderTaskId('');
-        setPollAttempts(0);
-        setIsGeneratingPreview(false);
-        setPreviewStatus('');
-        toast.error(error?.message || 'Preview generation failed. Please try again.');
-      }
-    }, 5000);
-
-    return () => {
-      if (pollTimerRef.current) {
-        window.clearInterval(pollTimerRef.current);
-        pollTimerRef.current = null;
-      }
-    };
-  }, [renderTaskId]);
-
-  useEffect(() => {
-    if (!renderTaskId || pollAttempts < 36) return;
-
-    if (pollTimerRef.current) {
-      window.clearInterval(pollTimerRef.current);
-      pollTimerRef.current = null;
-    }
-
-    setRenderTaskId('');
-    setPollAttempts(0);
     setIsGeneratingPreview(false);
-    setPreviewStatus('');
-    toast.error('Preview generation timed out. Please try again.');
-  }, [pollAttempts, renderTaskId]);
+  };
 
   const resetPreviewRenderState = () => {
     setPreviewOrder((prev) => prev ? { ...prev, booth_rendering_url: '' } : prev);
-    setRenderTaskId('');
     setIsGeneratingPreview(false);
     setPreviewStatus('');
   };
@@ -159,8 +82,6 @@ export default function XhibitlyStart2() {
     setPreviewPricingResult(null);
     setPreviewBrandWebsite('');
     setQueuedPromptForCatalog('');
-    setRenderTaskId('');
-    setPollAttempts(0);
     setIsGeneratingPreview(false);
     setPreviewStatus('');
     setShowSessionModal(true);
@@ -172,8 +93,6 @@ export default function XhibitlyStart2() {
     setPreviewPricingResult(null);
     setPreviewBrandWebsite(order?.website_url || '');
     setQueuedPromptForCatalog('');
-    setRenderTaskId('');
-    setPollAttempts(0);
     setIsGeneratingPreview(false);
     setPreviewStatus('');
     setShowSessionModal(false);
