@@ -93,10 +93,10 @@ export default function XhibitlyAgentPane({ queuedPrompt, onPromptConsumed }) {
 
   return (
     <div className="w-full h-full min-h-0 flex flex-col bg-white overflow-hidden">
-      <div className="border-b border-slate-200 bg-white px-5 py-5 flex-shrink-0">
-        <div className="flex items-start gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#0D4FB3]/10 text-[#0D4FB3]">
-            <MessageSquare className="w-5 h-5" />
+      <div className="border-b border-slate-200 bg-white px-4 py-3 flex-shrink-0">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#0D4FB3]/10 text-[#0D4FB3] flex-shrink-0">
+            <MessageSquare className="w-4 h-4" />
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
@@ -105,19 +105,19 @@ export default function XhibitlyAgentPane({ queuedPrompt, onPromptConsumed }) {
                 live chat
               </span>
             </div>
-            <p className="mt-1 text-xs text-slate-500">
-              I’ll gather event info, brand details, and suggest popular catalog items while helping shape the proposal.
+            <p className="mt-0.5 text-[11px] text-slate-500">
+              Booth planning, brand details, and product ideas.
             </p>
           </div>
         </div>
       </div>
 
-      <div className="p-3 border-b border-slate-100 flex flex-wrap gap-2 bg-slate-50 flex-shrink-0">
+      <div className="p-2.5 border-b border-slate-100 flex flex-wrap gap-1.5 bg-slate-50 flex-shrink-0">
         {STARTERS.map((item) => (
           <button
             key={item}
             onClick={() => handleSend(item)}
-            className="px-3 py-2 rounded-full bg-white border border-slate-200 text-xs font-semibold text-[#0D4FB3] hover:border-[#0D4FB3]/50"
+            className="px-2.5 py-1.5 rounded-full bg-white border border-slate-200 text-[11px] font-semibold text-[#0D4FB3] hover:border-[#0D4FB3]/50"
           >
             {item}
           </button>
@@ -126,12 +126,12 @@ export default function XhibitlyAgentPane({ queuedPrompt, onPromptConsumed }) {
 
       <div ref={scrollRef} className="min-h-0 p-3 space-y-3 bg-slate-50/70 flex-1 overflow-y-auto overscroll-contain">
         {!authChecked ? (
-          <div className="rounded-3xl border border-dashed border-slate-200 bg-white px-5 py-10 text-center shadow-sm">
+          <div className="rounded-3xl border border-dashed border-slate-200 bg-white px-4 py-6 text-center shadow-sm"
             <Sparkles className="w-8 h-8 text-slate-200 mx-auto mb-3" />
             <p className="text-sm font-semibold text-slate-800">Checking access…</p>
           </div>
         ) : !isAuthenticated ? (
-          <div className="rounded-3xl border border-dashed border-slate-200 bg-white px-5 py-10 text-center shadow-sm">
+          <div className="rounded-3xl border border-dashed border-slate-200 bg-white px-4 py-6 text-center shadow-sm"
             <LogIn className="w-8 h-8 text-slate-300 mx-auto mb-3" />
             <p className="text-sm font-semibold text-slate-800">Sign in to use the AI booth guide</p>
             <p className="text-xs text-slate-500 mt-1 leading-relaxed">
@@ -142,7 +142,7 @@ export default function XhibitlyAgentPane({ queuedPrompt, onPromptConsumed }) {
             </Button>
           </div>
         ) : messages.length === 0 ? (
-          <div className="rounded-3xl border border-dashed border-slate-200 bg-white px-5 py-10 text-center shadow-sm">
+          <div className="rounded-3xl border border-dashed border-slate-200 bg-white px-4 py-6 text-center shadow-sm"
             <Sparkles className="w-8 h-8 text-slate-200 mx-auto mb-3" />
             <p className="text-sm font-semibold text-slate-800">No conversation started yet</p>
             <p className="text-xs text-slate-500 mt-1 leading-relaxed">
@@ -157,7 +157,7 @@ export default function XhibitlyAgentPane({ queuedPrompt, onPromptConsumed }) {
         {loading && <div className="text-xs text-slate-400 px-1">Xhibitly AI is thinking…</div>}
       </div>
 
-      <div className="p-3 border-t border-slate-200 bg-white mt-auto flex-shrink-0">
+      <div className="p-2.5 border-t border-slate-200 bg-white mt-auto flex-shrink-0">
         {isAuthenticated ? (
           <div className="flex gap-2">
             <Input
