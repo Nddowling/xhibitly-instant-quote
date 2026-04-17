@@ -156,7 +156,7 @@ export default function QuoteView() {
       <div className="no-print bg-[#1a1a1a] px-4 md:px-6 py-3 sticky top-0 z-10">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex min-w-0 items-center gap-2.5">
-            <div className="w-7 h-7 bg-[#e2231a] rounded-lg flex items-center justify-center font-black text-xs text-white">XQ</div>
+            <div className="w-7 h-7 bg-[#0D4FB3] rounded-lg flex items-center justify-center font-black text-xs text-white">XQ</div>
             <span className="text-white font-bold text-sm">Xhibitly Quote</span>
             <span className="truncate text-white/30 text-xs font-mono">· {order.reference_number}</span>
           </div>
@@ -175,7 +175,7 @@ export default function QuoteView() {
 
       <div className="max-w-4xl mx-auto px-4 md:px-6 py-6 md:py-10 space-y-6 md:space-y-8">
         {isEditMode && (
-          <div className="rounded-2xl border border-[#0D4FB3]/15 bg-white p-4 md:p-5 shadow-sm print-break">
+          <div className="rounded-2xl border border-[#0D4FB3]/20 bg-white p-4 md:p-5 shadow-sm print-break">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <div>
                 <p className="text-sm font-black text-slate-900">Quote Delivery</p>
@@ -210,7 +210,7 @@ export default function QuoteView() {
         {/* Header block */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-12 h-12 bg-[#e2231a] rounded-xl flex items-center justify-center font-black text-sm text-white">XQ</div>
+            <div className="w-12 h-12 bg-[#0D4FB3] rounded-xl flex items-center justify-center font-black text-sm text-white">XQ</div>
             <div className="min-w-0">
               <p className="font-black text-lg sm:text-xl text-slate-900 break-words">{order.dealer_company || 'Xhibitly'}</p>
               {order.dealer_name && <p className="text-sm text-slate-400 break-words">{order.dealer_name}</p>}
@@ -220,7 +220,7 @@ export default function QuoteView() {
           <div className="text-left sm:text-right">
             <p className="text-xl sm:text-2xl font-black text-slate-900 break-words">{order.reference_number}</p>
             <p className="text-sm text-slate-400 mt-1">{quoteDate}</p>
-            <span className="inline-block mt-1 bg-[#e2231a]/10 text-[#e2231a] text-xs font-bold px-2.5 py-0.5 rounded-full">
+            <span className="inline-block mt-1 bg-[#0D4FB3]/10 text-[#0D4FB3] text-xs font-bold px-2.5 py-0.5 rounded-full">
               {order.status}
             </span>
           </div>
@@ -290,7 +290,7 @@ export default function QuoteView() {
                 <tr className="border-t-2 border-slate-200 bg-slate-50">
                   <td colSpan={5} className="px-6 py-4 text-right text-sm font-bold text-slate-700">Grand Total</td>
                   <td className="px-6 py-4 text-right">
-                    <span className="text-xl font-black text-[#e2231a]">{fmt(grandTotal)}</span>
+                    <span className="text-xl font-black text-[#0D4FB3]">{fmt(grandTotal)}</span>
                   </td>
                 </tr>
               </tfoot>
