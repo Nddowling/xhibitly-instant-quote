@@ -15,16 +15,14 @@ function buildProductLines(products, quantities) {
   return products.map((product) => {
     const qty = quantities[product.sku] || 1;
     const dims = (product.footprint_w_ft || product.footprint_d_ft || product.height_ft)
-      ? `Approx size: ${product.footprint_w_ft || '?'}ft W x ${product.footprint_d_ft || '?'}ft D x ${product.height_ft || '?'}ft H`
+      ? `${product.footprint_w_ft || '?'}ft W x ${product.footprint_d_ft || '?'}ft D x ${product.height_ft || '?'}ft H`
       : null;
     return [
       `${product.name || product.sku} (${product.sku})${qty > 1 ? ` x${qty}` : ''}`,
-      product.render_category      ? `Category: ${product.render_category}` : null,
-      product.placement_zone       ? `Placement zone: ${product.placement_zone}` : null,
-      product.physical_description ? `Physical description: ${product.physical_description}` : null,
-      product.render_instruction   ? `Rendering instruction: ${product.render_instruction}` : null,
-      product.material             ? `Material: ${product.material}` : null,
-      dims,
+      product.render_category ? `Category: ${product.render_category}` : null,
+      product.placement_zone ? `Zone: ${product.placement_zone}` : null,
+      product.render_instruction ? `Render: ${product.render_instruction}` : null,
+      dims ? `Size: ${dims}` : null,
     ].filter(Boolean).join('\n');
   }).join('\n\n');
 }
