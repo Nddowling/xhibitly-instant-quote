@@ -78,6 +78,11 @@ export default function XhibitlyStart2() {
         throw new Error(response?.data?.error || 'No booth render image was returned');
       }
 
+      await base44.entities.Order.update(previewOrder.id, {
+        website_url: cleanWebsite || previewOrder?.website_url || '',
+        booth_rendering_url: renderUrl,
+      });
+
       setPreviewOrder((prev) => prev ? {
         ...prev,
         website_url: cleanWebsite || prev?.website_url,
@@ -102,15 +107,24 @@ export default function XhibitlyStart2() {
   const handleGenerateQuote = async () => {
     if (!previewOrder?.id || previewLineItems.length === 0) return;
 
-    let shareToken = previewOrder.share_token;
+    const latestOrders = await base44.entities.Order.filter({ id: previewOrder.id }, '-created_date', 1);
+    const latestOrder = latestOrders?.[0] || previewOrder;
+
+    let shareToken = latestOrder.share_token;
     if (!shareToken) {
       shareToken = crypto.randomUUID();
-      await base44.entities.Order.update(previewOrder.id, {
+      await base44.entities.Order.update(latestOrder.id, {
         share_token: shareToken,
-        status: previewOrder.status === 'Draft' || previewOrder.status === 'Pending' ? 'Quoted' : previewOrder.status,
+        status: latestOrder.status === 'Draft' || latestOrder.status === 'Pending' ? 'Quoted' : latestOrder.status,
       });
-      setPreviewOrder((prev) => prev ? { ...prev, share_token: shareToken, status: prev.status === 'Draft' || prev.status === 'Pending' ? 'Quoted' : prev.status } : prev);
     }
+
+    setPreviewOrder((prev) => prev ? {
+      ...prev,
+      ...latestOrder,
+      share_token: shareToken,
+      status: (latestOrder.status === 'Draft' || latestOrder.status === 'Pending') ? 'Quoted' : latestOrder.status,
+    } : prev);
 
     navigate(`/QuoteView?token=${shareToken}&edit=1`);
   };

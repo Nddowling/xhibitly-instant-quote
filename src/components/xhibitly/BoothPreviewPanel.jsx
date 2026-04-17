@@ -269,10 +269,10 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult, onG
           </div>
           <Button
             onClick={onGenerateQuote}
-            disabled={!order?.id || !lineItems?.length}
+            disabled={!order?.id || !lineItems?.length || isGeneratingPreview}
             className="w-full rounded-xl bg-[#0D4FB3] hover:bg-[#0b428f] text-white"
           >
-            Generate Quote
+            {isGeneratingPreview ? 'Generating Preview…' : 'Generate Quote'}
           </Button>
         </div>
         {showBrandPrompt && (
