@@ -4,7 +4,7 @@ import { createPageUrl } from '../utils';
 import { base44 } from '@/api/base44Client';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, ArrowLeft, BookOpen } from 'lucide-react';
+import { Search, ArrowLeft, BookOpen, Download } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import ProductRow from '../components/catalog/ProductRow';
@@ -18,6 +18,7 @@ export default function Product3DManager() {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isExporting, setIsExporting] = useState(false);
 
   const urlParams = new URLSearchParams(location.search);
   const projectId = urlParams.get('projectId');
@@ -117,6 +118,25 @@ export default function Product3DManager() {
 
   const filteredProducts = getFilteredProducts();
 
+  const handleExportAllProducts = async () => {
+    setIsExporting(true);
+    try {
+      const response = await base44.functions.invoke('exportFullProductTable', {});
+      const csvText = response?.data;
+      const blob = new Blob([csvText], { type: 'text/csv;charset=utf-8;' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'full-product-table.csv';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
@@ -162,12 +182,18 @@ export default function Product3DManager() {
                 </p>
               </div>
             </div>
-            <Link to={createPageUrl('CatalogImport')}>
-              <Button variant="outline" className="gap-2 shrink-0">
-                <BookOpen className="w-4 h-4" />
-                <span className="hidden sm:inline">Import Pages</span>
+            <div className="flex items-center gap-2 shrink-0">
+              <Button variant="outline" className="gap-2" onClick={handleExportAllProducts} disabled={isExporting}>
+                <Download className="w-4 h-4" />
+                <span className="hidden sm:inline">{isExporting ? 'Exporting…' : 'Export Products'}</span>
               </Button>
-            </Link>
+              <Link to={createPageUrl('CatalogImport')}>
+                <Button variant="outline" className="gap-2 shrink-0">
+                  <BookOpen className="w-4 h-4" />
+                  <span className="hidden sm:inline">Import Pages</span>
+                </Button>
+              </Link>
+            </div>
           </div>
         </motion.div>
 
