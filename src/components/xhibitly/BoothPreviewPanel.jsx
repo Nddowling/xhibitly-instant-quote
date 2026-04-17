@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Sparkles, Image as ImageIcon, Package, Loader2, X, Palette, CheckCircle2, Wand2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -293,7 +294,7 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult, onG
             {isGeneratingPreview ? 'Generating Preview…' : 'Generate Quote'}
           </Button>
         </div>
-        {showBrandPrompt && (
+        {showBrandPrompt && createPortal(
           <div className="fixed inset-0 z-[10001] flex items-center justify-center bg-slate-950/60 p-3 sm:p-4 backdrop-blur-sm">
             <div className="w-full max-w-sm rounded-3xl border border-slate-200 bg-white p-4 sm:p-5 shadow-2xl max-h-[calc(100%-1.5rem)] overflow-y-auto">
               <div className="flex items-start justify-between gap-3">
@@ -328,18 +329,20 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult, onG
                 <Button variant="outline" onClick={handleSkipBranding} className="flex-1 rounded-xl hover:bg-slate-100 hover:text-slate-900 hover:border-slate-300">Skip Branding</Button>
               </div>
             </div>
-          </div>
+          </div>,
+          document.body
         )}
 
-        {isGeneratingPreview && (
+        {isGeneratingPreview && createPortal(
           <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-950/60 p-4 backdrop-blur-sm">
             <div className="w-full max-w-md">
               <RenderProgressCard isGeneratingPreview={isGeneratingPreview} />
             </div>
-          </div>
+          </div>,
+          document.body
         )}
 
-        {imageModalOpen && order?.booth_rendering_url && (
+        {imageModalOpen && order?.booth_rendering_url && createPortal(
           <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-slate-950/90 p-4" onClick={() => setImageModalOpen(false)}>
             <button
               type="button"
@@ -354,7 +357,8 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult, onG
               className="max-h-full max-w-full rounded-[20px] object-contain shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             />
-          </div>
+          </div>,
+          document.body
         )}
       </div>
     </div>
