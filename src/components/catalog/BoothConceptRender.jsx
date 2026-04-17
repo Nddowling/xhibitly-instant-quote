@@ -260,7 +260,7 @@ export default function BoothConceptRender({ order, lineItems = [], onRenderingS
         <button
           onClick={handleGenerate}
           disabled={isGenerating || lineItems.length === 0}
-          className="flex items-center justify-center gap-2 w-full py-3 bg-[#e2231a] hover:bg-[#b01b13] disabled:opacity-50 text-white text-sm font-bold rounded-xl transition-colors"
+          className="flex items-center justify-center gap-2 w-full py-3 bg-[#0D4FB3] hover:bg-[#0b428f] disabled:opacity-50 text-white text-sm font-bold rounded-xl transition-colors"
         >
           {isGenerating ? (
             <><Loader2 className="w-4 h-4 animate-spin" /> {genStep || 'Generating…'}</>

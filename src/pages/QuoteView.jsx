@@ -6,6 +6,17 @@ import { Download, Printer, Link2, Send, CheckCircle2, ExternalLink } from 'luci
 import * as XLSX from 'xlsx';
 import BoothConceptRender from '@/components/catalog/BoothConceptRender';
 
+function ExhibitlyLogo({ className = '' }) {
+  return (
+    <div className={`relative overflow-hidden rounded-xl bg-[#0D4FB3] ${className}`}>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.28),transparent_48%)]" />
+      <div className="absolute left-[22%] top-[20%] h-[60%] w-[60%] rounded-full border-[3px] border-white/95" />
+      <div className="absolute left-[50%] top-[18%] h-[64%] w-[26%] -translate-x-1/2 rounded-full bg-[#0D4FB3]" />
+      <div className="absolute left-[22%] top-[46%] h-[14%] w-[60%] -translate-y-1/2 bg-white/95" />
+    </div>
+  );
+}
+
 function fmt(n) {
   if (!n && n !== 0) return '—';
   return '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -112,9 +123,7 @@ export default function QuoteView() {
   if (notFound || !order) return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50">
       <div className="text-center px-4">
-        <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-          <span className="text-2xl font-black text-slate-300">XQ</span>
-        </div>
+        <ExhibitlyLogo className="w-16 h-16 mx-auto mb-4" />
         <p className="text-xl font-bold text-slate-700">Quote not found</p>
         <p className="text-slate-400 mt-2 text-sm">This quote may have expired or the link is invalid.</p>
       </div>
@@ -156,7 +165,7 @@ export default function QuoteView() {
       <div className="no-print bg-[#1a1a1a] px-4 md:px-6 py-3 sticky top-0 z-10">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex min-w-0 items-center gap-2.5">
-            <div className="w-7 h-7 bg-[#0D4FB3] rounded-lg flex items-center justify-center font-black text-xs text-white">XQ</div>
+            <ExhibitlyLogo className="w-7 h-7" />
             <span className="text-white font-bold text-sm">Xhibitly Quote</span>
             <span className="truncate text-white/30 text-xs font-mono">· {order.reference_number}</span>
           </div>
@@ -210,7 +219,7 @@ export default function QuoteView() {
         {/* Header block */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-12 h-12 bg-[#0D4FB3] rounded-xl flex items-center justify-center font-black text-sm text-white">XQ</div>
+            <ExhibitlyLogo className="w-12 h-12 flex-shrink-0" />
             <div className="min-w-0">
               <p className="font-black text-lg sm:text-xl text-slate-900 break-words">{order.dealer_company || 'Xhibitly'}</p>
               {order.dealer_name && <p className="text-sm text-slate-400 break-words">{order.dealer_name}</p>}
