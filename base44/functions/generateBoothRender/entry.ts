@@ -14,47 +14,55 @@ function dedupeUrls(urls) {
 function buildProductLines(products, quantities) {
   return products.map((product) => {
     const qty = quantities[product.sku] || 1;
+    const dims = (product.footprint_w_ft || product.footprint_d_ft || product.height_ft)
+      ? `Approx size: ${product.footprint_w_ft || '?'}ft W x ${product.footprint_d_ft || '?'}ft D x ${product.height_ft || '?'}ft H`
+      : null;
     return [
-      `${product.name || product.sku} (${product.sku}) x${qty}`,
-      product.render_category ? `Category: ${product.render_category}` : null,
-      product.placement_zone ? `Placement: ${product.placement_zone}` : null,
+      `${product.name || product.sku} (${product.sku})${qty > 1 ? ` x${qty}` : ''}`,
+      product.render_category      ? `Category: ${product.render_category}` : null,
+      product.placement_zone       ? `Placement zone: ${product.placement_zone}` : null,
       product.physical_description ? `Physical description: ${product.physical_description}` : null,
-      product.render_instruction ? `Rendering notes: ${product.render_instruction}` : null,
-      product.material ? `Material: ${product.material}` : null,
-      (product.footprint_w_ft || product.footprint_d_ft || product.height_ft)
-        ? `Approx size: ${product.footprint_w_ft || '?'}ft W x ${product.footprint_d_ft || '?'}ft D x ${product.height_ft || '?'}ft H`
-        : null,
+      product.render_instruction   ? `Rendering instruction: ${product.render_instruction}` : null,
+      product.material             ? `Material: ${product.material}` : null,
+      dims,
     ].filter(Boolean).join('\n');
   }).join('\n\n');
 }
 
-function buildRenderPrompt({ boothInfo, products, productLines }) {
-  return `Create a photorealistic concept render of a trade show booth.
+function buildRenderPrompt({ boothInfo, productLines }) {
+  const boothTypeDesc =
+    (boothInfo.boothType || '').toLowerCase() === 'island'
+      ? 'island — freestanding, open on all four sides'
+      : (boothInfo.boothType || '').toLowerCase() === 'peninsula'
+      ? 'peninsula — open on three sides, closed on one back wall'
+      : 'inline — open at the front only, backed against a back wall';
 
-Booth requirements:
-- Booth size: ${boothInfo.boothSize}
-- Booth type: ${boothInfo.boothType}
-- Brand name: ${boothInfo.brandName}
+  return `Create a photorealistic trade show booth concept render for a professional sales proposal.
+
+BOOTH SPECS:
+- Size: ${boothInfo.boothSize} feet
+- Type: ${boothTypeDesc}
+- Brand: ${boothInfo.brandName}
 - Event: ${boothInfo.showName}
-- Environment: professional indoor convention center
-- Camera view: wide 3/4 perspective showing the full booth clearly
-- People: none
+- Environment: indoor convention center hall
+- Camera: 3/4 perspective from slightly above eye level, full booth visible
+- No people in the render
 
-Use only the quoted products below. Do not add any extra products, furniture, counters, monitors, signs, hanging elements, or accessories unless they are listed below.
+BRANDING:
+${boothInfo.colorNotes ? `- Apply these exact brand colors to all graphic panels, fabric, and signage: ${boothInfo.colorNotes}` : '- Use a clean professional branded graphic treatment'}
+${boothInfo.logoUrl ? '- A logo reference image is provided — reproduce it accurately on all branded surfaces, do not distort or hallucinate it' : `- Display the brand name "${boothInfo.brandName}" prominently on booth graphics`}
 
-Quoted products from the Product records:
+QUOTED PRODUCTS — render ONLY these products, exactly as described. Do NOT add any extra furniture, counters, monitors, kiosks, lighting rigs, hanging signs, or accessories not listed here:
+
 ${productLines}
 
-Branding:
-- ${boothInfo.colorNotes ? `Use these colors in the booth graphics: ${boothInfo.colorNotes}` : 'Use a clean professional branded graphic treatment'}
-- ${boothInfo.logoUrl ? 'Use the provided logo reference on the booth graphics' : `Show the brand name ${boothInfo.brandName} on the booth graphics`}
+SPATIAL RULES:
+- Respect each product's placement zone (back_wall = rear of booth, flanking = sides, front = near aisle, accessory = attached to main structure)
+- Maintain realistic scale for each product relative to the booth footprint and a 6ft human figure
+- Products labeled back_wall should span the rear; flanking products go left/right sides; front products face the aisle
+- Each product image provided is a reference photo of that exact item — match its geometry, form factor, and materials
 
-Important:
-- Build only the booth structure and quoted products
-- Keep product scale realistic for the booth footprint
-- Match each product's physical look and materials based on its Product record
-- Respect the booth type and layout
-- Make the final image look like a polished exhibit concept render for a sales proposal`;
+OUTPUT: Polished exhibit concept render, sharp, well-lit with overhead fluorescent + track spotlights on key products, neutral gray convention floor, slightly blurred show floor background for depth.`;
 }
 
 function extractDomain(url) {
@@ -77,7 +85,7 @@ function parseBrandfetchResponse(brandfetchData, domain) {
     ? brandfetchData.logos.flatMap((logo) =>
         Array.isArray(logo?.formats)
           ? logo.formats
-              .filter((format) => format?.src && (format.format === 'png' || format.format === 'jpeg' || format.format === 'jpg' || format.format === 'webp'))
+              .filter((format) => format?.src && ['png', 'jpeg', 'jpg', 'webp'].includes(format.format))
               .map((format) => ({
                 url: format.src,
                 format: format.format,
@@ -91,52 +99,43 @@ function parseBrandfetchResponse(brandfetchData, domain) {
 
   const sortedLogoOptions = [...logoOptions].sort((a, b) => {
     const score = (item) => {
-      const typeScore = item?.type === 'icon' ? 0 : 10;
+      const typeScore   = item?.type === 'icon' ? 0 : 10;
       const formatScore = item?.format === 'png' ? 5 : item?.format === 'webp' ? 4 : 3;
-      const sizeScore = Number(item?.width || 0);
+      const sizeScore   = Number(item?.width || 0);
       return typeScore + formatScore + sizeScore;
     };
     return score(b) - score(a);
   });
 
   return {
-    company_name: brandfetchData.name || domain || null,
-    domain: domain || null,
-    primary_color: colors[0] || null,
+    company_name:    brandfetchData.name || domain || null,
+    domain:          domain || null,
+    primary_color:   colors[0] || null,
     secondary_color: colors[1] || null,
-    accent_color_1: colors[2] || null,
-    accent_color_2: colors[3] || null,
-    logo_url: sortedLogoOptions[0]?.url || null,
-    logo_options: sortedLogoOptions,
-    industry: Array.isArray(brandfetchData.industries) ? brandfetchData.industries[0] || null : null,
+    accent_color_1:  colors[2] || null,
+    accent_color_2:  colors[3] || null,
+    logo_url:        sortedLogoOptions[0]?.url || null,
+    logo_options:    sortedLogoOptions,
+    industry:        Array.isArray(brandfetchData.industries) ? brandfetchData.industries[0] || null : null,
   };
 }
 
 async function fetchBrandDetails(base44, websiteUrl) {
   if (!websiteUrl) return null;
-
   const domain = extractDomain(websiteUrl);
   if (!domain) return null;
 
-  const existing = await base44.asServiceRole.entities.CompanyBrand.filter({ domain });
-  if (existing?.length > 0) {
-    return existing[0]?.brand_identity || null;
-  }
+  try {
+    const existing = await base44.asServiceRole.entities.CompanyBrand.filter({ domain });
+    if (existing?.length > 0) return existing[0]?.brand_identity || null;
+  } catch { /* fall through */ }
 
-  if (!BRANDFETCH_API_KEY) {
-    return null;
-  }
+  if (!BRANDFETCH_API_KEY) return null;
 
   const response = await fetch(`https://api.brandfetch.io/v2/brands/${domain}`, {
-    method: 'GET',
-    headers: {
-      'Authorization': `Bearer ${BRANDFETCH_API_KEY}`,
-    },
+    headers: { 'Authorization': `Bearer ${BRANDFETCH_API_KEY}` },
   });
-
-  if (!response.ok) {
-    return null;
-  }
+  if (!response.ok) return null;
 
   const data = await response.json();
   const parsed = parseBrandfetchResponse(data, domain);
@@ -145,11 +144,10 @@ async function fetchBrandDetails(base44, websiteUrl) {
   if (parsed.logo_url && !String(parsed.logo_url).toLowerCase().includes('.svg')) {
     try {
       const cacheRes = await base44.functions.invoke('cacheExternalImage', { url: parsed.logo_url });
-      if (cacheRes?.data?.success && cacheRes?.data?.cached_url && !String(cacheRes.data.cached_url).toLowerCase().includes('.svg')) {
+      if (cacheRes?.data?.success && cacheRes?.data?.cached_url) {
         parsed.logo_cached_url = cacheRes.data.cached_url;
       }
-    } catch {
-    }
+    } catch { /* non-fatal */ }
   }
 
   await base44.asServiceRole.entities.CompanyBrand.create({
@@ -162,65 +160,84 @@ async function fetchBrandDetails(base44, websiteUrl) {
 }
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: CORS });
-  }
+  if (req.method === 'OPTIONS') return new Response(null, { headers: CORS });
 
   let body;
-  try {
-    body = await req.json();
-  } catch {
-    return Response.json({ error: 'Invalid JSON body' }, { status: 400, headers: CORS });
-  }
+  try { body = await req.json(); }
+  catch { return Response.json({ error: 'Invalid JSON body' }, { status: 400, headers: CORS }); }
 
-  const { website_url = '', brand_name = '', booth_size = '', booth_type = '', show_name = '', quote_items = [] } = body;
+  const {
+    website_url = '',
+    brand_name  = '',
+    booth_size  = '',
+    booth_type  = '',
+    show_name   = '',
+    quote_items = [],
+  } = body;
 
   try {
     const base44 = createClientFromRequest(req);
+
     const brandDetails = website_url ? await fetchBrandDetails(base44, website_url) : null;
+
     const skus = Array.isArray(quote_items)
       ? quote_items.map((item) => item?.sku).filter(Boolean)
       : [];
+
     const quantities = {};
     (quote_items || []).forEach((item) => {
       if (item?.sku) quantities[item.sku] = item.quantity || 1;
     });
 
-    const boothInfo = {
-      brandName: brand_name || brandDetails?.company_name || 'Client brand',
-      boothSize: booth_size || '10x10',
-      boothType: booth_type || 'Inline',
-      showName: show_name || 'Convention event',
-      colorNotes: [brandDetails?.primary_color, brandDetails?.secondary_color, brandDetails?.accent_color_1, brandDetails?.accent_color_2].filter(Boolean).join(', '),
-      logoUrl: brandDetails?.logo_cached_url || brandDetails?.logo_url || ''
-    };
-
-    const allProducts = await base44.asServiceRole.entities.Product.filter({ is_active: true }, 'sku', 5000);
-    const productBySku = new Map(
-      (allProducts || []).map((product) => {
-        const normalized = { ...product, ...(product?.data || {}) };
-        return [normalized.sku, normalized];
-      }).filter(([sku]) => Boolean(sku))
-    );
-
-    const selectedProducts = skus
-      .map((sku) => productBySku.get(sku))
-      .filter(Boolean);
-
-    if (selectedProducts.length === 0) {
-      throw new Error('No matching Product records were found for the selected SKUs');
+    // Paginated full catalog load — fixes the broken .filter('sku', 5000) bug
+    const productBySku = new Map();
+    let skip = 0;
+    while (true) {
+      const batch = await base44.asServiceRole.entities.Product.list({ limit: 500, skip });
+      if (!batch?.length) break;
+      for (const p of batch) {
+        if (p.sku) productBySku.set(p.sku, p);
+      }
+      if (batch.length < 500) break;
+      skip += 500;
     }
 
+    console.log(`[generateBoothRender] Catalog loaded: ${productBySku.size} SKUs`);
+
+    const selectedProducts = skus.map((sku) => productBySku.get(sku)).filter(Boolean);
+
+    console.log(`[generateBoothRender] Matched ${selectedProducts.length}/${skus.length} SKUs`);
+    console.log(`[generateBoothRender] Detail check:`, JSON.stringify(
+      selectedProducts.map(p => ({
+        sku: p.sku,
+        has_desc: !!p.physical_description,
+        has_inst: !!p.render_instruction,
+        zone: p.placement_zone,
+      }))
+    ));
+
+    if (selectedProducts.length === 0) {
+      throw new Error(`No matching Product records found for SKUs: ${skus.join(', ')}`);
+    }
+
+    const boothInfo = {
+      brandName:  brand_name || brandDetails?.company_name || 'Client brand',
+      boothSize:  booth_size || '10x10',
+      boothType:  booth_type || 'Inline',
+      showName:   show_name || 'Convention event',
+      colorNotes: [brandDetails?.primary_color, brandDetails?.secondary_color, brandDetails?.accent_color_1, brandDetails?.accent_color_2].filter(Boolean).join(', '),
+      logoUrl:    brandDetails?.logo_cached_url || brandDetails?.logo_url || '',
+    };
+
     const productLines = buildProductLines(selectedProducts, quantities);
-    const finalPrompt = buildRenderPrompt({ boothInfo, products: selectedProducts, productLines });
+    const finalPrompt  = buildRenderPrompt({ boothInfo, productLines });
+
     const combinedReferenceUrls = dedupeUrls([
-      ...selectedProducts.map((product) => product.image_cached_url || product.image_url || null),
+      ...selectedProducts.map((p) => p.image_cached_url || p.image_url || null),
       boothInfo.logoUrl || null,
     ]).slice(0, 6);
 
-    console.log('[generateBoothRender] Using Base44 Product records');
-    console.log('[generateBoothRender] Selected SKUs:', JSON.stringify(skus));
-    console.log('[generateBoothRender] Prompt:', finalPrompt);
+    console.log('[generateBoothRender] Prompt:\n', finalPrompt);
     console.log('[generateBoothRender] Reference URLs:', JSON.stringify(combinedReferenceUrls));
 
     const imageResult = await base44.asServiceRole.integrations.Core.GenerateImage({
@@ -228,11 +245,10 @@ Deno.serve(async (req) => {
       existing_image_urls: combinedReferenceUrls.length > 0 ? combinedReferenceUrls : undefined,
     });
 
-    if (!imageResult?.url) {
-      throw new Error('GPT Image did not return an image URL');
-    }
+    if (!imageResult?.url) throw new Error('Image generation returned no URL');
 
     return Response.json({ status: 'completed', url: imageResult.url }, { headers: CORS });
+
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
     console.error('[generateBoothRender] Error:', msg);
