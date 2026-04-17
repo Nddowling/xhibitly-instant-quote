@@ -67,6 +67,7 @@ function PreviewThumb({ item, onRemove, onQuantityChange }) {
 export default function BoothPreviewPanel({ order, lineItems, pricingResult, onGeneratePreview, onRemoveItem, onQuantityChange, isGeneratingPreview = false, previewStatus = '', brandWebsite = '' }) {
   const [showBrandPrompt, setShowBrandPrompt] = useState(false);
   const [websiteInput, setWebsiteInput] = useState(order?.website_url || '');
+  const [imageModalOpen, setImageModalOpen] = useState(false);
 
   const previewPrompt = useMemo(() => {
     const items = (lineItems || []).map(item => item.product_name || item.sku).filter(Boolean);
@@ -112,7 +113,12 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult, onG
       <div className="flex-1 min-h-0 p-4 bg-slate-50/70 flex flex-col gap-4 overflow-hidden">
         <div className="relative min-h-[260px] flex-1 rounded-[24px] border border-dashed border-slate-200 bg-white flex flex-col items-center justify-center text-center px-6 overflow-hidden">
           {order?.booth_rendering_url ? (
-            <img src={order.booth_rendering_url} alt="Booth preview" className="w-full h-full object-cover rounded-[20px]" />
+            <img
+              src={order.booth_rendering_url}
+              alt="Booth preview"
+              className="w-full h-full object-cover rounded-[20px] cursor-zoom-in"
+              onClick={() => setImageModalOpen(true)}
+            />
           ) : (
             <>
               <Sparkles className="w-8 h-8 text-slate-300 mb-3" />
