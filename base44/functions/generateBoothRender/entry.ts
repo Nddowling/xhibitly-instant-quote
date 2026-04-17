@@ -177,6 +177,39 @@ function sanitizeProduct(product) {
   };
 }
 
+function isFrameOnlySku(product) {
+  const sku = String(product?.sku || '').toUpperCase();
+  const name = String(product?.name || '').toLowerCase();
+  const category = String(product?.category || '').toLowerCase();
+  const renderCategory = String(product?.render_category || '').toLowerCase();
+
+  const frameSignals = [
+    sku.includes('-EXT-'),
+    name.includes('frame only'),
+    name.includes('hardware only'),
+    name.includes('replacement frame'),
+    name.includes('extrusion'),
+    category.includes('hardware only'),
+    renderCategory.includes('frame_only'),
+  ];
+
+  return frameSignals.some(Boolean);
+}
+
+function hasFabricOrKitCompanion(product, products) {
+  const sku = String(product?.sku || '').toUpperCase();
+  const family = getSkuFamily(sku);
+
+  return (products || []).some((candidate) => {
+    if (!candidate?.sku || candidate.sku === product.sku) return false;
+    const candidateSku = String(candidate.sku).toUpperCase();
+    const candidateName = String(candidate.name || '').toLowerCase();
+    const sameFamily = getSkuFamily(candidateSku) === family || candidateSku.startsWith(family);
+    const isCompanion = candidateName.includes('kit') || candidateName.includes('fabric') || !isFrameOnlySku(candidate);
+    return sameFamily && isCompanion;
+  });
+}
+
 function resolveAccessoryParent(item, hosts) {
   const zoneMatch = hosts.find((host) => host.placement_zone === item.placement_zone);
   if (zoneMatch) return zoneMatch.sku;
@@ -214,7 +247,21 @@ function buildRenderContract({ quoteItems, products, boothInfo }) {
     });
   }
 
-  const items = products.map((product) => {
+  const eligibleProducts = products.filter((product) => {
+    if (!isFrameOnlySku(product)) return true;
+    const keep = hasFabricOrKitCompanion(product, products);
+    if (!keep) {
+      warnings.push({
+        type: 'FRAME_ONLY_EXCLUDED',
+        severity: 'info',
+        message: 'Frame-only hardware was excluded from the render because no fabric or kit companion was quoted.',
+        skus: [product.sku],
+      });
+    }
+    return keep;
+  });
+
+  const items = eligibleProducts.map((product) => {
     const quoteItem = quoteItems.find((item) => item?.sku === product.sku);
     const objectClass = inferObjectClass(product);
     const renderCategory = String(product.render_category || '').toLowerCase();
@@ -512,7 +559,7 @@ Deno.serve(async (req) => {
 
     const combinedReferenceUrls = dedupeUrls([
       ...(reference_urls || []).map(normalizeReferenceUrl),
-      ...matchedProducts.map((p) => normalizeReferenceUrl(p.image_cached_url || p.image_url || null)),
+      ...renderContract.items.map((item) => item.reference_image_url).filter(Boolean),
       boothInfo.logoUrl || null,
     ]);
 
