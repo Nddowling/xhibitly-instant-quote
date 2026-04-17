@@ -9,7 +9,7 @@ import { SKU_TO_IMAGE } from '@/data/skuImageMap';
 import {
   ChevronLeft, ChevronRight, Plus, Minus, X, ShoppingCart,
   FileText, Search, Loader2, ImageOff, Package, Edit2, Save,
-  Download, Trash2, RefreshCw
+  Trash2, RefreshCw, Download
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SessionStartModal from '@/components/catalog/SessionStartModal';
@@ -1109,17 +1109,6 @@ export default function CatalogQuote({ embeddedMode = false, initialPrompt = '',
     await refreshLineItems();
   }, [activeOrder, refreshLineItems]);
 
-  const handleExportCatalogSkus = async () => {
-    const response = await base44.functions.invoke('exportCatalogSkus', {});
-    const blob = new Blob([response.data], { type: 'text/csv;charset=utf-8' });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'catalog-selectable-skus.csv';
-    link.click();
-    window.URL.revokeObjectURL(url);
-  };
-
   const handleCreateQuote = async () => {
     if (!activeOrder || lineItems.length === 0) return;
     setShowConfirmModal(false);
@@ -1657,14 +1646,6 @@ export default function CatalogQuote({ embeddedMode = false, initialPrompt = '',
               </button>
             </div>
 
-            <button
-              onClick={handleExportCatalogSkus}
-              className="flex items-center justify-center gap-1.5 rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:border-[#0D4FB3]/30 hover:text-[#0D4FB3] transition-colors w-full sm:w-auto"
-            >
-              <Download className="w-4 h-4" />
-              Export SKU CSV
-            </button>
-
             {hasHotspots && !editMode && (
               <Badge className="hidden 2xl:inline-flex bg-[#0D4FB3]/10 text-[#0D4FB3] text-[10px] rounded-full px-3 py-1">{currentHotspots.length} hotspots</Badge>
             )}
@@ -1804,7 +1785,7 @@ export default function CatalogQuote({ embeddedMode = false, initialPrompt = '',
                 title="Export JSON"
                 className="flex flex-col items-center gap-1 p-2.5 rounded-lg w-full text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-all"
               >
-                <Download className="w-4 h-4" />
+                <Save className="w-4 h-4" />
                 <span className="text-[9px] font-medium leading-none">Export</span>
               </button>
 
