@@ -124,7 +124,7 @@ export default function QuoteView() {
   if (notFound || !order) return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50">
       <div className="text-center px-4">
-        <ExhibitlyLogo className="w-16 h-16 mx-auto mb-4" />
+        <ExhibitlyLogo className="h-16 w-auto mx-auto mb-4" />
         <p className="text-xl font-bold text-slate-700">Quote not found</p>
         <p className="text-slate-400 mt-2 text-sm">This quote may have expired or the link is invalid.</p>
       </div>
@@ -166,7 +166,7 @@ export default function QuoteView() {
       <div className="no-print bg-[#1a1a1a] px-4 md:px-6 py-3 sticky top-0 z-10">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex min-w-0 items-center gap-2.5">
-            <ExhibitlyLogo className="w-7 h-7" />
+            <ExhibitlyLogo className="h-7 w-auto" />
             <span className="text-white font-bold text-sm">Xhibitly Quote</span>
             <span className="truncate text-white/30 text-xs font-mono">· {order.reference_number}</span>
           </div>
@@ -220,7 +220,7 @@ export default function QuoteView() {
         {/* Header block */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex items-center gap-3 min-w-0">
-            <ExhibitlyLogo className="w-12 h-12 flex-shrink-0" />
+            <ExhibitlyLogo className="h-12 w-auto flex-shrink-0" />
             <div className="min-w-0">
               <p className="font-black text-lg sm:text-xl text-slate-900 break-words">{order.dealer_company || 'Xhibitly'}</p>
               {order.dealer_name && <p className="text-sm text-slate-400 break-words">{order.dealer_name}</p>}
