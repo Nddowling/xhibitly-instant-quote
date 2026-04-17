@@ -39,7 +39,7 @@ Deno.serve(async (req) => {
     await base44.integrations.Core.SendEmail({
       to: order.customer_email,
       subject: `Your quote is ready${showLabel}`,
-      body: `Hi ${customerName},\n\nYour exhibit quote${boothLabel}${showLabel} is ready to review.\n\nView your quote here:\n${quoteUrl}\n\nIf you have any questions, just reply to this email and we can walk through the selected products together.\n\nThanks,\n${dealerName}`,
+      body: `Hi ${customerName},\n\nYour exhibit quote${boothLabel}${showLabel} is ready to review.\n\nView your quote here:\n${quoteUrl}\n\nAn account representative will be reaching out shortly to walk through your quote and answer any questions.\n\nIf you have any questions in the meantime, just reply to this email and we can walk through the selected products together.\n\nThanks,\n${dealerName}`,
     });
 
     await base44.entities.Activity.create({

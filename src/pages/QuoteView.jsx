@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import { Download, Printer } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Download, Printer, Link2, Send, CheckCircle2, ExternalLink } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import BoothConceptRender from '@/components/catalog/BoothConceptRender';
 
@@ -15,6 +16,10 @@ export default function QuoteView() {
   const [lineItems, setLineItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [deliveryEmail, setDeliveryEmail] = useState('');
+  const [copied, setCopied] = useState(false);
+  const [emailing, setEmailing] = useState(false);
+  const [emailed, setEmailed] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -36,6 +41,7 @@ export default function QuoteView() {
       if (res.data?.order) {
         setOrder(res.data.order);
         setLineItems(res.data.lineItems || []);
+        setDeliveryEmail(res.data.order?.customer_email || '');
       } else {
         setNotFound(true);
       }
@@ -43,6 +49,27 @@ export default function QuoteView() {
       setNotFound(true);
     }
     setLoading(false);
+  };
+
+  const shareUrl = order?.share_token ? `${window.location.origin}/QuoteView?token=${order.share_token}` : '';
+  const urlParams = new URLSearchParams(window.location.search);
+  const isEditMode = urlParams.get('edit') === '1';
+
+  const copyLink = async () => {
+    if (!shareUrl) return;
+    await navigator.clipboard.writeText(shareUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2500);
+  };
+
+  const sendQuote = async () => {
+    if (!order?.id || !deliveryEmail || emailing) return;
+    setEmailing(true);
+    await base44.entities.Order.update(order.id, { customer_email: deliveryEmail });
+    await base44.functions.invoke('emailQuote', { order_id: order.id });
+    setOrder((prev) => prev ? { ...prev, customer_email: deliveryEmail } : prev);
+    setEmailed(true);
+    setEmailing(false);
   };
 
   const downloadExcel = () => {
@@ -147,6 +174,39 @@ export default function QuoteView() {
       </div>
 
       <div className="max-w-4xl mx-auto px-4 md:px-6 py-6 md:py-10 space-y-6 md:space-y-8">
+        {isEditMode && (
+          <div className="rounded-2xl border border-[#0D4FB3]/15 bg-white p-4 md:p-5 shadow-sm print-break">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+              <div>
+                <p className="text-sm font-black text-slate-900">Quote Delivery</p>
+                <p className="mt-1 text-sm text-slate-500">Share this quote or send it by email. An account representative will be reaching out shortly.</p>
+              </div>
+              <div className="flex flex-col gap-3 lg:w-[28rem]">
+                <Input
+                  type="email"
+                  value={deliveryEmail}
+                  onChange={(e) => setDeliveryEmail(e.target.value)}
+                  placeholder="Customer email for quote delivery"
+                  className="h-11"
+                />
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                  <Button onClick={sendQuote} disabled={!deliveryEmail || emailing} className="bg-[#0D4FB3] hover:bg-[#0b428f] text-white gap-2">
+                    {emailing ? <><Send className="w-4 h-4" />Sending…</> : emailed ? <><CheckCircle2 className="w-4 h-4" />Sent</> : <><Send className="w-4 h-4" />Email Quote</>}
+                  </Button>
+                  <Button onClick={copyLink} variant="outline" className="gap-2">
+                    <Link2 className="w-4 h-4" />{copied ? 'Copied' : 'Copy Link'}
+                  </Button>
+                  <a href={shareUrl} target="_blank" rel="noopener noreferrer" className="w-full">
+                    <Button variant="outline" className="w-full gap-2">
+                      <ExternalLink className="w-4 h-4" />Open Share Link
+                    </Button>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Header block */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex items-center gap-3 min-w-0">

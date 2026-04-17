@@ -64,7 +64,7 @@ function PreviewThumb({ item, onRemove, onQuantityChange }) {
   );
 }
 
-export default function BoothPreviewPanel({ order, lineItems, pricingResult, onGeneratePreview, onRemoveItem, onQuantityChange, isGeneratingPreview = false, previewStatus = '', brandWebsite = '' }) {
+export default function BoothPreviewPanel({ order, lineItems, pricingResult, onGeneratePreview, onRemoveItem, onQuantityChange, onGenerateQuote, isGeneratingPreview = false, previewStatus = '', brandWebsite = '' }) {
   const [showBrandPrompt, setShowBrandPrompt] = useState(false);
   const [websiteInput, setWebsiteInput] = useState(order?.website_url || '');
   const [imageModalOpen, setImageModalOpen] = useState(false);
@@ -166,12 +166,21 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult, onG
           </div>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3 flex items-center justify-between">
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Running Total</p>
-            <p className="text-[11px] text-slate-500 mt-1">{lineItems?.length || 0} line items</p>
+        <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3 space-y-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Running Total</p>
+              <p className="text-[11px] text-slate-500 mt-1">{lineItems?.length || 0} line items</p>
+            </div>
+            <span className="text-lg font-black text-[#0D4FB3]">{fmt(pricingResult?.finalTotal ?? lineItems?.reduce((sum, item) => sum + (item.final_total_price ?? item.total_price ?? 0), 0))}</span>
           </div>
-          <span className="text-lg font-black text-[#0D4FB3]">{fmt(pricingResult?.finalTotal ?? lineItems?.reduce((sum, item) => sum + (item.final_total_price ?? item.total_price ?? 0), 0))}</span>
+          <Button
+            onClick={onGenerateQuote}
+            disabled={!order?.id || !lineItems?.length}
+            className="w-full rounded-xl bg-[#e2231a] hover:bg-[#b01b13] text-white"
+          >
+            Generate Quote
+          </Button>
         </div>
         {showBrandPrompt && (
           <div className="absolute inset-0 z-30 flex items-center justify-center bg-slate-950/45 p-3 sm:p-4">

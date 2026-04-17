@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
 import CatalogQuote from '@/pages/CatalogQuote';
@@ -7,6 +8,7 @@ import BoothPreviewPanel from '@/components/xhibitly/BoothPreviewPanel';
 import SessionStartModal from '@/components/catalog/SessionStartModal';
 
 export default function XhibitlyStart2() {
+  const navigate = useNavigate();
   const [previewOrder, setPreviewOrder] = useState(null);
   const [showSessionModal, setShowSessionModal] = useState(false);
   const [queuedPromptForCatalog, setQueuedPromptForCatalog] = useState('');
@@ -74,6 +76,22 @@ export default function XhibitlyStart2() {
     setPreviewOrder((prev) => prev ? { ...prev, booth_rendering_url: '' } : prev);
     setIsGeneratingPreview(false);
     setPreviewStatus('');
+  };
+
+  const handleGenerateQuote = async () => {
+    if (!previewOrder?.id || previewLineItems.length === 0) return;
+
+    let shareToken = previewOrder.share_token;
+    if (!shareToken) {
+      shareToken = crypto.randomUUID();
+      await base44.entities.Order.update(previewOrder.id, {
+        share_token: shareToken,
+        status: previewOrder.status === 'Draft' || previewOrder.status === 'Pending' ? 'Quoted' : previewOrder.status,
+      });
+      setPreviewOrder((prev) => prev ? { ...prev, share_token: shareToken, status: prev.status === 'Draft' || prev.status === 'Pending' ? 'Quoted' : prev.status } : prev);
+    }
+
+    navigate(`/QuoteView?token=${shareToken}&edit=1`);
   };
 
   const startFreshQuote = () => {
@@ -168,6 +186,7 @@ export default function XhibitlyStart2() {
                 pricingResult={previewPricingResult}
                 brandWebsite={previewBrandWebsite}
                 onGeneratePreview={handleGeneratePreview}
+                onGenerateQuote={handleGenerateQuote}
                 onRemoveItem={handleRemovePreviewItem}
                 onQuantityChange={handleQuantityChange}
                 isGeneratingPreview={isGeneratingPreview}
