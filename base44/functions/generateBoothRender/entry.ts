@@ -130,7 +130,7 @@ function getSkuFamily(sku) {
 function inferObjectClass(product) {
   const category = String(product.render_category || '').toLowerCase();
   const zone = String(product.placement_zone || '').toLowerCase();
-  if (category.includes('accessory')) return 'accessory';
+  if (category.includes('accessory') || category.includes('monitor_mount') || category.includes('shelf')) return 'accessory';
   if (category.includes('backwall')) return 'backwall';
   if (category.includes('banner_stand')) return 'banner_stand';
   if (category.includes('counter')) return 'counter';
@@ -201,6 +201,7 @@ function resolveAccessoryParent(item, hosts) {
 
 function buildRenderContract({ quoteItems, products, boothInfo }) {
   const boothDims = parseBoothSize(boothInfo.boothSize);
+  const boothWidth = Number(boothDims.width_ft || 10);
   const unresolvedSkus = quoteItems.map((item) => item?.sku).filter(Boolean).filter((sku) => !products.find((product) => product.sku === sku));
   const errors = [];
   const warnings = [];
@@ -216,13 +217,20 @@ function buildRenderContract({ quoteItems, products, boothInfo }) {
   const items = products.map((product) => {
     const quoteItem = quoteItems.find((item) => item?.sku === product.sku);
     const objectClass = inferObjectClass(product);
-    const isAccessory = objectClass === 'accessory' || String(product.render_category || '').toLowerCase().includes('accessory');
+    const renderCategory = String(product.render_category || '').toLowerCase();
+    const widthFt = Number(product.footprint_w_ft || 0);
+    const isAccessory = objectClass === 'accessory' || renderCategory.includes('accessory');
+    const isWideBackwall = objectClass === 'backwall' && widthFt >= Math.max(boothWidth - 2, 16);
+    const normalizedZone = isWideBackwall
+      ? 'back_wall'
+      : (product.placement_zone || 'center');
+
     return {
       sku: product.sku,
       quantity: quoteItem?.quantity || 1,
       object_class: objectClass,
-      placement_zone: product.placement_zone || 'center',
-      width_ft: Number(product.footprint_w_ft || 0),
+      placement_zone: normalizedZone,
+      width_ft: widthFt,
       depth_ft: Number(product.footprint_d_ft || 0),
       height_ft: Number(product.height_ft || 0),
       material: product.material || null,
@@ -232,6 +240,7 @@ function buildRenderContract({ quoteItems, products, boothInfo }) {
       reference_image_url: normalizeReferenceUrl(product.image_cached_url || product.image_url || null),
       render_category: product.render_category || '',
       render_instruction: product.render_instruction || '',
+      is_wide_backwall: isWideBackwall,
       _sanitized: !!product._sanitized,
     };
   });
@@ -252,7 +261,7 @@ function buildRenderContract({ quoteItems, products, boothInfo }) {
 
   const backWallGroups = new Map();
   items.filter((item) => item.placement_zone === 'back_wall').forEach((item) => {
-    const key = `${item.sku_family}:${item.placement_zone}`;
+    const key = item.is_wide_backwall ? `full_span:${item.sku}` : `${item.sku_family}:${item.placement_zone}`;
     const current = backWallGroups.get(key) || [];
     current.push(item);
     backWallGroups.set(key, current);
@@ -333,7 +342,7 @@ function buildDenseProductLine(item, index) {
   return parts.join(' | ');
 }
 
-function buildStrictRenderPrompt({ boothInfo, denseProductLines, referenceImageCount }) {
+function buildStrictRenderPrompt({ boothInfo, denseProductLines, referenceImageCount, hasFullSpanBackwall }) {
   const boothTypeLower = (boothInfo.boothType || '').toLowerCase();
 
   const boothTypeDesc =
@@ -397,10 +406,13 @@ SPATIAL RULES:
 - Back wall items anchor to the rear plane of the booth
 - Front zone items face the aisle at the front of the booth space
 - Flanking items position along the left and right sides
+- Banner stands and narrow signs must never be dropped alone in the aisle unless their ZONE is explicitly front
 - Accessories with a parent SKU mount directly to their parent structure's frame — do not place on the floor
 - Inline booths have a solid back wall and closed sides — do not show open sides or wraparound architecture
 - Maintain realistic human scale — a 6ft tall person should be able to stand next to any product and the proportions look correct
 - Multi-section backwalls that share a SKU family prefix connect together as one continuous structure
+- If a quoted backwall is approximately booth-width, render it as one continuous full rear-span master backwall, not a smaller centered panel with empty wall space beside it
+- Do not mount counters, beds, shelves, or horizontal surfaces on banner stands or iPad towers
 
 OUTPUT:
 Generate one clean, photorealistic, well-lit convention booth render that shows the exact quoted products assembled together in the booth space with no unquoted objects. Sharp focus, professional trade show lighting, slight depth-of-field blur on the background show floor for realism.`;
@@ -489,6 +501,7 @@ Deno.serve(async (req) => {
     }
 
     const denseProductLines = renderContract.items.map((item, index) => buildDenseProductLine(item, index)).join('\n');
+  const hasFullSpanBackwall = renderContract.items.some((item) => item.is_wide_backwall);
 
     const combinedReferenceUrls = dedupeUrls([
       ...(reference_urls || []).map(normalizeReferenceUrl),
@@ -500,6 +513,7 @@ Deno.serve(async (req) => {
       boothInfo,
       denseProductLines,
       referenceImageCount: combinedReferenceUrls.length,
+      hasFullSpanBackwall,
     });
 
     console.log('[generateBoothRender] Prompt length:', finalPrompt.length);
