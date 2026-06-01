@@ -1,0 +1,95 @@
+{
+  "name": "SalesRep",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "Reference to User entity (1:1 relationship)"
+    },
+    "email": {
+      "type": "string",
+      "description": "Sales rep email (for quick lookup)"
+    },
+    "company_name": {
+      "type": "string",
+      "description": "Company or dealership name"
+    },
+    "contact_name": {
+      "type": "string",
+      "description": "Sales rep full name"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Contact phone number"
+    },
+    "territory": {
+      "type": "string",
+      "description": "Sales territory name"
+    },
+    "territory_states": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Array of state codes covered (e.g., ['FL', 'GA', 'AL'])"
+    },
+    "commission_rate": {
+      "type": "number",
+      "description": "Commission percentage (e.g., 10 for 10%)",
+      "default": 0
+    },
+    "manager_id": {
+      "type": "string",
+      "description": "Reference to another SalesRep (sales hierarchy)"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Active status flag"
+    },
+    "onboarding_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date sales rep joined"
+    },
+    "total_orders": {
+      "type": "number",
+      "default": 0,
+      "description": "Lifetime order count"
+    },
+    "total_revenue": {
+      "type": "number",
+      "default": 0,
+      "description": "Lifetime revenue generated (USD)"
+    },
+    "ytd_orders": {
+      "type": "number",
+      "default": 0,
+      "description": "Year-to-date order count"
+    },
+    "ytd_revenue": {
+      "type": "number",
+      "default": 0,
+      "description": "Year-to-date revenue (USD)"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal notes about the sales rep"
+    },
+    "profile_image_url": {
+      "type": "string",
+      "description": "Profile photo URL"
+    },
+    "linkedin_url": {
+      "type": "string",
+      "description": "LinkedIn profile URL"
+    }
+  },
+  "required": [
+    "user_id",
+    "email",
+    "company_name",
+    "contact_name",
+    "phone"
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "name": "Report",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "report_type": {
+      "type": "string",
+      "enum": [
+        "tabular",
+        "summary",
+        "matrix"
+      ],
+      "default": "tabular"
+    },
+    "source_object": {
+      "type": "string"
+    },
+    "selected_fields": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "filters": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "filter_logic": {
+      "type": "string"
+    },
+    "groupings": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "chart_type": {
+      "type": "string",
+      "enum": [
+        "bar",
+        "line",
+        "pie",
+        "donut",
+        "funnel",
+        "none"
+      ],
+      "default": "none"
+    },
+    "chart_x_field": {
+      "type": "string"
+    },
+    "chart_y_field": {
+      "type": "string"
+    },
+    "chart_y_aggregate": {
+      "type": "string",
+      "enum": [
+        "count",
+        "sum",
+        "avg",
+        "min",
+        "max"
+      ]
+    },
+    "row_limit": {
+      "type": "number",
+      "default": 2000
+    },
+    "last_run_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "is_public": {
+      "type": "boolean",
+      "default": false
+    },
+    "folder_name": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "source_object"
+  ]
+}

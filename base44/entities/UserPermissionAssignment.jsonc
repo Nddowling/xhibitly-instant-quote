@@ -1,0 +1,29 @@
+{
+  "name": "UserPermissionAssignment",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "profile_id": {
+      "type": "string"
+    },
+    "permission_set_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "effective_permissions": {
+      "type": "object"
+    },
+    "last_computed_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "user_id",
+    "profile_id"
+  ]
+}

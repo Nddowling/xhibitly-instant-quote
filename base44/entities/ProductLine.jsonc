@@ -1,0 +1,17 @@
+{
+  "name": "ProductLine",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Product line name (Portable/Modular, Vector Frame, Hybrid Pro, MODify, Carpentry)"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of the product line"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

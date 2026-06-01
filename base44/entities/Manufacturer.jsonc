@@ -1,0 +1,38 @@
+{
+  "name": "Manufacturer",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Manufacturer name"
+    },
+    "logo_url": {
+      "type": "string",
+      "description": "Manufacturer logo URL"
+    },
+    "contact_email": {
+      "type": "string",
+      "description": "Primary contact email"
+    },
+    "contact_phone": {
+      "type": "string",
+      "description": "Primary contact phone"
+    },
+    "website_url": {
+      "type": "string",
+      "description": "Manufacturer website"
+    },
+    "description": {
+      "type": "string",
+      "description": "About the manufacturer"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Active status"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

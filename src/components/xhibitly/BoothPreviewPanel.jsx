@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Sparkles, Image as ImageIcon, Package, Loader2, X, Palette, CheckCircle2, Wand2 } from 'lucide-react';
+import { Sparkles, Image as ImageIcon, Package, X, Palette, CheckCircle2, Wand2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { SKU_TO_IMAGE } from '@/data/skuImageMap';
@@ -15,19 +15,16 @@ function fmt(n) {
 
 function getPreviewThumbUrl(item) {
   if (item?.sku && SKU_TO_IMAGE[item.sku]) return SKU_TO_IMAGE[item.sku];
-
   const productLikeUrl = item?.image_url;
   if (productLikeUrl) {
     if (productLikeUrl.includes('/products/')) return productLikeUrl;
     if (productLikeUrl.startsWith('/products/')) return `${SUPABASE_URL}${productLikeUrl}`;
   }
-
   return null;
 }
 
 function PreviewThumb({ item, onRemove, onQuantityChange }) {
   const src = getPreviewThumbUrl(item);
-
   return (
     <div className="rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-2">
       <div className="flex items-center gap-2">
@@ -45,7 +42,7 @@ function PreviewThumb({ item, onRemove, onQuantityChange }) {
         <button
           type="button"
           onClick={() => onRemove?.(item)}
-          className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-400 hover:border-red-200 hover:text-red-500"
+          className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-400 hover:border-red-200 hover:text-red-500"
           title="Remove from quote"
         >
           <X className="w-3.5 h-3.5" />
@@ -58,7 +55,7 @@ function PreviewThumb({ item, onRemove, onQuantityChange }) {
           min="1"
           value={item?.quantity || 1}
           onChange={(e) => onQuantityChange?.(item, e.target.value)}
-          className="h-8 w-16 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-bold text-slate-700 text-center focus:outline-none focus:ring-1 focus:ring-[#0D4FB3]"
+          className="h-9 w-16 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-bold text-slate-700 text-center focus:outline-none focus:ring-1 focus:ring-[#0D4FB3]"
           aria-label={`Quantity for ${item?.product_name || item?.sku || 'product'}`}
         />
       </div>
@@ -68,21 +65,9 @@ function PreviewThumb({ item, onRemove, onQuantityChange }) {
 
 function RenderProgressCard({ isGeneratingPreview }) {
   const steps = [
-    {
-      title: 'Reading quote products',
-      description: 'Collecting your selected SKUs and booth details.',
-      icon: CheckCircle2,
-    },
-    {
-      title: 'Building booth prompt',
-      description: 'Preparing the branded render instructions.',
-      icon: Wand2,
-    },
-    {
-      title: 'Generating booth image',
-      description: 'Creating the booth concept preview image.',
-      icon: Sparkles,
-    },
+    { title: 'Reading quote products', icon: CheckCircle2 },
+    { title: 'Building booth prompt', icon: Wand2 },
+    { title: 'Generating booth image', icon: Sparkles },
   ];
 
   const exhibitFacts = [
@@ -104,44 +89,29 @@ function RenderProgressCard({ isGeneratingPreview }) {
 
   useEffect(() => {
     if (!isGeneratingPreview) {
-      setActiveStep(0);
-      setProgress(12);
-      setFactIndex(0);
+      setActiveStep(0); setProgress(12); setFactIndex(0);
       return;
     }
-
-    setActiveStep(0);
-    setProgress(12);
-    setFactIndex(0);
-
+    setActiveStep(0); setProgress(12); setFactIndex(0);
     const startedAt = Date.now();
     const totalDuration = 12000;
     const stepDuration = totalDuration / steps.length;
-
     const progressTimer = window.setInterval(() => {
       const elapsed = Date.now() - startedAt;
-      const boundedElapsed = Math.min(elapsed, totalDuration);
-      const nextStep = Math.min(Math.floor(boundedElapsed / stepDuration), steps.length - 1);
-      const nextProgress = Math.min(12 + (boundedElapsed / totalDuration) * 78, 90);
-
-      setActiveStep(nextStep);
-      setProgress(nextProgress);
+      const bounded = Math.min(elapsed, totalDuration);
+      setActiveStep(Math.min(Math.floor(bounded / stepDuration), steps.length - 1));
+      setProgress(Math.min(12 + (bounded / totalDuration) * 78, 90));
     }, 180);
-
     const factTimer = window.setInterval(() => {
       setFactIndex((prev) => (prev + 1) % exhibitFacts.length);
     }, 8000);
-
-    return () => {
-      window.clearInterval(progressTimer);
-      window.clearInterval(factTimer);
-    };
+    return () => { window.clearInterval(progressTimer); window.clearInterval(factTimer); };
   }, [isGeneratingPreview]);
 
   return (
     <div className="h-full rounded-[24px] border border-[#1f3f86] bg-[linear-gradient(180deg,#0d1730_0%,#16233d_100%)] p-4 text-white shadow-[0_18px_40px_rgba(13,79,179,0.22)] flex flex-col overflow-hidden">
       <div className="flex items-start gap-3">
-        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/8 text-[#6EA8FF]">
+        <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/8 text-[#6EA8FF]">
           <Sparkles className="w-5 h-5" />
         </div>
         <div className="min-w-0 flex-1">
@@ -149,46 +119,34 @@ function RenderProgressCard({ isGeneratingPreview }) {
           <p className="mt-1 text-xs text-white/65">Building the scene from your selected products and booth layout.</p>
         </div>
       </div>
-
       <div className="mt-4 h-2 rounded-full bg-white/10 overflow-hidden">
-        <div
-          className="h-full rounded-full bg-[linear-gradient(90deg,#0D4FB3_0%,#4A8DFF_100%)] transition-all duration-300"
-          style={{ width: `${progress}%` }}
-        />
+        <div className="h-full rounded-full bg-[linear-gradient(90deg,#0D4FB3_0%,#4A8DFF_100%)] transition-all duration-300" style={{ width: `${progress}%` }} />
       </div>
-
       <div className="mt-3 flex items-center justify-center gap-2">
         {steps.map((step, index) => (
-          <div
-            key={step.title}
-            className={`h-1.5 rounded-full transition-all duration-300 ${index === activeStep ? 'w-8 bg-[#4A8DFF]' : index < activeStep ? 'w-4 bg-white/70' : 'w-4 bg-white/15'}`}
-          />
+          <div key={step.title} className={`h-1.5 rounded-full transition-all duration-300 ${index === activeStep ? 'w-8 bg-[#4A8DFF]' : index < activeStep ? 'w-4 bg-white/70' : 'w-4 bg-white/15'}`} />
         ))}
       </div>
-
-      <div className="relative mt-4 min-h-[210px] flex-1 overflow-hidden rounded-[22px] border border-white/8 bg-white/6 px-5 py-6">
-        <div className="flex h-full flex-col justify-center">
-          <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-[#2B6EF3]/20 text-[#7FB0FF]">
-              <Sparkles className="w-5 h-5 animate-pulse" />
+      <div className="relative mt-4 flex-1 overflow-hidden rounded-[22px] border border-white/8 bg-white/6 px-4 py-5">
+        <div className="flex flex-col justify-center h-full">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-2xl bg-[#2B6EF3]/20 text-[#7FB0FF]">
+              <Sparkles className="w-4 h-4 animate-pulse" />
             </div>
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center justify-between gap-3">
-                <p className="text-lg font-black text-white">2026 Exhibit Insight</p>
-                <span className="text-[10px] font-bold uppercase tracking-[0.28em] text-white/45">LIVE</span>
-              </div>
+            <div>
+              <p className="text-base font-black text-white">2026 Exhibit Insight</p>
+              <span className="text-[10px] font-bold uppercase tracking-[0.28em] text-white/45">LIVE</span>
             </div>
           </div>
-
-          <div className="relative mt-6 min-h-[96px] overflow-hidden">
+          <div className="relative mt-4 min-h-[80px] overflow-hidden">
             <AnimatePresence mode="wait">
               <motion.p
                 key={factIndex}
-                initial={{ opacity: 0, x: 120 }}
+                initial={{ opacity: 0, x: 80 }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -120 }}
-                transition={{ duration: 0.45, ease: 'easeInOut' }}
-                className="absolute inset-0 text-[22px] font-medium leading-[1.15] tracking-[-0.02em] text-white/95 sm:text-[26px]"
+                exit={{ opacity: 0, x: -80 }}
+                transition={{ duration: 0.4, ease: 'easeInOut' }}
+                className="absolute inset-0 text-base font-medium leading-snug tracking-tight text-white/95 sm:text-lg"
               >
                 {exhibitFacts[factIndex]}
               </motion.p>
@@ -231,49 +189,52 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult, onG
 
   return (
     <div className="rounded-[28px] border border-slate-200 bg-white shadow-[0_18px_40px_rgba(15,23,42,0.08)] overflow-hidden h-full flex flex-col">
-      <div className="px-4 py-4 border-b border-slate-200 bg-white">
-        <div className="flex items-start gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#0D4FB3]/10 text-[#0D4FB3]">
-            <ImageIcon className="w-5 h-5" />
+      {/* Header */}
+      <div className="px-4 py-3 border-b border-slate-200 bg-white flex-shrink-0">
+        <div className="flex items-center gap-3">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#0D4FB3]/10 text-[#0D4FB3]">
+            <ImageIcon className="w-4 h-4" />
           </div>
-          <div className="min-w-0 flex-1">
+          <div>
             <div className="flex items-center gap-2">
               <p className="text-sm font-black tracking-tight text-slate-900">Booth Preview</p>
               <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-600">AI image</span>
             </div>
-            <p className="mt-1 text-xs text-slate-500">Preview area for the customer’s branded booth concept.</p>
+            <p className="text-[11px] text-slate-500">Customer-branded booth concept.</p>
           </div>
         </div>
       </div>
 
-      <div className="flex-1 min-h-0 p-4 bg-slate-50/70 flex flex-col gap-4 overflow-visible">
-        <div className="relative min-h-[260px] flex-1 rounded-[24px] border border-dashed border-slate-200 bg-white overflow-hidden">
+      {/* Scrollable body */}
+      <div className="flex-1 min-h-0 overflow-y-auto p-3 bg-slate-50/70 flex flex-col gap-3">
+        {/* AI render image */}
+        <div className="relative rounded-[20px] border border-dashed border-slate-200 bg-white overflow-hidden" style={{ minHeight: 200 }}>
           {order?.booth_rendering_url ? (
             <img
               src={order.booth_rendering_url}
               alt="Booth preview"
-              className="w-full h-full object-cover rounded-[20px] cursor-zoom-in"
+              className="w-full h-full object-cover rounded-[18px] cursor-zoom-in"
+              style={{ minHeight: 200 }}
               onClick={() => setImageModalOpen(true)}
             />
           ) : (
-            <div className="h-full flex flex-col items-center justify-center text-center px-6">
-              <Sparkles className="w-8 h-8 text-slate-300 mb-3" />
+            <div className="flex flex-col items-center justify-center text-center px-6 py-10">
+              <Sparkles className="w-7 h-7 text-slate-300 mb-2" />
               <p className="text-sm font-semibold text-slate-800">AI booth image will appear here</p>
-              <p className="text-xs text-slate-500 mt-1 leading-relaxed max-w-xs">As products, booth details, and brand info are captured, this panel can show the generated concept.</p>
+              <p className="text-xs text-slate-500 mt-1 leading-relaxed max-w-xs">Add products then generate a branded concept.</p>
             </div>
           )}
-
           {!isGeneratingPreview && (
-            <div className="absolute bottom-4 left-4 right-4 flex flex-col items-center gap-2">
-              {previewStatus ? (
+            <div className="absolute bottom-3 left-3 right-3 flex flex-col items-center gap-2">
+              {previewStatus && (
                 <div className="rounded-full bg-slate-900/85 px-3 py-1.5 text-[11px] font-medium text-white shadow-sm">
                   {previewStatus}
                 </div>
-              ) : null}
+              )}
               <Button
                 onClick={handleGenerateClick}
                 disabled={!lineItems?.length || isGeneratingPreview}
-                className="rounded-xl bg-[#0D4FB3] hover:bg-[#0b428f] text-white shadow-sm"
+                className="rounded-xl bg-[#0D4FB3] hover:bg-[#0b428f] text-white shadow-sm h-11 px-5 w-full sm:w-auto"
               >
                 Generate AI Booth Image
               </Button>
@@ -281,113 +242,112 @@ export default function BoothPreviewPanel({ order, lineItems, pricingResult, onG
           )}
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3 min-h-0 max-h-[280px] flex flex-col overflow-hidden">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500 flex-shrink-0">Current Render Inputs</p>
-          <div className="mt-2 min-h-0 overflow-y-auto pr-1 space-y-3">
-            <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">Brand</p>
-              <p className="mt-1 text-xs font-semibold text-slate-800">{order?.customer_company || order?.customer_name || 'Client brand'}</p>
-              <p className="mt-1 text-[11px] text-slate-500 break-all">{brandWebsite || order?.website_url || 'No website added'}</p>
-            </div>
-            <p className="text-xs text-slate-600 leading-relaxed">{previewPrompt}</p>
-            {lineItems?.length > 0 && (
-              <div className="grid gap-2">
-                {(lineItems || []).map((item) => (
-                  <PreviewThumb
-                    key={item.id || item.sku}
-                    item={item}
-                    onRemove={onRemoveItem}
-                    onQuantityChange={onQuantityChange}
-                  />
-                ))}
-              </div>
-            )}
+        {/* Brand + line items */}
+        <div className="rounded-2xl border border-slate-200 bg-white px-3 py-3 flex flex-col gap-2">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">Render Inputs</p>
+          <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">Brand</p>
+            <p className="mt-0.5 text-xs font-semibold text-slate-800">{order?.customer_company || order?.customer_name || 'Client brand'}</p>
+            <p className="mt-0.5 text-[11px] text-slate-500 break-all">{brandWebsite || order?.website_url || 'No website added'}</p>
           </div>
+          {lineItems?.length > 0 ? (
+            <div className="grid gap-2">
+              {lineItems.map((item) => (
+                <PreviewThumb
+                  key={item.id || item.sku}
+                  item={item}
+                  onRemove={onRemoveItem}
+                  onQuantityChange={onQuantityChange}
+                />
+              ))}
+            </div>
+          ) : (
+            <p className="text-xs text-slate-400 leading-relaxed">{previewPrompt}</p>
+          )}
         </div>
 
+        {/* Total + quote button */}
         <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3 space-y-3">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Running Total</p>
-              <p className="text-[11px] text-slate-500 mt-1">{lineItems?.length || 0} line items</p>
+              <p className="text-[11px] text-slate-500 mt-0.5">{lineItems?.length || 0} items</p>
             </div>
             <span className="text-lg font-black text-[#0D4FB3]">{fmt(pricingResult?.finalTotal ?? lineItems?.reduce((sum, item) => sum + (item.final_total_price ?? item.total_price ?? 0), 0))}</span>
           </div>
           <Button
             onClick={onGenerateQuote}
             disabled={!order?.id || !lineItems?.length || isGeneratingPreview}
-            className="w-full rounded-xl bg-[#0D4FB3] hover:bg-[#0b428f] text-white"
+            className="w-full rounded-xl bg-[#0D4FB3] hover:bg-[#0b428f] text-white h-11"
           >
             {isGeneratingPreview ? 'Generating Preview…' : 'Generate Quote'}
           </Button>
         </div>
-        {showBrandPrompt && createPortal(
-          <div className="fixed inset-0 z-[10001] flex items-center justify-center bg-slate-950/60 p-3 sm:p-4 backdrop-blur-sm">
-            <div className="w-full max-w-sm rounded-3xl border border-slate-200 bg-white p-4 sm:p-5 shadow-2xl max-h-[calc(100%-1.5rem)] overflow-y-auto">
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex items-start gap-3 min-w-0">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#0D4FB3]/10 text-[#0D4FB3] flex-shrink-0">
-                    <Palette className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-black text-slate-900">Add branding first?</p>
-                    <p className="mt-1 text-xs leading-relaxed text-slate-500">If you have a company website, we can pull saved brand details first and use them in the render.</p>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setShowBrandPrompt(false)}
-                  className="flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-400 transition-colors hover:border-slate-300 hover:bg-slate-100 hover:text-slate-700 flex-shrink-0"
-                  aria-label="Close branding modal"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-              <div className="mt-4">
-                <Input
-                  value={websiteInput}
-                  onChange={(e) => setWebsiteInput(e.target.value)}
-                  placeholder="Company website (optional)"
-                  className="h-11 rounded-xl"
-                />
-              </div>
-              <div className="mt-4 flex gap-2">
-                <Button onClick={handleBrandConfirm} className="flex-1 rounded-xl bg-[#0D4FB3] hover:bg-[#0b428f] text-white">Use Website</Button>
-                <Button variant="outline" onClick={handleSkipBranding} className="flex-1 rounded-xl hover:bg-slate-100 hover:text-slate-900 hover:border-slate-300">Skip Branding</Button>
-              </div>
-            </div>
-          </div>,
-          document.body
-        )}
-
-        {isGeneratingPreview && createPortal(
-          <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-950/60 p-4 backdrop-blur-sm">
-            <div className="w-full max-w-md">
-              <RenderProgressCard isGeneratingPreview={isGeneratingPreview} />
-            </div>
-          </div>,
-          document.body
-        )}
-
-        {imageModalOpen && order?.booth_rendering_url && createPortal(
-          <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-slate-950/90 p-4" onClick={() => setImageModalOpen(false)}>
-            <button
-              type="button"
-              onClick={() => setImageModalOpen(false)}
-              className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20"
-            >
-              <X className="w-5 h-5" />
-            </button>
-            <img
-              src={order.booth_rendering_url}
-              alt="Booth preview full size"
-              className="max-h-full max-w-full rounded-[20px] object-contain shadow-2xl"
-              onClick={(e) => e.stopPropagation()}
-            />
-          </div>,
-          document.body
-        )}
       </div>
+
+      {/* Brand prompt modal */}
+      {showBrandPrompt && createPortal(
+        <div className="fixed inset-0 z-[10001] flex items-end sm:items-center justify-center bg-slate-950/60 p-0 sm:p-4 backdrop-blur-sm">
+          <div className="w-full sm:max-w-sm rounded-t-3xl sm:rounded-3xl border border-slate-200 bg-white p-5 shadow-2xl">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex items-start gap-3 min-w-0">
+                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#0D4FB3]/10 text-[#0D4FB3] flex-shrink-0">
+                  <Palette className="w-4 h-4" />
+                </div>
+                <div>
+                  <p className="text-sm font-black text-slate-900">Add branding first?</p>
+                  <p className="mt-1 text-xs leading-relaxed text-slate-500">Enter a website to pull brand colors and logo for the render.</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowBrandPrompt(false)}
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-400 hover:text-slate-700 flex-shrink-0"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="mt-4">
+              <Input value={websiteInput} onChange={(e) => setWebsiteInput(e.target.value)} placeholder="Company website (optional)" className="h-11 rounded-xl" />
+            </div>
+            <div className="mt-4 flex gap-2">
+              <Button onClick={handleBrandConfirm} className="flex-1 rounded-xl bg-[#0D4FB3] hover:bg-[#0b428f] text-white h-11">Use Website</Button>
+              <Button variant="outline" onClick={handleSkipBranding} className="flex-1 rounded-xl h-11">Skip</Button>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
+
+      {/* Generating progress overlay */}
+      {isGeneratingPreview && createPortal(
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-950/60 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-md">
+            <RenderProgressCard isGeneratingPreview={isGeneratingPreview} />
+          </div>
+        </div>,
+        document.body
+      )}
+
+      {/* Image lightbox */}
+      {imageModalOpen && order?.booth_rendering_url && createPortal(
+        <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-slate-950/90 p-4" onClick={() => setImageModalOpen(false)}>
+          <button
+            type="button"
+            onClick={() => setImageModalOpen(false)}
+            className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20"
+          >
+            <X className="w-5 h-5" />
+          </button>
+          <img
+            src={order.booth_rendering_url}
+            alt="Booth preview full size"
+            className="max-h-full max-w-full rounded-[20px] object-contain shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>,
+        document.body
+      )}
     </div>
   );
 }

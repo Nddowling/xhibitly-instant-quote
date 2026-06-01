@@ -1,0 +1,69 @@
+{
+  "name": "Service",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Service name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Service description"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "installation",
+        "dismantle",
+        "shipping",
+        "graphic_design",
+        "storage",
+        "supervision",
+        "electrical",
+        "cleaning"
+      ],
+      "description": "Service category"
+    },
+    "base_cost": {
+      "type": "number",
+      "description": "Base cost USD"
+    },
+    "billing_unit": {
+      "type": "string",
+      "enum": [
+        "flat_fee",
+        "per_day",
+        "per_sqft",
+        "percentage_of_order"
+      ],
+      "description": "Billing unit"
+    },
+    "is_optional": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this is optional"
+    },
+    "applies_to_tier": {
+      "type": "string",
+      "enum": [
+        "Modular",
+        "Hybrid",
+        "Custom",
+        "All"
+      ],
+      "default": "All",
+      "description": "Which tier this applies to"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Active status"
+    }
+  },
+  "required": [
+    "name",
+    "category",
+    "base_cost",
+    "billing_unit"
+  ]
+}

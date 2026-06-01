@@ -1,0 +1,86 @@
+{
+  "name": "CatalogPage",
+  "type": "object",
+  "properties": {
+    "page_number": {
+      "type": "number",
+      "description": "Page number in the PDF catalog"
+    },
+    "handbook_name": {
+      "type": "string",
+      "description": "Which catalog this page belongs to"
+    },
+    "page_image_url": {
+      "type": "string",
+      "description": "Uploaded image of the catalog page"
+    },
+    "page_text": {
+      "type": "string",
+      "description": "Extracted text content from the page"
+    },
+    "products": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "sku": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "dimensions": {
+            "type": "string"
+          },
+          "estimated_price": {
+            "type": "number"
+          },
+          "image_url": {
+            "type": "string"
+          },
+          "geometry_type": {
+            "type": "string"
+          },
+          "booth_sizes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "branding_surfaces": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "color_options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "description": "Products extracted from this page"
+    },
+    "section": {
+      "type": "string",
+      "description": "Catalog section (e.g., Portable Displays, Fabric Structures)"
+    },
+    "is_processed": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether products have been reviewed and pushed to ProductVariant"
+    }
+  },
+  "required": [
+    "page_number",
+    "handbook_name"
+  ]
+}

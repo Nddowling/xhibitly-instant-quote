@@ -1,0 +1,64 @@
+{
+  "name": "DashboardWidget",
+  "type": "object",
+  "properties": {
+    "dashboard_id": {
+      "type": "string"
+    },
+    "report_id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "widget_type": {
+      "type": "string",
+      "enum": [
+        "chart",
+        "table",
+        "metric",
+        "funnel"
+      ],
+      "default": "chart"
+    },
+    "position_x": {
+      "type": "number",
+      "default": 0
+    },
+    "position_y": {
+      "type": "number",
+      "default": 0
+    },
+    "width": {
+      "type": "number",
+      "default": 6
+    },
+    "height": {
+      "type": "number",
+      "default": 4
+    },
+    "chart_override": {
+      "type": "string"
+    },
+    "metric_field": {
+      "type": "string"
+    },
+    "metric_aggregate": {
+      "type": "string",
+      "enum": [
+        "count",
+        "sum",
+        "avg"
+      ]
+    },
+    "refresh_interval": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "dashboard_id",
+    "report_id",
+    "widget_type"
+  ]
+}

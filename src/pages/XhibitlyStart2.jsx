@@ -6,11 +6,13 @@ import CatalogQuote from '@/pages/CatalogQuote';
 import XhibitlyAgentPane from '@/components/xhibitly/XhibitlyAgentPane';
 import BoothPreviewPanel from '@/components/xhibitly/BoothPreviewPanel';
 import SessionStartModal from '@/components/catalog/SessionStartModal';
+import { Image as ImageIcon, BookOpen, MessageSquare } from 'lucide-react';
 
 const ACTIVE_SESSION_KEY = 'xhibitly-active-order-id';
 
 export default function XhibitlyStart2() {
   const navigate = useNavigate();
+  const [mobileTab, setMobileTab] = useState('catalog'); // 'preview' | 'catalog' | 'agent'
   const [previewOrder, setPreviewOrder] = useState(null);
   const [showSessionModal, setShowSessionModal] = useState(false);
   const [queuedPromptForCatalog, setQueuedPromptForCatalog] = useState('');
@@ -202,19 +204,27 @@ export default function XhibitlyStart2() {
     };
   }, [restoreSavedSession]);
 
+  const mobileTabs = [
+    { key: 'preview', label: 'Preview', icon: ImageIcon },
+    { key: 'catalog', label: 'Catalog', icon: BookOpen },
+    { key: 'agent', label: 'AI Guide', icon: MessageSquare },
+  ];
+
   return (
     <div className="min-h-screen bg-[#f6f8fc] text-slate-900 overflow-x-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(24,195,248,0.16),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(13,79,179,0.12),transparent_30%)]" />
       <div className="absolute inset-0 opacity-70" style={{ backgroundImage: 'linear-gradient(rgba(13,79,179,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(13,79,179,0.08) 1px, transparent 1px)', backgroundSize: '46px 46px' }} />
-      <div className="relative z-10 px-4 md:px-8 py-2 md:py-3">
-        <div className="max-w-[1560px] mx-auto">
-          {showSessionModal && (
-            <SessionStartModal
-              onComplete={handleSessionComplete}
-              onDismiss={() => setShowSessionModal(false)}
-            />
-          )}
 
+      {showSessionModal && (
+        <SessionStartModal
+          onComplete={handleSessionComplete}
+          onDismiss={() => setShowSessionModal(false)}
+        />
+      )}
+
+      {/* ── Desktop layout ── */}
+      <div className="hidden lg:block relative z-10 px-4 md:px-8 py-2 md:py-3">
+        <div className="max-w-[1560px] mx-auto">
           <div className="flex items-center justify-center mb-2 md:mb-3">
             <div className="rounded-2xl overflow-hidden">
               <img src="https://media.base44.com/images/public/69834d9e0d7220d671bfd124/f3c8fd783_IMG_1062.png" alt="Xhibitly" className="h-8 md:h-10 w-auto object-contain block rounded-[28px]" />
@@ -254,7 +264,69 @@ export default function XhibitlyStart2() {
             </section>
           </div>
 
-          <p className="text-center text-xs md:text-sm text-slate-500 mt-2">The Speed of AI. The Power of The Handbook.</p>
+          <p className="text-center text-xs text-slate-500 mt-2">The Speed of AI. The Power of The Handbook.</p>
+        </div>
+      </div>
+
+      {/* ── Mobile layout ── */}
+      <div className="lg:hidden relative z-10 flex flex-col h-screen">
+        {/* Mobile header */}
+        <div className="flex-shrink-0 flex items-center justify-center py-2 px-4 bg-white/90 border-b border-slate-200">
+          <img src="https://media.base44.com/images/public/69834d9e0d7220d671bfd124/f3c8fd783_IMG_1062.png" alt="Xhibitly" className="h-7 w-auto object-contain rounded-xl" />
+        </div>
+
+        {/* Mobile tab bar */}
+        <div className="flex-shrink-0 flex bg-white border-b border-slate-200">
+          {mobileTabs.map(({ key, label, icon: Icon }) => (
+            <button
+              key={key}
+              onClick={() => setMobileTab(key)}
+              className={`flex-1 flex flex-col items-center gap-0.5 py-2.5 text-[11px] font-semibold transition-colors border-b-2 ${
+                mobileTab === key
+                  ? 'border-[#0D4FB3] text-[#0D4FB3]'
+                  : 'border-transparent text-slate-500'
+              }`}
+            >
+              <Icon className="w-4 h-4" />
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {/* Mobile panel content — only render active tab */}
+        <div className="flex-1 min-h-0 overflow-hidden">
+          {mobileTab === 'preview' && (
+            <div className="h-full overflow-y-auto p-3">
+              <BoothPreviewPanel
+                order={previewOrder}
+                lineItems={previewLineItems}
+                pricingResult={previewPricingResult}
+                brandWebsite={previewBrandWebsite}
+                onGeneratePreview={handleGeneratePreview}
+                onGenerateQuote={handleGenerateQuote}
+                onRemoveItem={handleRemovePreviewItem}
+                onQuantityChange={handleQuantityChange}
+                isGeneratingPreview={isGeneratingPreview}
+                previewStatus={previewStatus}
+              />
+            </div>
+          )}
+          {mobileTab === 'catalog' && (
+            <div className="h-full bg-white">
+              <CatalogQuote
+                embeddedMode
+                initialPrompt={queuedPromptForCatalog}
+                onOrderChange={setPreviewOrder}
+                onLineItemsChange={setPreviewLineItems}
+                onPricingResult={setPreviewPricingResult}
+              />
+            </div>
+          )}
+          {mobileTab === 'agent' && (
+            <div className="h-full">
+              <XhibitlyAgentPane />
+            </div>
+          )}
         </div>
       </div>
     </div>

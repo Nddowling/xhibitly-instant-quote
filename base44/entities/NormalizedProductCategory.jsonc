@@ -1,0 +1,53 @@
+{
+  "name": "NormalizedProductCategory",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Category name (e.g., Backwall, Reception Counter, Banner Stand)"
+    },
+    "description": {
+      "type": "string",
+      "description": "Category description"
+    },
+    "geometry_type": {
+      "type": "string",
+      "enum": [
+        "backwall",
+        "counter",
+        "table",
+        "tent",
+        "banner_stand",
+        "billboard",
+        "monitor_stand",
+        "lighting",
+        "flooring",
+        "accessory"
+      ],
+      "description": "3D geometry type for rendering"
+    },
+    "default_dimensions": {
+      "type": "object",
+      "properties": {
+        "width": {
+          "type": "number"
+        },
+        "height": {
+          "type": "number"
+        },
+        "depth": {
+          "type": "number"
+        }
+      },
+      "description": "Default dimensions in feet"
+    },
+    "icon": {
+      "type": "string",
+      "description": "Icon identifier for UI"
+    }
+  },
+  "required": [
+    "name",
+    "geometry_type"
+  ]
+}

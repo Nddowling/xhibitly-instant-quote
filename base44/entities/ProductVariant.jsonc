@@ -1,0 +1,131 @@
+{
+  "name": "ProductVariant",
+  "type": "object",
+  "properties": {
+    "manufacturer_id": {
+      "type": "string",
+      "description": "FK to Manufacturer"
+    },
+    "category_id": {
+      "type": "string",
+      "description": "FK to NormalizedProductCategory"
+    },
+    "category_name": {
+      "type": "string",
+      "description": "Denormalized category name for quick display"
+    },
+    "manufacturer_sku": {
+      "type": "string",
+      "description": "Manufacturer's SKU"
+    },
+    "display_name": {
+      "type": "string",
+      "description": "Product display name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Product description"
+    },
+    "visual_description": {
+      "type": "string",
+      "description": "Extremely detailed visual description for AI image rendering \u2014 shape, materials, colors, proportions, how it looks when set up at a trade show"
+    },
+    "thumbnail_url": {
+      "type": "string",
+      "description": "Direct URL to a product photo showing the item fully assembled"
+    },
+    "price_tier": {
+      "type": "string",
+      "enum": [
+        "Modular",
+        "Hybrid",
+        "Custom"
+      ],
+      "description": "Price tier"
+    },
+    "base_price": {
+      "type": "number",
+      "description": "Base price USD"
+    },
+    "booth_sizes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "10x10",
+          "10x20",
+          "20x20"
+        ]
+      },
+      "description": "Compatible booth sizes"
+    },
+    "design_style": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Design style tags"
+    },
+    "dimensions": {
+      "type": "object",
+      "properties": {
+        "width": {
+          "type": "number"
+        },
+        "height": {
+          "type": "number"
+        },
+        "depth": {
+          "type": "number"
+        }
+      },
+      "description": "Product dimensions in feet"
+    },
+    "geometry_type": {
+      "type": "string",
+      "description": "3D geometry type for rendering"
+    },
+    "color_options": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Available color options"
+    },
+    "customizable": {
+      "type": "boolean",
+      "default": true,
+      "description": "Can be branded"
+    },
+    "branding_surfaces": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Surfaces that accept branding (front, top, sides)"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Product image URL (category-level)"
+    },
+    "features": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Key features"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Active status"
+    },
+    "swap_group": {
+      "type": "string",
+      "description": "Group ID for swappable products"
+    }
+  },
+  "required": [
+    "display_name"
+  ]
+}

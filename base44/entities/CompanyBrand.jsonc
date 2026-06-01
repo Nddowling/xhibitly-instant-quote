@@ -1,0 +1,19 @@
+{
+  "name": "CompanyBrand",
+  "type": "object",
+  "properties": {
+    "domain": {
+      "type": "string",
+      "description": "The website domain of the company"
+    },
+    "company_name": {
+      "type": "string"
+    },
+    "brand_identity": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "domain"
+  ]
+}

@@ -16,5 +16,8 @@
       "type": "string",
       "description": "Linked Contact record for customer login"
     }
-  }
+  },
+  "required": [
+    "contact_id"
+  ]
 }

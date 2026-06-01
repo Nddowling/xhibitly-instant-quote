@@ -1,0 +1,37 @@
+{
+  "name": "Profile",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "is_system": {
+      "type": "boolean",
+      "default": false
+    },
+    "object_permissions": {
+      "type": "object"
+    },
+    "field_permissions": {
+      "type": "object"
+    },
+    "page_access": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "tab_visibility": {
+      "type": "object"
+    },
+    "default_landing_page": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

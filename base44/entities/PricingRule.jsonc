@@ -1,0 +1,70 @@
+{
+  "name": "PricingRule",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Rule name"
+    },
+    "description": {
+      "type": "string"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "priority": {
+      "type": "number",
+      "default": 10,
+      "description": "Lower = evaluated first"
+    },
+    "scope": {
+      "type": "string",
+      "enum": [
+        "quote",
+        "line_item",
+        "category"
+      ],
+      "default": "quote"
+    },
+    "condition_logic": {
+      "type": "string",
+      "default": "ALL",
+      "description": "ALL | ANY | boolean expression like '(1 AND 2) OR 3'"
+    },
+    "conditions": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "description": "Array of PricingCondition objects"
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "description": "Array of PricingAction objects"
+    },
+    "stackable": {
+      "type": "boolean",
+      "default": true,
+      "description": "If false, stops evaluating further rules once this fires"
+    },
+    "exclusive": {
+      "type": "boolean",
+      "default": false,
+      "description": "If true, no other rules apply in same pass"
+    },
+    "is_dealer_specific": {
+      "type": "boolean",
+      "default": false
+    },
+    "created_by_user_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

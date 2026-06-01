@@ -1,0 +1,27 @@
+{
+  "name": "PermissionSet",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "object_permissions": {
+      "type": "object"
+    },
+    "field_permissions": {
+      "type": "object"
+    },
+    "page_access": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

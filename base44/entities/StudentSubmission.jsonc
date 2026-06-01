@@ -1,0 +1,56 @@
+{
+  "name": "StudentSubmission",
+  "type": "object",
+  "properties": {
+    "student_id": {
+      "type": "string",
+      "description": "Reference to User entity"
+    },
+    "student_email": {
+      "type": "string",
+      "description": "Student email for filtering"
+    },
+    "student_name": {
+      "type": "string",
+      "description": "Student name"
+    },
+    "title": {
+      "type": "string",
+      "description": "Submission title"
+    },
+    "description": {
+      "type": "string",
+      "description": "Project description"
+    },
+    "model_file_url": {
+      "type": "string",
+      "description": "Uploaded GLB/GLTF file URL"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Draft",
+        "Submitted",
+        "Under Review",
+        "Approved",
+        "Needs Revision",
+        "Rejected"
+      ],
+      "default": "Draft",
+      "description": "Submission status"
+    },
+    "feedback": {
+      "type": "string",
+      "description": "Instructor/reviewer feedback"
+    },
+    "grade": {
+      "type": "string",
+      "description": "Grade or score"
+    }
+  },
+  "required": [
+    "student_id",
+    "student_email",
+    "title"
+  ]
+}

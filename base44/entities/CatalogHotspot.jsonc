@@ -1,0 +1,20 @@
+{
+  "name": "CatalogHotspot",
+  "type": "object",
+  "properties": {
+    "page_number": {
+      "type": "number",
+      "description": "The catalog page number"
+    },
+    "hotspots": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "description": "Array of hotspot objects for this page"
+    }
+  },
+  "required": [
+    "page_number"
+  ]
+}

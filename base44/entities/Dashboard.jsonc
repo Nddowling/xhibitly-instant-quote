@@ -1,0 +1,29 @@
+{
+  "name": "Dashboard",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "layout": {
+      "type": "object"
+    },
+    "is_public": {
+      "type": "boolean",
+      "default": false
+    },
+    "folder_name": {
+      "type": "string"
+    },
+    "last_modified_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

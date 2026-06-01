@@ -1,0 +1,54 @@
+{
+  "name": "PromoCode",
+  "type": "object",
+  "properties": {
+    "code": {
+      "type": "string",
+      "description": "Uppercase 8-char alphanumeric"
+    },
+    "generated_from_rule_id": {
+      "type": "string"
+    },
+    "generated_from_order_id": {
+      "type": "string"
+    },
+    "discount_pct": {
+      "type": "number"
+    },
+    "discount_fixed": {
+      "type": "number"
+    },
+    "applies_to": {
+      "type": "string",
+      "enum": [
+        "quote",
+        "category",
+        "sku"
+      ],
+      "default": "quote"
+    },
+    "applies_to_value": {
+      "type": "string"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date"
+    },
+    "is_used": {
+      "type": "boolean",
+      "default": false
+    },
+    "used_by_order_id": {
+      "type": "string"
+    },
+    "message": {
+      "type": "string"
+    },
+    "created_by_user_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "code"
+  ]
+}
