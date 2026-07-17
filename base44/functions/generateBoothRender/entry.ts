@@ -14,10 +14,23 @@ function dedupeUrls(urls) {
 function normalizeReferenceUrl(url) {
   if (!url) return null;
   if (String(url).startsWith('http')) return url;
-  if (String(url).startsWith('/images/')) {
+  if (String(url).startsWith('/')) {
     return `https://xpgvpzbzmkubahyxwipk.supabase.co/storage/v1/object/public/orbus-assets${url}`;
   }
   return url;
+}
+
+function productCompletenessScore(product) {
+  const fields = [
+    'name', 'base_price', 'retail_price', 'dimensions', 'footprint_w_ft',
+    'footprint_d_ft', 'height_ft', 'image_cached_url', 'image_url',
+    'render_category', 'physical_description', 'placement_zone',
+    'render_instruction', 'material',
+  ];
+  return fields.reduce((total, field) => {
+    const value = product?.[field];
+    return total + (value !== undefined && value !== null && value !== '' ? 1 : 0);
+  }, 0);
 }
 
 function extractDomain(url) {
@@ -235,6 +248,7 @@ function resolveAccessoryParent(item, hosts) {
 function buildRenderContract({ quoteItems, products, boothInfo }) {
   const boothDims = parseBoothSize(boothInfo.boothSize);
   const boothWidth = Number(boothDims.width_ft || 10);
+  const boothDepth = Number(boothDims.depth_ft || 10);
   const unresolvedSkus = quoteItems.map((item) => item?.sku).filter(Boolean).filter((sku) => !products.find((product) => product.sku === sku));
   const errors = [];
   const warnings = [];
@@ -274,7 +288,7 @@ function buildRenderContract({ quoteItems, products, boothInfo }) {
 
     return {
       sku: product.sku,
-      quantity: quoteItem?.quantity || 1,
+      quantity: Math.max(1, Number(quoteItem?.quantity || 1)),
       object_class: objectClass,
       placement_zone: normalizedZone,
       width_ft: widthFt,
@@ -327,6 +341,30 @@ function buildRenderContract({ quoteItems, products, boothInfo }) {
     });
   }
 
+  const oversizedItems = items.filter((item) => !item.is_accessory && (
+    Number(item.width_ft || 0) > boothWidth || Number(item.depth_ft || 0) > boothDepth
+  ));
+  if (oversizedItems.length > 0) {
+    errors.push({
+      type: 'SPATIAL_CONFLICT',
+      message: 'One or more products exceed the booth boundary. Select a larger booth or a smaller product.',
+      skus: oversizedItems.map((item) => item.sku),
+    });
+  }
+
+  const occupiedFloorArea = items
+    .filter((item) => !item.is_accessory && item.object_class !== 'lighting')
+    .reduce((sum, item) => sum + (Number(item.width_ft || 0) * Number(item.depth_ft || 0) * Number(item.quantity || 1)), 0);
+  const boothArea = boothWidth * boothDepth;
+  if (boothArea > 0 && occupiedFloorArea > boothArea * 0.65) {
+    warnings.push({
+      type: 'HIGH_FLOOR_DENSITY',
+      severity: 'warning',
+      message: `Quoted products occupy approximately ${Math.round((occupiedFloorArea / boothArea) * 100)}% of the booth floor before circulation clearance. Review placement before treating this concept as installation-ready.`,
+      skus: items.filter((item) => !item.is_accessory).map((item) => item.sku),
+    });
+  }
+
   const structures = Array.from(backWallGroups.entries()).map(([key, group], index) => ({
     structure_id: `struct_${index + 1}`,
     family: group[0]?.sku_family || key,
@@ -351,8 +389,10 @@ function buildRenderContract({ quoteItems, products, boothInfo }) {
       logo_url: boothInfo.logoUrl || null,
     },
     validation: {
-      total_items: items.length,
+      total_items: items.reduce((sum, item) => sum + Number(item.quantity || 1), 0),
       total_footprint_width_ft: totalBackwallWidth,
+      occupied_floor_area_sq_ft: occupiedFloorArea,
+      booth_area_sq_ft: boothArea,
       fits_booth: errors.filter((error) => error.type === 'SPATIAL_CONFLICT').length === 0,
       all_accessories_have_parents: items.filter((item) => item.is_accessory).every((item) => !!item.parent_sku),
       all_skus_resolved: unresolvedSkus.length === 0,
@@ -494,12 +534,23 @@ Deno.serve(async (req) => {
 
   try {
     const base44 = createClientFromRequest(req);
+    const user = await base44.auth.me();
+    if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401, headers: CORS });
+
+    if (!Array.isArray(quote_items) || quote_items.length === 0) {
+      return Response.json({ error: 'At least one verified catalog product is required.' }, { status: 400, headers: CORS });
+    }
+    const missingSkuItems = quote_items.filter((item) => !String(item?.sku || '').trim());
+    if (missingSkuItems.length > 0) {
+      return Response.json({ error: 'Every rendered product must have a verified catalog SKU.' }, { status: 400, headers: CORS });
+    }
+    if (!/^[0-9]+x[0-9]+$/i.test(String(booth_size || ''))) {
+      return Response.json({ error: 'A valid booth size is required before rendering.' }, { status: 400, headers: CORS });
+    }
 
     const brandDetails = website_url ? await fetchBrandDetails(base44, website_url) : null;
 
-    const skus = Array.isArray(quote_items)
-      ? quote_items.map((item) => item?.sku).filter(Boolean)
-      : [];
+    const skus = quote_items.map((item) => String(item.sku).trim());
 
     const productBySku = new Map();
     let skip = 0;
@@ -507,7 +558,12 @@ Deno.serve(async (req) => {
       const batch = await base44.asServiceRole.entities.Product.list('-updated_date', 500, skip);
       if (!batch?.length) break;
       for (const p of batch) {
-        if (p?.sku) productBySku.set(p.sku, p);
+        if (!p?.sku || p.is_active === false) continue;
+        const existing = productBySku.get(p.sku);
+        const shouldReplace = !existing ||
+          productCompletenessScore(p) > productCompletenessScore(existing) ||
+          (productCompletenessScore(p) === productCompletenessScore(existing) && new Date(p.updated_date || 0) > new Date(existing.updated_date || 0));
+        if (shouldReplace) productBySku.set(p.sku, p);
       }
       if (batch.length < 500) break;
       skip += 500;
@@ -558,17 +614,17 @@ Deno.serve(async (req) => {
   const hasFullSpanBackwall = renderContract.items.some((item) => item.is_wide_backwall);
 
     const combinedReferenceUrls = dedupeUrls([
-      ...(reference_urls || []).map(normalizeReferenceUrl),
-      ...renderContract.items.map((item) => item.reference_image_url).filter(Boolean),
       boothInfo.logoUrl || null,
-    ]);
+      ...renderContract.items.map((item) => item.reference_image_url).filter(Boolean),
+      ...(reference_urls || []).map(normalizeReferenceUrl),
+    ]).slice(0, 10);
 
     const finalPrompt = buildStrictRenderPrompt({
       boothInfo,
       denseProductLines,
       referenceImageCount: combinedReferenceUrls.length,
       hasFullSpanBackwall,
-      itemCount: renderContract.items.length,
+      itemCount: renderContract.validation.total_items,
       structureCount: renderContract.structures.length,
       bannerStandCount: renderContract.items.filter((item) => item.object_class === 'banner_stand').reduce((sum, item) => sum + Number(item.quantity || 1), 0),
       counterCount: renderContract.items.filter((item) => item.object_class === 'counter').reduce((sum, item) => sum + Number(item.quantity || 1), 0),
@@ -579,19 +635,68 @@ Deno.serve(async (req) => {
     console.log('[generateBoothRender] Prompt:\n', finalPrompt);
     console.log('[generateBoothRender] Reference URLs:', JSON.stringify(combinedReferenceUrls));
 
-    const imageResult = await base44.asServiceRole.integrations.Core.GenerateImage({
+    const firstImageResult = await base44.asServiceRole.integrations.Core.GenerateImage({
       prompt: finalPrompt,
       existing_image_urls: combinedReferenceUrls.length > 0 ? combinedReferenceUrls : undefined,
     });
 
-    if (!imageResult?.url) throw new Error('Image generation returned no URL');
+    if (!firstImageResult?.url) throw new Error('Image generation returned no URL');
+
+    let qualityAudit = null;
+    let finalImageUrl = firstImageResult.url;
+    let regenerated = false;
+    try {
+      qualityAudit = await base44.asServiceRole.integrations.Core.InvokeLLM({
+        prompt: `Audit this trade show booth render against the contract below. Check visible object classes and quantities, booth type, boundary fit, and whether obvious unquoted furniture, signs, plants, monitors, counters, towers, or banner stands were added. Do not judge SKU text because it may not be readable.\n\nCONTRACT:\n${denseProductLines}\n\nBOOTH: ${boothInfo.boothSize} ${boothInfo.boothType}`,
+        file_urls: [firstImageResult.url],
+        response_json_schema: {
+          type: 'object',
+          properties: {
+            counts_match: { type: 'boolean' },
+            booth_type_matches: { type: 'boolean' },
+            no_unquoted_objects: { type: 'boolean' },
+            fits_visible_boundary: { type: 'boolean' },
+            correction_notes: { type: 'array', items: { type: 'string' } },
+          },
+          required: ['counts_match', 'booth_type_matches', 'no_unquoted_objects', 'fits_visible_boundary', 'correction_notes'],
+        },
+      });
+
+      const needsCorrection = qualityAudit && (
+        !qualityAudit.counts_match ||
+        !qualityAudit.booth_type_matches ||
+        !qualityAudit.no_unquoted_objects ||
+        !qualityAudit.fits_visible_boundary
+      );
+
+      if (needsCorrection) {
+        const correctionPrompt = `${finalPrompt}\n\nMANDATORY CORRECTIONS FROM VISUAL AUDIT:\n${(qualityAudit.correction_notes || []).map((note) => `- ${note}`).join('\n')}\nRebuild the image and correct every listed issue while preserving the exact quoted product contract.`;
+        const correctedImageResult = await base44.asServiceRole.integrations.Core.GenerateImage({
+          prompt: correctionPrompt,
+          existing_image_urls: combinedReferenceUrls.length > 0 ? combinedReferenceUrls : undefined,
+        });
+        if (correctedImageResult?.url) {
+          finalImageUrl = correctedImageResult.url;
+          regenerated = true;
+        }
+      }
+    } catch (auditError) {
+      renderContract.warnings.push({
+        type: 'QUALITY_AUDIT_UNAVAILABLE',
+        severity: 'warning',
+        message: 'The render was generated, but automated visual verification was unavailable.',
+      });
+      console.warn('[generateBoothRender] Quality audit unavailable:', auditError instanceof Error ? auditError.message : String(auditError));
+    }
 
     return Response.json({
       status: 'completed',
-      url: imageResult.url,
+      url: finalImageUrl,
       prompt: finalPrompt,
       booth_info: boothInfo,
       render_contract: renderContract,
+      quality_audit: qualityAudit,
+      regenerated,
       warnings: renderContract.warnings,
     }, { headers: CORS });
   } catch (e) {

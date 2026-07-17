@@ -18,6 +18,8 @@ import { useLocation } from 'react-router-dom';
 
 import QuoteConfirmModal from '@/components/catalog/QuoteConfirmModal';
 import { runPricingEngine, generatePromoCode } from '@/components/pricing/pricingEngine';
+import { chooseCanonicalProduct } from '@/components/catalog/productIntegrity';
+import { toast } from 'sonner';
 
 // ─── Claude Vision: detect product within a specific bounding box ─────────────
 async function detectProductInBox(pageNum, box, supabaseUrl) {
@@ -280,7 +282,7 @@ function useProductCache() {
       let prod = null;
       const res = await base44.entities.Product.filter({ sku });
       if (res && res.length > 0) {
-        prod = res[0];
+        prod = chooseCanonicalProduct(res);
       } else {
         const variantRes = await base44.entities.ProductVariant.filter({ manufacturer_sku: sku });
         if (variantRes && variantRes.length > 0) {
@@ -1093,7 +1095,19 @@ export default function CatalogQuote({ embeddedMode = false, initialPrompt = '',
 
   const handleAddToQuote = useCallback(async (product) => {
     if (!activeOrder) return;
-    const { sku, name, price, imageUrl } = product;
+    const { sku, imageUrl } = product;
+    if (!sku) {
+      toast.error('This selection does not have a verified catalog SKU.');
+      return;
+    }
+
+    const verifiedProduct = chooseCanonicalProduct(await base44.entities.Product.filter({ sku }));
+    if (!verifiedProduct) {
+      toast.error(`${sku} could not be verified in the approved catalog.`);
+      return;
+    }
+    const name = verifiedProduct.name;
+    const price = verifiedProduct.base_price;
 
     const liveLineItems = await base44.entities.LineItem.filter({ order_id: activeOrder.id }, '-created_date', 500);
     const existing = (liveLineItems || []).find(i => i.sku === sku);
@@ -1105,20 +1119,13 @@ export default function CatalogQuote({ embeddedMode = false, initialPrompt = '',
         total_price: parseFloat((newQty * (existing.unit_price || 0)).toFixed(2)),
       });
     } else {
-      let unitPrice = price;
-      let resolvedImageUrl = imageUrl;
-      if (!unitPrice || !resolvedImageUrl) {
-        const prods = await base44.entities.Product.filter({ sku });
-        if (prods?.length > 0) {
-          unitPrice = unitPrice || prods[0].base_price || 0;
-          resolvedImageUrl = resolvedImageUrl || getImageUrl(prods[0]);
-        }
-      }
+      const unitPrice = price ?? 0;
+      const resolvedImageUrl = imageUrl || getImageUrl(verifiedProduct);
       await base44.entities.LineItem.create({
         order_id: activeOrder.id,
-        sku: sku || '',
-        product_name: name || sku || '',
-        category: '',
+        sku,
+        product_name: name,
+        category: verifiedProduct.category || '',
         quantity: 1,
         unit_price: parseFloat((unitPrice || 0).toFixed(2)),
         total_price: parseFloat((unitPrice || 0).toFixed(2)),
@@ -1357,7 +1364,7 @@ export default function CatalogQuote({ embeddedMode = false, initialPrompt = '',
         const normalizedQuery = normalizeSearchText(trimmed);
         const queryWords = normalizedQuery.split(' ').filter(Boolean);
         const combined = [...(byName || []), ...(bySku || []), ...(byCategory || []), ...(bySubcategory || []), ...(byDescription || [])];
-        const unique = combined.filter((v, i, a) => a.findIndex(x => x.id === v.id) === i);
+        const unique = combined.filter((v, i, a) => a.findIndex(x => x.sku === v.sku) === i);
         const ranked = unique
           .map(product => {
             const tagging = getProductTagging(product);
