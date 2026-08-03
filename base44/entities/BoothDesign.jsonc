@@ -10,6 +10,10 @@
       "type": "string",
       "description": "Dealer workspace scope"
     },
+    "order_id": {
+      "type": "string",
+      "description": "Visual quote project Order"
+    },
     "booth_size": {
       "type": "string",
       "enum": [
@@ -52,7 +56,7 @@
     },
     "layout_instructions": {
       "type": "string",
-      "description": "Specific user instructions for placing products within the booth (e.g., 'place arch at back center, TVs in front corners')"
+      "description": "Specific user instructions for placing products within the booth"
     },
     "brand_identity": {
       "type": "object",
@@ -89,7 +93,7 @@
     },
     "total_price": {
       "type": "number",
-      "description": "Total design price (sum of line items)"
+      "description": "Total design price"
     },
     "design_rationale": {
       "type": "string",
@@ -123,6 +127,58 @@
     "scene_json": {
       "type": "string",
       "description": "Serialized 2D scene state for placement engine"
+    },
+    "configuration_version": {
+      "type": "number",
+      "default": 0
+    },
+    "open_sides": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "front",
+          "left",
+          "right",
+          "back"
+        ]
+      }
+    },
+    "render_contract": {
+      "type": "object"
+    },
+    "validation_results": {
+      "type": "object"
+    },
+    "render_status": {
+      "type": "string",
+      "enum": [
+        "not_started",
+        "generating",
+        "completed",
+        "failed"
+      ],
+      "default": "not_started"
+    },
+    "visual_audit": {
+      "type": "object"
+    },
+    "review_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "passed",
+        "passed_with_warnings",
+        "failed",
+        "approved"
+      ],
+      "default": "pending"
+    },
+    "manual_review_note": {
+      "type": "string"
+    },
+    "approved_render_url": {
+      "type": "string"
     }
   },
   "required": [

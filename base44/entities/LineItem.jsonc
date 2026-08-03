@@ -77,6 +77,36 @@
     },
     "override_note": {
       "type": "string"
+    },
+    "product_id": {
+      "type": "string",
+      "description": "Exact selected Product record ID"
+    },
+    "product_snapshot": {
+      "type": "object",
+      "description": "Product details and price used for this configuration version"
+    },
+    "verification_status": {
+      "type": "string",
+      "enum": [
+        "verified",
+        "ambiguous",
+        "confirmed_ambiguous",
+        "unavailable"
+      ]
+    },
+    "pricing_status": {
+      "type": "string",
+      "enum": [
+        "verified",
+        "unavailable"
+      ]
+    },
+    "placement_intent": {
+      "type": "object"
+    },
+    "render_ready": {
+      "type": "boolean"
     }
   },
   "required": [

@@ -260,6 +260,51 @@
     "ai_context": {
       "type": "object",
       "description": "Structured booth planning details captured during chat"
+    },
+    "visual_quote_configuration": {
+      "type": "object",
+      "description": "Versioned materialized snapshot assembled from Order, LineItem, and BoothDesign"
+    },
+    "visual_quote_fingerprint": {
+      "type": "string",
+      "description": "Fingerprint of material quote and render inputs"
+    },
+    "workflow_stage": {
+      "type": "string",
+      "enum": [
+        "customer_show",
+        "brand",
+        "booth",
+        "products",
+        "price",
+        "render",
+        "review",
+        "proposal"
+      ],
+      "default": "customer_show"
+    },
+    "configuration_version": {
+      "type": "number",
+      "default": 0
+    },
+    "proposal_status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "ready",
+        "shared",
+        "approved",
+        "revision_requested"
+      ],
+      "default": "draft"
+    },
+    "quote_expiration_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "last_autosaved_at": {
+      "type": "string",
+      "format": "date-time"
     }
   },
   "required": [

@@ -19,6 +19,8 @@ import { useLocation } from 'react-router-dom';
 import QuoteConfirmModal from '@/components/catalog/QuoteConfirmModal';
 import { runPricingEngine, generatePromoCode } from '@/components/pricing/pricingEngine';
 import { chooseCanonicalProduct } from '@/components/catalog/productIntegrity';
+import VisualQuoteProjectStatus from '@/components/visual-quote/VisualQuoteProjectStatus';
+import useVisualQuoteProject from '@/hooks/useVisualQuoteProject';
 import { toast } from 'sonner';
 
 // ─── Claude Vision: detect product within a specific bounding box ─────────────
@@ -1042,6 +1044,11 @@ export default function CatalogQuote({ embeddedMode = false, initialPrompt = '',
   const [latestPricingResult, setLatestPricingResult] = useState(null);
   const [generatedPromos, setGeneratedPromos] = useState([]);
   const rulesResCacheRef = useRef([]);
+  const { saveStatus, configurationVersion } = useVisualQuoteProject({
+    order: activeOrder,
+    lineItems,
+    workflowStage: activeOrder?.workflow_stage || 'products',
+  });
 
   useEffect(() => {
     base44.auth.me()
@@ -1577,6 +1584,11 @@ export default function CatalogQuote({ embeddedMode = false, initialPrompt = '',
       {/* ── Top bar ── */}
       <div className="relative z-20 bg-white/95 backdrop-blur border-b border-slate-200 px-2 sm:px-4 py-1.5 flex-shrink-0 shadow-sm">
         <div className="flex items-center gap-2" ref={searchRef}>
+          <VisualQuoteProjectStatus
+            order={activeOrder}
+            saveStatus={saveStatus}
+            configurationVersion={configurationVersion}
+          />
           {/* Search */}
           <div className="relative flex-1 min-w-0">
             <input
